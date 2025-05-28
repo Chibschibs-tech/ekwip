@@ -1,83 +1,126 @@
 "use client"
-
 import { useState } from "react"
-import TestimonialCard from "@/components/testimonial-card"
+import { ChevronLeft, ChevronRight, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react"
 
-// Mock testimonial data
 const testimonials = [
   {
-    quote:
-      "Ekwip nous a permis de moderniser notre parc informatique sans impacter notre trésorerie. Un service client exceptionnel !",
-    author: "Sarah Benali",
-    role: "Directrice Financière",
-    company: "TechMaroc",
-    avatar: "/placeholder.svg?height=100&width=100",
-  },
-  {
-    quote:
-      "La flexibilité d'Ekwip est parfaite pour notre startup en croissance. Nous adaptons notre équipement selon nos besoins.",
-    author: "Karim Alaoui",
+    id: 1,
+    name: "Sarah Benali",
+    company: "TechStart Morocco",
     role: "CEO",
-    company: "InnovDigital",
-    avatar: "/placeholder.svg?height=100&width=100",
+    content:
+      "Ekwip nous a permis d'équiper notre équipe rapidement sans impacter notre trésorerie. Le service est exceptionnel et les équipements toujours à jour.",
+    rating: 5,
+    avatar: "/placeholder.svg?height=60&width=60&text=SB",
   },
   {
-    quote:
-      "Le support technique est réactif et efficace. Un vrai plus pour notre entreprise qui ne peut pas se permettre de temps d'arrêt.",
-    author: "Nadia Chraibi",
-    role: "Responsable IT",
-    company: "ConseilPro",
-    avatar: "/placeholder.svg?height=100&width=100",
+    id: 2,
+    name: "Ahmed Tazi",
+    company: "Digital Solutions",
+    role: "CTO",
+    content:
+      "La flexibilité offerte par Ekwip est remarquable. Nous pouvons adapter notre parc informatique selon nos besoins sans contraintes.",
+    rating: 5,
+    avatar: "/placeholder.svg?height=60&width=60&text=AT",
+  },
+  {
+    id: 3,
+    name: "Fatima Chraibi",
+    company: "InnovCorp",
+    role: "Directrice Financière",
+    content:
+      "L'impact sur notre cash-flow a été immédiat. Nous recommandons vivement Ekwip à toutes les entreprises soucieuses de leur trésorerie.",
+    rating: 5,
+    avatar: "/placeholder.svg?height=60&width=60&text=FC",
   },
 ]
 
 export default function TestimonialsSection() {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentTestimonial, setCurrentTestimonial] = useState(0)
+
+  // Ensure we always have an array to work with
+  const testimonialsList = Array.isArray(testimonials) ? testimonials : []
+
+  if (testimonialsList.length === 0) {
+    return (
+      <div className="text-center py-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Témoignages clients</h2>
+        <p className="text-gray-600">Témoignages en cours de chargement...</p>
+      </div>
+    )
+  }
 
   const nextTestimonial = () => {
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % testimonials.length)
+    setCurrentTestimonial((prev) => (prev + 1) % testimonialsList.length)
   }
 
   const prevTestimonial = () => {
-    setCurrentIndex((prevIndex) => (prevIndex - 1 + testimonials.length) % testimonials.length)
+    setCurrentTestimonial((prev) => (prev - 1 + testimonialsList.length) % testimonialsList.length)
   }
 
+  const currentTestimonialData = testimonialsList[currentTestimonial] || testimonialsList[0]
+
   return (
-    <div className="relative">
-      <div className="flex flex-col md:flex-row gap-6">
-        <div className="md:w-1/3">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Ce que nos clients disent</h2>
-          <p className="text-gray-600 mb-8">
-            Découvrez les témoignages de nos clients satisfaits qui ont transformé leur gestion IT grâce à nos solutions
-            de location.
-          </p>
-          <div className="flex gap-3">
-            <Button variant="outline" size="icon" className="rounded-full" onClick={prevTestimonial}>
-              <ChevronLeft className="h-5 w-5" />
+    <section className="py-16 md:py-24">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Ce que disent nos clients</h2>
+        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          Découvrez pourquoi plus de 500 entreprises font confiance à Ekwip pour leurs besoins en équipement IT.
+        </p>
+      </div>
+
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-3xl shadow-xl p-8 md:p-12 relative">
+          <div className="flex items-center justify-between mb-8">
+            <Button variant="outline" size="icon" onClick={prevTestimonial} className="rounded-full">
+              <ChevronLeft className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon" className="rounded-full" onClick={nextTestimonial}>
-              <ChevronRight className="h-5 w-5" />
+
+            <div className="flex space-x-2">
+              {testimonialsList.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                    index === currentTestimonial ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <Button variant="outline" size="icon" onClick={nextTestimonial} className="rounded-full">
+              <ChevronRight className="h-4 w-4" />
             </Button>
           </div>
-        </div>
-        <div className="md:w-2/3 grid grid-cols-1 md:grid-cols-2 gap-6">
-          {testimonials.map((testimonial, index) => (
-            <TestimonialCard
-              key={index}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              role={testimonial.role}
-              company={testimonial.company}
-              avatar={testimonial.avatar}
-              className={
-                index === currentIndex || index === (currentIndex + 1) % testimonials.length ? "" : "hidden md:block"
-              }
-            />
-          ))}
+
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
+              {Array.from({ length: currentTestimonialData.rating }).map((_, i) => (
+                <Star key={i} className="h-5 w-5 text-yellow-400 fill-current" />
+              ))}
+            </div>
+
+            <blockquote className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed">
+              "{currentTestimonialData.content}"
+            </blockquote>
+
+            <div className="flex items-center justify-center space-x-4">
+              <img
+                src={currentTestimonialData.avatar || "/placeholder.svg"}
+                alt={currentTestimonialData.name}
+                className="w-12 h-12 rounded-full"
+              />
+              <div className="text-left">
+                <div className="font-semibold text-gray-800">{currentTestimonialData.name}</div>
+                <div className="text-gray-600">
+                  {currentTestimonialData.role}, {currentTestimonialData.company}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

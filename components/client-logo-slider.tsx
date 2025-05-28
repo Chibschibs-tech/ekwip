@@ -1,69 +1,94 @@
-import type React from "react"
-import Slider from "react-slick"
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
-import { fetchClientLogos } from "@/lib/wordpress-api"
+"use client"
+import { useState, useEffect } from "react"
+import Image from "next/image"
 
-interface ClientLogo {
-  id: number
-  title: string
-  url: string
-}
+const clientLogos = [
+  {
+    id: 1,
+    name: "Client 1",
+    logo: "/images/client-logo-1.png",
+  },
+  {
+    id: 2,
+    name: "Client 2",
+    logo: "/images/client-logo-2.png",
+  },
+  {
+    id: 3,
+    name: "Client 3",
+    logo: "/images/client-logo-3.png",
+  },
+  {
+    id: 4,
+    name: "Client 4",
+    logo: "/images/client-logo-4.png",
+  },
+  {
+    id: 5,
+    name: "Client 5",
+    logo: "/images/client-logo-5.png",
+  },
+  {
+    id: 6,
+    name: "Client 6",
+    logo: "/images/client-logo-6.png",
+  },
+]
 
-const ClientLogoSlider: React.FC = () => {
-  const clientLogos: ClientLogo[] = fetchClientLogos()
+export default function ClientLogoSlider() {
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    cssEase: "linear",
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % Math.max(1, clientLogos.length - 2))
+    }, 3000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  // Ensure we always have an array to work with
+  const logos = Array.isArray(clientLogos) ? clientLogos : []
+
+  if (logos.length === 0) {
+    return (
+      <div className="flex justify-center items-center py-8">
+        <p className="text-gray-500">Logos en cours de chargement...</p>
+      </div>
+    )
   }
 
   return (
-    <div className="client-logo-slider">
-      <Slider {...settings}>
-        {clientLogos.map((logo) => (
-          <div key={logo.id} className="client-logo-item">
-            <img
-              src={logo.url || "/placeholder.svg"}
-              alt={logo.title}
-              style={{ maxWidth: "150px", maxHeight: "50px", margin: "auto" }}
-            />
+    <div className="relative overflow-hidden">
+      <div
+        className="flex transition-transform duration-500 ease-in-out"
+        style={{ transform: `translateX(-${currentIndex * (100 / 3)}%)` }}
+      >
+        {logos.map((client) => (
+          <div key={client.id} className="flex-shrink-0 w-1/3 px-4">
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow duration-300 flex items-center justify-center h-24">
+              <Image
+                src={client.logo || "/placeholder.svg"}
+                alt={client.name}
+                width={120}
+                height={60}
+                className="max-h-12 w-auto object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+              />
+            </div>
           </div>
         ))}
-      </Slider>
+      </div>
+
+      <div className="flex justify-center mt-6 space-x-2">
+        {Array.from({ length: Math.max(1, logos.length - 2) }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentIndex(index)}
+            className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+              index === currentIndex ? "bg-blue-600" : "bg-gray-300"
+            }`}
+          />
+        ))}
+      </div>
     </div>
   )
 }
-
-export default ClientLogoSlider

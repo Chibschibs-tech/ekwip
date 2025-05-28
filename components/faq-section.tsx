@@ -1,62 +1,90 @@
 "use client"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { useState } from "react"
+import { ChevronDown, ChevronUp } from "lucide-react"
 
-// FAQ data
-const faqItems = [
+const faqs = [
   {
-    question: "Comment fonctionne la location d'équipement IT avec Ekwip?",
+    id: 1,
+    question: "Quels sont les avantages de la location par rapport à l'achat ?",
     answer:
-      "Ekwip vous propose une solution de location flexible d'équipement IT. Vous choisissez les équipements dont vous avez besoin, nous les livrons et les installons. Vous payez un loyer mensuel fixe pendant la durée de votre choix, et à la fin du contrat, vous pouvez renouveler, acheter ou nous retourner les équipements.",
+      "La location vous permet de préserver votre trésorerie, de bénéficier d'équipements toujours à jour, d'inclure la maintenance et le support, et d'avoir une meilleure flexibilité pour adapter votre parc selon vos besoins.",
   },
   {
-    question: "Quels types d'équipements proposez-vous?",
+    id: 2,
+    question: "Quelle est la durée minimale de location ?",
     answer:
-      "Nous proposons une large gamme d'équipements IT: ordinateurs portables, ordinateurs de bureau, serveurs, équipements réseau, smartphones, tablettes, écrans, imprimantes et périphériques. Tous nos équipements sont de marques reconnues et peuvent être configurés selon vos besoins.",
+      "Nos contrats de location démarrent à partir de 12 mois, avec des options de renouvellement flexibles selon vos besoins.",
   },
   {
-    question: "Quelle est la durée minimale de location?",
+    id: 3,
+    question: "Que se passe-t-il en cas de panne d'un équipement ?",
     answer:
-      "La durée minimale de location est de 12 mois, mais nous proposons des contrats de 12, 24, 36 ou 48 mois. Plus la durée est longue, plus le loyer mensuel est avantageux.",
+      "Tous nos contrats incluent la maintenance et le support technique. En cas de panne, nous intervenons rapidement et fournissons un équipement de remplacement si nécessaire.",
   },
   {
-    question: "Puis-je changer ou mettre à jour mon matériel en cours de contrat ?",
+    id: 4,
+    question: "Puis-je acheter l'équipement en fin de contrat ?",
     answer:
-      "Oui, vous pouvez upgrader votre équipement en fonction de vos besoins. l'upgarde se fait sans frais additionnels.",
+      "Oui, vous avez plusieurs options en fin de contrat : renouvellement, prolongation, retour de l'équipement, ou achat à la valeur résiduelle.",
   },
   {
-    question: "Le support technique est-il inclus ?",
+    id: 5,
+    question: "Comment fonctionne la livraison et l'installation ?",
     answer:
-      "Oui, notre support technique est inclus. En cas de problème, nous assurons assistance et maintenance. Votre matériel est également couvert contre les dommages, pertes ou vols. En cas d'incident, une franchise unique de 600 Dhs s'applique pour la réparation ou le remplacement.",
-  },
-  {
-    question: "Quelle est la durée du contrat de location et que se passe-t-il en cas de résiliation anticipée ?",
-    answer:
-      "Nos contrats standards sont d'une durée de 24 mois. Si vous souhaitez résilier avant la fin de votre engagement, vous devrez payer 50 % du montant dû sur la période restante.",
-  },
-  {
-    question: "Que se passe-t-il en cas de panne d'un équipement?",
-    answer:
-      "En cas de panne, notre équipe technique intervient rapidement pour diagnostiquer le problème. Si l'équipement ne peut pas être réparé, nous le remplaçons par un équipement équivalent ou supérieur sans frais supplémentaires (dans le cadre de nos conditions de garantie standard).",
-  },
-  {
-    question: "Puis-je ajouter des équipements en cours de contrat?",
-    answer:
-      "Absolument! Vous pouvez ajouter des équipements à tout moment. Les nouveaux équipements seront intégrés à votre contrat existant ou feront l'objet d'un nouveau contrat, selon ce qui est le plus avantageux pour vous.",
+      "Nous nous occupons de la livraison, de l'installation et de la configuration de vos équipements. Notre équipe technique assure également la formation de vos utilisateurs.",
   },
 ]
 
 export default function FAQSection() {
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
+
+  // Ensure we always have an array to work with
+  const faqsList = Array.isArray(faqs) ? faqs : []
+
+  if (faqsList.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">Questions fréquentes</h3>
+        <p className="text-gray-600">FAQ en cours de chargement...</p>
+      </div>
+    )
+  }
+
+  const toggleFaq = (id: number) => {
+    setOpenFaq(openFaq === id ? null : id)
+  }
+
   return (
-    <div className="w-full max-w-3xl mx-auto">
-      <h2 className="text-3xl font-bold text-center mb-8">Questions fréquentes</h2>
-      <Accordion type="single" collapsible className="w-full">
-        {faqItems.map((item, index) => (
-          <AccordionItem key={index} value={`item-${index}`}>
-            <AccordionTrigger className="text-left font-medium">{item.question}</AccordionTrigger>
-            <AccordionContent className="text-gray-600">{item.answer}</AccordionContent>
-          </AccordionItem>
+    <div className="mt-16">
+      <div className="text-center mb-12">
+        <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Questions fréquentes</h3>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Trouvez rapidement les réponses aux questions les plus courantes sur nos services de location d'équipement IT.
+        </p>
+      </div>
+
+      <div className="max-w-3xl mx-auto space-y-4">
+        {faqsList.map((faq) => (
+          <div key={faq.id} className="bg-white rounded-lg shadow-sm border border-gray-200">
+            <button
+              onClick={() => toggleFaq(faq.id)}
+              className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors duration-200"
+            >
+              <span className="font-medium text-gray-800">{faq.question}</span>
+              {openFaq === faq.id ? (
+                <ChevronUp className="h-5 w-5 text-gray-500" />
+              ) : (
+                <ChevronDown className="h-5 w-5 text-gray-500" />
+              )}
+            </button>
+            {openFaq === faq.id && (
+              <div className="px-6 pb-4">
+                <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
+              </div>
+            )}
+          </div>
         ))}
-      </Accordion>
+      </div>
     </div>
   )
 }
