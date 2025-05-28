@@ -86,6 +86,9 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      backgroundImage: {
+        "gradient-ekwip": "linear-gradient(135deg, #1f3b57 0%, #334e68 100%)",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

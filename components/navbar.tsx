@@ -110,7 +110,7 @@ export default function Navbar() {
         {/* Desktop menu */}
         <nav className="hidden lg:flex items-center gap-8">
           <Link href="/comment-ca-marche" className="text-gray-700 hover:text-ekwip font-medium transition-colors">
-            {t("nav.how_it_works")}?
+            {t("nav.how_it_works")}
           </Link>
           <a href="https://ekwip.ma/catalogue" className="text-gray-700 hover:text-ekwip font-medium transition-colors">
             {t("nav.catalog")}
