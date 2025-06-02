@@ -35,7 +35,7 @@ export default function Home() {
           <div className="relative">
             <div className="bg-white rounded-3xl overflow-hidden shadow-xl transform transition-all duration-500 hover:rotate-1 hover:shadow-2xl">
               <Image
-                src="/images/hero-office-equipment.png"
+                src="/placeholder.svg?height=600&width=600"
                 alt="Équipement informatique professionnel pour entreprises"
                 width={600}
                 height={600}
