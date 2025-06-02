@@ -35,8 +35,8 @@ export default function Home() {
           <div className="relative">
             <div className="bg-white rounded-3xl overflow-hidden shadow-xl transform transition-all duration-500 hover:rotate-1 hover:shadow-2xl">
               <Image
-                src="/images/macbook-pro.png"
-                alt="Équipement informatique professionnel"
+                src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/Hero%20Office.png"
+                alt="Équipement informatique professionnel pour entreprises"
                 width={600}
                 height={600}
                 className="w-full h-auto object-cover"
