@@ -1,10 +1,11 @@
 import Image from "next/image"
 import { cn } from "@/lib/utils"
+import type { ReactNode } from "react"
 
 interface FeatureCardProps {
   title: string
   description: string
-  icon: string
+  icon: string | ReactNode
   className?: string
   iconBgColor?: string
   textColor?: string
@@ -30,7 +31,11 @@ export default function FeatureCard({
       )}
     >
       <div className={cn("icon-container rounded-full p-4 mb-6", iconBgColor)}>
-        <Image src={icon || "/placeholder.svg"} alt={title} width={60} height={60} className="w-15 h-15" />
+        {typeof icon === "string" ? (
+          <Image src={icon || "/placeholder.svg"} alt={title} width={60} height={60} className="w-15 h-15" />
+        ) : (
+          icon
+        )}
       </div>
       <h3 className="text-xl font-bold mb-4">{title}</h3>
       <p className="text-sm md:text-base">{description}</p>

@@ -7,7 +7,7 @@ import ProductTabs from "@/components/product-tabs"
 import ClientLogoSlider from "@/components/client-logo-slider"
 import TestimonialsSection from "@/components/testimonials-section"
 import FAQSection from "@/components/faq-section"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Banknote, Server, RefreshCw, HeadphonesIcon } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 export default function Home() {
@@ -34,14 +34,18 @@ export default function Home() {
           </div>
           <div className="relative">
             <div className="bg-white rounded-3xl overflow-hidden shadow-xl transform transition-all duration-500 hover:rotate-1 hover:shadow-2xl">
-              <Image
-                src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/Hero%20Office.png"
-                alt="Équipement informatique professionnel pour entreprises"
-                width={600}
-                height={600}
-                className="w-full h-auto object-cover"
-                priority
-              />
+              <div className="relative">
+                <Image
+                  src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/Hero%20office"
+                  alt="Équipement informatique professionnel pour entreprises"
+                  width={600}
+                  height={600}
+                  className="w-full h-auto object-cover brightness-105 contrast-105"
+                  priority
+                />
+                {/* Overlay with brand color */}
+                <div className="absolute inset-0 bg-ekwip opacity-10"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -54,7 +58,7 @@ export default function Home() {
             <FeatureCard
               title={t("home.features.card1.title")}
               description={t("home.features.card1.description")}
-              icon="/images/icon-cash.png"
+              icon={<Banknote className="w-10 h-10 text-ekwip" />}
               iconBgColor="bg-blue-100"
               className="shadow-md"
             />
@@ -62,7 +66,7 @@ export default function Home() {
             <FeatureCard
               title={t("home.features.card2.title")}
               description={t("home.features.card2.description")}
-              icon="/images/icon-fleet.png"
+              icon={<Server className="w-10 h-10 text-ekwip" />}
               iconBgColor="bg-indigo-100"
               className="shadow-md"
             />
@@ -70,7 +74,7 @@ export default function Home() {
             <FeatureCard
               title={t("home.features.card3.title")}
               description={t("home.features.card3.description")}
-              icon="/images/icon-upgrade.png"
+              icon={<RefreshCw className="w-10 h-10 text-white" />}
               iconBgColor="bg-white/20"
               bgColor="bg-ekwip"
               textColor="text-white"
@@ -80,7 +84,7 @@ export default function Home() {
             <FeatureCard
               title={t("home.features.card4.title")}
               description={t("home.features.card4.description")}
-              icon="/images/icon-support.png"
+              icon={<HeadphonesIcon className="w-10 h-10 text-ekwip" />}
               iconBgColor="bg-indigo-100"
               className="shadow-md"
             />
