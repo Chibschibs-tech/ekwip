@@ -223,17 +223,17 @@ export default function Home() {
                 </li>
               </ul>
               <Button variant="gradient" size="lg">
-                Demander un devis
+                Offre sur mesure
               </Button>
             </div>
             <div className="relative">
               <div className="bg-white rounded-3xl overflow-hidden shadow-xl">
                 <Image
-                  src="/images/dell-xps.png"
-                  alt="Solutions entreprise"
+                  src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/collaborators.jpg"
+                  alt="Équipe de collaborateurs travaillant ensemble"
                   width={500}
                   height={500}
-                  className="w-full h-auto"
+                  className="w-full h-auto object-cover"
                 />
               </div>
             </div>
