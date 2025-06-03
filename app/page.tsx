@@ -24,12 +24,16 @@ export default function Home() {
             </h1>
             <p className="mt-6 text-lg text-gray-600 max-w-lg">{t("home.hero.description")}</p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Button variant="gradient" size="xl" className="shadow-lg">
-                {t("home.hero.button1")}
-              </Button>
-              <Button variant="outline" size="xl">
-                {t("home.hero.button2")}
-              </Button>
+              <Link href="/catalogue">
+                <Button variant="gradient" size="xl" className="shadow-lg">
+                  Découvrir nos offres
+                </Button>
+              </Link>
+              <Link href="/comment-ca-marche">
+                <Button variant="outline" size="xl">
+                  Comment ça marche
+                </Button>
+              </Link>
             </div>
           </div>
           <div className="relative">
@@ -105,11 +109,11 @@ export default function Home() {
           </div>
 
           <div className="mt-16 text-center">
-            <a href="https://ekwip.ma/catalogue">
+            <Link href="/catalogue">
               <Button variant="gradient" size="lg" className="shadow-lg px-8 py-6 text-lg">
                 {t("home.products.button")} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
