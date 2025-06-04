@@ -35,7 +35,14 @@ const fallbackCategories = [
     count: 8,
     parent: 0,
   },
-  // Add more fallback categories as needed
+  {
+    id: 3,
+    name: "Smartphones",
+    slug: "smartphones",
+    description: "Smartphones professionnels pour vos équipes mobiles",
+    count: 6,
+    parent: 0,
+  },
 ]
 
 export default async function Catalogue() {

@@ -196,8 +196,8 @@ export async function fetchAllCategories(): Promise<Category[]> {
 
 export async function fetchRentalCategories(): Promise<Category[]> {
   await new Promise((resolve) => setTimeout(resolve, 100))
-  // Return categories that could be for rental
-  return mockCategories.filter((cat) => cat.name.includes("Ordinateurs"))
+  // Return categories that could be for rental - include smartphones
+  return mockCategories.filter((cat) => cat.name.includes("Ordinateurs") || cat.name.includes("Smartphones"))
 }
 
 export async function fetchProductsByCategory(categoryId: number): Promise<Product[]> {
