@@ -2,8 +2,24 @@ import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { Laptop, Monitor, Smartphone, Server, Headphones, Printer, TabletSmartphone, HardDrive } from "lucide-react"
+import { Input } from "@/components/ui/input"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Badge } from "@/components/ui/badge"
+import {
+  Laptop,
+  Monitor,
+  Smartphone,
+  Server,
+  Headphones,
+  Printer,
+  TabletSmartphone,
+  HardDrive,
+  Search,
+  Filter,
+} from "lucide-react"
 import { fetchRentalCategories, type WordPressCategory } from "@/lib/wordpress-api"
+import { storeProducts } from "@/lib/store-products"
+import CatalogProductCard from "@/components/catalog-product-card"
 
 // Map of category slugs to icons
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -61,6 +77,10 @@ export default async function Catalogue() {
     categories = fallbackCategories
   }
 
+  // Get all available categories from products for filtering
+  const availableCategories = Array.from(new Set(storeProducts.map((product) => product.category)))
+  const availableBrands = Array.from(new Set(storeProducts.map((product) => product.brand)))
+
   return (
     <div>
       {/* Hero Section */}
@@ -77,7 +97,13 @@ export default async function Catalogue() {
       {/* Categories Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Nos catégories principales</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Explorez nos équipements par catégorie pour trouver rapidement ce dont vous avez besoin.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             {categories.map((category) => (
               <Link href={`/catalogue/${category.slug}`} key={category.id}>
                 <Card className="h-full border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all">
@@ -98,8 +124,91 @@ export default async function Catalogue() {
         </div>
       </section>
 
-      {/* Featured Products Section */}
+      {/* All Products Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Tous nos équipements</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
+              Parcourez l'intégralité de notre catalogue d'équipements disponibles à la location.
+            </p>
+          </div>
+
+          {/* Filters Section */}
+          <div className="mb-8 bg-white p-6 rounded-lg shadow-sm border border-slate-200">
+            <div className="flex flex-col lg:flex-row gap-4 items-center">
+              <div className="flex items-center gap-2 text-slate-700 font-medium">
+                <Filter className="h-5 w-5" />
+                <span>Filtres :</span>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-4 flex-1">
+                {/* Search */}
+                <div className="relative flex-1 max-w-md">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                  <Input placeholder="Rechercher un équipement..." className="pl-10" />
+                </div>
+
+                {/* Category Filter */}
+                <Select>
+                  <SelectTrigger className="w-full sm:w-48">
+                    <SelectValue placeholder="Toutes catégories" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Toutes catégories</SelectItem>
+                    {availableCategories.map((category) => (
+                      <SelectItem key={category} value={category.toLowerCase()}>
+                        {category}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                {/* Brand Filter */}
+                <Select>
+                  <SelectTrigger className="w-full sm:w-48">
+                    <SelectValue placeholder="Toutes marques" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Toutes marques</SelectItem>
+                    {availableBrands.map((brand) => (
+                      <SelectItem key={brand} value={brand.toLowerCase()}>
+                        {brand}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex gap-2">
+                <Badge variant="secondary" className="cursor-pointer hover:bg-slate-200">
+                  En stock uniquement
+                </Badge>
+                <Badge variant="secondary" className="cursor-pointer hover:bg-slate-200">
+                  Nouveautés
+                </Badge>
+              </div>
+            </div>
+          </div>
+
+          {/* Products Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {storeProducts.map((product) => (
+              <CatalogProductCard key={product.id} product={product} />
+            ))}
+          </div>
+
+          {/* Load More Button */}
+          <div className="mt-12 text-center">
+            <Button variant="outline" size="lg">
+              Charger plus d'équipements
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Products Section */}
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Produits populaires</h2>
