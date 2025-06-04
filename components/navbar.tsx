@@ -80,6 +80,7 @@ export default function Navbar() {
                   >
                     {t("nav.catalog")}
                   </a>
+                  {/* Temporarily commented out Store link
                   <Link
                     href="/store"
                     className="px-6 py-4 text-lg font-medium text-gray-800 hover:text-ekwip hover:bg-ekwip-50 transition-colors"
@@ -87,6 +88,7 @@ export default function Navbar() {
                   >
                     {t("nav.store")}
                   </Link>
+                  */}
                   <Link
                     href="/contact"
                     className="px-6 py-4 text-lg font-medium text-gray-800 hover:text-ekwip hover:bg-ekwip-50 transition-colors"
@@ -115,9 +117,11 @@ export default function Navbar() {
           <a href="https://ekwip.ma/catalogue" className="text-gray-700 hover:text-ekwip font-medium transition-colors">
             {t("nav.catalog")}
           </a>
+          {/* Temporarily commented out Store link
           <Link href="/store" className="text-gray-700 hover:text-ekwip font-medium transition-colors">
             {t("nav.store")}
           </Link>
+          */}
           <Link href="/blog" className="text-gray-700 hover:text-ekwip font-medium transition-colors">
             Blog
           </Link>
