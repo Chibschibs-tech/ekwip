@@ -5,33 +5,23 @@ import Image from "next/image"
 const clientLogos = [
   {
     id: 1,
-    name: "Client 1",
-    logo: "/images/client-logo-1.png",
+    name: "Cambiste",
+    logo: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/partners/cambiste-logo-dark.png",
   },
   {
     id: 2,
-    name: "Client 2",
-    logo: "/images/client-logo-2.png",
+    name: "YouPack",
+    logo: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/partners/logo-youpack-site-2048x444.png",
   },
   {
     id: 3,
-    name: "Client 3",
-    logo: "/images/client-logo-3.png",
+    name: "Ocura Consulting",
+    logo: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/partners/ocura22consuting_cover_e2147483647vbetatxSLpw.png",
   },
   {
     id: 4,
-    name: "Client 4",
-    logo: "/images/client-logo-4.png",
-  },
-  {
-    id: 5,
-    name: "Client 5",
-    logo: "/images/client-logo-5.png",
-  },
-  {
-    id: 6,
-    name: "Client 6",
-    logo: "/images/client-logo-6.png",
+    name: "Valkima",
+    logo: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/partners/valkima.png",
   },
 ]
 
