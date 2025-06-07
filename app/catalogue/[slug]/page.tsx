@@ -70,43 +70,43 @@ export default async function CategoryPage({ params }: { params: { slug: string 
   return (
     <div>
       {/* Hero Section with Wide Banner */}
-      <section className="relative bg-gradient-to-r from-slate-900 to-slate-800 text-white">
+      <section className="relative bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="py-12 md:py-16 lg:py-20 flex flex-col md:flex-row items-center">
             <div className="w-full md:w-3/5 pr-0 md:pr-8 mb-8 md:mb-0">
               {/* Breadcrumbs */}
               <nav className="mb-4">
-                <ol className="flex items-center space-x-2 text-sm text-slate-300">
+                <ol className="flex items-center space-x-2 text-sm text-gray-800">
                   <li>
-                    <Link href="/" className="hover:text-white">
+                    <Link href="/" className="hover:text-gray-900">
                       Accueil
                     </Link>
                   </li>
                   <li>
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4 text-gray-500" />
                   </li>
                   <li>
-                    <Link href="/catalogue" className="hover:text-white">
+                    <Link href="/catalogue" className="hover:text-gray-900">
                       Catalogue
                     </Link>
                   </li>
                   <li>
-                    <ChevronRight className="h-4 w-4" />
+                    <ChevronRight className="h-4 w-4 text-gray-500" />
                   </li>
-                  <li className="font-medium text-white">{category.name}</li>
+                  <li className="font-medium text-gray-800">{category.name}</li>
                 </ol>
               </nav>
 
               {/* SEO Title */}
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">{seoTitle}</h1>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-gray-800">{seoTitle}</h1>
 
               {/* SEO Description */}
-              <p className="text-lg text-slate-300 mb-8 max-w-2xl">{seoDescription}</p>
+              <p className="text-lg text-gray-600 mb-8 max-w-2xl">{seoDescription}</p>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button className="bg-ekwip hover:bg-ekwip-700 text-white">Démarrer</Button>
-                <Button variant="outline" className="text-white border-white hover:bg-white/10">
+                <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
                   Obtenir un devis
                 </Button>
               </div>
@@ -126,18 +126,6 @@ export default async function CategoryPage({ params }: { params: { slug: string 
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Decorative bottom wave */}
-        <div className="absolute bottom-0 left-0 right-0 h-8 md:h-12 overflow-hidden">
-          <svg
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            className="absolute bottom-0 left-0 w-full h-full text-white"
-            fill="currentColor"
-          >
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
-          </svg>
         </div>
       </section>
 
