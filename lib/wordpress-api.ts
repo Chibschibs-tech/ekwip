@@ -59,15 +59,24 @@ const mockCategories: Category[] = [
   {
     id: 1,
     name: "Ordinateurs portables",
-    slug: "laptops",
+    slug: "ordinateurs-portables",
     description: "Ordinateurs portables professionnels",
     count: 15,
     parent: 0,
   },
-  { id: 2, name: "Ordinateurs de bureau", slug: "desktops", description: "Ordinateurs de bureau", count: 8, parent: 0 },
+  {
+    id: 2,
+    name: "Ordinateurs de bureau",
+    slug: "ordinateurs-de-bureau",
+    description: "Ordinateurs de bureau",
+    count: 8,
+    parent: 0,
+  },
   { id: 3, name: "Smartphones", slug: "smartphones", description: "Téléphones intelligents", count: 12, parent: 0 },
-  { id: 4, name: "Tablettes", slug: "tablets", description: "Tablettes tactiles", count: 6, parent: 0 },
-  { id: 5, name: "Accessoires", slug: "accessories", description: "Accessoires informatiques", count: 20, parent: 0 },
+  { id: 4, name: "Tablettes", slug: "tablettes", description: "Tablettes tactiles", count: 6, parent: 0 },
+  { id: 5, name: "Accessoires", slug: "accessoires", description: "Accessoires informatiques", count: 20, parent: 0 },
+  { id: 6, name: "Imprimantes", slug: "imprimantes", description: "Solutions d'impression", count: 7, parent: 0 },
+  { id: 7, name: "Mobilier", slug: "mobilier", description: "Mobilier de bureau", count: 9, parent: 0 },
 ]
 
 // Mock data for products
@@ -85,7 +94,7 @@ const mockProducts: Product[] = [
     stock_quantity: 5,
     stock_status: "instock",
     images: [{ id: 1, src: "/images/macbook-pro.png", alt: 'MacBook Pro 14"' }],
-    categories: [{ id: 1, name: "Ordinateurs portables", slug: "laptops" }],
+    categories: [{ id: 1, name: "Ordinateurs portables", slug: "ordinateurs-portables" }],
     attributes: [
       { id: 1, name: "Processeur", options: ["Apple M3 Pro"] },
       { id: 2, name: "RAM", options: ["16 GB"] },
@@ -113,7 +122,7 @@ const mockProducts: Product[] = [
     stock_quantity: 8,
     stock_status: "instock",
     images: [{ id: 2, src: "/images/dell-xps.png", alt: "Dell XPS 13" }],
-    categories: [{ id: 1, name: "Ordinateurs portables", slug: "laptops" }],
+    categories: [{ id: 1, name: "Ordinateurs portables", slug: "ordinateurs-portables" }],
     attributes: [
       { id: 1, name: "Processeur", options: ["Intel Core i7"] },
       { id: 2, name: "RAM", options: ["16 GB"] },
@@ -141,7 +150,7 @@ const mockProducts: Product[] = [
     stock_quantity: 3,
     stock_status: "instock",
     images: [{ id: 3, src: "/images/imac.png", alt: 'iMac 24"' }],
-    categories: [{ id: 2, name: "Ordinateurs de bureau", slug: "desktops" }],
+    categories: [{ id: 2, name: "Ordinateurs de bureau", slug: "ordinateurs-de-bureau" }],
     attributes: [
       { id: 1, name: "Processeur", options: ["Apple M3"] },
       { id: 2, name: "RAM", options: ["8 GB"] },
@@ -184,6 +193,114 @@ const mockProducts: Product[] = [
     ],
     related_ids: [1, 3],
   },
+  {
+    id: 5,
+    name: "iPad Pro 12.9",
+    slug: "ipad-pro-12-9",
+    description:
+      "<p>L'iPad Pro 12.9 pouces avec puce M2 offre des performances exceptionnelles pour les professionnels créatifs.</p>",
+    short_description: "iPad Pro 12.9 avec puce M2 - Performance professionnelle",
+    price: "18000",
+    regular_price: "18000",
+    sale_price: "",
+    stock_quantity: 7,
+    stock_status: "instock",
+    images: [{ id: 5, src: "/placeholder.svg?height=300&width=300", alt: "iPad Pro 12.9" }],
+    categories: [{ id: 4, name: "Tablettes", slug: "tablettes" }],
+    attributes: [
+      { id: 1, name: "Processeur", options: ["Apple M2"] },
+      { id: 2, name: "Stockage", options: ["256 GB"] },
+      { id: 3, name: "Écran", options: ["12.9 pouces"] },
+    ],
+    meta_data: [],
+    featured: true,
+    date_created: "2024-02-15T10:00:00Z",
+    tags: [
+      { id: 1, name: "Apple", slug: "apple" },
+      { id: 2, name: "Professionnel", slug: "professional" },
+    ],
+    related_ids: [6],
+  },
+  {
+    id: 6,
+    name: "Magic Keyboard",
+    slug: "magic-keyboard",
+    description: "<p>Le Magic Keyboard pour iPad Pro offre une expérience de frappe exceptionnelle.</p>",
+    short_description: "Magic Keyboard pour iPad Pro - Clavier et trackpad intégrés",
+    price: "5000",
+    regular_price: "5500",
+    sale_price: "5000",
+    stock_quantity: 15,
+    stock_status: "instock",
+    images: [{ id: 6, src: "/placeholder.svg?height=300&width=300", alt: "Magic Keyboard" }],
+    categories: [{ id: 5, name: "Accessoires", slug: "accessoires" }],
+    attributes: [
+      { id: 1, name: "Compatibilité", options: ["iPad Pro 11 pouces", "iPad Pro 12.9 pouces"] },
+      { id: 2, name: "Connectivité", options: ["Smart Connector"] },
+    ],
+    meta_data: [],
+    featured: false,
+    date_created: "2024-02-10T10:00:00Z",
+    tags: [
+      { id: 1, name: "Apple", slug: "apple" },
+      { id: 7, name: "Clavier", slug: "keyboard" },
+    ],
+    related_ids: [5],
+  },
+  {
+    id: 7,
+    name: "HP LaserJet Pro",
+    slug: "hp-laserjet-pro",
+    description: "<p>L'imprimante HP LaserJet Pro offre des impressions rapides et de haute qualité.</p>",
+    short_description: "HP LaserJet Pro - Imprimante laser monochrome",
+    price: "8000",
+    regular_price: "8000",
+    sale_price: "",
+    stock_quantity: 10,
+    stock_status: "instock",
+    images: [{ id: 7, src: "/placeholder.svg?height=300&width=300", alt: "HP LaserJet Pro" }],
+    categories: [{ id: 6, name: "Imprimantes", slug: "imprimantes" }],
+    attributes: [
+      { id: 1, name: "Type", options: ["Laser"] },
+      { id: 2, name: "Connectivité", options: ["USB", "Wi-Fi", "Ethernet"] },
+      { id: 3, name: "Vitesse d'impression", options: ["30 ppm"] },
+    ],
+    meta_data: [],
+    featured: true,
+    date_created: "2024-01-25T10:00:00Z",
+    tags: [
+      { id: 8, name: "HP", slug: "hp" },
+      { id: 9, name: "Imprimante", slug: "printer" },
+    ],
+    related_ids: [],
+  },
+  {
+    id: 8,
+    name: "Bureau Réglable en Hauteur",
+    slug: "bureau-reglable-hauteur",
+    description: "<p>Bureau réglable en hauteur électriquement pour alterner entre position assise et debout.</p>",
+    short_description: "Bureau réglable en hauteur - Pour un travail ergonomique",
+    price: "12000",
+    regular_price: "13000",
+    sale_price: "12000",
+    stock_quantity: 5,
+    stock_status: "instock",
+    images: [{ id: 8, src: "/placeholder.svg?height=300&width=300", alt: "Bureau Réglable en Hauteur" }],
+    categories: [{ id: 7, name: "Mobilier", slug: "mobilier" }],
+    attributes: [
+      { id: 1, name: "Dimensions", options: ["160x80 cm"] },
+      { id: 2, name: "Réglage", options: ["Électrique"] },
+      { id: 3, name: "Matériau", options: ["Bois et métal"] },
+    ],
+    meta_data: [],
+    featured: false,
+    date_created: "2024-03-01T10:00:00Z",
+    tags: [
+      { id: 10, name: "Ergonomie", slug: "ergonomics" },
+      { id: 11, name: "Bureau", slug: "desk" },
+    ],
+    related_ids: [],
+  },
 ]
 
 // Replace all WordPress API functions with mock implementations
@@ -196,8 +313,8 @@ export async function fetchAllCategories(): Promise<Category[]> {
 
 export async function fetchRentalCategories(): Promise<Category[]> {
   await new Promise((resolve) => setTimeout(resolve, 100))
-  // Return categories that could be for rental - include smartphones
-  return mockCategories.filter((cat) => cat.name.includes("Ordinateurs") || cat.name.includes("Smartphones"))
+  // Return all categories for rental
+  return mockCategories
 }
 
 export async function fetchProductsByCategory(categoryId: number): Promise<Product[]> {

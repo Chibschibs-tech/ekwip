@@ -16,6 +16,7 @@ import {
   HardDrive,
   Search,
   Filter,
+  Armchair,
 } from "lucide-react"
 import { fetchRentalCategories, type WordPressCategory } from "@/lib/wordpress-api"
 import { storeProducts } from "@/lib/store-products"
@@ -26,10 +27,11 @@ const categoryIcons: Record<string, React.ReactNode> = {
   "ordinateurs-portables": <Laptop className="h-10 w-10" />,
   "ordinateurs-de-bureau": <Monitor className="h-10 w-10" />,
   smartphones: <Smartphone className="h-10 w-10" />,
-  serveurs: <Server className="h-10 w-10" />,
+  tablettes: <TabletSmartphone className="h-10 w-10" />,
   accessoires: <Headphones className="h-10 w-10" />,
   imprimantes: <Printer className="h-10 w-10" />,
-  tablettes: <TabletSmartphone className="h-10 w-10" />,
+  mobilier: <Armchair className="h-10 w-10" />,
+  serveurs: <Server className="h-10 w-10" />,
   stockage: <HardDrive className="h-10 w-10" />,
 }
 
@@ -57,6 +59,38 @@ const fallbackCategories = [
     slug: "smartphones",
     description: "Smartphones professionnels pour vos équipes mobiles",
     count: 6,
+    parent: 0,
+  },
+  {
+    id: 4,
+    name: "Tablettes",
+    slug: "tablettes",
+    description: "Tablettes tactiles pour une productivité en déplacement",
+    count: 5,
+    parent: 0,
+  },
+  {
+    id: 5,
+    name: "Accessoires",
+    slug: "accessoires",
+    description: "Accessoires et périphériques pour compléter votre équipement",
+    count: 15,
+    parent: 0,
+  },
+  {
+    id: 6,
+    name: "Imprimantes",
+    slug: "imprimantes",
+    description: "Solutions d'impression pour tous vos besoins professionnels",
+    count: 7,
+    parent: 0,
+  },
+  {
+    id: 7,
+    name: "Mobilier",
+    slug: "mobilier",
+    description: "Mobilier de bureau ergonomique et fonctionnel",
+    count: 9,
     parent: 0,
   },
 ]
@@ -103,7 +137,7 @@ export default async function Catalogue() {
               Explorez nos équipements par catégorie pour trouver rapidement ce dont vous avez besoin.
             </p>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {categories.map((category) => (
               <Link href={`/catalogue/${category.slug}`} key={category.id}>
                 <Card className="h-full border border-slate-200 hover:border-slate-300 hover:shadow-md transition-all">
