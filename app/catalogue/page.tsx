@@ -39,7 +39,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
 // Map of category slugs to product images
 const categoryImages: Record<string, string> = {
-  "ordinateurs-portables": "/images/macbook-pro.png",
+  "ordinateurs-portables": "/images/laptop-hero.png",
   "ordinateurs-de-bureau": "/images/imac.png",
   smartphones: "/images/iphone.png",
   tablettes: "/placeholder.svg?height=60&width=60",
@@ -155,9 +155,13 @@ export default async function Catalogue() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category, index) => (
               <Link href={`/catalogue/${category.slug}`} key={category.id} className="group">
-                <div className="relative overflow-hidden rounded-2xl border-2 border-blue-200 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-blue-100 hover:border-blue-300">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-blue-50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-blue-100 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-blue-100 hover:border-blue-300">
+                  {/* Decorative Elements */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-transparent rounded-full -mr-16 -mt-16 opacity-70"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-100 to-transparent rounded-full -ml-12 -mb-12 opacity-70"></div>
+
                   {/* Product Image in Circle */}
-                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-blue-100 border-2 border-blue-200 overflow-hidden flex items-center justify-center shadow-md">
+                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-white border-2 border-blue-200 overflow-hidden flex items-center justify-center shadow-md z-10">
                     {categoryImages[category.slug] ? (
                       <Image
                         src={categoryImages[category.slug] || "/placeholder.svg"}
@@ -172,28 +176,28 @@ export default async function Catalogue() {
                   </div>
 
                   {/* Icon Container */}
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-100 text-blue-700 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-600 text-white mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md relative z-10">
                     {categoryIcons[category.slug] || <Laptop className="h-8 w-8" />}
                   </div>
 
                   {/* Category Info */}
-                  <div className="space-y-2">
-                    <h3 className="text-xl font-semibold text-slate-800 group-hover:text-ekwip transition-colors">
+                  <div className="space-y-2 relative z-10">
+                    <h3 className="text-xl font-bold text-slate-800 group-hover:text-ekwip transition-colors">
                       {category.name}
                     </h3>
                     <p className="text-sm text-slate-600 line-clamp-2">{category.description}</p>
 
                     {/* Product Count */}
-                    <div className="flex items-center justify-between pt-2">
-                      <span className="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-1 rounded-full">
+                    <div className="flex items-center justify-between pt-3">
+                      <span className="text-xs font-semibold text-blue-700 bg-blue-100 px-3 py-1 rounded-full shadow-sm">
                         {category.count} {category.count > 1 ? "produits" : "produit"}
                       </span>
-                      <ArrowRight className="h-4 w-4 text-blue-500 group-hover:text-ekwip group-hover:translate-x-1 transition-all" />
+                      <div className="flex items-center text-blue-600 font-medium text-sm">
+                        Découvrir
+                        <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-all" />
+                      </div>
                     </div>
                   </div>
-
-                  {/* Hover Effect Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-r from-ekwip/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
                 </div>
               </Link>
             ))}
@@ -298,7 +302,13 @@ export default async function Catalogue() {
             <Card className="border border-slate-200 hover:shadow-lg transition-shadow">
               <CardContent className="p-0">
                 <div className="bg-slate-100 p-8 flex items-center justify-center">
-                  <Laptop className="h-20 w-20 text-slate-600" />
+                  <Image
+                    src="/images/laptop-hero.png"
+                    alt="MacBook Pro"
+                    width={200}
+                    height={150}
+                    className="object-contain"
+                  />
                 </div>
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
