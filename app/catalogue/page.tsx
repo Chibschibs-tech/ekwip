@@ -22,6 +22,7 @@ import {
 import { fetchRentalCategories, type WordPressCategory } from "@/lib/wordpress-api"
 import { storeProducts } from "@/lib/store-products"
 import CatalogProductCard from "@/components/catalog-product-card"
+import Image from "next/image"
 
 // Map of category slugs to icons
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -36,15 +37,15 @@ const categoryIcons: Record<string, React.ReactNode> = {
   stockage: <HardDrive className="h-8 w-8" />,
 }
 
-// Category colors for modern design
-const categoryColors: Record<string, { bg: string; text: string; hover: string }> = {
-  "ordinateurs-portables": { bg: "bg-blue-50", text: "text-blue-700", hover: "hover:bg-blue-100" },
-  "ordinateurs-de-bureau": { bg: "bg-indigo-50", text: "text-indigo-700", hover: "hover:bg-indigo-100" },
-  smartphones: { bg: "bg-purple-50", text: "text-purple-700", hover: "hover:bg-purple-100" },
-  tablettes: { bg: "bg-pink-50", text: "text-pink-700", hover: "hover:bg-pink-100" },
-  accessoires: { bg: "bg-green-50", text: "text-green-700", hover: "hover:bg-green-100" },
-  imprimantes: { bg: "bg-orange-50", text: "text-orange-700", hover: "hover:bg-orange-100" },
-  mobilier: { bg: "bg-amber-50", text: "text-amber-700", hover: "hover:bg-amber-100" },
+// Map of category slugs to product images
+const categoryImages: Record<string, string> = {
+  "ordinateurs-portables": "/images/macbook-pro.png",
+  "ordinateurs-de-bureau": "/images/imac.png",
+  smartphones: "/images/iphone.png",
+  tablettes: "/placeholder.svg?height=60&width=60",
+  accessoires: "/placeholder.svg?height=60&width=60",
+  imprimantes: "/placeholder.svg?height=60&width=60",
+  mobilier: "/placeholder.svg?height=60&width=60",
 }
 
 // Default fallback categories in case the API fails
@@ -150,54 +151,52 @@ export default async function Catalogue() {
             </p>
           </div>
 
-          {/* Categories Grid - Modern Design */}
+          {/* Categories Grid - Uniform Design */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {categories.map((category, index) => {
-              const colors = categoryColors[category.slug] || {
-                bg: "bg-slate-50",
-                text: "text-slate-700",
-                hover: "hover:bg-slate-100",
-              }
-
-              return (
-                <Link href={`/catalogue/${category.slug}`} key={category.id} className="group">
-                  <div
-                    className={`relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 ${colors.hover}`}
-                  >
-                    {/* Background Pattern */}
-                    <div className="absolute top-0 right-0 w-20 h-20 opacity-10">
-                      <div className={`w-full h-full rounded-full ${colors.bg}`}></div>
-                    </div>
-
-                    {/* Icon Container */}
-                    <div
-                      className={`inline-flex items-center justify-center w-16 h-16 rounded-xl ${colors.bg} ${colors.text} mb-4 group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      {categoryIcons[category.slug] || <Laptop className="h-8 w-8" />}
-                    </div>
-
-                    {/* Category Info */}
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-slate-800 group-hover:text-ekwip transition-colors">
-                        {category.name}
-                      </h3>
-                      <p className="text-sm text-slate-600 line-clamp-2">{category.description}</p>
-
-                      {/* Product Count */}
-                      <div className="flex items-center justify-between pt-2">
-                        <span className="text-xs text-slate-500 font-medium">
-                          {category.count} {category.count > 1 ? "produits" : "produit"}
-                        </span>
-                        <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-ekwip group-hover:translate-x-1 transition-all" />
-                      </div>
-                    </div>
-
-                    {/* Hover Effect Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-ekwip/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+            {categories.map((category, index) => (
+              <Link href={`/catalogue/${category.slug}`} key={category.id} className="group">
+                <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-blue-100">
+                  {/* Product Image in Circle */}
+                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-blue-50 border-2 border-blue-100 overflow-hidden flex items-center justify-center">
+                    {categoryImages[category.slug] ? (
+                      <Image
+                        src={categoryImages[category.slug] || "/placeholder.svg"}
+                        alt={category.name}
+                        width={40}
+                        height={40}
+                        className="object-contain"
+                      />
+                    ) : (
+                      <div className="w-8 h-8 bg-blue-200 rounded-full"></div>
+                    )}
                   </div>
-                </Link>
-              )
-            })}
+
+                  {/* Icon Container */}
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-50 text-blue-700 mb-4 group-hover:scale-110 transition-transform duration-300">
+                    {categoryIcons[category.slug] || <Laptop className="h-8 w-8" />}
+                  </div>
+
+                  {/* Category Info */}
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-semibold text-slate-800 group-hover:text-ekwip transition-colors">
+                      {category.name}
+                    </h3>
+                    <p className="text-sm text-slate-600 line-clamp-2">{category.description}</p>
+
+                    {/* Product Count */}
+                    <div className="flex items-center justify-between pt-2">
+                      <span className="text-xs text-slate-500 font-medium">
+                        {category.count} {category.count > 1 ? "produits" : "produit"}
+                      </span>
+                      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-ekwip group-hover:translate-x-1 transition-all" />
+                    </div>
+                  </div>
+
+                  {/* Hover Effect Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-ekwip/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl"></div>
+                </div>
+              </Link>
+            ))}
           </div>
 
           {/* Featured Category Highlight */}
