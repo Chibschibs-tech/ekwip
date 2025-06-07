@@ -2,23 +2,105 @@ import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { fetchRentalCategories, fetchProductsByCategory } from "@/lib/wordpress-api"
 import { ChevronRight } from "lucide-react"
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
-  // Fetch all rental categories
-  const categories = await fetchRentalCategories()
+// Mock categories data (no WordPress)
+const mockCategories = [
+  {
+    id: 1,
+    name: "Ordinateurs portables",
+    slug: "ordinateurs-portables",
+    description: "Ordinateurs portables professionnels pour tous vos besoins",
+    count: 10,
+  },
+  {
+    id: 2,
+    name: "Ordinateurs de bureau",
+    slug: "ordinateurs-de-bureau",
+    description: "Stations de travail performantes pour vos équipes",
+    count: 8,
+  },
+  {
+    id: 3,
+    name: "Smartphones",
+    slug: "smartphones",
+    description: "Smartphones professionnels pour vos équipes mobiles",
+    count: 6,
+  },
+  {
+    id: 4,
+    name: "Tablettes",
+    slug: "tablettes",
+    description: "Tablettes tactiles pour une productivité en déplacement",
+    count: 5,
+  },
+  {
+    id: 5,
+    name: "Accessoires",
+    slug: "accessoires",
+    description: "Accessoires et périphériques pour compléter votre équipement",
+    count: 15,
+  },
+  {
+    id: 6,
+    name: "Imprimantes",
+    slug: "imprimantes",
+    description: "Solutions d'impression pour tous vos besoins professionnels",
+    count: 7,
+  },
+  {
+    id: 7,
+    name: "Mobilier",
+    slug: "mobilier",
+    description: "Mobilier de bureau ergonomique et fonctionnel",
+    count: 9,
+  },
+]
 
-  // Find the current category
-  const category = categories.find((cat) => cat.slug === params.slug)
+// Mock products data
+const mockProducts = [
+  {
+    id: 1,
+    name: 'MacBook Pro 14"',
+    slug: "macbook-pro-14",
+    price: "120",
+    short_description: "Processeur M2 Pro, 16 Go RAM, 512 Go SSD",
+    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", alt: 'MacBook Pro 14"' }],
+    category_id: 1,
+  },
+  {
+    id: 2,
+    name: "Dell XPS 13",
+    slug: "dell-xps-13",
+    price: "95",
+    short_description: "Intel i7, 16 Go RAM, 512 Go SSD",
+    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", alt: "Dell XPS 13" }],
+    category_id: 1,
+  },
+  {
+    id: 3,
+    name: "ThinkPad X1 Carbon",
+    slug: "thinkpad-x1-carbon",
+    price: "110",
+    short_description: "Intel i7, 32 Go RAM, 1 To SSD",
+    images: [
+      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", alt: "ThinkPad X1 Carbon" },
+    ],
+    category_id: 1,
+  },
+]
+
+export default async function CategoryPage({ params }: { params: { slug: string } }) {
+  // Find the current category from mock data
+  const category = mockCategories.find((cat) => cat.slug === params.slug)
 
   // If category not found, return 404
   if (!category) {
     notFound()
   }
 
-  // Fetch products for this category
-  const products = await fetchProductsByCategory(category.id)
+  // Get products for this category
+  const products = mockProducts.filter((product) => product.category_id === category.id)
 
   // SEO-optimized titles and descriptions based on category
   const seoTitles: Record<string, string> = {
@@ -54,9 +136,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     seoDescriptions[category.slug] ||
     `Découvrez notre sélection de ${category.name.toLowerCase()} disponibles à la location pour votre entreprise. Solutions flexibles et service inclus.`
 
-  // Category image placeholders (to be replaced with actual images)
+  // Category hero images
   const categoryImages: Record<string, string> = {
-    "ordinateurs-portables": "/images/laptop-hero.png",
+    "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
     "ordinateurs-de-bureau": "/placeholder.svg?height=400&width=400",
     smartphones: "/placeholder.svg?height=400&width=400",
     tablettes: "/placeholder.svg?height=400&width=400",
@@ -170,10 +252,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                   </div>
                   <div className="p-6">
                     <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: product.short_description }}
-                      className="text-slate-600 text-sm mb-4"
-                    />
+                    <p className="text-slate-600 text-sm mb-4">{product.short_description}</p>
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-sm text-slate-500">À partir de</p>

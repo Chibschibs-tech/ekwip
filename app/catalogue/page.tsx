@@ -19,7 +19,6 @@ import {
   Armchair,
   ArrowRight,
 } from "lucide-react"
-import { fetchRentalCategories, type WordPressCategory } from "@/lib/wordpress-api"
 import { storeProducts } from "@/lib/store-products"
 import CatalogProductCard from "@/components/catalog-product-card"
 import Image from "next/image"
@@ -39,7 +38,7 @@ const categoryIcons: Record<string, React.ReactNode> = {
 
 // Map of category slugs to product images
 const categoryImages: Record<string, string> = {
-  "ordinateurs-portables": "/images/laptop-hero.png",
+  "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
   "ordinateurs-de-bureau": "/images/imac.png",
   smartphones: "/images/iphone.png",
   tablettes: "/placeholder.svg?height=60&width=60",
@@ -48,8 +47,8 @@ const categoryImages: Record<string, string> = {
   mobilier: "/placeholder.svg?height=60&width=60",
 }
 
-// Default fallback categories in case the API fails
-const fallbackCategories = [
+// Mock categories (no WordPress)
+const categories = [
   {
     id: 1,
     name: "Ordinateurs portables",
@@ -109,21 +108,6 @@ const fallbackCategories = [
 ]
 
 export default async function Catalogue() {
-  // Fetch categories from WordPress
-  let categories: WordPressCategory[] = []
-
-  try {
-    categories = await fetchRentalCategories()
-
-    // If no categories were found, use fallback
-    if (categories.length === 0) {
-      categories = fallbackCategories
-    }
-  } catch (error) {
-    console.error("Error fetching categories:", error)
-    categories = fallbackCategories
-  }
-
   // Get all available categories from products for filtering
   const availableCategories = Array.from(new Set(storeProducts.map((product) => product.category)))
   const availableBrands = Array.from(new Set(storeProducts.map((product) => product.brand)))
@@ -305,7 +289,7 @@ export default async function Catalogue() {
               <CardContent className="p-0">
                 <div className="bg-slate-100 p-8 flex items-center justify-center">
                   <Image
-                    src="/images/laptop-hero.png"
+                    src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops"
                     alt="MacBook Pro"
                     width={200}
                     height={150}
