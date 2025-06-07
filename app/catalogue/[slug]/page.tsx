@@ -106,7 +106,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button className="bg-ekwip hover:bg-ekwip-700 text-white">Démarrer</Button>
-                <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
+                <Button variant="outline" size="xl" className="border-ekwip text-ekwip hover:bg-ekwip hover:text-white">
                   Obtenir un devis
                 </Button>
               </div>
