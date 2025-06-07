@@ -140,7 +140,7 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
-              <div className="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                 1
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-800">{t("home.howItWorks.step1.title")}</h3>
@@ -148,7 +148,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
-              <div className="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                 2
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-800">{t("home.howItWorks.step2.title")}</h3>
@@ -156,7 +156,7 @@ export default function Home() {
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
-              <div className="h-16 w-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                 3
               </div>
               <h3 className="text-xl font-bold mb-3 text-gray-800">{t("home.howItWorks.step3.title")}</h3>
