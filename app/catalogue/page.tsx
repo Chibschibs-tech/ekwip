@@ -151,17 +151,17 @@ export default async function Catalogue() {
             </p>
           </div>
 
-          {/* Categories Grid - Enhanced Design */}
+          {/* Categories Grid - Ekwip Brand Colors */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category, index) => (
               <Link href={`/catalogue/${category.slug}`} key={category.id} className="group">
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-blue-50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-blue-100 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-blue-100 hover:border-blue-300">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-ekwip-50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-ekwip-200 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-gradient-to-br hover:from-ekwip hover:to-blue-600 hover:border-ekwip">
                   {/* Decorative Elements */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-blue-100 to-transparent rounded-full -mr-16 -mt-16 opacity-70"></div>
-                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-blue-100 to-transparent rounded-full -ml-12 -mb-12 opacity-70"></div>
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-ekwip-100 to-transparent rounded-full -mr-16 -mt-16 opacity-70 group-hover:from-white/20"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-ekwip-100 to-transparent rounded-full -ml-12 -mb-12 opacity-70 group-hover:from-white/20"></div>
 
                   {/* Product Image in Circle */}
-                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-white border-2 border-blue-200 overflow-hidden flex items-center justify-center shadow-md z-10">
+                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-white border-2 border-ekwip-200 overflow-hidden flex items-center justify-center shadow-md z-10 group-hover:border-white/30">
                     {categoryImages[category.slug] ? (
                       <Image
                         src={categoryImages[category.slug] || "/placeholder.svg"}
@@ -171,28 +171,30 @@ export default async function Catalogue() {
                         className="object-contain"
                       />
                     ) : (
-                      <div className="w-8 h-8 bg-blue-300 rounded-full"></div>
+                      <div className="w-8 h-8 bg-ekwip-300 rounded-full group-hover:bg-white/30"></div>
                     )}
                   </div>
 
                   {/* Icon Container */}
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-600 text-white mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md relative z-10">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-ekwip text-white mb-4 group-hover:scale-110 group-hover:bg-white group-hover:text-ekwip transition-all duration-300 shadow-md relative z-10">
                     {categoryIcons[category.slug] || <Laptop className="h-8 w-8" />}
                   </div>
 
                   {/* Category Info */}
                   <div className="space-y-2 relative z-10">
-                    <h3 className="text-xl font-bold text-slate-800 group-hover:text-ekwip transition-colors">
+                    <h3 className="text-xl font-bold text-slate-800 group-hover:text-white transition-colors">
                       {category.name}
                     </h3>
-                    <p className="text-sm text-slate-600 line-clamp-2">{category.description}</p>
+                    <p className="text-sm text-slate-600 line-clamp-2 group-hover:text-gray-200 transition-colors">
+                      {category.description}
+                    </p>
 
                     {/* Product Count */}
                     <div className="flex items-center justify-between pt-3">
-                      <span className="text-xs font-semibold text-blue-700 bg-blue-100 px-3 py-1 rounded-full shadow-sm">
+                      <span className="text-xs font-semibold text-ekwip bg-ekwip-100 px-3 py-1 rounded-full shadow-sm group-hover:bg-white/20 group-hover:text-white transition-colors">
                         {category.count} {category.count > 1 ? "produits" : "produit"}
                       </span>
-                      <div className="flex items-center text-blue-600 font-medium text-sm">
+                      <div className="flex items-center text-ekwip font-medium text-sm group-hover:text-white transition-colors">
                         Découvrir
                         <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-all" />
                       </div>

@@ -56,7 +56,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
   // Category image placeholders (to be replaced with actual images)
   const categoryImages: Record<string, string> = {
-    "ordinateurs-portables": "/placeholder.svg?height=400&width=400",
+    "ordinateurs-portables": "/images/laptop-hero.png",
     "ordinateurs-de-bureau": "/placeholder.svg?height=400&width=400",
     smartphones: "/placeholder.svg?height=400&width=400",
     tablettes: "/placeholder.svg?height=400&width=400",
