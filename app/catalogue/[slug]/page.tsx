@@ -61,7 +61,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     smartphones: "/placeholder.svg?height=400&width=400",
     tablettes: "/placeholder.svg?height=400&width=400",
     accessoires: "/placeholder.svg?height=400&width=400",
-    imprimantes: "/placeholder.svg?height=400&width=400",
+    imprimantes: "/images/printer-hero.png",
     mobilier: "/placeholder.svg?height=400&width=400",
   }
 

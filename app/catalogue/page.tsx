@@ -44,7 +44,7 @@ const categoryImages: Record<string, string> = {
   smartphones: "/images/iphone.png",
   tablettes: "/placeholder.svg?height=60&width=60",
   accessoires: "/placeholder.svg?height=60&width=60",
-  imprimantes: "/placeholder.svg?height=60&width=60",
+  imprimantes: "/images/printer-hero.png",
   mobilier: "/placeholder.svg?height=60&width=60",
 }
 
@@ -151,13 +151,13 @@ export default async function Catalogue() {
             </p>
           </div>
 
-          {/* Categories Grid - Uniform Design */}
+          {/* Categories Grid - Enhanced Design */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category, index) => (
               <Link href={`/catalogue/${category.slug}`} key={category.id} className="group">
-                <div className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-blue-100">
+                <div className="relative overflow-hidden rounded-2xl border-2 border-blue-200 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-blue-100 hover:border-blue-300">
                   {/* Product Image in Circle */}
-                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-blue-50 border-2 border-blue-100 overflow-hidden flex items-center justify-center">
+                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-blue-100 border-2 border-blue-200 overflow-hidden flex items-center justify-center shadow-md">
                     {categoryImages[category.slug] ? (
                       <Image
                         src={categoryImages[category.slug] || "/placeholder.svg"}
@@ -167,12 +167,12 @@ export default async function Catalogue() {
                         className="object-contain"
                       />
                     ) : (
-                      <div className="w-8 h-8 bg-blue-200 rounded-full"></div>
+                      <div className="w-8 h-8 bg-blue-300 rounded-full"></div>
                     )}
                   </div>
 
                   {/* Icon Container */}
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-50 text-blue-700 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-xl bg-blue-100 text-blue-700 mb-4 group-hover:scale-110 transition-transform duration-300 shadow-sm">
                     {categoryIcons[category.slug] || <Laptop className="h-8 w-8" />}
                   </div>
 
@@ -185,10 +185,10 @@ export default async function Catalogue() {
 
                     {/* Product Count */}
                     <div className="flex items-center justify-between pt-2">
-                      <span className="text-xs text-slate-500 font-medium">
+                      <span className="text-xs text-slate-600 font-medium bg-slate-100 px-2 py-1 rounded-full">
                         {category.count} {category.count > 1 ? "produits" : "produit"}
                       </span>
-                      <ArrowRight className="h-4 w-4 text-slate-400 group-hover:text-ekwip group-hover:translate-x-1 transition-all" />
+                      <ArrowRight className="h-4 w-4 text-blue-500 group-hover:text-ekwip group-hover:translate-x-1 transition-all" />
                     </div>
                   </div>
 
@@ -197,24 +197,6 @@ export default async function Catalogue() {
                 </div>
               </Link>
             ))}
-          </div>
-
-          {/* Featured Category Highlight */}
-          <div className="mt-12 bg-gradient-to-r from-ekwip to-blue-600 rounded-3xl p-8 md:p-12 text-white">
-            <div className="max-w-4xl mx-auto text-center">
-              <h3 className="text-2xl md:text-3xl font-bold mb-4">Besoin d'aide pour choisir ?</h3>
-              <p className="text-lg opacity-90 mb-6">
-                Nos experts sont là pour vous accompagner dans le choix des équipements les plus adaptés à vos besoins
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button size="lg" className="bg-white text-ekwip hover:bg-slate-100">
-                  Parler à un expert
-                </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                  Voir tous les produits
-                </Button>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -437,7 +419,7 @@ export default async function Catalogue() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button className="bg-ekwip hover:bg-ekwip-700">Demander un devis personnalisé</Button>
-            <Button variant="outline">Nous contacter</Button>
+            <Button variant="outline">Parler à un expert</Button>
           </div>
         </div>
       </section>
