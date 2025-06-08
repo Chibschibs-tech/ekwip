@@ -135,7 +135,7 @@ export default async function Catalogue() {
             </p>
           </div>
 
-          {/* Categories Grid - Fixed: Solid Ekwip Blue on Hover */}
+          {/* Categories Grid - Fixed: Solid Ekwip Blue on Hover with Light Grey Text */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category, index) => (
               <Link href={`/catalogue/${category.slug}`} key={category.id} className="group">
@@ -144,14 +144,14 @@ export default async function Catalogue() {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-ekwip-100 to-transparent rounded-full -mr-16 -mt-16 opacity-70 group-hover:from-white/20"></div>
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-ekwip-100 to-transparent rounded-full -ml-12 -mb-12 opacity-70 group-hover:from-white/20"></div>
 
-                  {/* Product Image in Circle */}
-                  <div className="absolute top-4 right-4 w-16 h-16 rounded-full bg-white border-2 border-ekwip-200 overflow-hidden flex items-center justify-center shadow-md z-10 group-hover:border-white/30">
+                  {/* Product Image in Circle - MADE BIGGER */}
+                  <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white border-4 border-ekwip-100 group-hover:border-white overflow-hidden flex items-center justify-center shadow-md z-10">
                     {categoryImages[category.slug] ? (
                       <Image
                         src={categoryImages[category.slug] || "/placeholder.svg"}
                         alt={category.name}
-                        width={40}
-                        height={40}
+                        width={80}
+                        height={80}
                         className="object-contain"
                       />
                     ) : (
@@ -164,12 +164,12 @@ export default async function Catalogue() {
                     {categoryIcons[category.slug] || <Laptop className="h-8 w-8" />}
                   </div>
 
-                  {/* Category Info */}
+                  {/* Category Info - UPDATED TEXT COLORS */}
                   <div className="space-y-2 relative z-10">
-                    <h3 className="text-xl font-bold text-slate-800 group-hover:text-white transition-colors">
+                    <h3 className="text-xl font-bold text-slate-800 group-hover:text-gray-100 transition-colors">
                       {category.name}
                     </h3>
-                    <p className="text-sm text-slate-600 line-clamp-2 group-hover:text-gray-200 transition-colors">
+                    <p className="text-sm text-slate-600 line-clamp-2 group-hover:text-gray-300 transition-colors">
                       {category.description}
                     </p>
 
@@ -178,7 +178,7 @@ export default async function Catalogue() {
                       <span className="text-xs font-semibold text-ekwip bg-ekwip-100 px-3 py-1 rounded-full shadow-sm group-hover:bg-white/20 group-hover:text-white transition-colors">
                         {category.count} {category.count > 1 ? "produits" : "produit"}
                       </span>
-                      <div className="flex items-center text-ekwip font-medium text-sm group-hover:text-white transition-colors">
+                      <div className="flex items-center text-ekwip font-medium text-sm group-hover:text-gray-100 transition-colors">
                         Découvrir
                         <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-all" />
                       </div>
