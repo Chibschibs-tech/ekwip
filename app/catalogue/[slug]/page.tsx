@@ -65,7 +65,9 @@ const mockProducts = [
     slug: "macbook-pro-14",
     price: "120",
     short_description: "Processeur M2 Pro, 16 Go RAM, 512 Go SSD",
-    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", alt: 'MacBook Pro 14"' }],
+    images: [
+      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png", alt: 'MacBook Pro 14"' },
+    ],
     category_id: 1,
   },
   {
@@ -74,7 +76,7 @@ const mockProducts = [
     slug: "dell-xps-13",
     price: "95",
     short_description: "Intel i7, 16 Go RAM, 512 Go SSD",
-    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", alt: "Dell XPS 13" }],
+    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png", alt: "Dell XPS 13" }],
     category_id: 1,
   },
   {
@@ -84,7 +86,7 @@ const mockProducts = [
     price: "110",
     short_description: "Intel i7, 32 Go RAM, 1 To SSD",
     images: [
-      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", alt: "ThinkPad X1 Carbon" },
+      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png", alt: "ThinkPad X1 Carbon" },
     ],
     category_id: 1,
   },
@@ -136,15 +138,15 @@ export default async function CategoryPage({ params }: { params: { slug: string 
     seoDescriptions[category.slug] ||
     `Découvrez notre sélection de ${category.name.toLowerCase()} disponibles à la location pour votre entreprise. Solutions flexibles et service inclus.`
 
-  // Category hero images
+  // Category hero images - UPDATED WITH NEW ASSIGNMENTS
   const categoryImages: Record<string, string> = {
-    "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
-    "ordinateurs-de-bureau": "/placeholder.svg?height=400&width=400",
-    smartphones: "/placeholder.svg?height=400&width=400",
-    tablettes: "/placeholder.svg?height=400&width=400",
-    accessoires: "/placeholder.svg?height=400&width=400",
+    "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
+    "ordinateurs-de-bureau": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", // Previous laptop image now for desktops
+    smartphones: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/smartphone.webp",
+    tablettes: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png",
+    accessoires: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/keyboard%20%26%20mouse.png",
     imprimantes: "/images/printer-hero.png",
-    mobilier: "/placeholder.svg?height=400&width=400",
+    mobilier: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/chair.png",
   }
 
   const categoryImage = categoryImages[category.slug] || "/placeholder.svg?height=400&width=400"

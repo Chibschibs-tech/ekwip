@@ -36,15 +36,15 @@ const categoryIcons: Record<string, React.ReactNode> = {
   stockage: <HardDrive className="h-8 w-8" />,
 }
 
-// Map of category slugs to product images
+// Map of category slugs to product images - UPDATED WITH NEW ASSIGNMENTS
 const categoryImages: Record<string, string> = {
-  "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
-  "ordinateurs-de-bureau": "/images/imac.png",
-  smartphones: "/images/iphone.png",
-  tablettes: "/placeholder.svg?height=80&width=80",
-  accessoires: "/placeholder.svg?height=80&width=80",
+  "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
+  "ordinateurs-de-bureau": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", // Previous laptop image now for desktops
+  smartphones: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/smartphone.webp",
+  tablettes: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png",
+  accessoires: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/keyboard%20%26%20mouse.png",
   imprimantes: "/images/printer-hero.png",
-  mobilier: "/placeholder.svg?height=80&width=80",
+  mobilier: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/chair.png",
 }
 
 // Mock categories (no WordPress)
@@ -289,7 +289,7 @@ export default async function Catalogue() {
               <CardContent className="p-0">
                 <div className="bg-slate-100 p-8 flex items-center justify-center">
                   <Image
-                    src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops"
+                    src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png"
                     alt="MacBook Pro"
                     width={200}
                     height={150}
