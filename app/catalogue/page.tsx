@@ -1,3 +1,5 @@
+"use client"
+
 import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -22,6 +24,7 @@ import {
 import { storeProducts } from "@/lib/store-products"
 import CatalogProductCard from "@/components/catalog-product-card"
 import Image from "next/image"
+import { useTranslations } from "next-intl"
 
 // Map of category slugs to icons
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -111,17 +114,15 @@ export default async function Catalogue() {
   // Get all available categories from products for filtering
   const availableCategories = Array.from(new Set(storeProducts.map((product) => product.category)))
   const availableBrands = Array.from(new Set(storeProducts.map((product) => product.brand)))
+  const t = useTranslations()
 
   return (
     <div>
       {/* Hero Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">Notre catalogue d'équipements</h1>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-            Découvrez notre large gamme d'équipements IT disponibles à la location pour répondre à tous vos besoins
-            professionnels.
-          </p>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-6">{t("catalogue.title")}</h1>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto">{t("catalogue.description")}</p>
         </div>
       </section>
 
@@ -129,10 +130,8 @@ export default async function Catalogue() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Explorez nos catégories</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Trouvez rapidement l'équipement dont vous avez besoin grâce à notre organisation par catégories
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">{t("catalogue.categories.title")}</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{t("catalogue.categories.description")}</p>
           </div>
 
           {/* Categories Grid - Fixed: Solid Ekwip Blue on Hover with Light Grey Text */}
@@ -195,10 +194,8 @@ export default async function Catalogue() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-slate-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Tous nos équipements</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Parcourez l'intégralité de notre catalogue d'équipements disponibles à la location.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">{t("catalogue.all_products.title")}</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{t("catalogue.all_products.description")}</p>
           </div>
 
           {/* Filters Section */}
@@ -206,20 +203,20 @@ export default async function Catalogue() {
             <div className="flex flex-col lg:flex-row gap-4 items-center">
               <div className="flex items-center gap-2 text-slate-700 font-medium">
                 <Filter className="h-5 w-5" />
-                <span>Filtres :</span>
+                <span>{t("catalogue.filters")}</span>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 flex-1">
                 {/* Search */}
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
-                  <Input placeholder="Rechercher un équipement..." className="pl-10" />
+                  <Input placeholder={t("catalogue.search_placeholder")} className="pl-10" />
                 </div>
 
                 {/* Category Filter */}
                 <Select>
                   <SelectTrigger className="w-full sm:w-48">
-                    <SelectValue placeholder="Toutes catégories" />
+                    <SelectValue placeholder={t("catalogue.all_categories")} />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Toutes catégories</SelectItem>
@@ -278,10 +275,8 @@ export default async function Catalogue() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Produits populaires</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Découvrez nos équipements les plus demandés par nos clients.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">{t("catalogue.popular_products")}</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{t("catalogue.popular_description")}</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -304,10 +299,10 @@ export default async function Catalogue() {
                   <p className="text-slate-600 text-sm mb-4">Processeur M2 Pro, 16 Go RAM, 512 Go SSD</p>
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm text-slate-500">À partir de</p>
+                      <p className="text-sm text-slate-500">{t("catalogue.from")}</p>
                       <p className="text-xl font-bold">120 €/mois</p>
                     </div>
-                    <Button variant="outline">Voir détails</Button>
+                    <Button variant="outline">{t("catalogue.view_details")}</Button>
                   </div>
                 </div>
               </CardContent>
@@ -326,10 +321,10 @@ export default async function Catalogue() {
                   <p className="text-slate-600 text-sm mb-4">Intel i7, 32 Go RAM, 1 To SSD, RTX 3060</p>
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm text-slate-500">À partir de</p>
+                      <p className="text-sm text-slate-500">{t("catalogue.from")}</p>
                       <p className="text-xl font-bold">95 €/mois</p>
                     </div>
-                    <Button variant="outline">Voir détails</Button>
+                    <Button variant="outline">{t("catalogue.view_details")}</Button>
                   </div>
                 </div>
               </CardContent>
@@ -348,10 +343,10 @@ export default async function Catalogue() {
                   <p className="text-slate-600 text-sm mb-4">256 Go, forfait data 100 Go inclus</p>
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm text-slate-500">À partir de</p>
+                      <p className="text-sm text-slate-500">{t("catalogue.from")}</p>
                       <p className="text-xl font-bold">45 €/mois</p>
                     </div>
-                    <Button variant="outline">Voir détails</Button>
+                    <Button variant="outline">{t("catalogue.view_details")}</Button>
                   </div>
                 </div>
               </CardContent>
@@ -368,10 +363,8 @@ export default async function Catalogue() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">Nos marques partenaires</h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Nous travaillons avec les meilleures marques pour vous offrir des équipements de qualité.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">{t("catalogue.partner_brands")}</h2>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{t("catalogue.partner_brands_description")}</p>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
@@ -406,16 +399,11 @@ export default async function Catalogue() {
       {/* CTA Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-slate-50">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">
-            Vous ne trouvez pas ce que vous cherchez ?
-          </h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
-            Contactez-nous pour discuter de vos besoins spécifiques. Nous pouvons vous proposer des solutions sur
-            mesure.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">{t("catalogue.not_found_title")}</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">{t("catalogue.not_found_description")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-ekwip hover:bg-ekwip-700">Demander un devis personnalisé</Button>
-            <Button variant="outline">Parler à un expert</Button>
+            <Button className="bg-ekwip hover:bg-ekwip-700">{t("catalogue.custom_quote")}</Button>
+            <Button variant="outline">{t("catalogue.talk_to_expert")}</Button>
           </div>
         </div>
       </section>

@@ -4,7 +4,7 @@ import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 
 // Define available languages
-export type Language = "fr" | "en"
+export type Language = "fr" | "en" | "es"
 
 // Define context type
 type LanguageContextType = {
@@ -206,6 +206,49 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.legal": "Mentions légales",
     "footer.privacy": "Politique de confidentialité",
     "footer.terms": "CGV",
+
+    // Catalogue
+    "catalogue.title": "Notre catalogue d'équipements",
+    "catalogue.description":
+      "Découvrez notre large gamme d'équipements IT disponibles à la location pour répondre à tous vos besoins professionnels.",
+    "catalogue.categories.title": "Explorez nos catégories",
+    "catalogue.categories.description":
+      "Trouvez rapidement l'équipement dont vous avez besoin grâce à notre organisation par catégories",
+    "catalogue.all_products.title": "Tous nos équipements",
+    "catalogue.all_products.description":
+      "Parcourez l'intégralité de notre catalogue d'équipements disponibles à la location.",
+    "catalogue.filters": "Filtres :",
+    "catalogue.search_placeholder": "Rechercher un équipement...",
+    "catalogue.all_categories": "Toutes catégories",
+    "catalogue.all_brands": "Toutes marques",
+    "catalogue.in_stock_only": "En stock uniquement",
+    "catalogue.new_items": "Nouveautés",
+    "catalogue.load_more": "Charger plus d'équipements",
+    "catalogue.popular_products": "Produits populaires",
+    "catalogue.popular_description": "Découvrez nos équipements les plus demandés par nos clients.",
+    "catalogue.from": "À partir de",
+    "catalogue.view_details": "Voir détails",
+    "catalogue.view_all_products": "Voir tous les produits",
+    "catalogue.partner_brands": "Nos marques partenaires",
+    "catalogue.partner_brands_description":
+      "Nous travaillons avec les meilleures marques pour vous offrir des équipements de qualité.",
+    "catalogue.not_found_title": "Vous ne trouvez pas ce que vous cherchez ?",
+    "catalogue.not_found_description":
+      "Contactez-nous pour discuter de vos besoins spécifiques. Nous pouvons vous proposer des solutions sur mesure.",
+    "catalogue.custom_quote": "Demander un devis personnalisé",
+    "catalogue.talk_to_expert": "Parler à un expert",
+
+    // Common
+    "common.discover": "Découvrir",
+    "common.popular": "Populaire",
+    "common.new": "Nouveau",
+    "common.products": "produits",
+    "common.product": "produit",
+    "common.month": "mois",
+    "common.start": "Démarrer",
+    "common.get_quote": "Obtenir un devis",
+    "common.contact_us": "Contactez-nous",
+    "common.learn_more": "En savoir plus",
   },
   en: {
     // Navigation
@@ -389,6 +432,272 @@ const translations: Record<Language, Record<string, string>> = {
     "footer.legal": "Legal notice",
     "footer.privacy": "Privacy policy",
     "footer.terms": "Terms and conditions",
+
+    // Catalogue
+    "catalogue.title": "Our equipment catalog",
+    "catalogue.description":
+      "Discover our wide range of IT equipment available for rental to meet all your professional needs.",
+    "catalogue.categories.title": "Explore our categories",
+    "catalogue.categories.description": "Quickly find the equipment you need thanks to our organization by categories",
+    "catalogue.all_products.title": "All our equipment",
+    "catalogue.all_products.description": "Browse our complete catalog of equipment available for rental.",
+    "catalogue.filters": "Filters:",
+    "catalogue.search_placeholder": "Search for equipment...",
+    "catalogue.all_categories": "All categories",
+    "catalogue.all_brands": "All brands",
+    "catalogue.in_stock_only": "In stock only",
+    "catalogue.new_items": "New items",
+    "catalogue.load_more": "Load more equipment",
+    "catalogue.popular_products": "Popular products",
+    "catalogue.popular_description": "Discover our most requested equipment by our customers.",
+    "catalogue.from": "From",
+    "catalogue.view_details": "View details",
+    "catalogue.view_all_products": "View all products",
+    "catalogue.partner_brands": "Our partner brands",
+    "catalogue.partner_brands_description": "We work with the best brands to offer you quality equipment.",
+    "catalogue.not_found_title": "Can't find what you're looking for?",
+    "catalogue.not_found_description":
+      "Contact us to discuss your specific needs. We can offer you customized solutions.",
+    "catalogue.custom_quote": "Request a personalized quote",
+    "catalogue.talk_to_expert": "Talk to an expert",
+
+    // Common
+    "common.discover": "Discover",
+    "common.popular": "Popular",
+    "common.new": "New",
+    "common.products": "products",
+    "common.product": "product",
+    "common.month": "month",
+    "common.start": "Start",
+    "common.get_quote": "Get quote",
+    "common.contact_us": "Contact us",
+    "common.learn_more": "Learn more",
+  },
+  es: {
+    // Navigation
+    "nav.how_it_works": "Cómo funciona",
+    "nav.catalog": "Catálogo",
+    "nav.store": "Tienda",
+    "nav.contact": "Contacto",
+    "nav.client_portal": "Portal del cliente",
+    "nav.customer_portal": "Portal del cliente",
+    "nav.customer_portal_description": "Reservado para clientes con equipos en alquiler",
+
+    // Home page
+    "home.hero.title": "¡Equípate, sin arruinar tu tesorería!",
+    "home.hero.description":
+      "Opta por el alquiler y accede a las mejores tecnologías con una solución flexible y sin compromiso pesado.",
+    "home.hero.button1": "Descubrir nuestras ofertas",
+    "home.hero.button2": "Cómo funciona",
+
+    // Feature cards
+    "home.features.card1.title": "Preserva tu tesorería",
+    "home.features.card1.description": "Alquila tu material sin inmovilizar tu capital y controla tus costos IT.",
+    "home.features.card2.title": "Gestiona tu flota IT",
+    "home.features.card2.description": "Gestiona y optimiza todo tu parque informático desde una interfaz única.",
+    "home.features.card3.title": "Actualiza en cualquier momento",
+    "home.features.card3.description": "Intercambia o actualiza tu equipo según tus necesidades, sin restricciones.",
+    "home.features.card4.title": "Soporte y mantenimiento incluidos",
+    "home.features.card4.description": "Asistencia técnica y reemplazo rápido en caso de problemas.",
+
+    // Catalog section
+    "home.products.title": "Descubre nuestro catálogo de equipos en alquiler",
+    "home.products.description":
+      "Laptops, tabletas, smartphones y mucho más, disponibles en alquiler para acompañar tu actividad. Ya sea que necesites una computadora potente para el trabajo, una tableta para la movilidad o un smartphone de última generación, tenemos el equipo adaptado a tus necesidades.",
+    "home.products.button": "Ver todo el catálogo",
+
+    // Clients section
+    "home.clients.title": "Confían en nosotros",
+    "home.clients.description": "Únete a las empresas que han elegido Ekwip para su equipo IT",
+
+    // How it works section
+    "home.howItWorks.title": "Cómo funciona",
+    "home.howItWorks.description": "Un proceso simple y transparente para equipar tu empresa",
+    "home.howItWorks.step1.title": "Elige tu equipo",
+    "home.howItWorks.step1.description":
+      "Navega por nuestro catálogo y selecciona los equipos adaptados a tus necesidades.",
+    "home.howItWorks.step2.title": "Define tu duración",
+    "home.howItWorks.step2.description":
+      "Elige la duración de alquiler que te convenga, de 1 a 36 meses según tus proyectos.",
+    "home.howItWorks.step3.title": "Recibe y utiliza",
+    "home.howItWorks.step3.description":
+      "Entregamos e instalamos tu equipo. Disfruta de soporte técnico durante toda la duración.",
+    "home.howItWorks.button": "Saber más",
+
+    // Custom offer banner
+    "home.offerBanner.title": "¿Más de 10 colaboradores?",
+    "home.offerBanner.description": "Contáctanos para estudiar juntos tu necesidad y obtener una oferta a medida.",
+    "home.offerBanner.button": "Contáctanos",
+
+    // Testimonials section
+    "home.testimonials.title": "Lo que dicen nuestros clientes",
+    "home.testimonials.description":
+      "Descubre los testimonios de nuestros clientes satisfechos que han transformado su gestión IT gracias a nuestras soluciones de alquiler.",
+
+    // CTA section
+    "home.cta.title": "¿Listo para equipar tu empresa?",
+    "home.cta.description":
+      "Contáctanos hoy para obtener un presupuesto personalizado y descubrir cómo Ekwip puede ayudarte.",
+    "home.cta.button": "Contáctanos",
+
+    // Client Portal
+    "portal.title": "Portal del cliente",
+    "portal.welcome": "Bienvenido a tu portal del cliente",
+    "portal.dashboard": "Panel de control",
+    "portal.orders": "Pedidos",
+    "portal.equipment": "Equipos",
+    "portal.users": "Usuarios",
+    "portal.billing": "Facturación",
+    "portal.tickets": "Soporte",
+    "portal.settings": "Configuración",
+    "portal.logout": "Cerrar sesión",
+
+    "portal.dashboard.title": "Panel de control",
+    "portal.dashboard.welcome": "Bienvenido, ",
+    "portal.dashboard.summary": "Resumen de la cuenta",
+    "portal.dashboard.active_rentals": "Alquileres activos",
+    "portal.dashboard.pending_orders": "Pedidos pendientes",
+    "portal.dashboard.open_tickets": "Tickets abiertos",
+    "portal.dashboard.upcoming_renewals": "Próximas renovaciones",
+    "portal.dashboard.recent_activity": "Actividad reciente",
+    "portal.dashboard.view_all": "Ver todo",
+
+    "portal.orders.title": "Gestión de pedidos",
+    "portal.orders.all": "Todos los pedidos",
+    "portal.orders.pending": "Pendiente",
+    "portal.orders.processing": "En proceso",
+    "portal.orders.completed": "Completado",
+    "portal.orders.cancelled": "Cancelado",
+    "portal.orders.search": "Buscar pedidos",
+    "portal.orders.order_number": "Número de pedido",
+    "portal.orders.date": "Fecha",
+    "portal.orders.status": "Estado",
+    "portal.orders.total": "Total",
+    "portal.orders.items": "Artículos",
+    "portal.orders.actions": "Acciones",
+    "portal.orders.view": "Ver",
+    "portal.orders.no_orders": "No se encontraron pedidos",
+
+    "portal.equipment.title": "Gestión de equipos",
+    "portal.equipment.all": "Todos los equipos",
+    "portal.equipment.active": "Activo",
+    "portal.equipment.expired": "Caducado",
+    "portal.equipment.search": "Buscar equipos",
+    "portal.equipment.name": "Nombre",
+    "portal.equipment.type": "Tipo",
+    "portal.equipment.serial": "Número de serie",
+    "portal.equipment.start_date": "Fecha de inicio",
+    "portal.equipment.end_date": "Fecha de finalización",
+    "portal.equipment.assigned_to": "Asignado a",
+    "portal.equipment.status": "Estado",
+    "portal.equipment.actions": "Acciones",
+    "portal.equipment.assign": "Asignar",
+    "portal.equipment.view_details": "Ver detalles",
+    "portal.equipment.no_equipment": "No se encontraron equipos",
+    "portal.equipment.days_remaining": "días restantes",
+    "portal.equipment.expired": "Caducado",
+
+    "portal.users.title": "Gestión de usuarios",
+    "portal.users.all": "Todos los usuarios",
+    "portal.users.active": "Activo",
+    "portal.users.inactive": "Inactivo",
+    "portal.users.search": "Buscar usuarios",
+    "portal.users.add": "Añadir usuario",
+    "portal.users.name": "Nombre",
+    "portal.users.email": "Correo electrónico",
+    "portal.users.role": "Rol",
+    "portal.users.department": "Departamento",
+    "portal.users.equipment": "Equipos",
+    "portal.users.status": "Estado",
+    "portal.users.actions": "Acciones",
+    "portal.users.edit": "Editar",
+    "portal.users.delete": "Eliminar",
+    "portal.users.no_users": "No se encontraron usuarios",
+
+    "portal.billing.title": "Historial de facturación",
+    "portal.billing.all": "Todas las facturas",
+    "portal.billing.paid": "Pagado",
+    "portal.billing.unpaid": "Impagado",
+    "portal.billing.search": "Buscar facturas",
+    "portal.billing.invoice_number": "Número de factura",
+    "portal.billing.date": "Fecha",
+    "portal.billing.due_date": "Fecha de vencimiento",
+    "portal.billing.amount": "Importe",
+    "portal.billing.status": "Estado",
+    "portal.billing.actions": "Acciones",
+    "portal.billing.download": "Descargar",
+    "portal.billing.pay": "Pagar",
+    "portal.billing.no_invoices": "No se encontraron facturas",
+
+    "portal.tickets.title": "Soporte técnico",
+    "portal.tickets.all": "Todos los tickets",
+    "portal.tickets.open": "Abiertos",
+    "portal.tickets.closed": "Cerrados",
+    "portal.tickets.search": "Buscar tickets",
+    "portal.tickets.create": "Crear ticket",
+    "portal.tickets.ticket_number": "Número de ticket",
+    "portal.tickets.subject": "Asunto",
+    "portal.tickets.equipment": "Equipo",
+    "portal.tickets.date": "Fecha",
+    "portal.tickets.status": "Estado",
+    "portal.tickets.priority": "Prioridad",
+    "portal.tickets.actions": "Acciones",
+    "portal.tickets.view": "Ver",
+    "portal.tickets.no_tickets": "No se encontraron tickets",
+
+    // Catalogue
+    "catalogue.title": "Nuestro catálogo de equipos",
+    "catalogue.description":
+      "Descubre nuestra amplia gama de equipos IT disponibles en alquiler para satisfacer todas tus necesidades profesionales.",
+    "catalogue.categories.title": "Explora nuestras categorías",
+    "catalogue.categories.description":
+      "Encuentra rápidamente el equipo que necesitas gracias a nuestra organización por categorías",
+    "catalogue.all_products.title": "Todos nuestros equipos",
+    "catalogue.all_products.description":
+      "Navega por la totalidad de nuestro catálogo de equipos disponibles en alquiler.",
+    "catalogue.filters": "Filtros:",
+    "catalogue.search_placeholder": "Buscar un equipo...",
+    "catalogue.all_categories": "Todas las categorías",
+    "catalogue.all_brands": "Todas las marcas",
+    "catalogue.in_stock_only": "Solo en stock",
+    "catalogue.new_items": "Novedades",
+    "catalogue.load_more": "Cargar más equipos",
+    "catalogue.popular_products": "Productos populares",
+    "catalogue.popular_description": "Descubre nuestros equipos más solicitados por nuestros clientes.",
+    "catalogue.from": "Desde",
+    "catalogue.view_details": "Ver detalles",
+    "catalogue.view_all_products": "Ver todos los productos",
+    "catalogue.partner_brands": "Nuestras marcas asociadas",
+    "catalogue.partner_brands_description": "Trabajamos con las mejores marcas para ofrecerte equipos de calidad.",
+    "catalogue.not_found_title": "¿No encuentras lo que buscas?",
+    "catalogue.not_found_description":
+      "Contáctanos para discutir tus necesidades específicas. Podemos proponerte soluciones a medida.",
+    "catalogue.custom_quote": "Solicitar un presupuesto personalizado",
+    "catalogue.talk_to_expert": "Hablar con un experto",
+
+    // Common
+    "common.discover": "Descubrir",
+    "common.popular": "Popular",
+    "common.new": "Nuevo",
+    "common.products": "productos",
+    "common.product": "producto",
+    "common.month": "mes",
+    "common.start": "Comenzar",
+    "common.get_quote": "Obtener presupuesto",
+    "common.contact_us": "Contáctanos",
+    "common.learn_more": "Saber más",
+
+    // Footer
+    "footer.description":
+      "Alquiler de equipos IT flexible y sin compromiso para empresas en Marruecos. Preserva tu tesorería y accede a las últimas tecnologías.",
+    "footer.services": "Servicios",
+    "footer.newsletter": "Newsletter",
+    "footer.newsletter.description": "Suscríbete para recibir nuestras noticias y ofertas especiales",
+    "footer.newsletter.placeholder": "Tu email",
+    "footer.copyright": "Todos los derechos reservados.",
+    "footer.legal": "Aviso legal",
+    "footer.privacy": "Política de privacidad",
+    "footer.terms": "Términos y condiciones",
   },
 }
 
@@ -400,7 +709,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   // Load language preference from localStorage on client side
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language") as Language
-    if (savedLanguage && (savedLanguage === "fr" || savedLanguage === "en")) {
+    if (savedLanguage && (savedLanguage === "fr" || savedLanguage === "en" || savedLanguage === "es")) {
       setLanguageState(savedLanguage)
     }
   }, [])

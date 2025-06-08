@@ -20,18 +20,18 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
-              Équipez-vous, <span className="text-ekwip">sans ruiner</span> votre trésorerie!
+              {t("home.hero.title")}
             </h1>
             <p className="mt-6 text-lg text-gray-600 max-w-lg">{t("home.hero.description")}</p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link href="/catalogue">
                 <Button variant="gradient" size="xl" className="shadow-lg">
-                  Découvrir nos offres
+                  {t("home.hero.button1")}
                 </Button>
               </Link>
               <Link href="/comment-ca-marche">
                 <Button variant="outline" size="xl">
-                  Comment ça marche
+                  {t("home.hero.button2")}
                 </Button>
               </Link>
             </div>
@@ -178,10 +178,8 @@ export default function Home() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Plus de 10 collaborateurs?</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Nous proposons des solutions sur mesure pour les moyennes et grandes entreprises.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{t("home.offerBanner.title")}</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("home.offerBanner.description")}</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
@@ -227,7 +225,7 @@ export default function Home() {
                 </li>
               </ul>
               <Button variant="gradient" size="lg">
-                Offre sur mesure
+                {t("common.get_quote")}
               </Button>
             </div>
             <div className="relative">
