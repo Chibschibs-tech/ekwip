@@ -144,14 +144,14 @@ export default async function Catalogue() {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-ekwip-100 to-transparent rounded-full -mr-16 -mt-16 opacity-70 group-hover:from-white/20"></div>
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-ekwip-100 to-transparent rounded-full -ml-12 -mb-12 opacity-70 group-hover:from-white/20"></div>
 
-                  {/* Product Image in Circle - MADE BIGGER */}
-                  <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white border-4 border-ekwip-100 group-hover:border-white overflow-hidden flex items-center justify-center shadow-md z-10">
+                  {/* Product Image in Circle - CENTERED AND FULLY VISIBLE */}
+                  <div className="absolute top-2 right-2 w-24 h-24 rounded-full bg-white border-3 border-ekwip-100 group-hover:border-white overflow-hidden flex items-center justify-center shadow-md z-10">
                     {categoryImages[category.slug] ? (
                       <Image
                         src={categoryImages[category.slug] || "/placeholder.svg"}
                         alt={category.name}
-                        width={120}
-                        height={120}
+                        width={80}
+                        height={80}
                         className="object-contain"
                       />
                     ) : (
