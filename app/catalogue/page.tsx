@@ -150,12 +150,12 @@ export default async function Catalogue() {
                       <Image
                         src={categoryImages[category.slug] || "/placeholder.svg"}
                         alt={category.name}
-                        width={80}
-                        height={80}
+                        width={120}
+                        height={120}
                         className="object-contain"
                       />
                     ) : (
-                      <div className="w-8 h-8 bg-ekwip-300 rounded-full group-hover:bg-white/30"></div>
+                      <div className="w-16 h-16 bg-ekwip-300 rounded-full group-hover:bg-white/30"></div>
                     )}
                   </div>
 
