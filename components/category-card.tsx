@@ -30,9 +30,9 @@ export default function CategoryCard({ iconName, title, description, slug }: Cat
   return (
     <Link href={`/catalogue/${slug}`}>
       <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
-        <Card className="group border border-ekwip-200 hover:border-ekwip hover:shadow-lg hover:!bg-ekwip hover:bg-none transition-all duration-300 h-full bg-gradient-to-br from-white to-ekwip-50 relative overflow-hidden">
-          {/* Circle with product image in upper right */}
-          <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-white border-4 border-ekwip-100 group-hover:border-white overflow-hidden shadow-md">
+        <Card className="group border border-ekwip-200 hover:border-ekwip hover:shadow-lg hover:bg-ekwip hover:bg-none transition-all duration-300 h-full bg-gradient-to-br from-white to-ekwip-50 relative overflow-hidden">
+          {/* Circle with product image in upper right - MADE BIGGER */}
+          <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white border-4 border-ekwip-100 group-hover:border-white overflow-hidden shadow-md">
             <div className="w-full h-full flex items-center justify-center">
               <Image
                 src={categoryImage || "/placeholder.svg"}
@@ -50,14 +50,14 @@ export default function CategoryCard({ iconName, title, description, slug }: Cat
                 {iconName.charAt(0).toUpperCase()}
               </div>
             </div>
-            <h3 className="text-lg font-semibold mb-2 group-hover:text-white transition-colors duration-300">
+            <h3 className="text-lg font-semibold mb-2 group-hover:text-gray-100 transition-colors duration-300">
               {title}
             </h3>
-            <p className="text-slate-600 text-sm mb-4 flex-grow group-hover:text-gray-200 transition-colors duration-300">
+            <p className="text-slate-600 text-sm mb-4 flex-grow group-hover:text-gray-300 transition-colors duration-300">
               {description}
             </p>
             <motion.div
-              className="text-ekwip flex items-center text-sm font-medium group-hover:text-white transition-colors duration-300"
+              className="text-ekwip flex items-center text-sm font-medium group-hover:text-gray-100 transition-colors duration-300"
               whileHover={{ x: 5 }}
               transition={{ duration: 0.2 }}
             >
