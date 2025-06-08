@@ -41,10 +41,10 @@ const categoryImages: Record<string, string> = {
   "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
   "ordinateurs-de-bureau": "/images/imac.png",
   smartphones: "/images/iphone.png",
-  tablettes: "/placeholder.svg?height=60&width=60",
-  accessoires: "/placeholder.svg?height=60&width=60",
+  tablettes: "/placeholder.svg?height=80&width=80",
+  accessoires: "/placeholder.svg?height=80&width=80",
   imprimantes: "/images/printer-hero.png",
-  mobilier: "/placeholder.svg?height=60&width=60",
+  mobilier: "/placeholder.svg?height=80&width=80",
 }
 
 // Mock categories (no WordPress)
@@ -139,7 +139,7 @@ export default async function Catalogue() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {categories.map((category, index) => (
               <Link href={`/catalogue/${category.slug}`} key={category.id} className="group">
-                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-ekwip-50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-ekwip-200 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-ekwip hover:border-ekwip">
+                <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-white to-ekwip-50 p-6 shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-ekwip-200 transition-all duration-300 hover:shadow-xl hover:scale-105 hover:-translate-y-1 hover:bg-ekwip hover:bg-none hover:border-ekwip">
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-ekwip-100 to-transparent rounded-full -mr-16 -mt-16 opacity-70 group-hover:from-white/20"></div>
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-ekwip-100 to-transparent rounded-full -ml-12 -mb-12 opacity-70 group-hover:from-white/20"></div>
