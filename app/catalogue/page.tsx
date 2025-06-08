@@ -24,7 +24,7 @@ import {
 import { storeProducts } from "@/lib/store-products"
 import CatalogProductCard from "@/components/catalog-product-card"
 import Image from "next/image"
-import { useTranslations } from "next-intl"
+import { useLanguage } from "@/contexts/language-context"
 
 // Map of category slugs to icons
 const categoryIcons: Record<string, React.ReactNode> = {
@@ -110,11 +110,11 @@ const categories = [
   },
 ]
 
-export default async function Catalogue() {
+export default function Catalogue() {
   // Get all available categories from products for filtering
   const availableCategories = Array.from(new Set(storeProducts.map((product) => product.category)))
   const availableBrands = Array.from(new Set(storeProducts.map((product) => product.brand)))
-  const t = useTranslations()
+  const { t } = useLanguage()
 
   return (
     <div>
@@ -175,10 +175,10 @@ export default async function Catalogue() {
                     {/* Product Count */}
                     <div className="flex items-center justify-between pt-3">
                       <span className="text-xs font-semibold text-ekwip bg-ekwip-100 px-3 py-1 rounded-full shadow-sm group-hover:bg-white/20 group-hover:text-white transition-colors">
-                        {category.count} {category.count > 1 ? "produits" : "produit"}
+                        {category.count} {category.count > 1 ? t("common.products") : t("common.product")}
                       </span>
                       <div className="flex items-center text-ekwip font-medium text-sm group-hover:text-gray-100 transition-colors">
-                        Découvrir
+                        {t("common.discover")}
                         <ArrowRight className="h-4 w-4 ml-1 group-hover:translate-x-1 transition-all" />
                       </div>
                     </div>
@@ -219,7 +219,7 @@ export default async function Catalogue() {
                     <SelectValue placeholder={t("catalogue.all_categories")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Toutes catégories</SelectItem>
+                    <SelectItem value="all">{t("catalogue.all_categories")}</SelectItem>
                     {availableCategories.map((category) => (
                       <SelectItem key={category} value={category.toLowerCase()}>
                         {category}
@@ -231,10 +231,10 @@ export default async function Catalogue() {
                 {/* Brand Filter */}
                 <Select>
                   <SelectTrigger className="w-full sm:w-48">
-                    <SelectValue placeholder="Toutes marques" />
+                    <SelectValue placeholder={t("catalogue.all_brands")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">Toutes marques</SelectItem>
+                    <SelectItem value="all">{t("catalogue.all_brands")}</SelectItem>
                     {availableBrands.map((brand) => (
                       <SelectItem key={brand} value={brand.toLowerCase()}>
                         {brand}
@@ -246,10 +246,10 @@ export default async function Catalogue() {
 
               <div className="flex gap-2">
                 <Badge variant="secondary" className="cursor-pointer hover:bg-slate-200">
-                  En stock uniquement
+                  {t("catalogue.in_stock_only")}
                 </Badge>
                 <Badge variant="secondary" className="cursor-pointer hover:bg-slate-200">
-                  Nouveautés
+                  {t("catalogue.new_items")}
                 </Badge>
               </div>
             </div>
@@ -265,7 +265,7 @@ export default async function Catalogue() {
           {/* Load More Button */}
           <div className="mt-12 text-center">
             <Button variant="outline" size="lg">
-              Charger plus d'équipements
+              {t("catalogue.load_more")}
             </Button>
           </div>
         </div>
@@ -294,13 +294,15 @@ export default async function Catalogue() {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-lg font-semibold">MacBook Pro 14"</h3>
-                    <div className="bg-ekwip-100 text-ekwip px-2 py-1 rounded text-xs font-medium">Populaire</div>
+                    <div className="bg-ekwip-100 text-ekwip px-2 py-1 rounded text-xs font-medium">
+                      {t("common.popular")}
+                    </div>
                   </div>
                   <p className="text-slate-600 text-sm mb-4">Processeur M2 Pro, 16 Go RAM, 512 Go SSD</p>
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-sm text-slate-500">{t("catalogue.from")}</p>
-                      <p className="text-xl font-bold">120 €/mois</p>
+                      <p className="text-xl font-bold">120 €/{t("common.month")}</p>
                     </div>
                     <Button variant="outline">{t("catalogue.view_details")}</Button>
                   </div>
@@ -316,13 +318,15 @@ export default async function Catalogue() {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-lg font-semibold">Dell XPS Desktop</h3>
-                    <div className="bg-ekwip-100 text-ekwip px-2 py-1 rounded text-xs font-medium">Nouveau</div>
+                    <div className="bg-ekwip-100 text-ekwip px-2 py-1 rounded text-xs font-medium">
+                      {t("common.new")}
+                    </div>
                   </div>
                   <p className="text-slate-600 text-sm mb-4">Intel i7, 32 Go RAM, 1 To SSD, RTX 3060</p>
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-sm text-slate-500">{t("catalogue.from")}</p>
-                      <p className="text-xl font-bold">95 €/mois</p>
+                      <p className="text-xl font-bold">95 €/{t("common.month")}</p>
                     </div>
                     <Button variant="outline">{t("catalogue.view_details")}</Button>
                   </div>
@@ -338,13 +342,15 @@ export default async function Catalogue() {
                 <div className="p-6">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="text-lg font-semibold">iPhone 15 Pro</h3>
-                    <div className="bg-ekwip-100 text-ekwip px-2 py-1 rounded text-xs font-medium">Populaire</div>
+                    <div className="bg-ekwip-100 text-ekwip px-2 py-1 rounded text-xs font-medium">
+                      {t("common.popular")}
+                    </div>
                   </div>
                   <p className="text-slate-600 text-sm mb-4">256 Go, forfait data 100 Go inclus</p>
                   <div className="flex justify-between items-center">
                     <div>
                       <p className="text-sm text-slate-500">{t("catalogue.from")}</p>
-                      <p className="text-xl font-bold">45 €/mois</p>
+                      <p className="text-xl font-bold">45 €/{t("common.month")}</p>
                     </div>
                     <Button variant="outline">{t("catalogue.view_details")}</Button>
                   </div>
@@ -354,7 +360,7 @@ export default async function Catalogue() {
           </div>
 
           <div className="mt-12 text-center">
-            <Button className="bg-ekwip hover:bg-ekwip-700">Voir tous les produits</Button>
+            <Button className="bg-ekwip hover:bg-ekwip-700">{t("catalogue.view_all_products")}</Button>
           </div>
         </div>
       </section>
