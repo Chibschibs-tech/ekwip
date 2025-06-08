@@ -1,8 +1,11 @@
+"use client"
+
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
 
 // Mock categories data (no WordPress)
 const mockCategories = [
@@ -92,7 +95,9 @@ const mockProducts = [
   },
 ]
 
-export default async function CategoryPage({ params }: { params: { slug: string } }) {
+export default function CategoryPage({ params }: { params: { slug: string } }) {
+  const { t } = useLanguage()
+
   // Find the current category from mock data
   const category = mockCategories.find((cat) => cat.slug === params.slug)
 
@@ -104,44 +109,40 @@ export default async function CategoryPage({ params }: { params: { slug: string 
   // Get products for this category
   const products = mockProducts.filter((product) => product.category_id === category.id)
 
-  // SEO-optimized titles and descriptions based on category
-  const seoTitles: Record<string, string> = {
-    "ordinateurs-portables": "Ordinateurs portables disponibles à la location",
-    "ordinateurs-de-bureau": "Ordinateurs de bureau disponibles à la location",
-    smartphones: "Smartphones disponibles à la location",
-    tablettes: "Tablettes disponibles à la location",
-    accessoires: "Accessoires informatiques disponibles à la location",
-    imprimantes: "Imprimantes disponibles à la location",
-    mobilier: "Mobilier de bureau disponible à la location",
+  // Get SEO content based on category slug
+  const getSeoTitle = (slug: string): string => {
+    const titleMap: Record<string, string> = {
+      "ordinateurs-portables": t("category.laptops.title"),
+      "ordinateurs-de-bureau": t("category.desktops.title"),
+      smartphones: t("category.smartphones.title"),
+      tablettes: t("category.tablets.title"),
+      accessoires: t("category.accessories.title"),
+      imprimantes: t("category.printers.title"),
+      mobilier: t("category.furniture.title"),
+    }
+    return titleMap[slug] || `${category.name} ${t("category.products_available")}`
   }
 
-  const seoDescriptions: Record<string, string> = {
-    "ordinateurs-portables":
-      "Louez des ordinateurs portables de dernière génération pour votre entreprise. Nous proposons une large gamme de modèles adaptés à tous les besoins professionnels, avec service de maintenance inclus.",
-    "ordinateurs-de-bureau":
-      "Équipez votre entreprise avec des ordinateurs de bureau performants en location. Solutions flexibles et évolutives pour tous types d'entreprises, avec support technique inclus.",
-    smartphones:
-      "Location de smartphones professionnels pour vos équipes. Forfaits data inclus, gestion de flotte simplifiée et renouvellement régulier des appareils.",
-    tablettes:
-      "Louez des tablettes tactiles pour vos besoins professionnels. Idéal pour la mobilité, les présentations clients ou les points de vente. Plusieurs modèles disponibles.",
-    accessoires:
-      "Complétez votre équipement informatique avec notre gamme d'accessoires en location. Écrans, claviers, souris, casques et autres périphériques pour optimiser votre productivité.",
-    imprimantes:
-      "Solutions d'impression professionnelles en location. Imprimantes laser, multifonctions et grands formats avec service de maintenance et consommables inclus.",
-    mobilier:
-      "Aménagez vos espaces de travail avec notre mobilier de bureau ergonomique en location. Bureaux, chaises, armoires et solutions d'aménagement flexibles.",
+  const getSeoDescription = (slug: string): string => {
+    const descriptionMap: Record<string, string> = {
+      "ordinateurs-portables": t("category.laptops.description"),
+      "ordinateurs-de-bureau": t("category.desktops.description"),
+      smartphones: t("category.smartphones.description"),
+      tablettes: t("category.tablets.description"),
+      accessoires: t("category.accessories.description"),
+      imprimantes: t("category.printers.description"),
+      mobilier: t("category.furniture.description"),
+    }
+    return descriptionMap[slug] || category.description
   }
 
-  // Get SEO content or use fallbacks
-  const seoTitle = seoTitles[category.slug] || `${category.name} disponibles à la location`
-  const seoDescription =
-    seoDescriptions[category.slug] ||
-    `Découvrez notre sélection de ${category.name.toLowerCase()} disponibles à la location pour votre entreprise. Solutions flexibles et service inclus.`
+  const seoTitle = getSeoTitle(category.slug)
+  const seoDescription = getSeoDescription(category.slug)
 
-  // Category hero images - UPDATED WITH NEW ASSIGNMENTS
+  // Category hero images
   const categoryImages: Record<string, string> = {
     "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
-    "ordinateurs-de-bureau": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops", // Previous laptop image now for desktops
+    "ordinateurs-de-bureau": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
     smartphones: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/smartphone.webp",
     tablettes: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png",
     accessoires: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/keyboard%20%26%20mouse.png",
@@ -163,7 +164,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                 <ol className="flex items-center space-x-2 text-sm text-gray-800">
                   <li>
                     <Link href="/" className="hover:text-gray-900">
-                      Accueil
+                      {t("category.breadcrumb.home")}
                     </Link>
                   </li>
                   <li>
@@ -171,7 +172,7 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                   </li>
                   <li>
                     <Link href="/catalogue" className="hover:text-gray-900">
-                      Catalogue
+                      {t("category.breadcrumb.catalog")}
                     </Link>
                   </li>
                   <li>
@@ -189,9 +190,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button className="bg-ekwip hover:bg-ekwip-700 text-white">Démarrer</Button>
+                <Button className="bg-ekwip hover:bg-ekwip-700 text-white">{t("common.start")}</Button>
                 <Button variant="outline" className="border-ekwip text-ekwip hover:bg-ekwip hover:text-white">
-                  Obtenir un devis
+                  {t("common.get_quote")}
                 </Button>
               </div>
             </div>
@@ -219,18 +220,19 @@ export default async function CategoryPage({ params }: { params: { slug: string 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
               <h2 className="text-2xl md:text-3xl font-bold text-slate-800">
-                {products.length} {products.length > 1 ? "produits" : "produit"} disponibles
+                {products.length}{" "}
+                {products.length > 1 ? t("category.products_available") : t("category.product_available")}
               </h2>
               <p className="text-slate-600">Trouvez l'équipement idéal pour votre entreprise</p>
             </div>
 
             <div className="flex items-center gap-4">
-              <span className="text-sm text-slate-600">Trier par:</span>
+              <span className="text-sm text-slate-600">{t("category.sort_by")}</span>
               <select className="border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ekwip">
-                <option value="popularity">Popularité</option>
-                <option value="price-asc">Prix croissant</option>
-                <option value="price-desc">Prix décroissant</option>
-                <option value="newest">Nouveautés</option>
+                <option value="popularity">{t("category.sort.popularity")}</option>
+                <option value="price-asc">{t("category.sort.price_asc")}</option>
+                <option value="price-desc">{t("category.sort.price_desc")}</option>
+                <option value="newest">{t("category.sort.newest")}</option>
               </select>
             </div>
           </div>
@@ -257,11 +259,13 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                     <p className="text-slate-600 text-sm mb-4">{product.short_description}</p>
                     <div className="flex justify-between items-center">
                       <div>
-                        <p className="text-sm text-slate-500">À partir de</p>
-                        <p className="text-xl font-bold">{product.price} €/mois</p>
+                        <p className="text-sm text-slate-500">{t("common.from")}</p>
+                        <p className="text-xl font-bold">
+                          {product.price} €/{t("common.month")}
+                        </p>
                       </div>
                       <Link href={`/catalogue/product/${product.slug}`}>
-                        <Button variant="outline">Voir détails</Button>
+                        <Button variant="outline">{t("common.view_details")}</Button>
                       </Link>
                     </div>
                   </div>
@@ -270,10 +274,10 @@ export default async function CategoryPage({ params }: { params: { slug: string 
             </div>
           ) : (
             <div className="text-center py-12">
-              <h2 className="text-2xl font-semibold mb-4">Aucun produit trouvé</h2>
-              <p className="text-slate-600 mb-6">Aucun produit n'est disponible dans cette catégorie pour le moment.</p>
+              <h2 className="text-2xl font-semibold mb-4">{t("category.no_products")}</h2>
+              <p className="text-slate-600 mb-6">{t("category.no_products_description")}</p>
               <Link href="/catalogue">
-                <Button>Retour au catalogue</Button>
+                <Button>{t("category.back_to_catalog")}</Button>
               </Link>
             </div>
           )}
@@ -285,11 +289,9 @@ export default async function CategoryPage({ params }: { params: { slug: string 
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-4">
-              Pourquoi louer des {category.name.toLowerCase()} ?
+              {t("category.why_rent_title").replace("{category}", category.name.toLowerCase())}
             </h2>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">
-              Découvrez les avantages de la location d'équipements pour votre entreprise
-            </p>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">{t("category.why_rent_description")}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -310,10 +312,8 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Coûts prévisibles</h3>
-              <p className="text-slate-600">
-                Transformez vos dépenses d'investissement en coûts opérationnels prévisibles avec des mensualités fixes.
-              </p>
+              <h3 className="text-xl font-semibold mb-2">{t("category.benefit1.title")}</h3>
+              <p className="text-slate-600">{t("category.benefit1.description")}</p>
             </div>
 
             <div className="bg-white p-8 rounded-xl shadow-sm">
@@ -333,11 +333,8 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Équipements à jour</h3>
-              <p className="text-slate-600">
-                Accédez aux dernières technologies sans investissement majeur et renouvelez régulièrement votre
-                matériel.
-              </p>
+              <h3 className="text-xl font-semibold mb-2">{t("category.benefit2.title")}</h3>
+              <p className="text-slate-600">{t("category.benefit2.description")}</p>
             </div>
 
             <div className="bg-white p-8 rounded-xl shadow-sm">
@@ -357,10 +354,8 @@ export default async function CategoryPage({ params }: { params: { slug: string 
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Service inclus</h3>
-              <p className="text-slate-600">
-                Bénéficiez d'un support technique, d'une maintenance et d'un remplacement en cas de panne.
-              </p>
+              <h3 className="text-xl font-semibold mb-2">{t("category.benefit3.title")}</h3>
+              <p className="text-slate-600">{t("category.benefit3.description")}</p>
             </div>
           </div>
         </div>
@@ -369,14 +364,11 @@ export default async function CategoryPage({ params }: { params: { slug: string 
       {/* CTA Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">Besoin d'une solution personnalisée ?</h2>
-          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">
-            Nos experts sont à votre disposition pour vous aider à trouver les équipements adaptés à vos besoins
-            spécifiques.
-          </p>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-800 mb-6">{t("category.cta.title")}</h2>
+          <p className="text-lg text-slate-600 max-w-2xl mx-auto mb-8">{t("category.cta.description")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-ekwip hover:bg-ekwip-700">Demander un devis personnalisé</Button>
-            <Button variant="outline">Nous contacter</Button>
+            <Button className="bg-ekwip hover:bg-ekwip-700">{t("category.cta.button1")}</Button>
+            <Button variant="outline">{t("category.cta.button2")}</Button>
           </div>
         </div>
       </section>

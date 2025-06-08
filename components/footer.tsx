@@ -1,10 +1,15 @@
+"use client"
+
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Facebook, Twitter, Linkedin, Instagram, Send } from "lucide-react"
 import Image from "next/image"
+import { useLanguage } from "@/contexts/language-context"
 
 export default function Footer() {
+  const { t } = useLanguage()
+
   return (
     <footer className="bg-gray-900 text-white py-16 px-4 md:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -13,10 +18,7 @@ export default function Footer() {
             <Link href="/" className="flex items-center text-2xl font-semibold mb-6">
               <Image src="/images/logo-white.png" alt="Ekwip" width={120} height={40} className="h-10 w-auto" />
             </Link>
-            <p className="text-gray-400 mb-6 max-w-md">
-              Location d'équipement IT flexible et sans engagement pour les entreprises au Maroc. Préservez votre
-              trésorerie et accédez aux dernières technologies.
-            </p>
+            <p className="text-gray-400 mb-6 max-w-md">{t("footer.description")}</p>
             <div className="flex space-x-4">
               <a href="#" className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-colors">
                 <Facebook className="h-5 w-5 text-ekwip-300" />
@@ -34,37 +36,37 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="font-bold text-lg mb-6">Services</h3>
+            <h3 className="font-bold text-lg mb-6">{t("footer.services")}</h3>
             <ul className="space-y-4">
               <li>
                 <Link href="/comment-ca-marche" className="text-gray-400 hover:text-white transition-colors">
-                  Comment ça marche
+                  {t("nav.how_it_works")}
                 </Link>
               </li>
               <li>
                 <a href="https://ekwip.ma/catalogue" className="text-gray-400 hover:text-white transition-colors">
-                  Catalogue
+                  {t("nav.catalog")}
                 </a>
               </li>
               <li>
                 <Link href="/store" className="text-gray-400 hover:text-white transition-colors">
-                  Store
+                  {t("nav.store")}
                 </Link>
               </li>
               <li>
                 <Link href="/portail-client" className="text-gray-400 hover:text-white transition-colors">
-                  Portail client
+                  {t("nav.customer_portal")}
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-bold text-lg mb-6">Newsletter</h3>
-            <p className="text-gray-400 mb-4">Inscrivez-vous pour recevoir nos actualités et offres spéciales</p>
+            <h3 className="font-bold text-lg mb-6">{t("footer.newsletter")}</h3>
+            <p className="text-gray-400 mb-4">{t("footer.newsletter_description")}</p>
             <div className="flex">
               <Input
-                placeholder="Votre email"
+                placeholder={t("footer.newsletter_placeholder")}
                 className="rounded-l-full rounded-r-none border-gray-700 bg-gray-800 text-white focus:border-ekwip"
               />
               <Button variant="gradient" size="icon" className="rounded-l-none rounded-r-full">
@@ -76,20 +78,20 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Ekwip. Tous droits réservés.
+            © {new Date().getFullYear()} Ekwip. {t("footer.rights")}
           </p>
           <div className="flex space-x-6">
             <Link href="/mentions-legales" className="text-gray-500 hover:text-white text-sm transition-colors">
-              Mentions légales
+              {t("footer.legal_notice")}
             </Link>
             <Link
               href="/politique-de-confidentialite"
               className="text-gray-500 hover:text-white text-sm transition-colors"
             >
-              Politique de confidentialité
+              {t("footer.privacy_policy")}
             </Link>
             <Link href="/cgv" className="text-gray-500 hover:text-white text-sm transition-colors">
-              CGV
+              {t("footer.terms")}
             </Link>
           </div>
         </div>

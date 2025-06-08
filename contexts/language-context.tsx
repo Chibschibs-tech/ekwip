@@ -3,24 +3,20 @@
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 
-// Define available languages
 export type Language = "fr" | "en" | "es"
 
-// Define context type
 type LanguageContextType = {
   language: Language
   setLanguage: (lang: Language) => void
   t: (key: string) => string
 }
 
-// Create context with default values
 const LanguageContext = createContext<LanguageContextType>({
   language: "fr",
   setLanguage: () => {},
   t: (key) => key,
 })
 
-// Translations
 const translations: Record<Language, Record<string, string>> = {
   fr: {
     // Navigation
@@ -31,6 +27,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.client_portal": "Portail client",
     "nav.customer_portal": "Portail client",
     "nav.customer_portal_description": "Réservé aux clients ayant du matériel en location",
+    "nav.blog": "Blog",
 
     // Home page
     "home.hero.title": "Équipez-vous, sans ruiner votre trésorerie!",
@@ -41,7 +38,8 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Feature cards
     "home.features.card1.title": "Préservez votre trésorerie",
-    "home.features.card1.description": "Louez votre matériel sans immobiliser votre capital et maîtrisez vos coûts IT.",
+    "home.features.card1.description":
+      "Transformez vos dépenses d'investissement en coûts opérationnels prévisibles avec des mensualités fixes.",
     "home.features.card2.title": "Pilotez votre flotte IT",
     "home.features.card2.description": "Gérez et optimisez tout votre parc informatique depuis une interface unique.",
     "home.features.card3.title": "Upgradez à tout moment",
@@ -90,122 +88,19 @@ const translations: Record<Language, Record<string, string>> = {
       "Contactez-nous dès aujourd'hui pour obtenir un devis personnalisé et découvrir comment Ekwip peut vous aider.",
     "home.cta.button": "Contactez-nous",
 
-    // Client Portal
-    "portal.title": "Portail Client",
-    "portal.welcome": "Bienvenue dans votre espace client",
-    "portal.dashboard": "Tableau de bord",
-    "portal.orders": "Commandes",
-    "portal.equipment": "Équipements",
-    "portal.users": "Utilisateurs",
-    "portal.billing": "Facturation",
-    "portal.tickets": "Support",
-    "portal.settings": "Paramètres",
-    "portal.logout": "Déconnexion",
-
-    "portal.dashboard.title": "Tableau de bord",
-    "portal.dashboard.welcome": "Bienvenue, ",
-    "portal.dashboard.summary": "Résumé de votre compte",
-    "portal.dashboard.active_rentals": "Locations actives",
-    "portal.dashboard.pending_orders": "Commandes en attente",
-    "portal.dashboard.open_tickets": "Tickets ouverts",
-    "portal.dashboard.upcoming_renewals": "Renouvellements à venir",
-    "portal.dashboard.recent_activity": "Activité récente",
-    "portal.dashboard.view_all": "Voir tout",
-
-    "portal.orders.title": "Gestion des commandes",
-    "portal.orders.all": "Toutes les commandes",
-    "portal.orders.pending": "En attente",
-    "portal.orders.processing": "En traitement",
-    "portal.orders.completed": "Complétées",
-    "portal.orders.cancelled": "Annulées",
-    "portal.orders.search": "Rechercher une commande",
-    "portal.orders.order_number": "N° de commande",
-    "portal.orders.date": "Date",
-    "portal.orders.status": "Statut",
-    "portal.orders.total": "Total",
-    "portal.orders.items": "Articles",
-    "portal.orders.actions": "Actions",
-    "portal.orders.view": "Voir",
-    "portal.orders.no_orders": "Aucune commande trouvée",
-
-    "portal.equipment.title": "Gestion des équipements",
-    "portal.equipment.all": "Tous les équipements",
-    "portal.equipment.active": "Actifs",
-    "portal.equipment.expired": "Expirés",
-    "portal.equipment.search": "Rechercher un équipement",
-    "portal.equipment.name": "Nom",
-    "portal.equipment.type": "Type",
-    "portal.equipment.serial": "N° de série",
-    "portal.equipment.start_date": "Date de début",
-    "portal.equipment.end_date": "Date de fin",
-    "portal.equipment.assigned_to": "Assigné à",
-    "portal.equipment.status": "Statut",
-    "portal.equipment.actions": "Actions",
-    "portal.equipment.assign": "Assigner",
-    "portal.equipment.view_details": "Voir détails",
-    "portal.equipment.no_equipment": "Aucun équipement trouvé",
-    "portal.equipment.days_remaining": "jours restants",
-    "portal.equipment.expired": "Expiré",
-
-    "portal.users.title": "Gestion des utilisateurs",
-    "portal.users.all": "Tous les utilisateurs",
-    "portal.users.active": "Actifs",
-    "portal.users.inactive": "Inactifs",
-    "portal.users.search": "Rechercher un utilisateur",
-    "portal.users.add": "Ajouter un utilisateur",
-    "portal.users.name": "Nom",
-    "portal.users.email": "Email",
-    "portal.users.role": "Rôle",
-    "portal.users.department": "Département",
-    "portal.users.equipment": "Équipements",
-    "portal.users.status": "Statut",
-    "portal.users.actions": "Actions",
-    "portal.users.edit": "Modifier",
-    "portal.users.delete": "Supprimer",
-    "portal.users.no_users": "Aucun utilisateur trouvé",
-
-    "portal.billing.title": "Historique de facturation",
-    "portal.billing.all": "Toutes les factures",
-    "portal.billing.paid": "Payées",
-    "portal.billing.unpaid": "Non payées",
-    "portal.billing.search": "Rechercher une facture",
-    "portal.billing.invoice_number": "N° de facture",
-    "portal.billing.date": "Date",
-    "portal.billing.due_date": "Date d'échéance",
-    "portal.billing.amount": "Montant",
-    "portal.billing.status": "Statut",
-    "portal.billing.actions": "Actions",
-    "portal.billing.download": "Télécharger",
-    "portal.billing.pay": "Payer",
-    "portal.billing.no_invoices": "Aucune facture trouvée",
-
-    "portal.tickets.title": "Support technique",
-    "portal.tickets.all": "Tous les tickets",
-    "portal.tickets.open": "Ouverts",
-    "portal.tickets.closed": "Fermés",
-    "portal.tickets.search": "Rechercher un ticket",
-    "portal.tickets.create": "Créer un ticket",
-    "portal.tickets.ticket_number": "N° de ticket",
-    "portal.tickets.subject": "Sujet",
-    "portal.tickets.equipment": "Équipement",
-    "portal.tickets.date": "Date",
-    "portal.tickets.status": "Statut",
-    "portal.tickets.priority": "Priorité",
-    "portal.tickets.actions": "Actions",
-    "portal.tickets.view": "Voir",
-    "portal.tickets.no_tickets": "Aucun ticket trouvé",
-
-    // Footer
-    "footer.description":
-      "Location d'équipement IT flexible et sans engagement pour les entreprises au Maroc. Préservez votre trésorerie et accédez aux dernières technologies.",
-    "footer.services": "Services",
-    "footer.newsletter": "Newsletter",
-    "footer.newsletter.description": "Inscrivez-vous pour recevoir nos actualités et offres spéciales",
-    "footer.newsletter.placeholder": "Votre email",
-    "footer.copyright": "Tous droits réservés.",
-    "footer.legal": "Mentions légales",
-    "footer.privacy": "Politique de confidentialité",
-    "footer.terms": "CGV",
+    // Enterprise section
+    "home.enterprise.title": "Solutions pour entreprises",
+    "home.enterprise.description":
+      "Ekwip propose des solutions de location d'équipement IT adaptées aux besoins spécifiques des moyennes et grandes entreprises. Nos experts vous accompagnent dans la définition de votre parc informatique et vous proposent des solutions sur mesure.",
+    "home.enterprise.feature1": "Gestion de parc informatique complète",
+    "home.enterprise.feature2": "Tarifs dégressifs selon le volume",
+    "home.enterprise.feature3": "Support technique dédié",
+    "home.enterprise.feature4": "Portail client personnalisé",
+    "home.enterprise.cta_title": "Prêt à équiper votre entreprise?",
+    "home.enterprise.cta_description":
+      "Contactez-nous dès aujourd'hui pour discuter de vos besoins et obtenir un devis personnalisé.",
+    "home.enterprise.cta_button1": "Demander un devis personnalisé",
+    "home.enterprise.cta_button2": "Nous contacter",
 
     // Catalogue
     "catalogue.title": "Notre catalogue d'équipements",
@@ -238,6 +133,70 @@ const translations: Record<Language, Record<string, string>> = {
     "catalogue.custom_quote": "Demander un devis personnalisé",
     "catalogue.talk_to_expert": "Parler à un expert",
 
+    // Category pages
+    "category.laptops.title": "Ordinateurs portables disponibles à la location",
+    "category.laptops.description":
+      "Louez des ordinateurs portables de dernière génération pour votre entreprise. Nous proposons une large gamme de modèles adaptés à tous les besoins professionnels, avec service de maintenance inclus.",
+    "category.desktops.title": "Ordinateurs de bureau disponibles à la location",
+    "category.desktops.description":
+      "Équipez votre entreprise avec des ordinateurs de bureau performants en location. Solutions flexibles et évolutives pour tous types d'entreprises, avec support technique inclus.",
+    "category.smartphones.title": "Smartphones disponibles à la location",
+    "category.smartphones.description":
+      "Location de smartphones professionnels pour vos équipes. Forfaits data inclus, gestion de flotte simplifiée et renouvellement régulier des appareils.",
+    "category.tablets.title": "Tablettes disponibles à la location",
+    "category.tablets.description":
+      "Louez des tablettes tactiles pour vos besoins professionnels. Idéal pour la mobilité, les présentations clients ou les points de vente. Plusieurs modèles disponibles.",
+    "category.accessories.title": "Accessoires informatiques disponibles à la location",
+    "category.accessories.description":
+      "Complétez votre équipement informatique avec notre gamme d'accessoires en location. Écrans, claviers, souris, casques et autres périphériques pour optimiser votre productivité.",
+    "category.printers.title": "Imprimantes disponibles à la location",
+    "category.printers.description":
+      "Solutions d'impression professionnelles en location. Imprimantes laser, multifonctions et grands formats avec service de maintenance et consommables inclus.",
+    "category.furniture.title": "Mobilier de bureau disponible à la location",
+    "category.furniture.description":
+      "Aménagez vos espaces de travail avec notre mobilier de bureau ergonomique en location. Bureaux, chaises, armoires et solutions d'aménagement flexibles.",
+
+    "category.breadcrumb.home": "Accueil",
+    "category.breadcrumb.catalog": "Catalogue",
+    "category.products_available": "produits disponibles",
+    "category.product_available": "produit disponible",
+    "category.sort_by": "Trier par:",
+    "category.sort.popularity": "Popularité",
+    "category.sort.price_asc": "Prix croissant",
+    "category.sort.price_desc": "Prix décroissant",
+    "category.sort.newest": "Nouveautés",
+    "category.no_products": "Aucun produit trouvé",
+    "category.no_products_description": "Aucun produit n'est disponible dans cette catégorie pour le moment.",
+    "category.back_to_catalog": "Retour au catalogue",
+    "category.why_rent_title": "Pourquoi louer des {category} ?",
+    "category.why_rent_description": "Découvrez les avantages de la location d'équipements pour votre entreprise",
+    "category.benefit1.title": "Coûts prévisibles",
+    "category.benefit1.description":
+      "Transformez vos dépenses d'investissement en coûts opérationnels prévisibles avec des mensualités fixes.",
+    "category.benefit2.title": "Équipements à jour",
+    "category.benefit2.description":
+      "Accédez aux dernières technologies sans investissement majeur et renouvelez régulièrement votre matériel.",
+    "category.benefit3.title": "Service inclus",
+    "category.benefit3.description":
+      "Bénéficiez d'un support technique, d'une maintenance et d'un remplacement en cas de panne.",
+    "category.cta.title": "Besoin d'une solution personnalisée ?",
+    "category.cta.description":
+      "Nos experts sont à votre disposition pour vous aider à trouver les équipements adaptés à vos besoins spécifiques.",
+    "category.cta.button1": "Demander un devis personnalisé",
+    "category.cta.button2": "Nous contacter",
+
+    // Footer
+    "footer.description":
+      "Location d'équipement IT flexible et sans engagement pour les entreprises au Maroc. Préservez votre trésorerie et accédez aux dernières technologies.",
+    "footer.services": "Services",
+    "footer.newsletter": "Newsletter",
+    "footer.newsletter.description": "Inscrivez-vous pour recevoir nos actualités et offres spéciales",
+    "footer.newsletter.placeholder": "Votre email",
+    "footer.copyright": "Tous droits réservés.",
+    "footer.legal": "Mentions légales",
+    "footer.privacy": "Politique de confidentialité",
+    "footer.terms": "CGV",
+
     // Common
     "common.discover": "Découvrir",
     "common.popular": "Populaire",
@@ -249,6 +208,24 @@ const translations: Record<Language, Record<string, string>> = {
     "common.get_quote": "Obtenir un devis",
     "common.contact_us": "Contactez-nous",
     "common.learn_more": "En savoir plus",
+    "common.view_details": "Voir détails",
+    "common.from": "À partir de",
+    "common.per_month": "par mois",
+    "common.loading": "Chargement...",
+    "common.error": "Erreur",
+    "common.success": "Succès",
+
+    // Blog
+    "blog.title": "Blog Ekwip",
+    "blog.description":
+      "Conseils et astuces pour optimiser votre trésorerie et gérer efficacement votre parc informatique.",
+    "blog.featured": "À la une",
+    "blog.recent": "Articles récents",
+    "blog.categories": "Catégories",
+    "blog.read_article": "Lire l'article",
+    "blog.back_to_blog": "Retour au blog",
+    "blog.reading_time": "min de lecture",
+    "blog.similar_articles": "Articles similaires",
   },
   en: {
     // Navigation
@@ -259,6 +236,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.client_portal": "Client Portal",
     "nav.customer_portal": "Client Portal",
     "nav.customer_portal_description": "Reserved for customers with rented equipment",
+    "nav.blog": "Blog",
 
     // Home page
     "home.hero.title": "Equip yourself, without draining your treasury!",
@@ -269,7 +247,8 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Feature cards
     "home.features.card1.title": "Preserve your cash flow",
-    "home.features.card1.description": "Rent your equipment without tying up your capital and control your IT costs.",
+    "home.features.card1.description":
+      "Transform your investment expenses into predictable operating costs with fixed monthly payments.",
     "home.features.card2.title": "Manage your IT fleet",
     "home.features.card2.description": "Manage and optimize your entire IT infrastructure from a single interface.",
     "home.features.card3.title": "Upgrade anytime",
@@ -316,122 +295,18 @@ const translations: Record<Language, Record<string, string>> = {
     "home.cta.description": "Contact us today to get a personalized quote and discover how Ekwip can help you.",
     "home.cta.button": "Contact us",
 
-    // Client Portal
-    "portal.title": "Client Portal",
-    "portal.welcome": "Welcome to your client portal",
-    "portal.dashboard": "Dashboard",
-    "portal.orders": "Orders",
-    "portal.equipment": "Equipment",
-    "portal.users": "Users",
-    "portal.billing": "Billing",
-    "portal.tickets": "Support",
-    "portal.settings": "Settings",
-    "portal.logout": "Logout",
-
-    "portal.dashboard.title": "Dashboard",
-    "portal.dashboard.welcome": "Welcome, ",
-    "portal.dashboard.summary": "Account Summary",
-    "portal.dashboard.active_rentals": "Active Rentals",
-    "portal.dashboard.pending_orders": "Pending Orders",
-    "portal.dashboard.open_tickets": "Open Tickets",
-    "portal.dashboard.upcoming_renewals": "Upcoming Renewals",
-    "portal.dashboard.recent_activity": "Recent Activity",
-    "portal.dashboard.view_all": "View All",
-
-    "portal.orders.title": "Order Management",
-    "portal.orders.all": "All Orders",
-    "portal.orders.pending": "Pending",
-    "portal.orders.processing": "Processing",
-    "portal.orders.completed": "Completed",
-    "portal.orders.cancelled": "Cancelled",
-    "portal.orders.search": "Search orders",
-    "portal.orders.order_number": "Order #",
-    "portal.orders.date": "Date",
-    "portal.orders.status": "Status",
-    "portal.orders.total": "Total",
-    "portal.orders.items": "Items",
-    "portal.orders.actions": "Actions",
-    "portal.orders.view": "View",
-    "portal.orders.no_orders": "No orders found",
-
-    "portal.equipment.title": "Equipment Management",
-    "portal.equipment.all": "All Equipment",
-    "portal.equipment.active": "Active",
-    "portal.equipment.expired": "Expired",
-    "portal.equipment.search": "Search equipment",
-    "portal.equipment.name": "Name",
-    "portal.equipment.type": "Type",
-    "portal.equipment.serial": "Serial #",
-    "portal.equipment.start_date": "Start Date",
-    "portal.equipment.end_date": "End Date",
-    "portal.equipment.assigned_to": "Assigned To",
-    "portal.equipment.status": "Status",
-    "portal.equipment.actions": "Actions",
-    "portal.equipment.assign": "Assign",
-    "portal.equipment.view_details": "View Details",
-    "portal.equipment.no_equipment": "No equipment found",
-    "portal.equipment.days_remaining": "days remaining",
-    "portal.equipment.expired": "Expired",
-
-    "portal.users.title": "User Management",
-    "portal.users.all": "All Users",
-    "portal.users.active": "Active",
-    "portal.users.inactive": "Inactive",
-    "portal.users.search": "Search users",
-    "portal.users.add": "Add User",
-    "portal.users.name": "Name",
-    "portal.users.email": "Email",
-    "portal.users.role": "Role",
-    "portal.users.department": "Department",
-    "portal.users.equipment": "Equipment",
-    "portal.users.status": "Status",
-    "portal.users.actions": "Actions",
-    "portal.users.edit": "Edit",
-    "portal.users.delete": "Delete",
-    "portal.users.no_users": "No users found",
-
-    "portal.billing.title": "Billing History",
-    "portal.billing.all": "All Invoices",
-    "portal.billing.paid": "Paid",
-    "portal.billing.unpaid": "Unpaid",
-    "portal.billing.search": "Search invoices",
-    "portal.billing.invoice_number": "Invoice #",
-    "portal.billing.date": "Date",
-    "portal.billing.due_date": "Due Date",
-    "portal.billing.amount": "Amount",
-    "portal.billing.status": "Status",
-    "portal.billing.actions": "Actions",
-    "portal.billing.download": "Download",
-    "portal.billing.pay": "Pay",
-    "portal.billing.no_invoices": "No invoices found",
-
-    "portal.tickets.title": "Technical Support",
-    "portal.tickets.all": "All Tickets",
-    "portal.tickets.open": "Open",
-    "portal.tickets.closed": "Closed",
-    "portal.tickets.search": "Search tickets",
-    "portal.tickets.create": "Create Ticket",
-    "portal.tickets.ticket_number": "Ticket #",
-    "portal.tickets.subject": "Subject",
-    "portal.tickets.equipment": "Equipment",
-    "portal.tickets.date": "Date",
-    "portal.tickets.status": "Status",
-    "portal.tickets.priority": "Priority",
-    "portal.tickets.actions": "Actions",
-    "portal.tickets.view": "View",
-    "portal.tickets.no_tickets": "No tickets found",
-
-    // Footer
-    "footer.description":
-      "Flexible IT equipment rental without commitment for companies in Morocco. Preserve your cash flow and access the latest technologies.",
-    "footer.services": "Services",
-    "footer.newsletter": "Newsletter",
-    "footer.newsletter.description": "Sign up to receive our news and special offers",
-    "footer.newsletter.placeholder": "Your email",
-    "footer.copyright": "All rights reserved.",
-    "footer.legal": "Legal notice",
-    "footer.privacy": "Privacy policy",
-    "footer.terms": "Terms and conditions",
+    // Enterprise section
+    "home.enterprise.title": "Enterprise solutions",
+    "home.enterprise.description":
+      "Ekwip offers IT equipment rental solutions adapted to the specific needs of medium and large enterprises. Our experts support you in defining your IT infrastructure and offer you customized solutions.",
+    "home.enterprise.feature1": "Complete IT fleet management",
+    "home.enterprise.feature2": "Volume-based pricing",
+    "home.enterprise.feature3": "Dedicated technical support",
+    "home.enterprise.feature4": "Personalized client portal",
+    "home.enterprise.cta_title": "Ready to equip your company?",
+    "home.enterprise.cta_description": "Contact us today to discuss your needs and get a personalized quote.",
+    "home.enterprise.cta_button1": "Request a personalized quote",
+    "home.enterprise.cta_button2": "Contact us",
 
     // Catalogue
     "catalogue.title": "Our equipment catalog",
@@ -461,6 +336,70 @@ const translations: Record<Language, Record<string, string>> = {
     "catalogue.custom_quote": "Request a personalized quote",
     "catalogue.talk_to_expert": "Talk to an expert",
 
+    // Category pages
+    "category.laptops.title": "Laptops available for rental",
+    "category.laptops.description":
+      "Rent latest generation laptops for your business. We offer a wide range of models suitable for all professional needs, with maintenance service included.",
+    "category.desktops.title": "Desktop computers available for rental",
+    "category.desktops.description":
+      "Equip your business with high-performance desktop computers for rental. Flexible and scalable solutions for all types of businesses, with technical support included.",
+    "category.smartphones.title": "Smartphones available for rental",
+    "category.smartphones.description":
+      "Professional smartphone rental for your teams. Data plans included, simplified fleet management and regular device renewal.",
+    "category.tablets.title": "Tablets available for rental",
+    "category.tablets.description":
+      "Rent touch tablets for your professional needs. Ideal for mobility, client presentations or point of sale. Several models available.",
+    "category.accessories.title": "IT accessories available for rental",
+    "category.accessories.description":
+      "Complete your IT equipment with our range of rental accessories. Screens, keyboards, mice, headsets and other peripherals to optimize your productivity.",
+    "category.printers.title": "Printers available for rental",
+    "category.printers.description":
+      "Professional printing solutions for rental. Laser, multifunction and large format printers with maintenance service and consumables included.",
+    "category.furniture.title": "Office furniture available for rental",
+    "category.furniture.description":
+      "Furnish your workspaces with our ergonomic office furniture for rental. Desks, chairs, cabinets and flexible layout solutions.",
+
+    "category.breadcrumb.home": "Home",
+    "category.breadcrumb.catalog": "Catalog",
+    "category.products_available": "products available",
+    "category.product_available": "product available",
+    "category.sort_by": "Sort by:",
+    "category.sort.popularity": "Popularity",
+    "category.sort.price_asc": "Price ascending",
+    "category.sort.price_desc": "Price descending",
+    "category.sort.newest": "Newest",
+    "category.no_products": "No products found",
+    "category.no_products_description": "No products are available in this category at the moment.",
+    "category.back_to_catalog": "Back to catalog",
+    "category.why_rent_title": "Why rent {category}?",
+    "category.why_rent_description": "Discover the advantages of equipment rental for your business",
+    "category.benefit1.title": "Predictable costs",
+    "category.benefit1.description":
+      "Transform your investment expenses into predictable operating costs with fixed monthly payments.",
+    "category.benefit2.title": "Up-to-date equipment",
+    "category.benefit2.description":
+      "Access the latest technologies without major investment and regularly renew your equipment.",
+    "category.benefit3.title": "Service included",
+    "category.benefit3.description":
+      "Benefit from technical support, maintenance and replacement in case of breakdown.",
+    "category.cta.title": "Need a customized solution?",
+    "category.cta.description":
+      "Our experts are at your disposal to help you find equipment suited to your specific needs.",
+    "category.cta.button1": "Request a personalized quote",
+    "category.cta.button2": "Contact us",
+
+    // Footer
+    "footer.description":
+      "Flexible IT equipment rental without commitment for companies in Morocco. Preserve your cash flow and access the latest technologies.",
+    "footer.services": "Services",
+    "footer.newsletter": "Newsletter",
+    "footer.newsletter.description": "Sign up to receive our news and special offers",
+    "footer.newsletter.placeholder": "Your email",
+    "footer.copyright": "All rights reserved.",
+    "footer.legal": "Legal notice",
+    "footer.privacy": "Privacy policy",
+    "footer.terms": "Terms and conditions",
+
     // Common
     "common.discover": "Discover",
     "common.popular": "Popular",
@@ -472,6 +411,23 @@ const translations: Record<Language, Record<string, string>> = {
     "common.get_quote": "Get quote",
     "common.contact_us": "Contact us",
     "common.learn_more": "Learn more",
+    "common.view_details": "View details",
+    "common.from": "From",
+    "common.per_month": "per month",
+    "common.loading": "Loading...",
+    "common.error": "Error",
+    "common.success": "Success",
+
+    // Blog
+    "blog.title": "Ekwip Blog",
+    "blog.description": "Tips and advice to optimize your cash flow and efficiently manage your IT fleet.",
+    "blog.featured": "Featured",
+    "blog.recent": "Recent articles",
+    "blog.categories": "Categories",
+    "blog.read_article": "Read article",
+    "blog.back_to_blog": "Back to blog",
+    "blog.reading_time": "min read",
+    "blog.similar_articles": "Similar articles",
   },
   es: {
     // Navigation
@@ -482,6 +438,7 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.client_portal": "Portal del cliente",
     "nav.customer_portal": "Portal del cliente",
     "nav.customer_portal_description": "Reservado para clientes con equipos en alquiler",
+    "nav.blog": "Blog",
 
     // Home page
     "home.hero.title": "¡Equípate, sin arruinar tu tesorería!",
@@ -492,9 +449,10 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Feature cards
     "home.features.card1.title": "Preserva tu tesorería",
-    "home.features.card1.description": "Alquila tu material sin inmovilizar tu capital y controla tus costos IT.",
+    "home.features.card1.description":
+      "Transforma tus gastos de inversión en costos operativos predecibles con pagos mensuales fijos.",
     "home.features.card2.title": "Gestiona tu flota IT",
-    "home.features.card2.description": "Gestiona y optimiza todo tu parque informático desde una interfaz única.",
+    "home.features.card2.description": "Gestiona y optimiza toda tu infraestructura IT desde una interfaz única.",
     "home.features.card3.title": "Actualiza en cualquier momento",
     "home.features.card3.description": "Intercambia o actualiza tu equipo según tus necesidades, sin restricciones.",
     "home.features.card4.title": "Soporte y mantenimiento incluidos",
@@ -540,110 +498,19 @@ const translations: Record<Language, Record<string, string>> = {
       "Contáctanos hoy para obtener un presupuesto personalizado y descubrir cómo Ekwip puede ayudarte.",
     "home.cta.button": "Contáctanos",
 
-    // Client Portal
-    "portal.title": "Portal del cliente",
-    "portal.welcome": "Bienvenido a tu portal del cliente",
-    "portal.dashboard": "Panel de control",
-    "portal.orders": "Pedidos",
-    "portal.equipment": "Equipos",
-    "portal.users": "Usuarios",
-    "portal.billing": "Facturación",
-    "portal.tickets": "Soporte",
-    "portal.settings": "Configuración",
-    "portal.logout": "Cerrar sesión",
-
-    "portal.dashboard.title": "Panel de control",
-    "portal.dashboard.welcome": "Bienvenido, ",
-    "portal.dashboard.summary": "Resumen de la cuenta",
-    "portal.dashboard.active_rentals": "Alquileres activos",
-    "portal.dashboard.pending_orders": "Pedidos pendientes",
-    "portal.dashboard.open_tickets": "Tickets abiertos",
-    "portal.dashboard.upcoming_renewals": "Próximas renovaciones",
-    "portal.dashboard.recent_activity": "Actividad reciente",
-    "portal.dashboard.view_all": "Ver todo",
-
-    "portal.orders.title": "Gestión de pedidos",
-    "portal.orders.all": "Todos los pedidos",
-    "portal.orders.pending": "Pendiente",
-    "portal.orders.processing": "En proceso",
-    "portal.orders.completed": "Completado",
-    "portal.orders.cancelled": "Cancelado",
-    "portal.orders.search": "Buscar pedidos",
-    "portal.orders.order_number": "Número de pedido",
-    "portal.orders.date": "Fecha",
-    "portal.orders.status": "Estado",
-    "portal.orders.total": "Total",
-    "portal.orders.items": "Artículos",
-    "portal.orders.actions": "Acciones",
-    "portal.orders.view": "Ver",
-    "portal.orders.no_orders": "No se encontraron pedidos",
-
-    "portal.equipment.title": "Gestión de equipos",
-    "portal.equipment.all": "Todos los equipos",
-    "portal.equipment.active": "Activo",
-    "portal.equipment.expired": "Caducado",
-    "portal.equipment.search": "Buscar equipos",
-    "portal.equipment.name": "Nombre",
-    "portal.equipment.type": "Tipo",
-    "portal.equipment.serial": "Número de serie",
-    "portal.equipment.start_date": "Fecha de inicio",
-    "portal.equipment.end_date": "Fecha de finalización",
-    "portal.equipment.assigned_to": "Asignado a",
-    "portal.equipment.status": "Estado",
-    "portal.equipment.actions": "Acciones",
-    "portal.equipment.assign": "Asignar",
-    "portal.equipment.view_details": "Ver detalles",
-    "portal.equipment.no_equipment": "No se encontraron equipos",
-    "portal.equipment.days_remaining": "días restantes",
-    "portal.equipment.expired": "Caducado",
-
-    "portal.users.title": "Gestión de usuarios",
-    "portal.users.all": "Todos los usuarios",
-    "portal.users.active": "Activo",
-    "portal.users.inactive": "Inactivo",
-    "portal.users.search": "Buscar usuarios",
-    "portal.users.add": "Añadir usuario",
-    "portal.users.name": "Nombre",
-    "portal.users.email": "Correo electrónico",
-    "portal.users.role": "Rol",
-    "portal.users.department": "Departamento",
-    "portal.users.equipment": "Equipos",
-    "portal.users.status": "Estado",
-    "portal.users.actions": "Acciones",
-    "portal.users.edit": "Editar",
-    "portal.users.delete": "Eliminar",
-    "portal.users.no_users": "No se encontraron usuarios",
-
-    "portal.billing.title": "Historial de facturación",
-    "portal.billing.all": "Todas las facturas",
-    "portal.billing.paid": "Pagado",
-    "portal.billing.unpaid": "Impagado",
-    "portal.billing.search": "Buscar facturas",
-    "portal.billing.invoice_number": "Número de factura",
-    "portal.billing.date": "Fecha",
-    "portal.billing.due_date": "Fecha de vencimiento",
-    "portal.billing.amount": "Importe",
-    "portal.billing.status": "Estado",
-    "portal.billing.actions": "Acciones",
-    "portal.billing.download": "Descargar",
-    "portal.billing.pay": "Pagar",
-    "portal.billing.no_invoices": "No se encontraron facturas",
-
-    "portal.tickets.title": "Soporte técnico",
-    "portal.tickets.all": "Todos los tickets",
-    "portal.tickets.open": "Abiertos",
-    "portal.tickets.closed": "Cerrados",
-    "portal.tickets.search": "Buscar tickets",
-    "portal.tickets.create": "Crear ticket",
-    "portal.tickets.ticket_number": "Número de ticket",
-    "portal.tickets.subject": "Asunto",
-    "portal.tickets.equipment": "Equipo",
-    "portal.tickets.date": "Fecha",
-    "portal.tickets.status": "Estado",
-    "portal.tickets.priority": "Prioridad",
-    "portal.tickets.actions": "Acciones",
-    "portal.tickets.view": "Ver",
-    "portal.tickets.no_tickets": "No se encontraron tickets",
+    // Enterprise section
+    "home.enterprise.title": "Soluciones para empresas",
+    "home.enterprise.description":
+      "Ekwip ofrece soluciones de alquiler de equipos IT adaptadas a las necesidades específicas de medianas y grandes empresas. Nuestros expertos te acompañan en la definición de tu infraestructura IT y te proponen soluciones a medida.",
+    "home.enterprise.feature1": "Gestión completa de flota IT",
+    "home.enterprise.feature2": "Precios según volumen",
+    "home.enterprise.feature3": "Soporte técnico dedicado",
+    "home.enterprise.feature4": "Portal cliente personalizado",
+    "home.enterprise.cta_title": "¿Listo para equipar tu empresa?",
+    "home.enterprise.cta_description":
+      "Contáctanos hoy para discutir tus necesidades y obtener un presupuesto personalizado.",
+    "home.enterprise.cta_button1": "Solicitar presupuesto personalizado",
+    "home.enterprise.cta_button2": "Contáctanos",
 
     // Catalogue
     "catalogue.title": "Nuestro catálogo de equipos",
@@ -653,10 +520,9 @@ const translations: Record<Language, Record<string, string>> = {
     "catalogue.categories.description":
       "Encuentra rápidamente el equipo que necesitas gracias a nuestra organización por categorías",
     "catalogue.all_products.title": "Todos nuestros equipos",
-    "catalogue.all_products.description":
-      "Navega por la totalidad de nuestro catálogo de equipos disponibles en alquiler.",
+    "catalogue.all_products.description": "Navega por nuestro catálogo completo de equipos disponibles en alquiler.",
     "catalogue.filters": "Filtros:",
-    "catalogue.search_placeholder": "Buscar un equipo...",
+    "catalogue.search_placeholder": "Buscar equipo...",
     "catalogue.all_categories": "Todas las categorías",
     "catalogue.all_brands": "Todas las marcas",
     "catalogue.in_stock_only": "Solo en stock",
@@ -671,9 +537,72 @@ const translations: Record<Language, Record<string, string>> = {
     "catalogue.partner_brands_description": "Trabajamos con las mejores marcas para ofrecerte equipos de calidad.",
     "catalogue.not_found_title": "¿No encuentras lo que buscas?",
     "catalogue.not_found_description":
-      "Contáctanos para discutir tus necesidades específicas. Podemos proponerte soluciones a medida.",
-    "catalogue.custom_quote": "Solicitar un presupuesto personalizado",
+      "Contáctanos para discutir tus necesidades específicas. Podemos ofrecerte soluciones a medida.",
+    "catalogue.custom_quote": "Solicitar presupuesto personalizado",
     "catalogue.talk_to_expert": "Hablar con un experto",
+
+    // Category pages
+    "category.laptops.title": "Laptops disponibles en alquiler",
+    "category.laptops.description":
+      "Alquila laptops de última generación para tu empresa. Ofrecemos una amplia gama de modelos adaptados a todas las necesidades profesionales, con servicio de mantenimiento incluido.",
+    "category.desktops.title": "Computadoras de escritorio disponibles en alquiler",
+    "category.desktops.description":
+      "Equipa tu empresa con computadoras de escritorio de alto rendimiento en alquiler. Soluciones flexibles y escalables para todo tipo de empresas, con soporte técnico incluido.",
+    "category.smartphones.title": "Smartphones disponibles en alquiler",
+    "category.smartphones.description":
+      "Alquiler de smartphones profesionales para tus equipos. Planes de datos incluidos, gestión de flota simplificada y renovación regular de dispositivos.",
+    "category.tablets.title": "Tabletas disponibles en alquiler",
+    "category.tablets.description":
+      "Alquila tabletas táctiles para tus necesidades profesionales. Ideal para movilidad, presentaciones a clientes o puntos de venta. Varios modelos disponibles.",
+    "category.accessories.title": "Accesorios IT disponibles en alquiler",
+    "category.accessories.description":
+      "Completa tu equipo IT con nuestra gama de accesorios en alquiler. Pantallas, teclados, ratones, auriculares y otros periféricos para optimizar tu productividad.",
+    "category.printers.title": "Impresoras disponibles en alquiler",
+    "category.printers.description":
+      "Soluciones de impresión profesionales en alquiler. Impresoras láser, multifunción y gran formato con servicio de mantenimiento y consumibles incluidos.",
+    "category.furniture.title": "Mobiliario de oficina disponible en alquiler",
+    "category.furniture.description":
+      "Amuebla tus espacios de trabajo con nuestro mobiliario de oficina ergonómico en alquiler. Escritorios, sillas, armarios y soluciones de distribución flexibles.",
+
+    "category.breadcrumb.home": "Inicio",
+    "category.breadcrumb.catalog": "Catálogo",
+    "category.products_available": "productos disponibles",
+    "category.product_available": "producto disponible",
+    "category.sort_by": "Ordenar por:",
+    "category.sort.popularity": "Popularidad",
+    "category.sort.price_asc": "Precio ascendente",
+    "category.sort.price_desc": "Precio descendente",
+    "category.sort.newest": "Más nuevos",
+    "category.no_products": "No se encontraron productos",
+    "category.no_products_description": "No hay productos disponibles en esta categoría en este momento.",
+    "category.back_to_catalog": "Volver al catálogo",
+    "category.why_rent_title": "¿Por qué alquilar {category}?",
+    "category.why_rent_description": "Descubre las ventajas del alquiler de equipos para tu empresa",
+    "category.benefit1.title": "Costos predecibles",
+    "category.benefit1.description":
+      "Transforma tus gastos de inversión en costos operativos predecibles con pagos mensuales fijos.",
+    "category.benefit2.title": "Equipos actualizados",
+    "category.benefit2.description":
+      "Accede a las últimas tecnologías sin inversión mayor y renueva regularmente tu equipo.",
+    "category.benefit3.title": "Servicio incluido",
+    "category.benefit3.description": "Benefíciate de soporte técnico, mantenimiento y reemplazo en caso de avería.",
+    "category.cta.title": "¿Necesitas una solución personalizada?",
+    "category.cta.description":
+      "Nuestros expertos están a tu disposición para ayudarte a encontrar equipos adaptados a tus necesidades específicas.",
+    "category.cta.button1": "Solicitar presupuesto personalizado",
+    "category.cta.button2": "Contáctanos",
+
+    // Footer
+    "footer.description":
+      "Alquiler flexible de equipos IT sin compromiso para empresas en Marruecos. Preserva tu flujo de caja y accede a las últimas tecnologías.",
+    "footer.services": "Servicios",
+    "footer.newsletter": "Newsletter",
+    "footer.newsletter.description": "Suscríbete para recibir nuestras noticias y ofertas especiales",
+    "footer.newsletter.placeholder": "Tu email",
+    "footer.copyright": "Todos los derechos reservados.",
+    "footer.legal": "Aviso legal",
+    "footer.privacy": "Política de privacidad",
+    "footer.terms": "Términos y condiciones",
 
     // Common
     "common.discover": "Descubrir",
@@ -686,27 +615,30 @@ const translations: Record<Language, Record<string, string>> = {
     "common.get_quote": "Obtener presupuesto",
     "common.contact_us": "Contáctanos",
     "common.learn_more": "Saber más",
+    "common.view_details": "Ver detalles",
+    "common.from": "Desde",
+    "common.per_month": "por mes",
+    "common.loading": "Cargando...",
+    "common.error": "Error",
+    "common.success": "Éxito",
 
-    // Footer
-    "footer.description":
-      "Alquiler de equipos IT flexible y sin compromiso para empresas en Marruecos. Preserva tu tesorería y accede a las últimas tecnologías.",
-    "footer.services": "Servicios",
-    "footer.newsletter": "Newsletter",
-    "footer.newsletter.description": "Suscríbete para recibir nuestras noticias y ofertas especiales",
-    "footer.newsletter.placeholder": "Tu email",
-    "footer.copyright": "Todos los derechos reservados.",
-    "footer.legal": "Aviso legal",
-    "footer.privacy": "Política de privacidad",
-    "footer.terms": "Términos y condiciones",
+    // Blog
+    "blog.title": "Blog Ekwip",
+    "blog.description":
+      "Consejos y trucos para optimizar tu flujo de caja y gestionar eficientemente tu parque informático.",
+    "blog.featured": "Destacado",
+    "blog.recent": "Artículos recientes",
+    "blog.categories": "Categorías",
+    "blog.read_article": "Leer artículo",
+    "blog.back_to_blog": "Volver al blog",
+    "blog.reading_time": "min de lectura",
+    "blog.similar_articles": "Artículos similares",
   },
 }
 
-// Provider component
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  // Get initial language from localStorage or default to French
   const [language, setLanguageState] = useState<Language>("fr")
 
-  // Load language preference from localStorage on client side
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language") as Language
     if (savedLanguage && (savedLanguage === "fr" || savedLanguage === "en" || savedLanguage === "es")) {
@@ -714,13 +646,11 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Update language and save to localStorage
   const setLanguage = (lang: Language) => {
     setLanguageState(lang)
     localStorage.setItem("language", lang)
   }
 
-  // Translation function
   const t = (key: string): string => {
     return translations[language][key] || key
   }
@@ -728,7 +658,6 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
 }
 
-// Custom hook to use the language context
 export function useLanguage() {
   return useContext(LanguageContext)
 }

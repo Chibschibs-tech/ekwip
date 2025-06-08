@@ -2,49 +2,47 @@
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { useLanguage, type Language } from "@/contexts/language-context"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Globe } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
+
+const languages = [
+  { code: "fr" as const, name: "Français", flag: "🇫🇷" },
+  { code: "en" as const, name: "English", flag: "🇺🇸" },
+  { code: "es" as const, name: "Español", flag: "🇪🇸" },
+]
 
 export default function LanguageSwitcher() {
   const { language, setLanguage } = useLanguage()
   const [isOpen, setIsOpen] = useState(false)
 
-  const toggleLanguage = (lang: Language) => {
-    setLanguage(lang)
-    setIsOpen(false)
-  }
+  const currentLanguage = languages.find((lang) => lang.code === language)
 
   return (
-    <div className="relative">
-      <Button variant="ghost" size="sm" className="flex items-center gap-1 text-sm" onClick={() => setIsOpen(!isOpen)}>
-        <Globe className="h-4 w-4" />
-        <span className="uppercase">{language}</span>
-      </Button>
-
-      {isOpen && (
-        <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg z-50">
-          <div className="py-1">
-            <button
-              className={`block px-4 py-2 text-sm w-full text-left ${language === "fr" ? "bg-ekwip-50 text-ekwip" : "text-gray-700 hover:bg-gray-100"}`}
-              onClick={() => toggleLanguage("fr")}
-            >
-              Français
-            </button>
-            <button
-              className={`block px-4 py-2 text-sm w-full text-left ${language === "en" ? "bg-ekwip-50 text-ekwip" : "text-gray-700 hover:bg-gray-100"}`}
-              onClick={() => toggleLanguage("en")}
-            >
-              English
-            </button>
-            <button
-              className={`block px-4 py-2 text-sm w-full text-left ${language === "es" ? "bg-ekwip-50 text-ekwip" : "text-gray-700 hover:bg-gray-100"}`}
-              onClick={() => toggleLanguage("es")}
-            >
-              Español
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+    <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
+          <Globe className="h-4 w-4" />
+          <span className="sr-only">Change language</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-40">
+        {languages.map((lang) => (
+          <DropdownMenuItem
+            key={lang.code}
+            onClick={() => {
+              setLanguage(lang.code)
+              setIsOpen(false)
+            }}
+            className={`flex items-center gap-2 cursor-pointer ${
+              language === lang.code ? "bg-ekwip-50 text-ekwip font-medium" : ""
+            }`}
+          >
+            <span className="text-base">{lang.flag}</span>
+            <span className="text-sm">{lang.name}</span>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
