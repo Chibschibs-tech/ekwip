@@ -1,14 +1,31 @@
 "use client"
 
-import { useEffect } from "react"
-import { useAuth } from "@/contexts/auth-context"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+
+// Force dynamic rendering to avoid SSR issues
+export const dynamic = "force-dynamic"
 
 export default function LogoutPage() {
-  const { logout } = useAuth()
+  const [isClient, setIsClient] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
-    logout()
-  }, [logout])
+    setIsClient(true)
+  }, [])
+
+  useEffect(() => {
+    if (isClient) {
+      // Clear auth data
+      localStorage.removeItem("ekwip_auth_token")
+      localStorage.removeItem("ekwip_user")
+
+      // Redirect to login page
+      setTimeout(() => {
+        router.push("/portail-client")
+      }, 1500)
+    }
+  }, [isClient, router])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
