@@ -102,6 +102,59 @@ const translations: Record<Language, Record<string, string>> = {
     "home.enterprise.cta_button1": "Demander un devis personnalisé",
     "home.enterprise.cta_button2": "Nous contacter",
 
+    // Category pages
+    "category.breadcrumb.home": "Accueil",
+    "category.breadcrumb.catalog": "Catalogue",
+    "category.products_available": "produits disponibles",
+    "category.product_available": "produit disponible",
+    "category.sort_by": "Trier par :",
+    "category.sort.popularity": "Popularité",
+    "category.sort.price_asc": "Prix croissant",
+    "category.sort.price_desc": "Prix décroissant",
+    "category.sort.newest": "Nouveautés",
+    "category.no_products": "Aucun produit trouvé",
+    "category.no_products_description": "Aucun produit n'est disponible dans cette catégorie pour le moment.",
+    "category.back_to_catalog": "Retour au catalogue",
+    "category.why_rent_title": "Pourquoi louer des {category} ?",
+    "category.why_rent_description": "Découvrez les avantages de la location d'équipements pour votre entreprise",
+    "category.benefit1.title": "Coûts prévisibles",
+    "category.benefit1.description":
+      "Transformez vos dépenses d'investissement en coûts opérationnels prévisibles avec des mensualités fixes.",
+    "category.benefit2.title": "Équipements à jour",
+    "category.benefit2.description":
+      "Accédez aux dernières technologies sans investissement majeur et renouvelez régulièrement votre matériel.",
+    "category.benefit3.title": "Service inclus",
+    "category.benefit3.description":
+      "Bénéficiez d'un support technique, d'une maintenance et d'un remplacement en cas de panne.",
+    "category.cta.title": "Besoin d'une solution personnalisée ?",
+    "category.cta.description":
+      "Nos experts sont à votre disposition pour vous aider à trouver les équipements adaptés à vos besoins spécifiques.",
+    "category.cta.button1": "Demander un devis personnalisé",
+    "category.cta.button2": "Nous contacter",
+
+    // Category specific titles and descriptions
+    "category.laptops.title": "Ordinateurs portables disponibles à la location",
+    "category.laptops.description":
+      "Louez des ordinateurs portables de dernière génération pour votre entreprise. Nous proposons une large gamme de modèles adaptés à tous les besoins professionnels, avec service de maintenance inclus.",
+    "category.desktops.title": "Ordinateurs de bureau disponibles à la location",
+    "category.desktops.description":
+      "Équipez votre entreprise avec des ordinateurs de bureau performants en location. Solutions flexibles et évolutives pour tous types d'entreprises, avec support technique inclus.",
+    "category.smartphones.title": "Smartphones disponibles à la location",
+    "category.smartphones.description":
+      "Location de smartphones professionnels pour vos équipes. Forfaits data inclus, gestion de flotte simplifiée et renouvellement régulier des appareils.",
+    "category.tablets.title": "Tablettes disponibles à la location",
+    "category.tablets.description":
+      "Louez des tablettes tactiles pour vos besoins professionnels. Idéal pour la mobilité, les présentations clients ou les points de vente. Plusieurs modèles disponibles.",
+    "category.accessories.title": "Accessoires informatiques disponibles à la location",
+    "category.accessories.description":
+      "Complétez votre équipement informatique avec notre gamme d'accessoires en location. Écrans, claviers, souris, casques et autres périphériques pour optimiser votre productivité.",
+    "category.printers.title": "Imprimantes disponibles à la location",
+    "category.printers.description":
+      "Solutions d'impression professionnelles en location. Imprimantes laser, multifonctions et grands formats avec service de maintenance et consommables inclus.",
+    "category.furniture.title": "Mobilier de bureau disponible à la location",
+    "category.furniture.description":
+      "Aménagez vos espaces de travail avec notre mobilier de bureau ergonomique en location. Bureaux, chaises, armoires et solutions d'aménagement flexibles.",
+
     // Common
     "common.discover": "Découvrir",
     "common.popular": "Populaire",
@@ -200,6 +253,59 @@ const translations: Record<Language, Record<string, string>> = {
     "home.enterprise.cta_description": "Contact us today to discuss your needs and get a personalized quote.",
     "home.enterprise.cta_button1": "Request a personalized quote",
     "home.enterprise.cta_button2": "Contact us",
+
+    // Category pages
+    "category.breadcrumb.home": "Home",
+    "category.breadcrumb.catalog": "Catalog",
+    "category.products_available": "products available",
+    "category.product_available": "product available",
+    "category.sort_by": "Sort by:",
+    "category.sort.popularity": "Popularity",
+    "category.sort.price_asc": "Price ascending",
+    "category.sort.price_desc": "Price descending",
+    "category.sort.newest": "Newest",
+    "category.no_products": "No products found",
+    "category.no_products_description": "No products are available in this category at the moment.",
+    "category.back_to_catalog": "Back to catalog",
+    "category.why_rent_title": "Why rent {category}?",
+    "category.why_rent_description": "Discover the advantages of equipment rental for your business",
+    "category.benefit1.title": "Predictable costs",
+    "category.benefit1.description":
+      "Transform your investment expenses into predictable operating costs with fixed monthly payments.",
+    "category.benefit2.title": "Up-to-date equipment",
+    "category.benefit2.description":
+      "Access the latest technologies without major investment and regularly renew your equipment.",
+    "category.benefit3.title": "Service included",
+    "category.benefit3.description":
+      "Benefit from technical support, maintenance and replacement in case of breakdown.",
+    "category.cta.title": "Need a customized solution?",
+    "category.cta.description":
+      "Our experts are at your disposal to help you find equipment adapted to your specific needs.",
+    "category.cta.button1": "Request a personalized quote",
+    "category.cta.button2": "Contact us",
+
+    // Category specific titles and descriptions
+    "category.laptops.title": "Laptops available for rental",
+    "category.laptops.description":
+      "Rent latest generation laptops for your business. We offer a wide range of models adapted to all professional needs, with maintenance service included.",
+    "category.desktops.title": "Desktop computers available for rental",
+    "category.desktops.description":
+      "Equip your business with high-performance desktop computers for rental. Flexible and scalable solutions for all types of businesses, with technical support included.",
+    "category.smartphones.title": "Smartphones available for rental",
+    "category.smartphones.description":
+      "Professional smartphone rental for your teams. Data plans included, simplified fleet management and regular device renewal.",
+    "category.tablets.title": "Tablets available for rental",
+    "category.tablets.description":
+      "Rent tablets for your professional needs. Ideal for mobility, client presentations or point of sale. Several models available.",
+    "category.accessories.title": "IT accessories available for rental",
+    "category.accessories.description":
+      "Complete your IT equipment with our range of rental accessories. Screens, keyboards, mice, headsets and other peripherals to optimize your productivity.",
+    "category.printers.title": "Printers available for rental",
+    "category.printers.description":
+      "Professional printing solutions for rental. Laser, multifunction and large format printers with maintenance service and consumables included.",
+    "category.furniture.title": "Office furniture available for rental",
+    "category.furniture.description":
+      "Furnish your workspaces with our ergonomic office furniture for rental. Desks, chairs, cabinets and flexible layout solutions.",
 
     // Common
     "common.discover": "Discover",
@@ -301,6 +407,58 @@ const translations: Record<Language, Record<string, string>> = {
       "Contáctanos hoy para discutir tus necesidades y obtener un presupuesto personalizado.",
     "home.enterprise.cta_button1": "Solicitar presupuesto personalizado",
     "home.enterprise.cta_button2": "Contáctanos",
+
+    // Category pages
+    "category.breadcrumb.home": "Inicio",
+    "category.breadcrumb.catalog": "Catálogo",
+    "category.products_available": "productos disponibles",
+    "category.product_available": "producto disponible",
+    "category.sort_by": "Ordenar por:",
+    "category.sort.popularity": "Popularidad",
+    "category.sort.price_asc": "Precio ascendente",
+    "category.sort.price_desc": "Precio descendente",
+    "category.sort.newest": "Novedades",
+    "category.no_products": "No se encontraron productos",
+    "category.no_products_description": "No hay productos disponibles en esta categoría en este momento.",
+    "category.back_to_catalog": "Volver al catálogo",
+    "category.why_rent_title": "¿Por qué alquilar {category}?",
+    "category.why_rent_description": "Descubre las ventajas del alquiler de equipos para tu empresa",
+    "category.benefit1.title": "Costos predecibles",
+    "category.benefit1.description":
+      "Transforma tus gastos de inversión en costos operativos predecibles con pagos mensuales fijos.",
+    "category.benefit2.title": "Equipos actualizados",
+    "category.benefit2.description":
+      "Accede a las últimas tecnologías sin inversión mayor y renueva regularmente tu equipo.",
+    "category.benefit3.title": "Servicio incluido",
+    "category.benefit3.description": "Benefíciate de soporte técnico, mantenimiento y reemplazo en caso de avería.",
+    "category.cta.title": "¿Necesitas una solución personalizada?",
+    "category.cta.description":
+      "Nuestros expertos están a tu disposición para ayudarte a encontrar equipos adaptados a tus necesidades específicas.",
+    "category.cta.button1": "Solicitar presupuesto personalizado",
+    "category.cta.button2": "Contáctanos",
+
+    // Category specific titles and descriptions
+    "category.laptops.title": "Laptops disponibles en alquiler",
+    "category.laptops.description":
+      "Alquila laptops de última generación para tu empresa. Ofrecemos una amplia gama de modelos adaptados a todas las necesidades profesionales, con servicio de mantenimiento incluido.",
+    "category.desktops.title": "Computadoras de escritorio disponibles en alquiler",
+    "category.desktops.description":
+      "Equipa tu empresa con computadoras de escritorio de alto rendimiento en alquiler. Soluciones flexibles y escalables para todo tipo de empresas, con soporte técnico incluido.",
+    "category.smartphones.title": "Smartphones disponibles en alquiler",
+    "category.smartphones.description":
+      "Alquiler de smartphones profesionales para tus equipos. Planes de datos incluidos, gestión de flota simplificada y renovación regular de dispositivos.",
+    "category.tablets.title": "Tabletas disponibles en alquiler",
+    "category.tablets.description":
+      "Alquila tabletas para tus necesidades profesionales. Ideal para movilidad, presentaciones a clientes o puntos de venta. Varios modelos disponibles.",
+    "category.accessories.title": "Accesorios informáticos disponibles en alquiler",
+    "category.accessories.description":
+      "Completa tu equipo informático con nuestra gama de accesorios en alquiler. Pantallas, teclados, ratones, auriculares y otros periféricos para optimizar tu productividad.",
+    "category.printers.title": "Impresoras disponibles en alquiler",
+    "category.printers.description":
+      "Soluciones de impresión profesionales en alquiler. Impresoras láser, multifunción y gran formato con servicio de mantenimiento y consumibles incluidos.",
+    "category.furniture.title": "Mobiliario de oficina disponible en alquiler",
+    "category.furniture.description":
+      "Amuebla tus espacios de trabajo con nuestro mobiliario de oficina ergonómico en alquiler. Escritorios, sillas, armarios y soluciones de distribución flexibles.",
 
     // Common
     "common.discover": "Descubrir",
