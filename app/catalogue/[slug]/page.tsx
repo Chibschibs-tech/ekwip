@@ -35,7 +35,7 @@ const mockCategories = [
     name: "Tablettes",
     slug: "tablettes",
     description: "Tablettes tactiles pour une productivité en déplacement",
-    count: 5,
+    count: 7, // Updated count
   },
   {
     id: 5,
@@ -60,8 +60,9 @@ const mockCategories = [
   },
 ]
 
-// Mock products data
+// Mock products data - UPDATED WITH REMARKABLE TABLETS
 const mockProducts = [
+  // Laptops
   {
     id: 1,
     name: 'MacBook Pro 14"',
@@ -92,6 +93,27 @@ const mockProducts = [
       { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png", alt: "ThinkPad X1 Carbon" },
     ],
     category_id: 1,
+  },
+  // Tablets - NEW REMARKABLE PRODUCTS
+  {
+    id: 4,
+    name: "reMarkable Paper Pro",
+    slug: "remarkable-paper-pro",
+    price: "85",
+    short_description: "Tablette papier numérique couleur avec Marker inclus, rétroéclairage et batterie longue durée",
+    images: [
+      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png", alt: "reMarkable Paper Pro" },
+    ],
+    category_id: 4,
+  },
+  {
+    id: 5,
+    name: "reMarkable 2",
+    slug: "remarkable-2",
+    price: "65",
+    short_description: "Tablette papier numérique avec Marker inclus, expérience d'écriture naturelle",
+    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png", alt: "reMarkable 2" }],
+    category_id: 4,
   },
 ]
 
