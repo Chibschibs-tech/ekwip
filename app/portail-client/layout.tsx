@@ -5,7 +5,7 @@ import type React from "react"
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import {
   LayoutDashboard,
   Package,
@@ -31,6 +31,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Suspense } from "react"
 
 export default function ClientPortalLayout({
   children,
@@ -38,12 +39,57 @@ export default function ClientPortalLayout({
   children: React.ReactNode
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
   const pathname = usePathname()
+  const router = useRouter()
+
+  // Check authentication status on mount
+  useEffect(() => {
+    const checkAuth = () => {
+      const token = localStorage.getItem("ekwip_auth_token")
+      const isAuth = !!token
+      setIsAuthenticated(isAuth)
+
+      // If not authenticated and not on login page, redirect to login
+      if (!isAuth && pathname !== "/portail-client") {
+        router.push("/portail-client")
+      }
+
+      // If authenticated and on login page, redirect to dashboard
+      if (isAuth && pathname === "/portail-client") {
+        router.push("/portail-client/dashboard")
+      }
+
+      setIsLoading(false)
+    }
+
+    checkAuth()
+  }, [pathname, router])
 
   // Close sidebar when route changes on mobile
   useEffect(() => {
     setSidebarOpen(false)
   }, [pathname])
+
+  // If loading, show minimal loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ekwip"></div>
+      </div>
+    )
+  }
+
+  // If not authenticated and not on login page, don't render the dashboard layout
+  if (!isAuthenticated && pathname !== "/portail-client") {
+    return null
+  }
+
+  // If on login page, just render the children (login form) without dashboard layout
+  if (pathname === "/portail-client") {
+    return <>{children}</>
+  }
 
   const navigation = [
     { name: "Tableau de bord", href: "/portail-client/dashboard", icon: LayoutDashboard },
@@ -235,7 +281,9 @@ export default function ClientPortalLayout({
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-6">{children}</main>
+        <main className="p-4 lg:p-6">
+          <Suspense fallback={<>Loading...</>}>{children}</Suspense>
+        </main>
       </div>
     </div>
   )

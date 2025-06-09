@@ -1,36 +1,26 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { useRouter } from "next/navigation"
 
-// Force dynamic rendering to avoid SSR issues
-export const dynamic = "force-dynamic"
-
 export default function LogoutPage() {
-  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
-    setIsClient(true)
-  }, [])
+    // Clear authentication data
+    localStorage.removeItem("ekwip_auth_token")
+    localStorage.removeItem("ekwip_user")
 
-  useEffect(() => {
-    if (isClient) {
-      // Clear auth data
-      localStorage.removeItem("ekwip_auth_token")
-      localStorage.removeItem("ekwip_user")
-
-      // Redirect to login page
-      setTimeout(() => {
-        router.push("/portail-client")
-      }, 1500)
-    }
-  }, [isClient, router])
+    // Redirect to login page
+    router.push("/portail-client")
+  }, [router])
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <h1 className="text-2xl font-bold mb-4">Déconnexion en cours...</h1>
-      <p className="text-gray-600">Vous allez être redirigé vers la page de connexion.</p>
+    <div className="flex items-center justify-center min-h-[50vh]">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ekwip mx-auto"></div>
+        <p className="mt-4 text-lg">Déconnexion en cours...</p>
+      </div>
     </div>
   )
 }

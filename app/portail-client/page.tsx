@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -16,7 +16,17 @@ export default function ClientPortalLogin() {
   const [isLoading, setIsLoading] = useState(false)
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
+
+  // Check if user is already authenticated
+  useEffect(() => {
+    const token = localStorage.getItem("ekwip_auth_token")
+    if (token) {
+      setIsAuthenticated(true)
+      router.push("/portail-client/dashboard")
+    }
+  }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -45,6 +55,11 @@ export default function ClientPortalLogin() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  // If already authenticated, don't render the login form
+  if (isAuthenticated) {
+    return null
   }
 
   return (
