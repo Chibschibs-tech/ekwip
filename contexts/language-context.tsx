@@ -102,6 +102,37 @@ const translations: Record<Language, Record<string, string>> = {
     "home.enterprise.cta_button1": "Demander un devis personnalisé",
     "home.enterprise.cta_button2": "Nous contacter",
 
+    // Catalogue page
+    "catalogue.title": "Notre catalogue d'équipements",
+    "catalogue.description":
+      "Découvrez notre large gamme d'équipements IT disponibles à la location pour répondre à tous vos besoins professionnels.",
+    "catalogue.categories.title": "Explorez nos catégories",
+    "catalogue.categories.description":
+      "Trouvez rapidement l'équipement dont vous avez besoin grâce à notre organisation par catégories",
+    "catalogue.all_products.title": "Tous nos équipements",
+    "catalogue.all_products.description":
+      "Parcourez l'intégralité de notre catalogue d'équipements disponibles à la location.",
+    "catalogue.filters": "Filtres :",
+    "catalogue.search_placeholder": "Rechercher un équipement...",
+    "catalogue.all_categories": "Toutes catégories",
+    "catalogue.all_brands": "Toutes marques",
+    "catalogue.in_stock_only": "En stock uniquement",
+    "catalogue.new_items": "Nouveautés",
+    "catalogue.load_more": "Charger plus d'équipements",
+    "catalogue.popular_products": "Produits populaires",
+    "catalogue.popular_description": "Découvrez nos équipements les plus demandés par nos clients.",
+    "catalogue.from": "À partir de",
+    "catalogue.view_details": "Voir détails",
+    "catalogue.view_all_products": "Voir tous les produits",
+    "catalogue.partner_brands": "Nos marques partenaires",
+    "catalogue.partner_brands_description":
+      "Nous travaillons avec les meilleures marques pour vous offrir des équipements de qualité.",
+    "catalogue.not_found_title": "Vous ne trouvez pas ce que vous cherchez ?",
+    "catalogue.not_found_description":
+      "Contactez-nous pour discuter de vos besoins spécifiques. Nous pouvons vous proposer des solutions sur mesure.",
+    "catalogue.custom_quote": "Demander un devis personnalisé",
+    "catalogue.talk_to_expert": "Parler à un expert",
+
     // Category pages
     "category.breadcrumb.home": "Accueil",
     "category.breadcrumb.catalog": "Catalogue",
@@ -253,6 +284,34 @@ const translations: Record<Language, Record<string, string>> = {
     "home.enterprise.cta_description": "Contact us today to discuss your needs and get a personalized quote.",
     "home.enterprise.cta_button1": "Request a personalized quote",
     "home.enterprise.cta_button2": "Contact us",
+
+    // Catalogue page
+    "catalogue.title": "Our equipment catalog",
+    "catalogue.description":
+      "Discover our wide range of IT equipment available for rental to meet all your professional needs.",
+    "catalogue.categories.title": "Explore our categories",
+    "catalogue.categories.description": "Quickly find the equipment you need thanks to our organization by categories",
+    "catalogue.all_products.title": "All our equipment",
+    "catalogue.all_products.description": "Browse our complete catalog of equipment available for rental.",
+    "catalogue.filters": "Filters:",
+    "catalogue.search_placeholder": "Search for equipment...",
+    "catalogue.all_categories": "All categories",
+    "catalogue.all_brands": "All brands",
+    "catalogue.in_stock_only": "In stock only",
+    "catalogue.new_items": "New items",
+    "catalogue.load_more": "Load more equipment",
+    "catalogue.popular_products": "Popular products",
+    "catalogue.popular_description": "Discover our most requested equipment by our customers.",
+    "catalogue.from": "From",
+    "catalogue.view_details": "View details",
+    "catalogue.view_all_products": "View all products",
+    "catalogue.partner_brands": "Our partner brands",
+    "catalogue.partner_brands_description": "We work with the best brands to offer you quality equipment.",
+    "catalogue.not_found_title": "Can't find what you're looking for?",
+    "catalogue.not_found_description":
+      "Contact us to discuss your specific needs. We can offer you customized solutions.",
+    "catalogue.custom_quote": "Request a personalized quote",
+    "catalogue.talk_to_expert": "Talk to an expert",
 
     // Category pages
     "category.breadcrumb.home": "Home",
@@ -407,6 +466,36 @@ const translations: Record<Language, Record<string, string>> = {
       "Contáctanos hoy para discutir tus necesidades y obtener un presupuesto personalizado.",
     "home.enterprise.cta_button1": "Solicitar presupuesto personalizado",
     "home.enterprise.cta_button2": "Contáctanos",
+
+    // Catalogue page
+    "catalogue.title": "Nuestro catálogo de equipos",
+    "catalogue.description":
+      "Descubre nuestra amplia gama de equipos IT disponibles en alquiler para satisfacer todas tus necesidades profesionales.",
+    "catalogue.categories.title": "Explora nuestras categorías",
+    "catalogue.categories.description":
+      "Encuentra rápidamente el equipo que necesitas gracias a nuestra organización por categorías",
+    "catalogue.all_products.title": "Todos nuestros equipos",
+    "catalogue.all_products.description":
+      "Navega por la totalidad de nuestro catálogo de equipos disponibles en alquiler.",
+    "catalogue.filters": "Filtros:",
+    "catalogue.search_placeholder": "Buscar un equipo...",
+    "catalogue.all_categories": "Todas las categorías",
+    "catalogue.all_brands": "Todas las marcas",
+    "catalogue.in_stock_only": "Solo en stock",
+    "catalogue.new_items": "Novedades",
+    "catalogue.load_more": "Cargar más equipos",
+    "catalogue.popular_products": "Productos populares",
+    "catalogue.popular_description": "Descubre nuestros equipos más solicitados por nuestros clientes.",
+    "catalogue.from": "Desde",
+    "catalogue.view_details": "Ver detalles",
+    "catalogue.view_all_products": "Ver todos los productos",
+    "catalogue.partner_brands": "Nuestras marcas asociadas",
+    "catalogue.partner_brands_description": "Trabajamos con las mejores marcas para ofrecerte equipos de calidad.",
+    "catalogue.not_found_title": "¿No encuentras lo que buscas?",
+    "catalogue.not_found_description":
+      "Contáctanos para discutir tus necesidades específicas. Podemos proponerte soluciones a medida.",
+    "catalogue.custom_quote": "Solicitar un presupuesto personalizado",
+    "catalogue.talk_to_expert": "Hablar con un experto",
 
     // Category pages
     "category.breadcrumb.home": "Inicio",
