@@ -79,11 +79,9 @@ export default function CatalogProductCard({ product }: CatalogProductCardProps)
                 {product.stock > 0 ? "Disponible" : "Indisponible"}
               </div>
             </div>
-            <Link href={`/catalogue/product/${product.slug}`}>
-              <Button variant="outline" className="w-full" size="sm">
-                Voir détails
-              </Button>
-            </Link>
+            <Button variant="outline" className="w-full" size="sm">
+              Voir détails
+            </Button>
           </div>
         </div>
       </div>
