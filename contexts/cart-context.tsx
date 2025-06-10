@@ -23,6 +23,7 @@ type NeedsListContextType = {
   updateDuration: (id: number, duration: number) => void
   clearNeedsList: () => void
   getTotalItems: () => number
+  getTotalPrice: () => number
   isInNeedsList: (id: number) => boolean
 }
 
@@ -34,6 +35,7 @@ const NeedsListContext = createContext<NeedsListContextType>({
   updateDuration: () => {},
   clearNeedsList: () => {},
   getTotalItems: () => 0,
+  getTotalPrice: () => 0,
   isInNeedsList: () => false,
 })
 
@@ -99,6 +101,10 @@ export function NeedsListProvider({ children }: { children: React.ReactNode }) {
     return items.reduce((total, item) => total + item.quantity, 0)
   }
 
+  const getTotalPrice = () => {
+    return items.reduce((total, item) => total + item.price * item.quantity * item.duration, 0)
+  }
+
   const isInNeedsList = (id: number) => {
     return items.some((item) => item.id === id)
   }
@@ -113,6 +119,7 @@ export function NeedsListProvider({ children }: { children: React.ReactNode }) {
         updateDuration,
         clearNeedsList,
         getTotalItems,
+        getTotalPrice,
         isInNeedsList,
       }}
     >
