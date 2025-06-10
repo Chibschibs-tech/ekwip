@@ -3,7 +3,7 @@
 import type React from "react"
 import { createContext, useContext, useState, useEffect } from "react"
 
-export interface CartItem {
+export interface NeedsListItem {
   id: number
   name: string
   slug: string
@@ -15,60 +15,58 @@ export interface CartItem {
   duration: number // rental duration in months
 }
 
-type CartContextType = {
-  items: CartItem[]
-  addItem: (item: Omit<CartItem, "quantity">) => void
-  removeItem: (id: number) => void
+type NeedsListContextType = {
+  items: NeedsListItem[]
+  addToNeedsList: (item: Omit<NeedsListItem, "quantity" | "duration">) => void
+  removeFromNeedsList: (id: number) => void
   updateQuantity: (id: number, quantity: number) => void
   updateDuration: (id: number, duration: number) => void
-  clearCart: () => void
+  clearNeedsList: () => void
   getTotalItems: () => number
-  getTotalPrice: () => number
-  getCartSummary: () => string
+  isInNeedsList: (id: number) => boolean
 }
 
-const CartContext = createContext<CartContextType>({
+const NeedsListContext = createContext<NeedsListContextType>({
   items: [],
-  addItem: () => {},
-  removeItem: () => {},
+  addToNeedsList: () => {},
+  removeFromNeedsList: () => {},
   updateQuantity: () => {},
   updateDuration: () => {},
-  clearCart: () => {},
+  clearNeedsList: () => {},
   getTotalItems: () => 0,
-  getTotalPrice: () => 0,
-  getCartSummary: () => "",
+  isInNeedsList: () => false,
 })
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([])
+export function NeedsListProvider({ children }: { children: React.ReactNode }) {
+  const [items, setItems] = useState<NeedsListItem[]>([])
 
-  // Load cart from localStorage on mount
+  // Load from localStorage on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const savedCart = localStorage.getItem("ekwip-cart")
-      if (savedCart) {
+      const saved = localStorage.getItem("ekwip-needs-list")
+      if (saved) {
         try {
-          setItems(JSON.parse(savedCart))
+          setItems(JSON.parse(saved))
         } catch (error) {
-          console.error("Error loading cart from localStorage:", error)
+          console.error("Error loading needs list:", error)
         }
       }
     }
   }, [])
 
-  // Save cart to localStorage whenever items change
+  // Save to localStorage whenever items change
   useEffect(() => {
     if (typeof window !== "undefined") {
-      localStorage.setItem("ekwip-cart", JSON.stringify(items))
+      localStorage.setItem("ekwip-needs-list", JSON.stringify(items))
     }
   }, [items])
 
-  const addItem = (newItem: Omit<CartItem, "quantity">) => {
+  const addToNeedsList = (newItem: Omit<NeedsListItem, "quantity" | "duration">) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === newItem.id)
 
       if (existingItem) {
-        // If item exists, increase quantity
+        // If item exists, just increase quantity
         return currentItems.map((item) => (item.id === newItem.id ? { ...item, quantity: item.quantity + 1 } : item))
       } else {
         // Add new item with default values
@@ -77,16 +75,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     })
   }
 
-  const removeItem = (id: number) => {
+  const removeFromNeedsList = (id: number) => {
     setItems((currentItems) => currentItems.filter((item) => item.id !== id))
   }
 
   const updateQuantity = (id: number, quantity: number) => {
     if (quantity <= 0) {
-      removeItem(id)
+      removeFromNeedsList(id)
       return
     }
-
     setItems((currentItems) => currentItems.map((item) => (item.id === id ? { ...item, quantity } : item)))
   }
 
@@ -94,7 +91,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setItems((currentItems) => currentItems.map((item) => (item.id === id ? { ...item, duration } : item)))
   }
 
-  const clearCart = () => {
+  const clearNeedsList = () => {
     setItems([])
   }
 
@@ -102,53 +99,37 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return items.reduce((total, item) => total + item.quantity, 0)
   }
 
-  const getTotalPrice = () => {
-    return items.reduce((total, item) => total + item.price * item.quantity * item.duration, 0)
-  }
-
-  const getCartSummary = () => {
-    if (items.length === 0) return ""
-
-    let summary = "Équipements sélectionnés pour devis :\n\n"
-
-    items.forEach((item) => {
-      const totalPrice = item.price * item.quantity * item.duration
-      summary += `• ${item.name}\n`
-      summary += `  Quantité: ${item.quantity}\n`
-      summary += `  Durée: ${item.duration} mois\n`
-      summary += `  Prix: ${item.price} MAD/mois/unité\n`
-      summary += `  Total: ${totalPrice} MAD\n\n`
-    })
-
-    summary += `TOTAL ESTIMÉ: ${getTotalPrice()} MAD\n\n`
-    summary += "Merci de me fournir un devis détaillé pour ces équipements."
-
-    return summary
+  const isInNeedsList = (id: number) => {
+    return items.some((item) => item.id === id)
   }
 
   return (
-    <CartContext.Provider
+    <NeedsListContext.Provider
       value={{
         items,
-        addItem,
-        removeItem,
+        addToNeedsList,
+        removeFromNeedsList,
         updateQuantity,
         updateDuration,
-        clearCart,
+        clearNeedsList,
         getTotalItems,
-        getTotalPrice,
-        getCartSummary,
+        isInNeedsList,
       }}
     >
       {children}
-    </CartContext.Provider>
+    </NeedsListContext.Provider>
   )
 }
 
-export function useCart() {
-  const context = useContext(CartContext)
+export function useNeedsList() {
+  const context = useContext(NeedsListContext)
   if (!context) {
-    throw new Error("useCart must be used within a CartProvider")
+    throw new Error("useNeedsList must be used within a NeedsListProvider")
   }
   return context
 }
+
+// Keep the old exports for compatibility
+export const useCart = useNeedsList
+export const CartProvider = NeedsListProvider
+export type CartItem = NeedsListItem

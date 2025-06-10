@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { ChevronRight, Shield, Truck, Headphones, Wrench, Check, X } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 import { getProductBySlug, storeProducts } from "@/lib/store-products"
+import AddToNeedsListButton from "@/components/cart/add-to-cart-button"
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const { t } = useLanguage()
@@ -124,7 +125,20 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 mb-8">
-                <Button className="bg-ekwip hover:bg-ekwip-700 text-white flex-1">{t("product.request_quote")}</Button>
+                <AddToNeedsListButton
+                  product={{
+                    id: product.id,
+                    name: product.name,
+                    slug: product.slug,
+                    price: product.price,
+                    image: product.image || "/placeholder.svg",
+                    category: product.category,
+                    brand: product.brand,
+                  }}
+                  variant="default"
+                  size="lg"
+                  className="flex-1"
+                />
                 <Button variant="outline" className="border-ekwip text-ekwip hover:bg-ekwip hover:text-white flex-1">
                   {t("product.talk_to_expert")}
                 </Button>
@@ -233,7 +247,19 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <h2 className="text-2xl md:text-3xl font-bold mb-4">{t("product.interested_title")}</h2>
           <p className="text-lg mb-8 opacity-90">{t("product.interested_description")}</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="bg-white text-ekwip hover:bg-gray-100">{t("product.request_quote")}</Button>
+            <AddToNeedsListButton
+              product={{
+                id: product.id,
+                name: product.name,
+                slug: product.slug,
+                price: product.price,
+                image: product.image || "/placeholder.svg",
+                category: product.category,
+                brand: product.brand,
+              }}
+              variant="default"
+              className="bg-white text-ekwip hover:bg-gray-100"
+            />
             <Button variant="outline" className="border-white text-white hover:bg-white hover:text-ekwip">
               {t("product.talk_to_expert")}
             </Button>

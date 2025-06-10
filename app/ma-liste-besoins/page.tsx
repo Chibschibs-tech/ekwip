@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useCart } from "@/contexts/cart-context"
+import { useNeedsList } from "@/contexts/cart-context"
 import { useLanguage } from "@/contexts/language-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,7 +15,7 @@ import Link from "next/link"
 import Image from "next/image"
 
 export default function NeedsListPage() {
-  const { items, removeItem, updateQuantity, updateDuration, clearCart, getTotalPrice } = useCart()
+  const { items, removeFromNeedsList, updateQuantity, updateDuration, clearNeedsList, getTotalPrice } = useNeedsList()
   const { t } = useLanguage()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -39,7 +39,7 @@ export default function NeedsListPage() {
 
     // Clear the needs list after successful submission
     setTimeout(() => {
-      clearCart()
+      clearNeedsList()
     }, 3000)
   }
 
@@ -74,22 +74,22 @@ export default function NeedsListPage() {
         <div className="mb-8">
           <Link href="/catalogue" className="inline-flex items-center text-ekwip hover:text-ekwip-dark mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            {t("needs_list.back_to_catalog")}
+            Retour au catalogue
           </Link>
 
           <div className="flex items-center mb-2">
             <ClipboardList className="h-8 w-8 text-ekwip mr-3" />
-            <h1 className="text-3xl font-bold text-gray-900">{t("needs_list.title")}</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Ma liste d'équipements</h1>
           </div>
-          <p className="text-gray-600">{t("needs_list.description")}</p>
+          <p className="text-gray-600">Sélectionnez vos équipements et demandez un devis personnalisé</p>
         </div>
 
         {items.length === 0 ? (
           /* Empty State */
           <div className="text-center py-12">
             <ClipboardList className="h-24 w-24 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">{t("needs_list.empty_title")}</h2>
-            <p className="text-gray-600 mb-6">{t("needs_list.empty_description")}</p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Votre liste est vide</h2>
+            <p className="text-gray-600 mb-6">Parcourez notre catalogue et ajoutez des équipements à votre liste</p>
             <Link href="/catalogue">
               <Button size="lg">{t("needs_list.browse_catalog")}</Button>
             </Link>
@@ -104,9 +104,14 @@ export default function NeedsListPage() {
                     <ClipboardList className="h-5 w-5 mr-2" />
                     {t("needs_list.selected_equipment")} ({items.length})
                   </CardTitle>
-                  <Button variant="outline" size="sm" onClick={clearCart} className="text-red-600 hover:text-red-700">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={clearNeedsList}
+                    className="text-red-600 hover:text-red-700"
+                  >
                     <Trash2 className="h-4 w-4 mr-2" />
-                    {t("needs_list.clear_all")}
+                    Vider la liste
                   </Button>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -175,7 +180,7 @@ export default function NeedsListPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => removeItem(item.id)}
+                          onClick={() => removeFromNeedsList(item.id)}
                           className="text-red-600 hover:text-red-700"
                         >
                           <Trash2 className="h-4 w-4" />

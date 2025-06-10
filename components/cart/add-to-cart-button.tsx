@@ -3,12 +3,19 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Plus, Check } from "lucide-react"
-import { useCart } from "@/contexts/cart-context"
+import { useNeedsList } from "@/contexts/cart-context"
 import { useLanguage } from "@/contexts/language-context"
-import type { Product } from "@/types/product"
 
 interface AddToNeedsListButtonProps {
-  product: Product
+  product: {
+    id: number
+    name: string
+    slug: string
+    price: number
+    image: string
+    category: string
+    brand: string
+  }
   variant?: "default" | "outline" | "secondary"
   size?: "sm" | "default" | "lg"
   className?: string
@@ -20,31 +27,21 @@ export default function AddToNeedsListButton({
   size = "default",
   className = "",
 }: AddToNeedsListButtonProps) {
-  const { addItem, isInCart } = useCart()
+  const { addToNeedsList, isInNeedsList } = useNeedsList()
   const { t } = useLanguage()
   const [justAdded, setJustAdded] = useState(false)
 
-  const inCart = isInCart(product.id)
+  const isInList = isInNeedsList(product.id)
 
   const handleAddToNeedsList = () => {
-    if (!inCart) {
-      addItem({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        category: product.category,
-        brand: product.brand,
-        quantity: 1,
-        duration: 12, // Default 12 months
-      })
-
+    if (!isInList) {
+      addToNeedsList(product)
       setJustAdded(true)
       setTimeout(() => setJustAdded(false), 2000)
     }
   }
 
-  if (inCart) {
+  if (isInList) {
     return (
       <Button
         variant="outline"
@@ -53,7 +50,7 @@ export default function AddToNeedsListButton({
         disabled
       >
         <Check className="h-4 w-4 mr-2" />
-        {t("needs_list.added")}
+        Ajouté à ma liste
       </Button>
     )
   }
@@ -68,12 +65,12 @@ export default function AddToNeedsListButton({
       {justAdded ? (
         <>
           <Check className="h-4 w-4 mr-2" />
-          {t("needs_list.added")}
+          Ajouté à ma liste
         </>
       ) : (
         <>
           <Plus className="h-4 w-4 mr-2" />
-          {t("needs_list.add_to_list")}
+          Ajouter à ma liste de besoins
         </>
       )}
     </Button>
