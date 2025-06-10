@@ -2,17 +2,17 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { LanguageProvider } from "@/contexts/language-context"
-import { AuthProvider } from "@/contexts/auth-context"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
+import { LanguageProvider } from "@/contexts/language-context"
+import { AuthProvider } from "@/contexts/auth-context"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Ekwip - Location d'équipement IT pour entreprises",
+  title: "Ekwip - Location d'équipements IT pour entreprises",
   description:
-    "Location d'équipement IT flexible et sans engagement pour les entreprises au Maroc. Préservez votre trésorerie et accédez aux dernières technologies.",
+    "Louez vos équipements informatiques avec Ekwip. Solutions flexibles pour ordinateurs, smartphones, tablettes et plus encore.",
     generator: 'v0.dev'
 }
 

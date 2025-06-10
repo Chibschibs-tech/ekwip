@@ -20,18 +20,18 @@ export default function Home() {
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
-              {t("home.hero.title")}
+              {t("home.hero.title") || "Missing Translation"}
             </h1>
-            <p className="mt-6 text-lg text-gray-600 max-w-lg">{t("home.hero.description")}</p>
+            <p className="mt-6 text-lg text-gray-600 max-w-lg">{t("home.hero.description") || "Missing Translation"}</p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4">
               <Link href="/catalogue">
                 <Button variant="gradient" size="xl" className="shadow-lg">
-                  {t("home.hero.button1")}
+                  {t("home.hero.button1") || "Missing Translation"}
                 </Button>
               </Link>
               <Link href="/comment-ca-marche">
                 <Button variant="outline" size="xl">
-                  {t("home.hero.button2")}
+                  {t("home.hero.button2") || "Missing Translation"}
                 </Button>
               </Link>
             </div>
@@ -60,24 +60,24 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <FeatureCard
-              title={t("home.features.card1.title")}
-              description={t("home.features.card1.description")}
+              title={t("home.features.card1.title") || "Missing Translation"}
+              description={t("home.features.card1.description") || "Missing Translation"}
               icon={<Banknote className="w-10 h-10 text-ekwip" />}
               iconBgColor="bg-blue-100"
               className="shadow-md"
             />
 
             <FeatureCard
-              title={t("home.features.card2.title")}
-              description={t("home.features.card2.description")}
+              title={t("home.features.card2.title") || "Missing Translation"}
+              description={t("home.features.card2.description") || "Missing Translation"}
               icon={<Server className="w-10 h-10 text-ekwip" />}
               iconBgColor="bg-indigo-100"
               className="shadow-md"
             />
 
             <FeatureCard
-              title={t("home.features.card3.title")}
-              description={t("home.features.card3.description")}
+              title={t("home.features.card3.title") || "Missing Translation"}
+              description={t("home.features.card3.description") || "Missing Translation"}
               icon={<RefreshCw className="w-10 h-10 text-white" />}
               iconBgColor="bg-white/20"
               bgColor="bg-ekwip"
@@ -86,8 +86,8 @@ export default function Home() {
             />
 
             <FeatureCard
-              title={t("home.features.card4.title")}
-              description={t("home.features.card4.description")}
+              title={t("home.features.card4.title") || "Missing Translation"}
+              description={t("home.features.card4.description") || "Missing Translation"}
               icon={<HeadphonesIcon className="w-10 h-10 text-ekwip" />}
               iconBgColor="bg-indigo-100"
               className="shadow-md"
@@ -100,8 +100,12 @@ export default function Home() {
       <section className="py-20 md:py-28 px-4 md:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-6">{t("home.products.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">{t("home.products.description")}</p>
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-6">
+              {t("home.products.title") || "Missing Translation"}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              {t("home.products.description") || "Missing Translation"}
+            </p>
           </div>
 
           <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8">
@@ -111,7 +115,7 @@ export default function Home() {
           <div className="mt-16 text-center">
             <Link href="/catalogue">
               <Button variant="gradient" size="lg" className="shadow-lg px-8 py-6 text-lg">
-                {t("home.products.button")} <ArrowRight className="ml-2 h-5 w-5" />
+                {t("home.products.button") || "Missing Translation"} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
@@ -122,8 +126,12 @@ export default function Home() {
       <section className="py-16 md:py-20 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{t("home.clients.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("home.clients.description")}</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              {t("home.clients.title") || "Missing Translation"}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {t("home.clients.description") || "Missing Translation"}
+            </p>
           </div>
 
           <ClientLogoSlider />
@@ -134,8 +142,12 @@ export default function Home() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl mx-4 md:mx-8 lg:mx-12">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{t("home.howItWorks.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("home.howItWorks.description")}</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              {t("home.howItWorks.title") || "Missing Translation"}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {t("home.howItWorks.description") || "Missing Translation"}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -143,31 +155,37 @@ export default function Home() {
               <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                 1
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">{t("home.howItWorks.step1.title")}</h3>
-              <p className="text-gray-600">{t("home.howItWorks.step1.description")}</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">
+                {t("home.howItWorks.step1.title") || "Missing Translation"}
+              </h3>
+              <p className="text-gray-600">{t("home.howItWorks.step1.description") || "Missing Translation"}</p>
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
               <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                 2
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">{t("home.howItWorks.step2.title")}</h3>
-              <p className="text-gray-600">{t("home.howItWorks.step2.description")}</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">
+                {t("home.howItWorks.step2.title") || "Missing Translation"}
+              </h3>
+              <p className="text-gray-600">{t("home.howItWorks.step2.description") || "Missing Translation"}</p>
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
               <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
                 3
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">{t("home.howItWorks.step3.title")}</h3>
-              <p className="text-gray-600">{t("home.howItWorks.step3.description")}</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">
+                {t("home.howItWorks.step3.title") || "Missing Translation"}
+              </h3>
+              <p className="text-gray-600">{t("home.howItWorks.step3.description") || "Missing Translation"}</p>
             </div>
           </div>
 
           <div className="mt-12 text-center">
             <Link href="/comment-ca-marche">
               <Button variant="outline" size="lg" className="bg-white">
-                {t("home.howItWorks.button")}
+                {t("home.howItWorks.button") || "Missing Translation"}
               </Button>
             </Link>
           </div>
@@ -178,8 +196,12 @@ export default function Home() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{t("home.offerBanner.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("home.offerBanner.description")}</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+              {t("home.offerBanner.title") || "Missing Translation"}
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              {t("home.offerBanner.description") || "Missing Translation"}
+            </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
@@ -225,7 +247,7 @@ export default function Home() {
                 </li>
               </ul>
               <Button variant="gradient" size="lg">
-                {t("common.get_quote")}
+                {t("common.get_quote") || "Missing Translation"}
               </Button>
             </div>
             <div className="relative">
@@ -276,11 +298,15 @@ export default function Home() {
       {/* CTA Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 md:p-12 text-center shadow-xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("home.cta.title")}</h2>
-          <p className="text-white text-lg max-w-2xl mx-auto mb-8 opacity-90">{t("home.cta.description")}</p>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+            {t("home.cta.title") || "Missing Translation"}
+          </h2>
+          <p className="text-white text-lg max-w-2xl mx-auto mb-8 opacity-90">
+            {t("home.cta.description") || "Missing Translation"}
+          </p>
           <Link href="/contact">
             <Button size="xl" className="bg-white text-blue-600 hover:bg-gray-100 shadow-lg">
-              {t("home.cta.button")}
+              {t("home.cta.button") || "Missing Translation"}
             </Button>
           </Link>
         </div>
