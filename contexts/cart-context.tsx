@@ -6,7 +6,7 @@ import { createContext, useContext, useState, useEffect } from "react"
 export interface CartItem {
   id: number
   name: string
-  slug: string
+  slug?: string
   price: number
   image: string
   category: string
@@ -17,7 +17,7 @@ export interface CartItem {
 
 type CartContextType = {
   items: CartItem[]
-  addItem: (item: Omit<CartItem, "quantity">) => void
+  addItem: (item: Omit<CartItem, "quantity" | "duration">) => void
   removeItem: (id: number) => void
   updateQuantity: (id: number, quantity: number) => void
   updateDuration: (id: number, duration: number) => void
@@ -25,6 +25,7 @@ type CartContextType = {
   getTotalItems: () => number
   getTotalPrice: () => number
   getCartSummary: () => string
+  isInCart: (id: number) => boolean // Added this function
 }
 
 const CartContext = createContext<CartContextType>({
@@ -37,6 +38,7 @@ const CartContext = createContext<CartContextType>({
   getTotalItems: () => 0,
   getTotalPrice: () => 0,
   getCartSummary: () => "",
+  isInCart: () => false, // Added default implementation
 })
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
@@ -63,7 +65,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items])
 
-  const addItem = (newItem: Omit<CartItem, "quantity">) => {
+  const addItem = (newItem: Omit<CartItem, "quantity" | "duration">) => {
     setItems((currentItems) => {
       const existingItem = currentItems.find((item) => item.id === newItem.id)
 
@@ -126,6 +128,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return summary
   }
 
+  // Add the isInCart function
+  const isInCart = (id: number) => {
+    return items.some((item) => item.id === id)
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -138,6 +145,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         getTotalItems,
         getTotalPrice,
         getCartSummary,
+        isInCart, // Export the function
       }}
     >
       {children}

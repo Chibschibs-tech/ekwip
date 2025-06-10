@@ -5,10 +5,17 @@ import { Button } from "@/components/ui/button"
 import { Plus, Check } from "lucide-react"
 import { useCart } from "@/contexts/cart-context"
 import { useLanguage } from "@/contexts/language-context"
-import type { Product } from "@/types/product"
 
 interface AddToNeedsListButtonProps {
-  product: Product
+  product: {
+    id: number
+    name: string
+    slug?: string
+    price: number
+    image: string
+    category: string
+    brand: string
+  }
   variant?: "default" | "outline" | "secondary"
   size?: "sm" | "default" | "lg"
   className?: string
@@ -35,8 +42,6 @@ export default function AddToNeedsListButton({
         image: product.image,
         category: product.category,
         brand: product.brand,
-        quantity: 1,
-        duration: 12, // Default 12 months
       })
 
       setJustAdded(true)
@@ -53,7 +58,7 @@ export default function AddToNeedsListButton({
         disabled
       >
         <Check className="h-4 w-4 mr-2" />
-        {t("needs_list.added")}
+        {t("needs_list.added") || "Ajouté"}
       </Button>
     )
   }
@@ -68,12 +73,12 @@ export default function AddToNeedsListButton({
       {justAdded ? (
         <>
           <Check className="h-4 w-4 mr-2" />
-          {t("needs_list.added")}
+          {t("needs_list.added") || "Ajouté"}
         </>
       ) : (
         <>
           <Plus className="h-4 w-4 mr-2" />
-          {t("needs_list.add_to_list")}
+          {t("needs_list.add_to_list") || "Ajouter à ma liste"}
         </>
       )}
     </Button>
