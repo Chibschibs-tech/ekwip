@@ -30,9 +30,32 @@ export default function ProductTabs() {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-4 mb-8">
+      <TabsList className="grid w-full grid-cols-4 mb-8 bg-transparent gap-2">
         {categories.map((category) => (
-          <TabsTrigger key={category.id} value={category.id} className="text-sm">
+          <TabsTrigger
+            key={category.id}
+            value={category.id}
+            className={`
+              text-sm transition-all duration-300 px-6 py-3 rounded-xl font-medium
+              data-[state=active]:bg-ekwip 
+              data-[state=active]:text-gray-100 
+              data-[state=active]:shadow-lg 
+              data-[state=active]:shadow-ekwip/30
+              data-[state=active]:transform 
+              data-[state=active]:scale-105
+              data-[state=active]:-translate-y-1
+              data-[state=active]:border-b-4
+              data-[state=active]:border-ekwip-dark
+              data-[state=inactive]:text-gray-600 
+              data-[state=inactive]:bg-gray-50
+              data-[state=inactive]:hover:text-gray-800 
+              data-[state=inactive]:hover:bg-gray-100
+              data-[state=inactive]:hover:shadow-md
+              data-[state=inactive]:hover:transform
+              data-[state=inactive]:hover:scale-102
+              data-[state=inactive]:shadow-sm
+            `}
+          >
             {category.name}
           </TabsTrigger>
         ))}

@@ -1,21 +1,49 @@
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { useNeedsList } from "@/contexts/cart-context"
-import { ShoppingBag } from "lucide-react"
+import { ClipboardList } from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
 
-const CartIcon = () => {
-  const { getTotalItems } = useNeedsList()
+export default function NeedsListIcon() {
+  const { items } = useNeedsList()
+  const { t } = useLanguage()
+  const [isHovered, setIsHovered] = useState(false)
+
+  const itemCount = items.length
 
   return (
-    <Link href="/ma-liste-besoins" className="relative">
-      <ShoppingBag className="h-6 w-6 text-gray-500" aria-hidden="true" />
-      {getTotalItems() > 0 ? (
-        <span className="absolute -top-2 -right-2 rounded-full bg-red-600 px-1 text-xs font-bold text-white">
-          {getTotalItems()}
-        </span>
-      ) : null}
-      <span className="text-xs">Ma liste de besoins</span>
+    <Link
+      href="/ma-liste-besoins"
+      className="relative flex items-center text-gray-700 hover:text-ekwip transition-colors"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative">
+        <ClipboardList className="h-5 w-5" />
+        {itemCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-ekwip text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+            {itemCount}
+          </span>
+        )}
+      </div>
+      <span className="ml-2 text-xs font-medium hidden md:inline-block">Liste de besoins</span>
+
+      {/* Tooltip */}
+      {isHovered && itemCount > 0 && (
+        <div className="absolute top-full right-0 mt-2 w-64 bg-white rounded-md shadow-lg border border-gray-200 p-3 z-50">
+          <p className="text-sm font-medium mb-2">
+            {itemCount} {itemCount === 1 ? "équipement" : "équipements"} dans votre liste
+          </p>
+          <Link
+            href="/ma-liste-besoins"
+            className="block w-full text-center bg-ekwip hover:bg-ekwip-700 text-white text-xs py-1.5 px-3 rounded-md transition-colors"
+          >
+            Voir ma liste
+          </Link>
+        </div>
+      )}
     </Link>
   )
 }
-
-export default CartIcon
