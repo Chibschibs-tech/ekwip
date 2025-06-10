@@ -263,6 +263,31 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "needs_list.sending_request": "Envoi en cours...",
     "needs_list.send_request": "Envoyer la demande de devis",
     "needs_list.back_to_catalog": "Retour au catalogue",
+
+    // Contact page
+    "contact.title": "Contactez-nous",
+    "contact.description":
+      "Nous sommes là pour répondre à toutes vos questions et vous accompagner dans vos projets d'équipement IT.",
+    "contact.info.title": "Nos coordonnées",
+    "contact.info.description": "Contactez notre équipe d'experts pour discuter de vos besoins en équipement IT.",
+    "contact.info.address": "Adresse",
+    "contact.info.phone": "Téléphone",
+    "contact.info.email": "Email",
+    "contact.info.hours": "Horaires d'ouverture",
+    "contact.form.title": "Envoyez-nous un message",
+    "contact.form.description":
+      "Remplissez ce formulaire et nous vous recontacterons rapidement pour discuter de vos besoins.",
+    "contact.form.name": "Nom complet",
+    "contact.form.email": "Adresse email",
+    "contact.form.phone": "Téléphone",
+    "contact.form.company": "Entreprise",
+    "contact.form.message": "Message",
+    "contact.form.submit": "Envoyer le message",
+    "contact.form.submitting": "Envoi en cours...",
+    "contact.form.success": "Message envoyé avec succès !",
+    "contact.form.success_description": "Nous vous recontacterons dans les plus brefs délais.",
+    "contact.map.title": "Notre localisation",
+    "contact.map.description": "Retrouvez-nous dans nos bureaux au cœur de Casablanca.",
   },
   en: {
     // Navigation
@@ -508,6 +533,29 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "needs_list.sending_request": "Sending...",
     "needs_list.send_request": "Send quote request",
     "needs_list.back_to_catalog": "Back to catalog",
+
+    // Contact page
+    "contact.title": "Contact us",
+    "contact.description": "We are here to answer all your questions and support you in your IT equipment projects.",
+    "contact.info.title": "Our contact details",
+    "contact.info.description": "Contact our team of experts to discuss your IT equipment needs.",
+    "contact.info.address": "Address",
+    "contact.info.phone": "Phone",
+    "contact.info.email": "Email",
+    "contact.info.hours": "Opening hours",
+    "contact.form.title": "Send us a message",
+    "contact.form.description": "Fill out this form and we will contact you quickly to discuss your needs.",
+    "contact.form.name": "Full name",
+    "contact.form.email": "Email address",
+    "contact.form.phone": "Phone",
+    "contact.form.company": "Company",
+    "contact.form.message": "Message",
+    "contact.form.submit": "Send message",
+    "contact.form.submitting": "Sending...",
+    "contact.form.success": "Message sent successfully!",
+    "contact.form.success_description": "We will contact you as soon as possible.",
+    "contact.map.title": "Our location",
+    "contact.map.description": "Find us in our offices in the heart of Casablanca.",
   },
   es: {
     // Navigation
@@ -756,6 +804,31 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "needs_list.sending_request": "Enviando...",
     "needs_list.send_request": "Enviar solicitud de presupuesto",
     "needs_list.back_to_catalog": "Volver al catálogo",
+
+    // Contact page
+    "contact.title": "Contáctanos",
+    "contact.description":
+      "Estamos aquí para responder todas tus preguntas y acompañarte en tus proyectos de equipos IT.",
+    "contact.info.title": "Nuestros datos de contacto",
+    "contact.info.description": "Contacta a nuestro equipo de expertos para discutir tus necesidades de equipos IT.",
+    "contact.info.address": "Dirección",
+    "contact.info.phone": "Teléfono",
+    "contact.info.email": "Email",
+    "contact.info.hours": "Horarios de atención",
+    "contact.form.title": "Envíanos un mensaje",
+    "contact.form.description":
+      "Completa este formulario y te contactaremos rápidamente para discutir tus necesidades.",
+    "contact.form.name": "Nombre completo",
+    "contact.form.email": "Dirección de email",
+    "contact.form.phone": "Teléfono",
+    "contact.form.company": "Empresa",
+    "contact.form.message": "Mensaje",
+    "contact.form.submit": "Enviar mensaje",
+    "contact.form.submitting": "Enviando...",
+    "contact.form.success": "¡Mensaje enviado con éxito!",
+    "contact.form.success_description": "Te contactaremos lo antes posible.",
+    "contact.map.title": "Nuestra ubicación",
+    "contact.map.description": "Encuéntranos en nuestras oficinas en el corazón de Casablanca.",
   },
 }
 
