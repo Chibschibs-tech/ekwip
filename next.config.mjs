@@ -10,11 +10,6 @@ const nextConfig = {
     domains: ['via.placeholder.com', 'picsum.photos', 'images.unsplash.com'],
     unoptimized: true,
   },
-  webpack: (config, { isServer }) => {
-    // Add a resolve alias for @medusajs/medusa to point to our mock implementation
-    config.resolve.alias['@medusajs/medusa'] = require.resolve('./lib/medusa-mock.ts');
-    return config;
-  },
   async redirects() {
     return [
       {
