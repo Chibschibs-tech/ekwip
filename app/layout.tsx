@@ -1,35 +1,39 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { Inter } from "next/font/google"
 import "./globals.css"
-import { NeedsListProvider } from "@/contexts/cart-context"
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
 import { LanguageProvider } from "@/contexts/language-context"
 import { AuthProvider } from "@/contexts/auth-context"
-import Navbar from "@/components/Navbar"
-import Footer from "@/components/Footer"
+import { CartProvider } from "@/contexts/cart-context"
+
+const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-  generator: "v0.dev",
+  title: "Ekwip - Location d'équipements IT pour entreprises",
+  description:
+    "Louez vos équipements informatiques avec Ekwip. Solutions flexibles pour ordinateurs, smartphones, tablettes et plus encore.",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body>
-        <NeedsListProvider>
-          <LanguageProvider>
-            <AuthProvider>
+    <html lang="fr">
+      <body className={inter.className}>
+        <LanguageProvider>
+          <AuthProvider>
+            <CartProvider>
               <Navbar />
-              {children}
+              <main>{children}</main>
               <Footer />
-            </AuthProvider>
-          </LanguageProvider>
-        </NeedsListProvider>
+            </CartProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   )
