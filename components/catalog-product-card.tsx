@@ -31,7 +31,7 @@ export default function CatalogProductCard({ product }: CatalogProductCardProps)
 
   return (
     <Link href={`/catalogue/product/${product.slug}`}>
-      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 h-full flex flex-col border border-gray-100 hover:border-gray-200 hover:-translate-y-1 cursor-pointer">
+      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 h-full flex flex-col border border-gray-100 hover:border-gray-200 hover:-translate-y-1">
         <div className="relative">
           {product.salePrice && (
             <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
@@ -79,9 +79,11 @@ export default function CatalogProductCard({ product }: CatalogProductCardProps)
                 {product.stock > 0 ? "Disponible" : "Indisponible"}
               </div>
             </div>
-            <Button variant="outline" className="w-full pointer-events-none" size="sm">
-              Voir détails
-            </Button>
+            <Link href={`/catalogue/product/${product.slug}`}>
+              <Button variant="outline" className="w-full" size="sm">
+                Voir détails
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
