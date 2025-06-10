@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { formatPrice } from "@/lib/wordpress-api"
+import AddToCartButton from "@/components/cart/add-to-cart-button"
 
 interface StoreProductCardProps {
   product: {
@@ -60,7 +61,7 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
           <h3 className="font-bold text-gray-800 mb-1 line-clamp-1">{product.name}</h3>
           <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.shortDescription}</p>
           <div className="mt-auto">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-3">
               <div>
                 {formattedSalePrice ? (
                   <div className="flex items-center gap-2">
@@ -77,6 +78,22 @@ export default function StoreProductCard({ product }: StoreProductCardProps) {
                 {product.stock > 0 ? "En stock" : "Rupture"}
               </div>
             </div>
+
+            {/* Add to Cart Button */}
+            <AddToCartButton
+              product={{
+                id: product.id,
+                name: product.name,
+                slug: product.slug,
+                price: product.salePrice || product.price,
+                image: product.image,
+                category: product.category,
+                brand: product.brand,
+              }}
+              variant="outline"
+              size="sm"
+              showIcon={false}
+            />
           </div>
         </div>
       </div>
