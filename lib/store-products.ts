@@ -19,7 +19,7 @@ export interface StoreProduct {
 }
 
 export const storeProducts: StoreProduct[] = [
-  // Laptops
+  // Laptops (Ordinateurs portables)
   {
     id: 1,
     name: 'MacBook Pro 14"',
@@ -90,7 +90,7 @@ export const storeProducts: StoreProduct[] = [
     new: true,
   },
 
-  // Desktops
+  // Desktops (Ordinateurs de bureau)
   {
     id: 4,
     name: "Mac Mini M2",
@@ -114,10 +114,33 @@ export const storeProducts: StoreProduct[] = [
     featured: false,
     new: false,
   },
+  {
+    id: 5,
+    name: "Dell OptiPlex 7090",
+    slug: "dell-optiplex-7090",
+    price: 55,
+    stock: 14,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
+    category: "Ordinateurs de bureau",
+    brand: "Dell",
+    tags: ["business", "fiable", "évolutif"],
+    specifications: {
+      Processeur: "Intel Core i5-11500",
+      RAM: "16 Go DDR4",
+      Stockage: "512 Go SSD",
+      Connectivité: "USB-A, USB-C, HDMI, DisplayPort",
+      Format: "Small Form Factor",
+    },
+    shortDescription: "Intel i5, 16 Go RAM, 512 Go SSD, format compact",
+    description:
+      "Ordinateur de bureau professionnel compact et fiable, idéal pour les environnements de bureau avec besoins de connectivité étendus.",
+    featured: false,
+    new: false,
+  },
 
   // Smartphones
   {
-    id: 5,
+    id: 6,
     name: "iPhone 15 Pro",
     slug: "iphone-15-pro",
     price: 45,
@@ -140,7 +163,7 @@ export const storeProducts: StoreProduct[] = [
     new: false,
   },
   {
-    id: 6,
+    id: 7,
     name: "Samsung Galaxy S23 Ultra",
     slug: "samsung-galaxy-s23-ultra",
     price: 42,
@@ -163,9 +186,9 @@ export const storeProducts: StoreProduct[] = [
     new: false,
   },
 
-  // Tablets
+  // Tablets (Tablettes)
   {
-    id: 7,
+    id: 8,
     name: 'iPad Pro 12.9"',
     slug: "ipad-pro-12-9",
     price: 35,
@@ -188,7 +211,7 @@ export const storeProducts: StoreProduct[] = [
     new: false,
   },
   {
-    id: 8,
+    id: 9,
     name: "reMarkable Paper Pro",
     slug: "remarkable-paper-pro",
     price: 85,
@@ -211,7 +234,7 @@ export const storeProducts: StoreProduct[] = [
     new: true,
   },
   {
-    id: 9,
+    id: 10,
     name: "reMarkable 2",
     slug: "remarkable-2",
     price: 65,
@@ -234,9 +257,9 @@ export const storeProducts: StoreProduct[] = [
     new: false,
   },
 
-  // Accessories
+  // Accessories (Accessoires)
   {
-    id: 10,
+    id: 11,
     name: "Sony WH-1000XM5",
     slug: "sony-wh-1000xm5",
     price: 15,
@@ -259,7 +282,7 @@ export const storeProducts: StoreProduct[] = [
     new: false,
   },
   {
-    id: 11,
+    id: 12,
     name: "Logitech MX Master 3S",
     slug: "logitech-mx-master-3s",
     price: 8,
@@ -281,10 +304,33 @@ export const storeProducts: StoreProduct[] = [
     featured: false,
     new: false,
   },
-
-  // Printers
   {
-    id: 12,
+    id: 13,
+    name: "Dell UltraSharp U2723QE",
+    slug: "dell-ultrasharp-u2723qe",
+    price: 25,
+    stock: 22,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/keyboard%20%26%20mouse.png",
+    category: "Accessoires",
+    brand: "Dell",
+    tags: ["écran", "4K", "USB-C"],
+    specifications: {
+      Taille: '27" 4K UHD',
+      Résolution: "3840 x 2160",
+      Connectivité: "USB-C, HDMI, DisplayPort",
+      "Hub USB": "4 ports USB intégrés",
+      Ergonomie: "Réglable en hauteur et rotation",
+    },
+    shortDescription: 'Écran 27" 4K avec hub USB-C intégré, réglable',
+    description:
+      "Écran professionnel 4K avec connectivité USB-C complète et hub intégré. Parfait pour les postes de travail modernes.",
+    featured: false,
+    new: false,
+  },
+
+  // Printers (Imprimantes)
+  {
+    id: 14,
     name: "HP LaserJet Pro MFP M428fdw",
     slug: "hp-laserjet-pro-mfp-m428fdw",
     price: 25,
@@ -303,6 +349,100 @@ export const storeProducts: StoreProduct[] = [
     shortDescription: "Imprimante laser multifonction, 38 ppm, Wi-Fi, fax",
     description:
       "Imprimante laser multifonction professionnelle avec connectivité complète et fonctionnalités avancées pour les bureaux.",
+    featured: false,
+    new: false,
+  },
+  {
+    id: 15,
+    name: "Canon PIXMA TR8620",
+    slug: "canon-pixma-tr8620",
+    price: 18,
+    stock: 12,
+    image: "/images/printer-hero.png",
+    category: "Imprimantes",
+    brand: "Canon",
+    tags: ["jet d'encre", "couleur", "compact"],
+    specifications: {
+      Type: "Imprimante jet d'encre couleur",
+      Vitesse: "15 ppm noir, 10 ppm couleur",
+      Résolution: "4800 x 1200 dpi",
+      Connectivité: "Wi-Fi, Bluetooth, USB",
+      Fonctions: "Impression, copie, scan",
+    },
+    shortDescription: "Imprimante jet d'encre couleur, Wi-Fi, Bluetooth",
+    description:
+      "Imprimante jet d'encre compacte et polyvalente avec connectivité sans fil complète. Idéale pour les petits bureaux.",
+    featured: false,
+    new: false,
+  },
+
+  // Furniture (Mobilier)
+  {
+    id: 16,
+    name: "Herman Miller Aeron",
+    slug: "herman-miller-aeron",
+    price: 35,
+    stock: 6,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/chair.png",
+    category: "Mobilier",
+    brand: "Herman Miller",
+    tags: ["chaise", "ergonomique", "premium"],
+    specifications: {
+      Type: "Chaise de bureau ergonomique",
+      Matériaux: "Résille respirante, aluminium",
+      Réglages: "12 zones d'ajustement",
+      Garantie: "12 ans",
+      Tailles: "A, B, C disponibles",
+    },
+    shortDescription: "Chaise ergonomique premium avec résille respirante",
+    description:
+      "La référence en matière de chaise de bureau ergonomique. Confort exceptionnel et design iconique pour les environnements de travail exigeants.",
+    featured: true,
+    new: false,
+  },
+  {
+    id: 17,
+    name: "Bureau réglable électrique IKEA",
+    slug: "bureau-reglable-electrique-ikea",
+    price: 28,
+    stock: 10,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/chair.png",
+    category: "Mobilier",
+    brand: "IKEA",
+    tags: ["bureau", "réglable", "électrique"],
+    specifications: {
+      Type: "Bureau assis-debout électrique",
+      Dimensions: "160 x 80 cm",
+      "Hauteur réglable": "70-120 cm",
+      Charge: "Jusqu'à 70 kg",
+      Mémoire: "4 positions mémorisables",
+    },
+    shortDescription: "Bureau assis-debout électrique, 4 positions mémoire",
+    description:
+      "Bureau réglable en hauteur électriquement avec positions mémorisables. Favorise l'alternance assis-debout pour une meilleure santé au travail.",
+    featured: false,
+    new: true,
+  },
+  {
+    id: 18,
+    name: "Armoire de rangement Steelcase",
+    slug: "armoire-rangement-steelcase",
+    price: 22,
+    stock: 8,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/chair.png",
+    category: "Mobilier",
+    brand: "Steelcase",
+    tags: ["rangement", "sécurisé", "modulaire"],
+    specifications: {
+      Type: "Armoire de rangement modulaire",
+      Dimensions: "80 x 40 x 180 cm",
+      Matériaux: "Acier laqué, serrure intégrée",
+      Étagères: "4 étagères réglables",
+      Sécurité: "Serrure à clé",
+    },
+    shortDescription: "Armoire modulaire sécurisée, 4 étagères réglables",
+    description:
+      "Solution de rangement professionnel modulaire avec sécurité intégrée. Parfaite pour organiser les espaces de travail.",
     featured: false,
     new: false,
   },

@@ -6,6 +6,7 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { getProductsByCategory } from "@/lib/store-products"
 
 // Mock categories data (no WordPress)
 const mockCategories = [
@@ -35,7 +36,7 @@ const mockCategories = [
     name: "Tablettes",
     slug: "tablettes",
     description: "Tablettes tactiles pour une productivité en déplacement",
-    count: 7, // Updated count
+    count: 7,
   },
   {
     id: 5,
@@ -60,63 +61,6 @@ const mockCategories = [
   },
 ]
 
-// Mock products data - UPDATED WITH REMARKABLE TABLETS
-const mockProducts = [
-  // Laptops
-  {
-    id: 1,
-    name: 'MacBook Pro 14"',
-    slug: "macbook-pro-14",
-    price: "120",
-    short_description: "Processeur M2 Pro, 16 Go RAM, 512 Go SSD",
-    images: [
-      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png", alt: 'MacBook Pro 14"' },
-    ],
-    category_id: 1,
-  },
-  {
-    id: 2,
-    name: "Dell XPS 13",
-    slug: "dell-xps-13",
-    price: "95",
-    short_description: "Intel i7, 16 Go RAM, 512 Go SSD",
-    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png", alt: "Dell XPS 13" }],
-    category_id: 1,
-  },
-  {
-    id: 3,
-    name: "ThinkPad X1 Carbon",
-    slug: "thinkpad-x1-carbon",
-    price: "110",
-    short_description: "Intel i7, 32 Go RAM, 1 To SSD",
-    images: [
-      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png", alt: "ThinkPad X1 Carbon" },
-    ],
-    category_id: 1,
-  },
-  // Tablets - NEW REMARKABLE PRODUCTS
-  {
-    id: 4,
-    name: "reMarkable Paper Pro",
-    slug: "remarkable-paper-pro",
-    price: "85",
-    short_description: "Tablette papier numérique couleur avec Marker inclus, rétroéclairage et batterie longue durée",
-    images: [
-      { src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png", alt: "reMarkable Paper Pro" },
-    ],
-    category_id: 4,
-  },
-  {
-    id: 5,
-    name: "reMarkable 2",
-    slug: "remarkable-2",
-    price: "65",
-    short_description: "Tablette papier numérique avec Marker inclus, expérience d'écriture naturelle",
-    images: [{ src: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png", alt: "reMarkable 2" }],
-    category_id: 4,
-  },
-]
-
 export default function CategoryPage({ params }: { params: { slug: string } }) {
   const { t } = useLanguage()
 
@@ -128,8 +72,8 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
     notFound()
   }
 
-  // Get products for this category
-  const products = mockProducts.filter((product) => product.category_id === category.id)
+  // Get products for this category using the store products database
+  const products = getProductsByCategory(category.name)
 
   // Get SEO content based on category slug
   const getSeoTitle = (slug: string): string => {
@@ -164,7 +108,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
   // Category hero images
   const categoryImages: Record<string, string> = {
     "ordinateurs-portables": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
-    "ordinateurs-de-bureau": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
+    "ordinateurs-de-bureau": "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
     smartphones: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/smartphone.webp",
     tablettes: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/tablet.png",
     accessoires: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/keyboard%20%26%20mouse.png",
@@ -245,7 +189,7 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
                 {products.length}{" "}
                 {products.length > 1 ? t("category.products_available") : t("category.product_available")}
               </h2>
-              <p className="text-slate-600">Trouvez l'équipement idéal pour votre entreprise</p>
+              <p className="text-slate-600">{t("category.find_equipment")}</p>
             </div>
 
             <div className="flex items-center gap-4">
@@ -262,23 +206,22 @@ export default function CategoryPage({ params }: { params: { slug: string } }) {
           {products.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {products.map((product) => (
-                <div key={product.id} className="bg-white rounded-xl shadow-sm overflow-hidden">
+                <div
+                  key={product.id}
+                  className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow"
+                >
                   <div className="bg-slate-100 p-6 flex items-center justify-center h-48">
-                    {product.images && product.images.length > 0 ? (
-                      <Image
-                        src={product.images[0].src || "/placeholder.svg"}
-                        alt={product.images[0].alt || product.name}
-                        width={300}
-                        height={300}
-                        className="max-h-40 w-auto object-contain"
-                      />
-                    ) : (
-                      <div className="text-slate-400">No image available</div>
-                    )}
+                    <Image
+                      src={product.image || "/placeholder.svg"}
+                      alt={product.name}
+                      width={300}
+                      height={300}
+                      className="max-h-40 w-auto object-contain"
+                    />
                   </div>
                   <div className="p-6">
                     <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-                    <p className="text-slate-600 text-sm mb-4">{product.short_description}</p>
+                    <p className="text-slate-600 text-sm mb-4">{product.shortDescription}</p>
                     <div className="flex justify-between items-center">
                       <div>
                         <p className="text-sm text-slate-500">{t("common.from")}</p>

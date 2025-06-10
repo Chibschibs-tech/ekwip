@@ -138,6 +138,7 @@ const translations: Record<Language, Record<string, string>> = {
     "category.breadcrumb.catalog": "Catalogue",
     "category.products_available": "produits disponibles",
     "category.product_available": "produit disponible",
+    "category.find_equipment": "Trouvez l'équipement idéal pour votre entreprise",
     "category.sort_by": "Trier par :",
     "category.sort.popularity": "Popularité",
     "category.sort.price_asc": "Prix croissant",
@@ -185,6 +186,25 @@ const translations: Record<Language, Record<string, string>> = {
     "category.furniture.title": "Mobilier de bureau disponible à la location",
     "category.furniture.description":
       "Aménagez vos espaces de travail avec notre mobilier de bureau ergonomique en location. Bureaux, chaises, armoires et solutions d'aménagement flexibles.",
+
+    // Product pages
+    "product.specifications": "Spécifications techniques",
+    "product.related_products": "Produits similaires",
+    "product.interested_title": "Intéressé par ce produit ?",
+    "product.interested_description":
+      "Contactez nos experts pour obtenir un devis personnalisé et découvrir comment ce produit peut répondre à vos besoins spécifiques.",
+    "product.request_quote": "Demander un devis",
+    "product.talk_to_expert": "Parler à un expert",
+    "product.insurance_included": "Assurance incluse",
+    "product.complete_protection": "Protection complète",
+    "product.free_delivery": "Livraison gratuite",
+    "product.installation_included": "Installation incluse",
+    "product.support_24_7": "Support 24/7",
+    "product.technical_assistance": "Assistance technique",
+    "product.maintenance_included": "Maintenance incluse",
+    "product.free_repairs": "Réparations gratuites",
+    "product.available": "Disponible",
+    "product.unavailable": "Indisponible",
 
     // Common
     "common.discover": "Découvrir",
@@ -318,6 +338,7 @@ const translations: Record<Language, Record<string, string>> = {
     "category.breadcrumb.catalog": "Catalog",
     "category.products_available": "products available",
     "category.product_available": "product available",
+    "category.find_equipment": "Find the ideal equipment for your business",
     "category.sort_by": "Sort by:",
     "category.sort.popularity": "Popularity",
     "category.sort.price_asc": "Price ascending",
@@ -337,7 +358,7 @@ const translations: Record<Language, Record<string, string>> = {
     "category.benefit3.title": "Service included",
     "category.benefit3.description":
       "Benefit from technical support, maintenance and replacement in case of breakdown.",
-    "category.cta.title": "Need a customized solution?",
+    "category.cta.title": "Need a personalized solution?",
     "category.cta.description":
       "Our experts are at your disposal to help you find equipment adapted to your specific needs.",
     "category.cta.button1": "Request a personalized quote",
@@ -355,16 +376,35 @@ const translations: Record<Language, Record<string, string>> = {
       "Professional smartphone rental for your teams. Data plans included, simplified fleet management and regular device renewal.",
     "category.tablets.title": "Tablets available for rental",
     "category.tablets.description":
-      "Rent tablets for your professional needs. Ideal for mobility, client presentations or point of sale. Several models available.",
+      "Rent touch tablets for your professional needs. Ideal for mobility, client presentations or point of sale. Several models available.",
     "category.accessories.title": "IT accessories available for rental",
     "category.accessories.description":
-      "Complete your IT equipment with our range of rental accessories. Screens, keyboards, mice, headsets and other peripherals to optimize your productivity.",
+      "Complete your IT equipment with our range of rental accessories. Monitors, keyboards, mice, headsets and other peripherals to optimize your productivity.",
     "category.printers.title": "Printers available for rental",
     "category.printers.description":
-      "Professional printing solutions for rental. Laser, multifunction and large format printers with maintenance service and consumables included.",
+      "Professional printing solutions for rental. Laser printers, multifunction and large format with maintenance service and consumables included.",
     "category.furniture.title": "Office furniture available for rental",
     "category.furniture.description":
       "Furnish your workspaces with our ergonomic office furniture for rental. Desks, chairs, cabinets and flexible layout solutions.",
+
+    // Product pages
+    "product.specifications": "Technical specifications",
+    "product.related_products": "Similar products",
+    "product.interested_title": "Interested in this product?",
+    "product.interested_description":
+      "Contact our experts to get a personalized quote and discover how this product can meet your specific needs.",
+    "product.request_quote": "Request a quote",
+    "product.talk_to_expert": "Talk to an expert",
+    "product.insurance_included": "Insurance included",
+    "product.complete_protection": "Complete protection",
+    "product.free_delivery": "Free delivery",
+    "product.installation_included": "Installation included",
+    "product.support_24_7": "24/7 Support",
+    "product.technical_assistance": "Technical assistance",
+    "product.maintenance_included": "Maintenance included",
+    "product.free_repairs": "Free repairs",
+    "product.available": "Available",
+    "product.unavailable": "Unavailable",
 
     // Common
     "common.discover": "Discover",
@@ -374,7 +414,7 @@ const translations: Record<Language, Record<string, string>> = {
     "common.product": "product",
     "common.month": "month",
     "common.start": "Start",
-    "common.get_quote": "Get quote",
+    "common.get_quote": "Get a quote",
     "common.contact_us": "Contact us",
     "common.learn_more": "Learn more",
     "common.view_details": "View details",
@@ -390,8 +430,8 @@ const translations: Record<Language, Record<string, string>> = {
     "nav.catalog": "Catálogo",
     "nav.store": "Tienda",
     "nav.contact": "Contacto",
-    "nav.client_portal": "Portal del cliente",
-    "nav.customer_portal": "Portal del cliente",
+    "nav.client_portal": "Portal del Cliente",
+    "nav.customer_portal": "Portal del Cliente",
     "nav.customer_portal_description": "Reservado para clientes con equipos en alquiler",
     "nav.blog": "Blog",
 
@@ -405,9 +445,9 @@ const translations: Record<Language, Record<string, string>> = {
     // Feature cards
     "home.features.card1.title": "Preserva tu tesorería",
     "home.features.card1.description":
-      "Transforma tus gastos de inversión en costos operativos predecibles con pagos mensuales fijos.",
+      "Transforma tus gastos de inversión en costos operativos predecibles con mensualidades fijas.",
     "home.features.card2.title": "Gestiona tu flota IT",
-    "home.features.card2.description": "Gestiona y optimiza toda tu infraestructura IT desde una interfaz única.",
+    "home.features.card2.description": "Gestiona y optimiza todo tu parque informático desde una interfaz única.",
     "home.features.card3.title": "Actualiza en cualquier momento",
     "home.features.card3.description": "Intercambia o actualiza tu equipo según tus necesidades, sin restricciones.",
     "home.features.card4.title": "Soporte y mantenimiento incluidos",
@@ -416,7 +456,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Catalog section
     "home.products.title": "Descubre nuestro catálogo de equipos en alquiler",
     "home.products.description":
-      "Laptops, tabletas, smartphones y mucho más, disponibles en alquiler para acompañar tu actividad. Ya sea que necesites una computadora potente para el trabajo, una tableta para la movilidad o un smartphone de última generación, tenemos el equipo adaptado a tus necesidades.",
+      "Portátiles, tabletas, smartphones y mucho más, disponibles en alquiler para acompañar tu actividad. Ya sea que necesites una computadora potente para el trabajo, una tableta para la movilidad o un smartphone de última generación, tenemos el equipo adaptado a tus necesidades.",
     "home.products.button": "Ver todo el catálogo",
 
     // Clients section
@@ -456,21 +496,21 @@ const translations: Record<Language, Record<string, string>> = {
     // Enterprise section
     "home.enterprise.title": "Soluciones para empresas",
     "home.enterprise.description":
-      "Ekwip ofrece soluciones de alquiler de equipos IT adaptadas a las necesidades específicas de medianas y grandes empresas. Nuestros expertos te acompañan en la definición de tu infraestructura IT y te proponen soluciones a medida.",
-    "home.enterprise.feature1": "Gestión completa de flota IT",
-    "home.enterprise.feature2": "Precios según volumen",
+      "Ekwip propone soluciones de alquiler de equipos IT adaptadas a las necesidades específicas de medianas y grandes empresas. Nuestros expertos te acompañan en la definición de tu parque informático y te proponen soluciones a medida.",
+    "home.enterprise.feature1": "Gestión completa del parque informático",
+    "home.enterprise.feature2": "Tarifas degresivas según el volumen",
     "home.enterprise.feature3": "Soporte técnico dedicado",
     "home.enterprise.feature4": "Portal cliente personalizado",
     "home.enterprise.cta_title": "¿Listo para equipar tu empresa?",
     "home.enterprise.cta_description":
       "Contáctanos hoy para discutir tus necesidades y obtener un presupuesto personalizado.",
-    "home.enterprise.cta_button1": "Solicitar presupuesto personalizado",
+    "home.enterprise.cta_button1": "Solicitar un presupuesto personalizado",
     "home.enterprise.cta_button2": "Contáctanos",
 
     // Catalogue page
     "catalogue.title": "Nuestro catálogo de equipos",
     "catalogue.description":
-      "Descubre nuestra amplia gama de equipos IT disponibles en alquiler para satisfacer todas tus necesidades profesionales.",
+      "Descubre nuestra amplia gama de equipos IT disponibles en alquiler para responder a todas tus necesidades profesionales.",
     "catalogue.categories.title": "Explora nuestras categorías",
     "catalogue.categories.description":
       "Encuentra rápidamente el equipo que necesitas gracias a nuestra organización por categorías",
@@ -502,43 +542,44 @@ const translations: Record<Language, Record<string, string>> = {
     "category.breadcrumb.catalog": "Catálogo",
     "category.products_available": "productos disponibles",
     "category.product_available": "producto disponible",
+    "category.find_equipment": "Encuentra el equipo ideal para tu empresa",
     "category.sort_by": "Ordenar por:",
     "category.sort.popularity": "Popularidad",
     "category.sort.price_asc": "Precio ascendente",
     "category.sort.price_desc": "Precio descendente",
     "category.sort.newest": "Novedades",
     "category.no_products": "No se encontraron productos",
-    "category.no_products_description": "No hay productos disponibles en esta categoría en este momento.",
+    "category.no_products_description": "No hay productos disponibles en esta categoría por el momento.",
     "category.back_to_catalog": "Volver al catálogo",
     "category.why_rent_title": "¿Por qué alquilar {category}?",
     "category.why_rent_description": "Descubre las ventajas del alquiler de equipos para tu empresa",
     "category.benefit1.title": "Costos predecibles",
     "category.benefit1.description":
-      "Transforma tus gastos de inversión en costos operativos predecibles con pagos mensuales fijos.",
+      "Transforma tus gastos de inversión en costos operativos predecibles con mensualidades fijas.",
     "category.benefit2.title": "Equipos actualizados",
     "category.benefit2.description":
-      "Accede a las últimas tecnologías sin inversión mayor y renueva regularmente tu equipo.",
+      "Accede a las últimas tecnologías sin inversión mayor y renueva regularmente tu material.",
     "category.benefit3.title": "Servicio incluido",
     "category.benefit3.description": "Benefíciate de soporte técnico, mantenimiento y reemplazo en caso de avería.",
     "category.cta.title": "¿Necesitas una solución personalizada?",
     "category.cta.description":
-      "Nuestros expertos están a tu disposición para ayudarte a encontrar equipos adaptados a tus necesidades específicas.",
-    "category.cta.button1": "Solicitar presupuesto personalizado",
+      "Nuestros expertos están a tu disposición para ayudarte a encontrar los equipos adaptados a tus necesidades específicas.",
+    "category.cta.button1": "Solicitar un presupuesto personalizado",
     "category.cta.button2": "Contáctanos",
 
     // Category specific titles and descriptions
-    "category.laptops.title": "Laptops disponibles en alquiler",
+    "category.laptops.title": "Ordenadores portátiles disponibles en alquiler",
     "category.laptops.description":
-      "Alquila laptops de última generación para tu empresa. Ofrecemos una amplia gama de modelos adaptados a todas las necesidades profesionales, con servicio de mantenimiento incluido.",
-    "category.desktops.title": "Computadoras de escritorio disponibles en alquiler",
+      "Alquila ordenadores portátiles de última generación para tu empresa. Ofrecemos una amplia gama de modelos adaptados a todas las necesidades profesionales, con servicio de mantenimiento incluido.",
+    "category.desktops.title": "Ordenadores de escritorio disponibles en alquiler",
     "category.desktops.description":
-      "Equipa tu empresa con computadoras de escritorio de alto rendimiento en alquiler. Soluciones flexibles y escalables para todo tipo de empresas, con soporte técnico incluido.",
+      "Equipa tu empresa con ordenadores de escritorio de alto rendimiento en alquiler. Soluciones flexibles y escalables para todo tipo de empresas, con soporte técnico incluido.",
     "category.smartphones.title": "Smartphones disponibles en alquiler",
     "category.smartphones.description":
       "Alquiler de smartphones profesionales para tus equipos. Planes de datos incluidos, gestión de flota simplificada y renovación regular de dispositivos.",
     "category.tablets.title": "Tabletas disponibles en alquiler",
     "category.tablets.description":
-      "Alquila tabletas para tus necesidades profesionales. Ideal para movilidad, presentaciones a clientes o puntos de venta. Varios modelos disponibles.",
+      "Alquila tabletas táctiles para tus necesidades profesionales. Ideal para la movilidad, presentaciones a clientes o puntos de venta. Varios modelos disponibles.",
     "category.accessories.title": "Accesorios informáticos disponibles en alquiler",
     "category.accessories.description":
       "Completa tu equipo informático con nuestra gama de accesorios en alquiler. Pantallas, teclados, ratones, auriculares y otros periféricos para optimizar tu productividad.",
@@ -547,7 +588,26 @@ const translations: Record<Language, Record<string, string>> = {
       "Soluciones de impresión profesionales en alquiler. Impresoras láser, multifunción y gran formato con servicio de mantenimiento y consumibles incluidos.",
     "category.furniture.title": "Mobiliario de oficina disponible en alquiler",
     "category.furniture.description":
-      "Amuebla tus espacios de trabajo con nuestro mobiliario de oficina ergonómico en alquiler. Escritorios, sillas, armarios y soluciones de distribución flexibles.",
+      "Acondiciona tus espacios de trabajo con nuestro mobiliario de oficina ergonómico en alquiler. Escritorios, sillas, armarios y soluciones de acondicionamiento flexibles.",
+
+    // Product pages
+    "product.specifications": "Especificaciones técnicas",
+    "product.related_products": "Productos similares",
+    "product.interested_title": "¿Interesado en este producto?",
+    "product.interested_description":
+      "Contacta a nuestros expertos para obtener un presupuesto personalizado y descubrir cómo este producto puede responder a tus necesidades específicas.",
+    "product.request_quote": "Solicitar presupuesto",
+    "product.talk_to_expert": "Hablar con un experto",
+    "product.insurance_included": "Seguro incluido",
+    "product.complete_protection": "Protección completa",
+    "product.free_delivery": "Entrega gratuita",
+    "product.installation_included": "Instalación incluida",
+    "product.support_24_7": "Soporte 24/7",
+    "product.technical_assistance": "Asistencia técnica",
+    "product.maintenance_included": "Mantenimiento incluido",
+    "product.free_repairs": "Reparaciones gratuitas",
+    "product.available": "Disponible",
+    "product.unavailable": "No disponible",
 
     // Common
     "common.discover": "Descubrir",
@@ -569,28 +629,56 @@ const translations: Record<Language, Record<string, string>> = {
   },
 }
 
-export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("fr")
+export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [language, setLanguage] = useState<Language>("fr")
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem("language") as Language
-    if (savedLanguage && (savedLanguage === "fr" || savedLanguage === "en" || savedLanguage === "es")) {
-      setLanguageState(savedLanguage)
+    if (savedLanguage && ["fr", "en", "es"].includes(savedLanguage)) {
+      setLanguage(savedLanguage)
     }
   }, [])
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang)
+  const handleSetLanguage = (lang: Language) => {
+    setLanguage(lang)
     localStorage.setItem("language", lang)
   }
 
   const t = (key: string): string => {
-    return translations[language][key] || key
+    const keys = key.split(".")
+    let value: any = translations[language]
+
+    for (const k of keys) {
+      if (value && typeof value === "object" && k in value) {
+        value = value[k]
+      } else {
+        // Fallback to French if key not found
+        value = translations.fr
+        for (const fallbackKey of keys) {
+          if (value && typeof value === "object" && fallbackKey in value) {
+            value = value[fallbackKey]
+          } else {
+            return key // Return the key itself if not found
+          }
+        }
+        break
+      }
+    }
+
+    return typeof value === "string" ? value : key
   }
 
-  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  )
 }
 
-export function useLanguage() {
-  return useContext(LanguageContext)
+export const useLanguage = () => {
+  const context = useContext(LanguageContext)
+  if (!context) {
+    throw new Error("useLanguage must be used within a LanguageProvider")
+  }
+  return context
 }
