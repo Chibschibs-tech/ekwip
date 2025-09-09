@@ -101,8 +101,9 @@ export function NeedsListProvider({ children }: { children: React.ReactNode }) {
     return items.reduce((total, item) => total + item.quantity, 0)
   }
 
+  // Fixed: Calculate monthly total, not total for entire duration
   const getTotalPrice = () => {
-    return items.reduce((total, item) => total + item.price * item.quantity * item.duration, 0)
+    return items.reduce((total, item) => total + item.price * item.quantity, 0)
   }
 
   const isInNeedsList = (id: number) => {
