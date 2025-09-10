@@ -131,7 +131,7 @@ export default function NeedsListPage() {
                           {item.brand} • {item.category}
                         </p>
                         <p className="text-sm font-medium text-ekwip">
-                          {item.price} Dhs {t("common.per_month")}
+                          {item.price}€ {t("common.per_month")}
                         </p>
                       </div>
 
@@ -198,7 +198,7 @@ export default function NeedsListPage() {
                 <CardHeader>
                   <CardTitle>{t("needs_list.quote_form_title")}</CardTitle>
                   <div className="text-2xl font-bold text-ekwip">
-                    {t("needs_list.total_estimate")}: {getTotalPrice()} Dhs/mois
+                    {t("needs_list.total_estimate")}: {getTotalPrice()}€/mois
                   </div>
                   <p className="text-xs text-gray-500">{t("needs_list.estimate_note")}</p>
                 </CardHeader>

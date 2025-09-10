@@ -1,6 +1,6 @@
-// Mock product data and API functions
+// Remove all WordPress API functionality and replace with mock data
 
-// Types for product data
+// Types for product data (keeping the same structure but removing WordPress-specific fields)
 export interface Category {
   id: number
   name: string
@@ -303,7 +303,7 @@ const mockProducts: Product[] = [
   },
 ]
 
-// API functions
+// Replace all WordPress API functions with mock implementations
 
 export async function fetchAllCategories(): Promise<Category[]> {
   // Simulate API delay
@@ -474,17 +474,16 @@ export async function fetchClientLogos() {
   ]
 }
 
-// Helper function to format price - Updated to use Moroccan Dirhams
+// Helper function to format price (keeping the same functionality)
 export function formatPrice(price: string | number): string {
   const numPrice = typeof price === "string" ? Number.parseFloat(price) : price
 
-  return (
-    new Intl.NumberFormat("fr-MA", {
-      style: "decimal",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(numPrice) + " Dhs"
-  )
+  return new Intl.NumberFormat("fr-MA", {
+    style: "currency",
+    currency: "MAD",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(numPrice)
 }
 
 // Export the renamed types for backward compatibility

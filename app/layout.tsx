@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   title: "Ekwip - Location d'équipements IT pour entreprises",
   description:
     "Louez vos équipements informatiques avec Ekwip. Solutions flexibles pour ordinateurs, smartphones, tablettes et plus encore.",
-    generator: 'v0.app'
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({

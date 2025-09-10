@@ -156,7 +156,7 @@ export default async function ProductPage({ params }: Props) {
                   </Button>
                 </Link>
                 <Link href="/comment-ca-marche" className="block">
-                  <Button variant="outline" size="lg" className="w-full">
+                  <Button variant="outline" size="lg" className="w-full bg-transparent">
                     Comment ça marche ?
                   </Button>
                 </Link>
