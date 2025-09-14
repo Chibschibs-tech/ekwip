@@ -72,7 +72,7 @@ export const products: Product[] = [
     shortDescription: 'Intel Core Ultra 7 165H vPro, 32 Go RAM, NVIDIA RTX 2000 Ada, Écran 16" FHD tactile',
     price: 180,
     image: "/images/dell-precision-5690.png",
-    category: "Stations de travail",
+    category: "Ordinateurs portables",
     slug: "dell-mobile-precision-workstation-5690",
     featured: true,
     new: true,
