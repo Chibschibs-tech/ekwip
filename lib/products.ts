@@ -64,6 +64,19 @@ export const products: Product[] = [
     featured: true,
     new: false,
   },
+  {
+    id: 5,
+    name: "Dell Mobile Precision Workstation 5690",
+    description:
+      "Station de travail mobile haut de gamme avec processeur Intel Core Ultra 7 165H vPro, 32 Go LPDDR5x, carte graphique NVIDIA RTX 2000 Ada 8 Go GDDR6, écran 16\" FHD tactile, clavier français rétroéclairé avec lecteur d'empreintes, Wi-Fi 7, Bluetooth, Windows 11 Professionnel et suite logicielle complète incluant Microsoft 365.",
+    shortDescription: 'Intel Core Ultra 7 165H vPro, 32 Go RAM, NVIDIA RTX 2000 Ada, Écran 16" FHD tactile',
+    price: 180,
+    image: "/images/dell-precision-5690.png",
+    category: "Stations de travail",
+    slug: "dell-mobile-precision-workstation-5690",
+    featured: true,
+    new: true,
+  },
 ]
 
 // These functions will be replaced with actual API calls in the future
