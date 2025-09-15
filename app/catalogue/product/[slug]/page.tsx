@@ -1,12 +1,13 @@
-import { notFound } from "next/navigation"
-import Image from "next/image"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
+import { ArrowLeft, Truck, Shield, Headphones, Star } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
 import { getProductBySlug, getProductsByCategory, formatPrice } from "@/lib/products"
-import { ChevronRight, ArrowLeft, Star, Shield, Truck, HeadphonesIcon } from "lucide-react"
+import { notFound } from "next/navigation"
 
 interface ProductPageProps {
   params: {
@@ -16,70 +17,66 @@ interface ProductPageProps {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const product = getProductBySlug(params.slug)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
   if (!product) {
     notFound()
   }
 
-  // Get related products from the same category
   const relatedProducts = getProductsByCategory(product.category)
     .filter((p) => p.id !== product.id)
     .slice(0, 3)
 
+  const selectedImage = product.images?.[selectedImageIndex] || product.image
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Breadcrumb */}
-      <div className="bg-white border-b">
-        <div className="container mx-auto px-4 py-4">
-          <nav className="flex items-center space-x-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-blue-600">
-              Accueil
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <Link href="/catalogue" className="hover:text-blue-600">
-              Catalogue
-            </Link>
-            <ChevronRight className="w-4 h-4" />
-            <span className="text-gray-900">{product.name}</span>
-          </nav>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 py-8">
-        {/* Back button */}
-        <Link href="/catalogue" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Retour au catalogue
-        </Link>
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+          <Link href="/catalogue" className="flex items-center gap-2 text-blue-600 hover:text-blue-800">
+            <ArrowLeft className="h-4 w-4" />
+            Retour au catalogue
+          </Link>
+        </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 mb-12">
+        {/* Product badges */}
+        <div className="flex gap-2 mb-4">
+          <Badge variant="outline" className="text-blue-600 border-blue-600">
+            {product.category}
+          </Badge>
+          {product.featured && <Badge className="bg-orange-100 text-orange-800 hover:bg-orange-200">Populaire</Badge>}
+          {product.new && <Badge className="bg-green-100 text-green-800 hover:bg-green-200">Nouveau</Badge>}
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Product Images */}
           <div className="space-y-4">
-            <div className="aspect-square bg-white rounded-2xl p-8 shadow-lg">
-              <Image
-                src={product.image || "/placeholder.svg?height=600&width=600&text=Product+Image"}
+            <div className="aspect-square bg-white rounded-lg overflow-hidden shadow-sm">
+              <img
+                src={selectedImage || "/placeholder.svg"}
                 alt={product.name}
-                width={600}
-                height={600}
-                className="w-full h-full object-contain"
-                unoptimized
+                className="w-full h-full object-cover"
               />
             </div>
 
-            {/* Additional Images */}
+            {/* Thumbnail Images */}
             {product.images && product.images.length > 1 && (
-              <div className="grid grid-cols-4 gap-4">
-                {product.images.slice(1).map((image, index) => (
-                  <div key={index} className="aspect-square bg-white rounded-lg p-2 shadow-md">
-                    <Image
-                      src={image || "/placeholder.svg?height=150&width=150&text=Product+Image"}
-                      alt={`${product.name} - Image ${index + 2}`}
-                      width={150}
-                      height={150}
-                      className="w-full h-full object-contain"
-                      unoptimized
+              <div className="grid grid-cols-5 gap-2">
+                {product.images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`aspect-square bg-white rounded-lg overflow-hidden border-2 transition-colors ${
+                      selectedImageIndex === index ? "border-blue-600" : "border-gray-200 hover:border-gray-300"
+                    }`}
+                  >
+                    <img
+                      src={image || "/placeholder.svg"}
+                      alt={`${product.name} - Image ${index + 1}`}
+                      className="w-full h-full object-cover"
                     />
-                  </div>
+                  </button>
                 ))}
               </div>
             )}
@@ -88,74 +85,78 @@ export default function ProductPage({ params }: ProductPageProps) {
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <div className="flex items-center gap-3 mb-4">
-                <Badge variant="secondary" className="text-blue-600 bg-blue-50">
-                  {product.category}
-                </Badge>
-                {product.featured && <Badge className="bg-amber-100 text-amber-600">Populaire</Badge>}
-                {product.new && <Badge className="bg-green-100 text-green-600">Nouveau</Badge>}
-              </div>
-
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">{product.name}</h1>
-              <p className="text-lg text-gray-600 mb-6">{product.shortDescription}</p>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+              <p className="text-lg text-gray-600">{product.shortDescription}</p>
             </div>
 
             {/* Pricing */}
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
-              <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-4xl font-bold text-gray-900">{formatPrice(product.price)}</span>
-                <span className="text-xl text-gray-600">DH</span>
-                <span className="text-lg text-gray-500">/mois</span>
+            <div className="space-y-2">
+              <div className="flex items-baseline gap-2">
+                <span className="text-4xl font-bold text-gray-900">{formatPrice(product.price)} DH</span>
+                <span className="text-lg text-gray-600">/mois</span>
                 {product.rentalDuration && (
                   <span className="text-lg text-gray-600">({product.rentalDuration} mois)</span>
                 )}
               </div>
               {product.firstMonthPrice && (
-                <p className="text-lg text-gray-700 mb-4">{formatPrice(product.firstMonthPrice)} DH Le 1er mois</p>
+                <p className="text-lg text-gray-600">{formatPrice(product.firstMonthPrice)} DH Le 1er mois</p>
               )}
-              <p className="text-sm text-gray-600 mb-4">
-                Location longue durée • Maintenance incluse • Assurance comprise
-              </p>
-
-              <div className="space-y-3">
-                <Button size="lg" className="w-full bg-[#334e68] hover:bg-[#2a3f5f] text-white">
-                  Demander un devis
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="w-full bg-transparent border-[#334e68] text-[#334e68] hover:bg-[#334e68] hover:text-white"
-                >
-                  Ajouter à ma liste de besoins
-                </Button>
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <span>Location longue durée</span>
+                <span>•</span>
+                <span>Maintenance incluse</span>
+                <span>•</span>
+                <span>Assurance comprise</span>
               </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="space-y-3">
+              <Button size="lg" className="w-full bg-[#334e68] hover:bg-[#2a3f5f] text-white">
+                Demander un devis
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full border-[#334e68] text-[#334e68] hover:bg-[#334e68] hover:text-white bg-transparent"
+              >
+                Ajouter à ma liste de besoins
+              </Button>
             </div>
 
             {/* Features */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
-                <Shield className="w-6 h-6 text-green-600" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Shield className="h-5 w-5 text-blue-600" />
+                </div>
                 <div>
                   <p className="font-medium text-gray-900">Garantie incluse</p>
                   <p className="text-sm text-gray-600">3 ans</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
-                <Truck className="w-6 h-6 text-blue-600" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <Truck className="h-5 w-5 text-green-600" />
+                </div>
                 <div>
                   <p className="font-medium text-gray-900">Livraison</p>
                   <p className="text-sm text-gray-600">24-48h</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
-                <HeadphonesIcon className="w-6 h-6 text-purple-600" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
+                  <Headphones className="h-5 w-5 text-purple-600" />
+                </div>
                 <div>
                   <p className="font-medium text-gray-900">Support</p>
-                  <p className="text-sm text-gray-600">7j/7</p>
+                  <p className="text-sm text-gray-600">7/7</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3 p-4 bg-white rounded-lg shadow-sm">
-                <Star className="w-6 h-6 text-yellow-600" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                  <Star className="h-5 w-5 text-yellow-600" />
+                </div>
                 <div>
                   <p className="font-medium text-gray-900">Maintenance</p>
                   <p className="text-sm text-gray-600">Incluse</p>
@@ -165,86 +166,69 @@ export default function ProductPage({ params }: ProductPageProps) {
           </div>
         </div>
 
-        {/* Product Details */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-12">
-          {/* Description */}
-          <div className="lg:col-span-2">
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold mb-4">Description</h2>
-                <div
-                  className="prose prose-gray max-w-none"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
-                />
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Specifications */}
-          <div>
-            <Card>
-              <CardContent className="p-6">
-                <h2 className="text-2xl font-bold mb-4">Spécifications</h2>
-                {product.specifications && (
-                  <div className="space-y-3">
-                    {Object.entries(product.specifications).map(([key, value], index) => (
-                      <div key={index}>
-                        <div className="flex justify-between items-start py-2">
-                          <span className="font-medium text-gray-700">{key}</span>
-                          <span className="text-gray-900 text-right ml-4">{value}</span>
-                        </div>
-                        {index < Object.entries(product.specifications!).length - 1 && <Separator />}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-          </div>
+        {/* Product Description */}
+        <div className="mt-16">
+          <Card>
+            <CardContent className="p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-4">Description</h2>
+              <p className="text-gray-700 leading-relaxed">{product.description}</p>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Specifications */}
+        {product.specifications && (
+          <div className="mt-8">
+            <Card>
+              <CardContent className="p-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-6">Spécifications techniques</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(product.specifications).map(([key, value]) => (
+                    <div key={key} className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="font-medium text-gray-900">{key}</span>
+                      <span className="text-gray-600">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div>
-            <h2 className="text-2xl font-bold mb-6">Produits similaires</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">Produits similaires</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {relatedProducts.map((relatedProduct) => (
-                <Card key={relatedProduct.id} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-square bg-gray-50 p-6">
-                    <Image
-                      src={relatedProduct.image || "/placeholder.svg?height=300&width=300&text=Product+Image"}
-                      alt={relatedProduct.name}
-                      width={300}
-                      height={300}
-                      className="w-full h-full object-contain"
-                      unoptimized
-                    />
-                  </div>
-                  <CardContent className="p-4">
-                    <h3 className="font-bold mb-2">{relatedProduct.name}</h3>
-                    <p className="text-sm text-gray-600 mb-3">{relatedProduct.shortDescription}</p>
-                    <div className="flex justify-between items-center">
-                      <div>
-                        <span className="text-lg font-bold">
-                          {formatPrice(relatedProduct.price)} DH/mois
+                <Card key={relatedProduct.id} className="group hover:shadow-lg transition-shadow">
+                  <CardContent className="p-0">
+                    <div className="aspect-square bg-gray-100 overflow-hidden rounded-t-lg">
+                      <img
+                        src={relatedProduct.image || "/placeholder.svg"}
+                        alt={relatedProduct.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                    <div className="p-6">
+                      <h3 className="font-semibold text-gray-900 mb-2">{relatedProduct.name}</h3>
+                      <p className="text-sm text-gray-600 mb-4">{relatedProduct.shortDescription}</p>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-xl font-bold text-gray-900">
+                            {formatPrice(relatedProduct.price)} DH
+                          </span>
+                          <span className="text-sm text-gray-600">/mois</span>
                           {relatedProduct.rentalDuration && (
-                            <span className="text-sm font-normal text-gray-600">
-                              {" "}
-                              ({relatedProduct.rentalDuration} mois)
-                            </span>
+                            <span className="text-sm text-gray-600"> ({relatedProduct.rentalDuration} mois)</span>
                           )}
-                        </span>
-                        {relatedProduct.firstMonthPrice && (
-                          <p className="text-xs text-gray-500">
-                            {formatPrice(relatedProduct.firstMonthPrice)} DH Le 1er mois
-                          </p>
-                        )}
+                        </div>
+                        <Link href={`/catalogue/product/${relatedProduct.slug}`}>
+                          <Button size="sm" className="bg-[#334e68] hover:bg-[#2a3f5f] text-white">
+                            Voir détails
+                          </Button>
+                        </Link>
                       </div>
-                      <Link href={`/catalogue/product/${relatedProduct.slug}`}>
-                        <Button size="sm" className="bg-[#334e68] hover:bg-[#2a3f5f] text-white">
-                          Voir détails
-                        </Button>
-                      </Link>
                     </div>
                   </CardContent>
                 </Card>
