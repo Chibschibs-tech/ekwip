@@ -55,11 +55,11 @@ export default function ProductCard({ product }: { product: ProductProps }) {
         <div className="flex justify-between items-end">
           <div>
             <p className="text-2xl font-bold text-gray-800">
-              {product.price} Dhs<span className="text-sm font-normal">/mois</span>
+              {product.price} DH<span className="text-sm font-normal">/mois</span>
             </p>
-            <p className="text-sm text-gray-500">(premier mois {product.firstMonthPrice} Dhs)</p>
+            <p className="text-sm text-gray-500">(premier mois {product.firstMonthPrice} DH)</p>
           </div>
-          <Link href={`/store/product/${product.slug}`}>
+          <Link href={`/catalogue/product/${product.slug}`}>
             <Button variant="gradient" size="sm" className="rounded-full shadow-md hover:shadow-lg">
               Voir détails
             </Button>

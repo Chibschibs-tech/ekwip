@@ -149,5 +149,5 @@ export async function fetchRelatedProducts(productId: number, limit = 4): Promis
 
 export function formatPrice(price: string | number): string {
   const numPrice = typeof price === "string" ? Number.parseFloat(price) : price
-  return `${numPrice}€`
+  return `${numPrice.toLocaleString()} DH`
 }
