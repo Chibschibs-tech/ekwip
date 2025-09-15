@@ -1,282 +1,307 @@
+"use client"
+
 import { notFound } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { getProductBySlug, getProducts } from "@/lib/products"
-import { ChevronRight, Star, Shield, Truck, RefreshCw, ArrowLeft } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ArrowLeft, Star, ShoppingCart, Heart, Share2, Check, Truck, Shield, Headphones } from "lucide-react"
+import { getProductBySlug, getProductsByCategory } from "@/lib/products"
+import { useLanguage } from "@/contexts/language-context"
 
-interface Props {
-  params: {
-    slug: string
-  }
-}
+export default function ProductDetailPage({ params }: { params: { slug: string } }) {
+  const { t } = useLanguage()
 
-export async function generateMetadata({ params }: Props) {
-  const product = getProductBySlug(params.slug)
-
-  if (!product) {
-    return {
-      title: "Produit non trouvé - Ekwip",
-      description: "Ce produit n'existe pas ou a été supprimé.",
-    }
-  }
-
-  return {
-    title: `${product.name} - Ekwip`,
-    description: product.shortDescription,
-  }
-}
-
-export default function ProductPage({ params }: Props) {
   const product = getProductBySlug(params.slug)
 
   if (!product) {
     notFound()
   }
 
-  const allProducts = getProducts()
-  const relatedProducts = allProducts.filter((p) => p.category === product.category && p.id !== product.id).slice(0, 3)
+  // Get related products (same category, excluding current product)
+  const relatedProducts = getProductsByCategory(product.category)
+    .filter((p) => p.id !== product.id)
+    .slice(0, 4)
 
   return (
-    <div>
-      {/* Breadcrumbs */}
-      <section className="py-8 px-4 md:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <nav className="mb-4">
-            <ol className="flex items-center space-x-2 text-sm text-gray-600">
-              <li>
-                <Link href="/" className="hover:text-blue-600">
-                  Accueil
-                </Link>
-              </li>
-              <li>
-                <ChevronRight className="h-4 w-4" />
-              </li>
-              <li>
-                <Link href="/store" className="hover:text-blue-600">
-                  Boutique
-                </Link>
-              </li>
-              <li>
-                <ChevronRight className="h-4 w-4" />
-              </li>
-              <li>
-                <Link href={`/store?category=${encodeURIComponent(product.category)}`} className="hover:text-blue-600">
-                  {product.category}
-                </Link>
-              </li>
-              <li>
-                <ChevronRight className="h-4 w-4" />
-              </li>
-              <li className="font-medium text-blue-600">{product.name}</li>
-            </ol>
-          </nav>
-
-          <Link
-            href="/store"
-            className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 text-sm font-medium"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Retour au catalogue
-          </Link>
+    <div className="min-h-screen bg-gray-50">
+      {/* Breadcrumb */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4">
+          <div className="flex items-center gap-2 text-sm text-gray-600">
+            <Link href="/" className="hover:text-ekwip">
+              Accueil
+            </Link>
+            <span>/</span>
+            <Link href="/store" className="hover:text-ekwip">
+              Boutique
+            </Link>
+            <span>/</span>
+            <Link
+              href={`/catalogue/${product.category.toLowerCase().replace(/\s+/g, "-")}`}
+              className="hover:text-ekwip"
+            >
+              {product.category}
+            </Link>
+            <span>/</span>
+            <span className="text-gray-900">{product.name}</span>
+          </div>
         </div>
-      </section>
+      </div>
 
       {/* Product Details */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
+      <section className="py-8 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-4 mb-8">
+            <Link href="/store">
+              <Button variant="outline" size="sm">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Retour à la boutique
+              </Button>
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Product Images */}
-            <div>
-              <div className="relative h-96 bg-gray-100 rounded-xl overflow-hidden mb-4">
+            {/* Product Image */}
+            <div className="space-y-4">
+              <div className="relative aspect-square bg-white rounded-lg overflow-hidden border">
                 <Image
                   src={product.image || "/placeholder.svg"}
                   alt={product.name}
                   fill
                   className="object-contain p-8"
                 />
+                {product.new && (
+                  <Badge className="absolute top-4 left-4 bg-green-500 hover:bg-green-600">Nouveau</Badge>
+                )}
+                {product.featured && (
+                  <Badge className="absolute top-4 right-4 bg-ekwip hover:bg-ekwip-700">
+                    <Star className="h-3 w-3 mr-1" />
+                    Populaire
+                  </Badge>
+                )}
               </div>
             </div>
 
             {/* Product Info */}
-            <div>
-              <div className="mb-4 flex items-center gap-2">
-                <Badge variant="secondary">{product.category}</Badge>
-                {product.new && <Badge className="bg-green-100 text-green-800">Nouveau</Badge>}
-                {product.featured && <Badge className="bg-blue-100 text-blue-800">Populaire</Badge>}
-              </div>
-
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{product.name}</h1>
-
-              <p className="text-gray-600 mb-6 text-lg leading-relaxed">{product.description}</p>
-
-              {/* Pricing */}
-              <div className="mb-8 bg-blue-50 rounded-lg p-6">
-                <div className="flex items-baseline gap-4 mb-2">
-                  <span className="text-3xl font-bold text-blue-600">{product.price}€</span>
-                  <span className="text-gray-500">/ mois</span>
+            <div className="space-y-6">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <Badge variant="outline">{product.category}</Badge>
                 </div>
-                <p className="text-sm text-gray-500">Prix TTC, engagement 24 mois minimum</p>
+                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
+                <p className="text-lg text-gray-600">{product.shortDescription}</p>
               </div>
 
-              {/* Specifications */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold mb-4">Spécifications principales</h3>
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <p className="text-gray-700">{product.shortDescription}</p>
+              {/* Price */}
+              <div className="bg-white p-6 rounded-lg border">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Prix de location mensuel</p>
+                    <p className="text-3xl font-bold text-ekwip">
+                      {product.price}€<span className="text-lg font-normal">/mois</span>
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              {/* CTA Buttons */}
-              <div className="space-y-4 mb-8">
-                <Button size="lg" className="w-full bg-blue-600 hover:bg-blue-700">
-                  Ajouter à ma liste de besoins
-                </Button>
-                <Link href="/contact" className="block">
-                  <Button variant="outline" size="lg" className="w-full bg-transparent">
-                    Demander un devis personnalisé
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span>Installation et configuration incluses</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span>Support technique 24/7</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <Check className="h-4 w-4 text-green-500" />
+                    <span>Maintenance et réparations incluses</span>
+                  </div>
+                </div>
+
+                <div className="flex gap-3">
+                  <Button className="flex-1 bg-ekwip hover:bg-ekwip-700">
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Demander un devis
                   </Button>
-                </Link>
+                  <Button variant="outline" size="icon">
+                    <Heart className="h-4 w-4" />
+                  </Button>
+                  <Button variant="outline" size="icon">
+                    <Share2 className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
 
               {/* Features */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-6 border-t">
-                <div className="flex items-center text-sm text-gray-600">
-                  <Shield className="h-4 w-4 mr-2 text-green-600" />
-                  <span>Assurance incluse</span>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center p-4 bg-white rounded-lg border">
+                  <Truck className="h-8 w-8 text-ekwip mx-auto mb-2" />
+                  <p className="text-sm font-medium">Livraison rapide</p>
+                  <p className="text-xs text-gray-500">24-48h</p>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Truck className="h-4 w-4 mr-2 text-blue-600" />
-                  <span>Livraison gratuite</span>
+                <div className="text-center p-4 bg-white rounded-lg border">
+                  <Shield className="h-8 w-8 text-ekwip mx-auto mb-2" />
+                  <p className="text-sm font-medium">Garantie totale</p>
+                  <p className="text-xs text-gray-500">Incluse</p>
                 </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <RefreshCw className="h-4 w-4 mr-2 text-purple-600" />
-                  <span>Mise à niveau possible</span>
-                </div>
-                <div className="flex items-center text-sm text-gray-600">
-                  <Star className="h-4 w-4 mr-2 text-yellow-600" />
-                  <span>Support technique 7j/7</span>
+                <div className="text-center p-4 bg-white rounded-lg border">
+                  <Headphones className="h-8 w-8 text-ekwip mx-auto mb-2" />
+                  <p className="text-sm font-medium">Support 24/7</p>
+                  <p className="text-xs text-gray-500">Inclus</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Product Details Card */}
-      <section className="py-8 px-4 md:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <Card>
-            <CardContent className="p-8">
-              <h2 className="text-2xl font-bold mb-6">Détails du produit</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Caractéristiques</h3>
-                  <div className="space-y-3">
-                    <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="font-medium">Catégorie</span>
-                      <span className="text-gray-600">{product.category}</span>
+          {/* Product Details Tabs */}
+          <div className="mt-16">
+            <Tabs defaultValue="description" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="specifications">Spécifications</TabsTrigger>
+                <TabsTrigger value="support">Support</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="description" className="mt-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-4">Description détaillée</h3>
+                    <p className="text-gray-600 leading-relaxed">{product.description}</p>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="specifications" className="mt-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-4">Spécifications techniques</h3>
+                    <div className="space-y-4">
+                      {product.slug === "dell-mobile-precision-workstation-5690" && (
+                        <>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <h4 className="font-medium text-gray-900">Processeur</h4>
+                              <p className="text-gray-600">Intel Core Ultra 7 165H vPro</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">Mémoire</h4>
+                              <p className="text-gray-600">32 Go LPDDR5x</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">Carte graphique</h4>
+                              <p className="text-gray-600">NVIDIA RTX 2000 Ada 8 Go GDDR6</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">Écran</h4>
+                              <p className="text-gray-600">16" FHD tactile</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">Clavier</h4>
+                              <p className="text-gray-600">Français rétroéclairé avec lecteur d'empreintes</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">Connectivité</h4>
+                              <p className="text-gray-600">Wi-Fi 7, Bluetooth</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">Système d'exploitation</h4>
+                              <p className="text-gray-600">Windows 11 Professionnel</p>
+                            </div>
+                            <div>
+                              <h4 className="font-medium text-gray-900">Logiciels inclus</h4>
+                              <p className="text-gray-600">Microsoft 365</p>
+                            </div>
+                          </div>
+                        </>
+                      )}
+                      {product.slug !== "dell-mobile-precision-workstation-5690" && (
+                        <p className="text-gray-600">
+                          Spécifications détaillées disponibles sur demande. Contactez notre équipe pour plus
+                          d'informations.
+                        </p>
+                      )}
                     </div>
-                    <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="font-medium">Prix mensuel</span>
-                      <span className="text-gray-600">{product.price}€ TTC</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="font-medium">Engagement minimum</span>
-                      <span className="text-gray-600">24 mois</span>
-                    </div>
-                    <div className="flex justify-between py-2">
-                      <span className="font-medium">Disponibilité</span>
-                      <span className="text-green-600 font-medium">En stock</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold mb-4">Services inclus</h3>
-                  <ul className="space-y-3">
-                    <li className="flex items-start gap-3">
-                      <Shield className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="support" className="mt-6">
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="text-xl font-semibold mb-4">Support et services</h3>
+                    <div className="space-y-4">
                       <div>
-                        <div className="font-medium">Assurance complète</div>
-                        <div className="text-sm text-gray-600">Couverture vol, casse, panne</div>
+                        <h4 className="font-medium text-gray-900 mb-2">Support technique 24/7</h4>
+                        <p className="text-gray-600">
+                          Notre équipe d'experts est disponible 24h/24 et 7j/7 pour vous assister.
+                        </p>
                       </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <Truck className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <div className="font-medium">Livraison & installation</div>
-                        <div className="text-sm text-gray-600">Partout au Maroc</div>
+                        <h4 className="font-medium text-gray-900 mb-2">Installation et configuration</h4>
+                        <p className="text-gray-600">
+                          Installation complète et configuration selon vos besoins professionnels.
+                        </p>
                       </div>
-                    </li>
-                    <li className="flex items-start gap-3">
-                      <Star className="h-5 w-5 text-yellow-600 mt-0.5 flex-shrink-0" />
                       <div>
-                        <div className="font-medium">Support technique</div>
-                        <div className="text-sm text-gray-600">7j/7 par téléphone et email</div>
+                        <h4 className="font-medium text-gray-900 mb-2">Maintenance préventive</h4>
+                        <p className="text-gray-600">Maintenance régulière pour assurer des performances optimales.</p>
                       </div>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </section>
 
       {/* Related Products */}
       {relatedProducts.length > 0 && (
-        <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
+        <section className="py-16 px-4 md:px-6 lg:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">Produits similaires</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">Produits similaires</h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.map((relatedProduct) => (
-                <Link key={relatedProduct.id} href={`/store/product/${relatedProduct.slug}`}>
-                  <Card className="h-full hover:shadow-md transition-all group">
-                    <div className="relative h-48 bg-gray-100 rounded-t-xl overflow-hidden">
+                <Card
+                  key={relatedProduct.id}
+                  className="group hover:shadow-lg transition-all duration-300 border-0 shadow-md"
+                >
+                  <CardContent className="p-0">
+                    <div className="relative bg-gray-100 aspect-square overflow-hidden rounded-t-lg">
                       <Image
                         src={relatedProduct.image || "/placeholder.svg"}
                         alt={relatedProduct.name}
                         fill
-                        className="object-contain p-4 group-hover:scale-105 transition-transform"
+                        className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
                       />
-                      <div className="absolute top-2 right-2 flex gap-1">
-                        {relatedProduct.new && <Badge className="bg-green-100 text-green-800 text-xs">Nouveau</Badge>}
-                        {relatedProduct.featured && (
-                          <Badge className="bg-blue-100 text-blue-800 text-xs">Populaire</Badge>
-                        )}
-                      </div>
                     </div>
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+                    <div className="p-4">
+                      <h3 className="font-semibold mb-2 group-hover:text-ekwip transition-colors">
                         {relatedProduct.name}
                       </h3>
-                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{relatedProduct.shortDescription}</p>
-                      <p className="text-xl font-bold text-blue-600">{relatedProduct.price}€/mois</p>
-                    </CardContent>
-                  </Card>
-                </Link>
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{relatedProduct.shortDescription}</p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-lg font-bold text-ekwip">
+                          {relatedProduct.price}€<span className="text-sm font-normal">/mois</span>
+                        </p>
+                        <Link href={`/store/product/${relatedProduct.slug}`}>
+                          <Button size="sm" variant="outline">
+                            Voir
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           </div>
         </section>
       )}
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-blue-600">
-        <div className="max-w-5xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Besoin d'aide pour faire votre choix ?</h2>
-          <p className="text-white text-lg max-w-2xl mx-auto mb-8 opacity-90">
-            Nos experts sont là pour vous conseiller et vous proposer la solution la plus adaptée à vos besoins.
-          </p>
-          <Link href="/contact">
-            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 shadow-lg">
-              Contactez nos experts
-            </Button>
-          </Link>
-        </div>
-      </section>
     </div>
   )
 }
