@@ -1,4 +1,4 @@
-import { getProducts, getProductBySlug as getProductBySlugFromProducts } from "./products"
+import { getProducts, getProductBySlug as getProductBySlugFromProducts, formatPrice } from "./products"
 
 // Mock WordPress API types
 export interface WordPressProduct {
@@ -147,7 +147,4 @@ export async function fetchRelatedProducts(productId: number, limit = 4): Promis
   return relatedProducts.map(convertToWordPressProduct)
 }
 
-export function formatPrice(price: string | number): string {
-  const numPrice = typeof price === "string" ? Number.parseFloat(price) : price
-  return `${numPrice.toLocaleString()} DH`
-}
+export { formatPrice }

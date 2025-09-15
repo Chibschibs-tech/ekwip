@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { getProductBySlug, getProductsByCategory } from "@/lib/products"
+import { getProductBySlug, getProductsByCategory, formatPrice } from "@/lib/products"
 import { ChevronRight, ArrowLeft, Star, Shield, Truck, HeadphonesIcon } from "lucide-react"
 
 interface ProductPageProps {
@@ -101,22 +101,26 @@ export default function ProductPage({ params }: ProductPageProps) {
             {/* Pricing */}
             <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6">
               <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-4xl font-bold text-gray-900">{product.price.toLocaleString()}</span>
+                <span className="text-4xl font-bold text-gray-900">{formatPrice(product.price)}</span>
                 <span className="text-xl text-gray-600">DH</span>
                 <span className="text-lg text-gray-500">/mois</span>
               </div>
+              {product.firstMonthPrice && (
+                <p className="text-lg text-gray-700 mb-4">{formatPrice(product.firstMonthPrice)} DH Le 1er mois</p>
+              )}
               <p className="text-sm text-gray-600 mb-4">
                 Location longue durée • Maintenance incluse • Assurance comprise
               </p>
 
               <div className="space-y-3">
-                <Button
-                  size="lg"
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
-                >
+                <Button size="lg" className="w-full bg-[#334e68] hover:bg-[#2a3f5f] text-white">
                   Demander un devis
                 </Button>
-                <Button variant="outline" size="lg" className="w-full bg-transparent">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="w-full bg-transparent border-[#334e68] text-[#334e68] hover:bg-[#334e68] hover:text-white"
+                >
                   Ajouter à ma liste de besoins
                 </Button>
               </div>
@@ -214,9 +218,16 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <h3 className="font-bold mb-2">{relatedProduct.name}</h3>
                     <p className="text-sm text-gray-600 mb-3">{relatedProduct.shortDescription}</p>
                     <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold">{relatedProduct.price.toLocaleString()} DH/mois</span>
+                      <div>
+                        <span className="text-lg font-bold">{formatPrice(relatedProduct.price)} DH/mois</span>
+                        {relatedProduct.firstMonthPrice && (
+                          <p className="text-xs text-gray-500">
+                            {formatPrice(relatedProduct.firstMonthPrice)} DH Le 1er mois
+                          </p>
+                        )}
+                      </div>
                       <Link href={`/catalogue/product/${relatedProduct.slug}`}>
-                        <Button size="sm" variant="outline">
+                        <Button size="sm" className="bg-[#334e68] hover:bg-[#2a3f5f] text-white">
                           Voir détails
                         </Button>
                       </Link>

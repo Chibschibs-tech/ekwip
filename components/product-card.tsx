@@ -5,6 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { formatPrice } from "@/lib/products"
 
 interface ProductProps {
   id: number
@@ -12,7 +13,7 @@ interface ProductProps {
   description: string
   shortDescription: string
   price: number
-  firstMonthPrice: number
+  firstMonthPrice?: number
   image: string
   category: string
   slug: string
@@ -55,12 +56,17 @@ export default function ProductCard({ product }: { product: ProductProps }) {
         <div className="flex justify-between items-end">
           <div>
             <p className="text-2xl font-bold text-gray-800">
-              {product.price} DH<span className="text-sm font-normal">/mois</span>
+              {formatPrice(product.price)} DH<span className="text-sm font-normal">/mois</span>
             </p>
-            <p className="text-sm text-gray-500">(premier mois {product.firstMonthPrice} DH)</p>
+            {product.firstMonthPrice && (
+              <p className="text-sm text-gray-500">{formatPrice(product.firstMonthPrice)} DH Le 1er mois</p>
+            )}
           </div>
           <Link href={`/catalogue/product/${product.slug}`}>
-            <Button variant="gradient" size="sm" className="rounded-full shadow-md hover:shadow-lg">
+            <Button
+              size="sm"
+              className="rounded-full shadow-md hover:shadow-lg bg-[#334e68] hover:bg-[#2a3f5f] text-white"
+            >
               Voir détails
             </Button>
           </Link>

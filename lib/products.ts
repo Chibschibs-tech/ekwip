@@ -7,6 +7,7 @@ export type Product = {
   description: string
   shortDescription: string
   price: number
+  firstMonthPrice?: number
   image: string
   images?: string[]
   category: string
@@ -16,7 +17,7 @@ export type Product = {
   specifications?: { [key: string]: string }
 }
 
-// Update the product images
+// Update the product images and pricing
 export const products: Product[] = [
   {
     id: 1,
@@ -100,15 +101,15 @@ export const products: Product[] = [
     description:
       "Station de travail mobile haut de gamme avec processeur Intel Core Ultra 7 165H vPro, 32 Go LPDDR5x, carte graphique NVIDIA RTX 2000 Ada 8 Go GDDR6, écran 16\" FHD tactile, clavier français rétroéclairé avec lecteur d'empreintes, Wi-Fi 7, Bluetooth, Windows 11 Professionnel et suite logicielle complète incluant Microsoft 365.",
     shortDescription: 'Intel Core Ultra 7 165H vPro, 32 Go RAM, NVIDIA RTX 2000 Ada, Écran 16" FHD tactile',
-    price: 18000,
-    image:
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/dell-precision-5690-main.jpg",
+    price: 1029,
+    firstMonthPrice: 2590,
+    image: "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690",
     images: [
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/dell-precision-5690-main.jpg",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/dell-precision-5690-side.jpg",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/dell-precision-5690-keyboard.jpg",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/dell-precision-5690-ports.jpg",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/dell-precision-5690-screen.jpg",
+      "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690+Main",
+      "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690+Side",
+      "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690+Keyboard",
+      "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690+Ports",
+      "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690+Screen",
     ],
     category: "Ordinateurs portables",
     slug: "dell-mobile-precision-workstation-5690",
@@ -139,3 +140,8 @@ export const getNewProducts = () => products.filter((product) => product.new)
 export const getProductsByCategory = (category: string) => products.filter((product) => product.category === category)
 
 export const getProductBySlug = (slug: string) => products.find((product) => product.slug === slug)
+
+// Helper function to format price with spaces
+export const formatPrice = (price: number): string => {
+  return price.toLocaleString("fr-FR").replace(/,/g, " ")
+}
