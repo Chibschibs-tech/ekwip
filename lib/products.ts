@@ -8,6 +8,7 @@ export type Product = {
   shortDescription: string
   price: number
   firstMonthPrice?: number
+  rentalDuration?: number // in months
   image: string
   images?: string[]
   category: string
@@ -25,6 +26,7 @@ export const products: Product[] = [
     description: "Ordinateur portable professionnel Apple avec puce M2 Pro, idéal pour les créatifs et développeurs.",
     shortDescription: "M2 Pro, 16 Go RAM, 512 Go SSD",
     price: 12000,
+    rentalDuration: 36,
     image: "/images/macbook-pro.png",
     category: "Ordinateurs portables",
     slug: "macbook-pro-14",
@@ -44,6 +46,7 @@ export const products: Product[] = [
     description: "Ordinateur portable haut de gamme avec écran InfinityEdge et performances exceptionnelles.",
     shortDescription: "Intel i7, 32 Go RAM, 1 To SSD",
     price: 9500,
+    rentalDuration: 36,
     image: "/images/dell-xps.png",
     category: "Ordinateurs portables",
     slug: "dell-xps-15",
@@ -63,6 +66,7 @@ export const products: Product[] = [
     description: "Ordinateur tout-en-un élégant avec écran Retina 4.5K et puce Apple M1.",
     shortDescription: "M1, 16 Go RAM, 512 Go SSD",
     price: 8500,
+    rentalDuration: 36,
     image: "/images/imac.png",
     category: "Ordinateurs de bureau",
     slug: "imac-24",
@@ -82,6 +86,7 @@ export const products: Product[] = [
     description: "Smartphone haut de gamme avec appareil photo professionnel et puce A17 Pro.",
     shortDescription: "256 Go, forfait data 100 Go inclus",
     price: 4500,
+    rentalDuration: 24,
     image: "/images/iphone.png",
     category: "Smartphones",
     slug: "iphone-15-pro",
@@ -103,6 +108,7 @@ export const products: Product[] = [
     shortDescription: 'Intel Core Ultra 7 165H vPro, 32 Go RAM, NVIDIA RTX 2000 Ada, Écran 16" FHD tactile',
     price: 1029,
     firstMonthPrice: 2590,
+    rentalDuration: 36,
     image: "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690",
     images: [
       "/placeholder.svg?height=400&width=400&text=Dell+Precision+5690+Main",

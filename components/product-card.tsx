@@ -14,6 +14,7 @@ interface ProductProps {
   shortDescription: string
   price: number
   firstMonthPrice?: number
+  rentalDuration?: number
   image: string
   category: string
   slug: string
@@ -32,11 +33,12 @@ export default function ProductCard({ product }: { product: ProductProps }) {
     >
       <div className="relative bg-gray-50 p-6 flex items-center justify-center h-56 overflow-hidden">
         <Image
-          src={product.image || "/placeholder.svg"}
+          src={product.image || "/placeholder.svg?height=180&width=180&text=Product+Image"}
           alt={product.name}
           width={180}
           height={180}
           className={`product-image transition-all duration-300 ${isHovered ? "scale-110" : "scale-100"}`}
+          unoptimized
         />
         {product.featured && (
           <Badge className="absolute top-3 left-3 bg-amber-100 text-amber-600 hover:bg-amber-100 rounded-full px-3 py-1 font-medium shadow-sm">
@@ -57,6 +59,9 @@ export default function ProductCard({ product }: { product: ProductProps }) {
           <div>
             <p className="text-2xl font-bold text-gray-800">
               {formatPrice(product.price)} DH<span className="text-sm font-normal">/mois</span>
+              {product.rentalDuration && (
+                <span className="text-sm font-normal text-gray-600"> ({product.rentalDuration} mois)</span>
+              )}
             </p>
             {product.firstMonthPrice && (
               <p className="text-sm text-gray-500">{formatPrice(product.firstMonthPrice)} DH Le 1er mois</p>

@@ -57,11 +57,12 @@ export default function ProductPage({ params }: ProductPageProps) {
           <div className="space-y-4">
             <div className="aspect-square bg-white rounded-2xl p-8 shadow-lg">
               <Image
-                src={product.image || "/placeholder.svg"}
+                src={product.image || "/placeholder.svg?height=600&width=600&text=Product+Image"}
                 alt={product.name}
                 width={600}
                 height={600}
                 className="w-full h-full object-contain"
+                unoptimized
               />
             </div>
 
@@ -71,11 +72,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                 {product.images.slice(1).map((image, index) => (
                   <div key={index} className="aspect-square bg-white rounded-lg p-2 shadow-md">
                     <Image
-                      src={image || "/placeholder.svg"}
+                      src={image || "/placeholder.svg?height=150&width=150&text=Product+Image"}
                       alt={`${product.name} - Image ${index + 2}`}
                       width={150}
                       height={150}
                       className="w-full h-full object-contain"
+                      unoptimized
                     />
                   </div>
                 ))}
@@ -104,6 +106,9 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <span className="text-4xl font-bold text-gray-900">{formatPrice(product.price)}</span>
                 <span className="text-xl text-gray-600">DH</span>
                 <span className="text-lg text-gray-500">/mois</span>
+                {product.rentalDuration && (
+                  <span className="text-lg text-gray-600">({product.rentalDuration} mois)</span>
+                )}
               </div>
               {product.firstMonthPrice && (
                 <p className="text-lg text-gray-700 mb-4">{formatPrice(product.firstMonthPrice)} DH Le 1er mois</p>
@@ -207,11 +212,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <Card key={relatedProduct.id} className="overflow-hidden hover:shadow-lg transition-shadow">
                   <div className="aspect-square bg-gray-50 p-6">
                     <Image
-                      src={relatedProduct.image || "/placeholder.svg"}
+                      src={relatedProduct.image || "/placeholder.svg?height=300&width=300&text=Product+Image"}
                       alt={relatedProduct.name}
                       width={300}
                       height={300}
                       className="w-full h-full object-contain"
+                      unoptimized
                     />
                   </div>
                   <CardContent className="p-4">
@@ -219,7 +225,15 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <p className="text-sm text-gray-600 mb-3">{relatedProduct.shortDescription}</p>
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="text-lg font-bold">{formatPrice(relatedProduct.price)} DH/mois</span>
+                        <span className="text-lg font-bold">
+                          {formatPrice(relatedProduct.price)} DH/mois
+                          {relatedProduct.rentalDuration && (
+                            <span className="text-sm font-normal text-gray-600">
+                              {" "}
+                              ({relatedProduct.rentalDuration} mois)
+                            </span>
+                          )}
+                        </span>
                         {relatedProduct.firstMonthPrice && (
                           <p className="text-xs text-gray-500">
                             {formatPrice(relatedProduct.firstMonthPrice)} DH Le 1er mois

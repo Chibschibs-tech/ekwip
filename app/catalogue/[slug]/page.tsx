@@ -70,7 +70,13 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           {products.map((product) => (
             <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative aspect-square bg-gray-50 p-6">
-                <Image src={product.image || "/placeholder.svg"} alt={product.name} fill className="object-contain" />
+                <Image
+                  src={product.image || "/placeholder.svg?height=300&width=300&text=Product+Image"}
+                  alt={product.name}
+                  fill
+                  className="object-contain"
+                  unoptimized
+                />
                 {product.featured && (
                   <Badge className="absolute top-3 left-3 bg-amber-100 text-amber-600">Populaire</Badge>
                 )}
@@ -83,6 +89,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                   <div>
                     <p className="text-2xl font-bold text-gray-900">
                       {formatPrice(product.price)} DH<span className="text-sm font-normal">/mois</span>
+                      {product.rentalDuration && (
+                        <span className="text-sm font-normal text-gray-600"> ({product.rentalDuration} mois)</span>
+                      )}
                     </p>
                     {product.firstMonthPrice && (
                       <p className="text-sm text-gray-500">{formatPrice(product.firstMonthPrice)} DH Le 1er mois</p>
