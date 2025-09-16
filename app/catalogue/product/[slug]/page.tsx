@@ -56,7 +56,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <img
                 src={selectedImage || "/placeholder.svg"}
                 alt={product.name}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain p-4"
               />
             </div>
 
@@ -74,7 +74,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <img
                       src={image || "/placeholder.svg"}
                       alt={`${product.name} - Image ${index + 1}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain p-1"
                     />
                   </button>
                 ))}
@@ -207,7 +207,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                       <img
                         src={relatedProduct.image || "/placeholder.svg"}
                         alt={relatedProduct.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
                       />
                     </div>
                     <div className="p-6">

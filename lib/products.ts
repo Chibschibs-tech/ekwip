@@ -115,7 +115,6 @@ export const products: Product[] = [
       "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-1.avif",
       "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-2.avif",
       "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-3.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-4.avif",
       "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-5.avif",
       "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-6.avif",
       "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-7.avif",
