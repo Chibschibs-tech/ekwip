@@ -96,85 +96,85 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         ) : (
           <div className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" : "space-y-4"}>
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="group hover:shadow-lg transition-shadow">
-                <CardContent className="p-0">
-                  {viewMode === "grid" ? (
-                    <>
-                      <div className="aspect-square bg-gray-100 overflow-hidden rounded-t-lg relative">
-                        <img
-                          src={product.image || "/placeholder.svg"}
-                          alt={product.name}
-                          className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
-                        />
-                        <div className="absolute top-2 left-2 flex gap-2">
-                          {product.featured && <Badge className="bg-orange-100 text-orange-800">Populaire</Badge>}
-                          {product.new && <Badge className="bg-green-100 text-green-800">Nouveau</Badge>}
+              <Link key={product.id} href={`/catalogue/product/${product.slug}`} className="block">
+                <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer h-full">
+                  <CardContent className="p-0">
+                    {viewMode === "grid" ? (
+                      <>
+                        <div className="aspect-square bg-gray-100 overflow-hidden rounded-t-lg relative">
+                          <img
+                            src={product.image || "/placeholder.svg"}
+                            alt={product.name}
+                            className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+                          />
+                          <div className="absolute top-2 left-2 flex gap-2">
+                            {product.featured && <Badge className="bg-orange-100 text-orange-800">Populaire</Badge>}
+                            {product.new && <Badge className="bg-green-100 text-green-800">Nouveau</Badge>}
+                          </div>
                         </div>
-                      </div>
-                      <div className="p-6">
-                        <h3 className="font-semibold text-gray-900 mb-2">{product.name}</h3>
-                        <p className="text-sm text-gray-600 mb-4">{product.shortDescription}</p>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <span className="text-xl font-bold text-gray-900">{formatPrice(product.price)} DH</span>
-                            <span className="text-sm text-gray-600">/mois</span>
+                        <div className="p-6">
+                          <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-4">{product.shortDescription}</p>
+                          <div className="space-y-1">
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-xl font-bold text-gray-900">
+                                À partir de {formatPrice(product.basePrice)} DH
+                              </span>
+                              <span className="text-sm text-gray-600">/mois</span>
+                            </div>
                             {product.rentalDuration && (
-                              <span className="text-sm text-gray-600"> ({product.rentalDuration} mois)</span>
+                              <p className="text-sm text-gray-600">Contrat {product.rentalDuration} mois</p>
                             )}
-                            {product.firstMonthPrice && (
+                            {product.baseFirstMonthPrice && (
                               <p className="text-xs text-gray-500">
-                                {formatPrice(product.firstMonthPrice)} DH Le 1er mois
+                                {formatPrice(product.baseFirstMonthPrice)} DH Le 1er mois
                               </p>
                             )}
                           </div>
-                          <Link href={`/catalogue/product/${product.slug}`}>
-                            <Button size="sm" className="bg-[#334e68] hover:bg-[#2a3f5f] text-white">
-                              Voir détails
-                            </Button>
-                          </Link>
                         </div>
-                      </div>
-                    </>
-                  ) : (
-                    <div className="flex p-6 gap-6">
-                      <div className="w-32 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
-                        <img
-                          src={product.image || "/placeholder.svg"}
-                          alt={product.name}
-                          className="w-full h-full object-contain p-2"
-                        />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex gap-2 mb-2">
-                          {product.featured && <Badge className="bg-orange-100 text-orange-800">Populaire</Badge>}
-                          {product.new && <Badge className="bg-green-100 text-green-800">Nouveau</Badge>}
+                      </>
+                    ) : (
+                      <div className="flex p-6 gap-6">
+                        <div className="w-32 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                          <img
+                            src={product.image || "/placeholder.svg"}
+                            alt={product.name}
+                            className="w-full h-full object-contain p-2"
+                          />
                         </div>
-                        <h3 className="font-semibold text-gray-900 mb-2">{product.name}</h3>
-                        <p className="text-sm text-gray-600 mb-4">{product.shortDescription}</p>
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <span className="text-xl font-bold text-gray-900">{formatPrice(product.price)} DH</span>
-                            <span className="text-sm text-gray-600">/mois</span>
+                        <div className="flex-1">
+                          <div className="flex gap-2 mb-2">
+                            {product.featured && <Badge className="bg-orange-100 text-orange-800">Populaire</Badge>}
+                            {product.new && <Badge className="bg-green-100 text-green-800">Nouveau</Badge>}
+                          </div>
+                          <h3 className="font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                            {product.name}
+                          </h3>
+                          <p className="text-sm text-gray-600 mb-4">{product.shortDescription}</p>
+                          <div className="space-y-1">
+                            <div className="flex items-baseline gap-2">
+                              <span className="text-xl font-bold text-gray-900">
+                                À partir de {formatPrice(product.basePrice)} DH
+                              </span>
+                              <span className="text-sm text-gray-600">/mois</span>
+                            </div>
                             {product.rentalDuration && (
-                              <span className="text-sm text-gray-600"> ({product.rentalDuration} mois)</span>
+                              <p className="text-sm text-gray-600">Contrat {product.rentalDuration} mois</p>
                             )}
-                            {product.firstMonthPrice && (
+                            {product.baseFirstMonthPrice && (
                               <p className="text-xs text-gray-500">
-                                {formatPrice(product.firstMonthPrice)} DH Le 1er mois
+                                {formatPrice(product.baseFirstMonthPrice)} DH Le 1er mois
                               </p>
                             )}
                           </div>
-                          <Link href={`/catalogue/product/${product.slug}`}>
-                            <Button size="sm" className="bg-[#334e68] hover:bg-[#2a3f5f] text-white">
-                              Voir détails
-                            </Button>
-                          </Link>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
+                    )}
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         )}
