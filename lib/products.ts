@@ -243,7 +243,11 @@ export const products: Product[] = [
   },
 ]
 
-// Helper functions
+// Helper functions - ALL REQUIRED EXPORTS
+export function getProducts(): Product[] {
+  return products
+}
+
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug)
 }
@@ -261,14 +265,17 @@ export function getNewProducts(): Product[] {
 }
 
 export function calculateTotalPrice(product: Product, configuration: ProductConfiguration): number {
-  const processorPrice = configuration.processor.price || 0
-  const memoryPrice = configuration.memory.price || 0
-  const storagePrice = configuration.storage.price || 0
+  const processorPrice = configuration.processor?.price || 0
+  const memoryPrice = configuration.memory?.price || 0
+  const storagePrice = configuration.storage?.price || 0
 
   return product.basePrice + processorPrice + memoryPrice + storagePrice
 }
 
-export function formatPrice(price: number): string {
+export function formatPrice(price: number | undefined): string {
+  if (typeof price !== "number" || isNaN(price)) {
+    return "0 DH"
+  }
   return `${price.toLocaleString("fr-FR")} DH`
 }
 
