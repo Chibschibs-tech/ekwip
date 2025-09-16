@@ -99,6 +99,56 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "home.enterprise.cta_button1": "Demander un devis personnalisé",
     "home.enterprise.cta_button2": "Nous contacter",
 
+    // Contact page
+    "contact.title": "Contactez-nous",
+    "contact.description": "Notre équipe est à votre disposition pour répondre à toutes vos questions",
+    "contact.info.title": "Informations de contact",
+    "contact.info.description": "Plusieurs moyens de nous joindre selon vos préférences",
+    "contact.info.address": "Adresse",
+    "contact.info.phone": "Téléphone",
+    "contact.info.email": "Email",
+    "contact.info.hours": "Horaires d'ouverture",
+    "contact.form.title": "Envoyez-nous un message",
+    "contact.form.description": "Remplissez le formulaire ci-dessous et nous vous répondrons rapidement",
+    "contact.form.name": "Nom complet",
+    "contact.form.email": "Adresse email",
+    "contact.form.phone": "Téléphone",
+    "contact.form.company": "Entreprise",
+    "contact.form.message": "Message",
+    "contact.form.submit": "Envoyer le message",
+    "contact.form.submitting": "Envoi en cours...",
+    "contact.form.success": "Message envoyé avec succès!",
+    "contact.form.success_description": "Nous vous répondrons dans les plus brefs délais",
+    "contact.map.title": "Notre localisation",
+    "contact.map.description": "Venez nous rendre visite dans nos bureaux",
+
+    // Blog page
+    "blog.title": "Blog Ekwip",
+    "blog.description": "Actualités, conseils et tendances du monde IT",
+    "blog.featured": "Article à la une",
+    "blog.read_article": "Lire l'article",
+    "blog.recent_posts": "Articles récents",
+    "blog.categories": "Catégories",
+    "blog.categories_list.treasury": "Gestion de trésorerie",
+    "blog.categories_list.equipment": "Équipements IT",
+    "blog.categories_list.optimization": "Optimisation",
+    "blog.categories_list.trends": "Tendances",
+
+    // Footer
+    "footer.description":
+      "Ekwip, votre partenaire pour la location d'équipements IT professionnels. Solutions flexibles et sur-mesure pour entreprises.",
+    "footer.services": "Nos services",
+    "footer.newsletter": "Newsletter",
+    "footer.newsletter_description": "Restez informé de nos dernières actualités et offres spéciales",
+    "footer.newsletter_placeholder": "Votre adresse email",
+    "footer.rights": "Tous droits réservés.",
+    "footer.legal_notice": "Mentions légales",
+    "footer.privacy_policy": "Politique de confidentialité",
+    "footer.terms": "CGV",
+
+    // How it works page
+    how_it_works: "Comment ça marche",
+
     // Catalogue page
     "catalogue.title": "Notre catalogue d'équipements",
     "catalogue.description":
@@ -347,6 +397,56 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
     "home.enterprise.cta_button1": "Request a personalized quote",
     "home.enterprise.cta_button2": "Contact us",
 
+    // Contact page
+    "contact.title": "Contact us",
+    "contact.description": "Our team is at your disposal to answer all your questions",
+    "contact.info.title": "Contact information",
+    "contact.info.description": "Several ways to reach us according to your preferences",
+    "contact.info.address": "Address",
+    "contact.info.phone": "Phone",
+    "contact.info.email": "Email",
+    "contact.info.hours": "Opening hours",
+    "contact.form.title": "Send us a message",
+    "contact.form.description": "Fill out the form below and we will respond quickly",
+    "contact.form.name": "Full name",
+    "contact.form.email": "Email address",
+    "contact.form.phone": "Phone",
+    "contact.form.company": "Company",
+    "contact.form.message": "Message",
+    "contact.form.submit": "Send message",
+    "contact.form.submitting": "Sending...",
+    "contact.form.success": "Message sent successfully!",
+    "contact.form.success_description": "We will respond as soon as possible",
+    "contact.map.title": "Our location",
+    "contact.map.description": "Come visit us at our offices",
+
+    // Blog page
+    "blog.title": "Ekwip Blog",
+    "blog.description": "News, tips and trends from the IT world",
+    "blog.featured": "Featured article",
+    "blog.read_article": "Read article",
+    "blog.recent_posts": "Recent posts",
+    "blog.categories": "Categories",
+    "blog.categories_list.treasury": "Treasury management",
+    "blog.categories_list.equipment": "IT equipment",
+    "blog.categories_list.optimization": "Optimization",
+    "blog.categories_list.trends": "Trends",
+
+    // Footer
+    "footer.description":
+      "Ekwip, your partner for professional IT equipment rental. Flexible and customized solutions for businesses.",
+    "footer.services": "Our services",
+    "footer.newsletter": "Newsletter",
+    "footer.newsletter_description": "Stay informed about our latest news and special offers",
+    "footer.newsletter_placeholder": "Your email address",
+    "footer.rights": "All rights reserved.",
+    "footer.legal_notice": "Legal notice",
+    "footer.privacy_policy": "Privacy policy",
+    "footer.terms": "Terms",
+
+    // How it works page
+    how_it_works: "How it works",
+
     // Catalogue page
     "catalogue.title": "Our equipment catalog",
     "catalogue.description":
@@ -593,6 +693,56 @@ const TRANSLATIONS: Record<Language, Record<string, string>> = {
       "Contáctanos hoy para discutir tus necesidades y obtener un presupuesto personalizado.",
     "home.enterprise.cta_button1": "Solicitar un presupuesto personalizado",
     "home.enterprise.cta_button2": "Contáctanos",
+
+    // Contact page
+    "contact.title": "Contáctanos",
+    "contact.description": "Nuestro equipo está a tu disposición para responder todas tus preguntas",
+    "contact.info.title": "Información de contacto",
+    "contact.info.description": "Varias formas de contactarnos según tus preferencias",
+    "contact.info.address": "Dirección",
+    "contact.info.phone": "Teléfono",
+    "contact.info.email": "Email",
+    "contact.info.hours": "Horarios de apertura",
+    "contact.form.title": "Envíanos un mensaje",
+    "contact.form.description": "Completa el formulario a continuación y te responderemos rápidamente",
+    "contact.form.name": "Nombre completo",
+    "contact.form.email": "Dirección de email",
+    "contact.form.phone": "Teléfono",
+    "contact.form.company": "Empresa",
+    "contact.form.message": "Mensaje",
+    "contact.form.submit": "Enviar mensaje",
+    "contact.form.submitting": "Enviando...",
+    "contact.form.success": "¡Mensaje enviado con éxito!",
+    "contact.form.success_description": "Responderemos lo antes posible",
+    "contact.map.title": "Nuestra ubicación",
+    "contact.map.description": "Ven a visitarnos a nuestras oficinas",
+
+    // Blog page
+    "blog.title": "Blog Ekwip",
+    "blog.description": "Noticias, consejos y tendencias del mundo IT",
+    "blog.featured": "Artículo destacado",
+    "blog.read_article": "Leer artículo",
+    "blog.recent_posts": "Artículos recientes",
+    "blog.categories": "Categorías",
+    "blog.categories_list.treasury": "Gestión de tesorería",
+    "blog.categories_list.equipment": "Equipos IT",
+    "blog.categories_list.optimization": "Optimización",
+    "blog.categories_list.trends": "Tendencias",
+
+    // Footer
+    "footer.description":
+      "Ekwip, tu socio para el alquiler de equipos IT profesionales. Soluciones flexibles y a medida para empresas.",
+    "footer.services": "Nuestros servicios",
+    "footer.newsletter": "Newsletter",
+    "footer.newsletter_description": "Mantente informado sobre nuestras últimas noticias y ofertas especiales",
+    "footer.newsletter_placeholder": "Tu dirección de email",
+    "footer.rights": "Todos los derechos reservados.",
+    "footer.legal_notice": "Aviso legal",
+    "footer.privacy_policy": "Política de privacidad",
+    "footer.terms": "Términos",
+
+    // How it works page
+    how_it_works: "Cómo funciona",
 
     // Catalogue page
     "catalogue.title": "Nuestro catálogo de equipos",

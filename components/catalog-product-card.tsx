@@ -1,90 +1,85 @@
-import Link from "next/link"
+"use client"
+
 import Image from "next/image"
+import Link from "next/link"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { formatPrice } from "@/lib/products"
+import type { Product } from "@/lib/products"
 
 interface CatalogProductCardProps {
-  product: {
-    id: number
-    name: string
-    description: string
-    shortDescription: string
-    price: number
-    salePrice?: number
-    stock: number
-    image: string
-    category: string
-    brand: string
-    tags: string[]
-    specifications?: Record<string, string>
-    slug: string
-    featured: boolean
-    new: boolean
-  }
+  product: Product
 }
 
 export default function CatalogProductCard({ product }: CatalogProductCardProps) {
-  const monthlyPrice = Math.round(product.price * 0.08) // Approximate 8% of purchase price for monthly rental
-  const discountPercentage = product.salePrice
-    ? Math.round(((product.price - product.salePrice) / product.price) * 100)
-    : 0
-
   return (
-    <Link href={`/catalogue/product/${product.slug}`}>
-      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 h-full flex flex-col border border-gray-100 hover:border-gray-200 hover:-translate-y-1">
+    <Link href={`/catalogue/product/${product.slug}`} className="block group">
+      <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border-0 shadow-lg">
         <div className="relative">
-          {product.salePrice && (
-            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
-              -{discountPercentage}%
-            </div>
-          )}
-          {product.new && (
-            <div className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
-              Nouveau
-            </div>
-          )}
-          {product.featured && (
-            <div className="absolute top-3 left-1/2 transform -translate-x-1/2 bg-ekwip text-white text-xs font-bold px-2 py-1 rounded-full z-10">
-              Populaire
-            </div>
-          )}
-          <div className="bg-gray-50 p-6 flex items-center justify-center h-56">
+          <div className="aspect-square bg-gradient-to-br from-gray-50 to-gray-100 p-6">
             <Image
-              src={product.image || "/placeholder.svg?height=200&width=200"}
+              src={product.image || "/placeholder.svg"}
               alt={product.name}
-              width={200}
-              height={200}
-              className="max-h-44 w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+              width={300}
+              height={300}
+              className="w-full h-full object-contain transition-transform duration-300 group-hover:scale-105"
             />
           </div>
-        </div>
-        <div className="p-5 flex flex-col flex-grow">
-          <div className="mb-2 flex items-center justify-between">
-            <Badge variant="secondary" className="text-xs">
-              {product.category}
-            </Badge>
-            <span className="text-xs text-gray-500 font-medium">{product.brand}</span>
+
+          {/* Badges */}
+          <div className="absolute top-3 left-3 flex flex-col gap-2">
+            {product.isNew && <Badge className="bg-green-500 hover:bg-green-600 text-white font-medium">Nouveau</Badge>}
+            {product.isFeatured && (
+              <Badge className="bg-ekwip hover:bg-ekwip-700 text-white font-medium">Populaire</Badge>
+            )}
           </div>
-          <h3 className="font-bold text-gray-800 mb-1 line-clamp-1">{product.name}</h3>
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.shortDescription}</p>
-          <div className="mt-auto">
-            <div className="flex items-center justify-between mb-3">
+
+          {/* Stock status */}
+          <div className="absolute top-3 right-3">
+            <div className={`w-3 h-3 rounded-full ${product.inStock ? "bg-green-500" : "bg-red-500"}`} />
+          </div>
+        </div>
+
+        <CardContent className="p-6">
+          <div className="space-y-3">
+            {/* Brand */}
+            <div className="text-sm text-gray-500 font-medium">{product.brand}</div>
+
+            {/* Product name */}
+            <h3 className="font-bold text-lg text-gray-800 line-clamp-2 group-hover:text-ekwip transition-colors">
+              {product.name}
+            </h3>
+
+            {/* Short description */}
+            <p className="text-gray-600 text-sm line-clamp-2">{product.shortDescription}</p>
+
+            {/* Rental duration */}
+            <div className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full inline-block">
+              Contrat {product.rentalDuration}
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center justify-between pt-2">
               <div>
-                <p className="text-sm text-gray-500">À partir de</p>
-                <span className="font-bold text-gray-800 text-lg">{monthlyPrice} €/mois</span>
+                <div className="text-sm text-gray-500">À partir de</div>
+                <div className="text-xl font-bold text-ekwip">
+                  {formatPrice(product.basePrice)}{" "}
+                  <span className="text-sm font-normal">({product.rentalDuration})</span>
+                </div>
               </div>
+
+              {/* Stock indicator */}
               <div
-                className={`text-xs font-medium px-2 py-1 rounded-full ${product.stock > 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}
+                className={`text-xs px-2 py-1 rounded-full ${
+                  product.inStock ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                }`}
               >
-                {product.stock > 0 ? "Disponible" : "Indisponible"}
+                {product.inStock ? "Disponible" : "Indisponible"}
               </div>
             </div>
-            <Button variant="outline" className="w-full" size="sm">
-              Voir détails
-            </Button>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </Link>
   )
 }
