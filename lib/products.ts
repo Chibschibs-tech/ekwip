@@ -54,7 +54,7 @@ const storageVariants: ProductVariant[] = [
   { id: "2tb", name: "2TB M.2 NVMe™ PCIe® 4.0 SSD", price: 250, basePrice: 250 },
 ]
 
-// Sample products data
+// Sample products data - UPDATED CATEGORIES TO MATCH URL SLUGS
 export const products: Product[] = [
   {
     id: "1",
@@ -72,7 +72,7 @@ export const products: Product[] = [
       "/images/dell-precision-5690-ports.png",
       "/images/dell-precision-5690-screen.png",
     ],
-    category: "laptops",
+    category: "ordinateurs-portables",
     brand: "Dell",
     inStock: true,
     isNew: true,
@@ -104,7 +104,7 @@ export const products: Product[] = [
     basePrice: 2800,
     image: "/images/macbook-pro.png",
     images: ["/images/macbook-pro.png"],
-    category: "laptops",
+    category: "ordinateurs-portables",
     brand: "Apple",
     inStock: true,
     isNew: false,
@@ -141,7 +141,7 @@ export const products: Product[] = [
     basePrice: 1800,
     image: "/images/dell-xps.png",
     images: ["/images/dell-xps.png"],
-    category: "laptops",
+    category: "ordinateurs-portables",
     brand: "Dell",
     inStock: true,
     isNew: false,
@@ -178,7 +178,7 @@ export const products: Product[] = [
     basePrice: 2200,
     image: "/images/imac.png",
     images: ["/images/imac.png"],
-    category: "desktops",
+    category: "ordinateurs-de-bureau",
     brand: "Apple",
     inStock: true,
     isNew: true,
@@ -279,23 +279,23 @@ export function formatPrice(price: number | undefined): string {
   return `${price.toLocaleString("fr-FR")} DH`
 }
 
-// Categories data
+// Categories data - UPDATED TO MATCH URL SLUGS
 export const categories = [
   {
-    id: "laptops",
+    id: "ordinateurs-portables",
     name: "Ordinateurs portables",
-    slug: "laptops",
+    slug: "ordinateurs-portables",
     description: "Laptops et ultrabooks pour tous vos besoins professionnels",
     image: "/images/laptop-hero.png",
-    count: products.filter((p) => p.category === "laptops").length,
+    count: products.filter((p) => p.category === "ordinateurs-portables").length,
   },
   {
-    id: "desktops",
+    id: "ordinateurs-de-bureau",
     name: "Ordinateurs de bureau",
-    slug: "desktops",
+    slug: "ordinateurs-de-bureau",
     description: "Stations de travail et PC de bureau performants",
     image: "/images/imac.png",
-    count: products.filter((p) => p.category === "desktops").length,
+    count: products.filter((p) => p.category === "ordinateurs-de-bureau").length,
   },
   {
     id: "smartphones",
@@ -306,28 +306,36 @@ export const categories = [
     count: products.filter((p) => p.category === "smartphones").length,
   },
   {
-    id: "tablets",
+    id: "tablettes",
     name: "Tablettes",
-    slug: "tablets",
+    slug: "tablettes",
     description: "Tablettes tactiles pour la mobilité professionnelle",
     image: "/placeholder.svg?height=200&width=200",
-    count: 0,
+    count: products.filter((p) => p.category === "tablettes").length,
   },
   {
-    id: "printers",
+    id: "imprimantes",
     name: "Imprimantes",
-    slug: "printers",
+    slug: "imprimantes",
     description: "Solutions d'impression professionnelles",
     image: "/images/printer-hero.png",
-    count: 0,
+    count: products.filter((p) => p.category === "imprimantes").length,
   },
   {
-    id: "accessories",
+    id: "accessoires",
     name: "Accessoires",
-    slug: "accessories",
+    slug: "accessoires",
     description: "Accessoires et périphériques informatiques",
     image: "/placeholder.svg?height=200&width=200",
-    count: 0,
+    count: products.filter((p) => p.category === "accessoires").length,
+  },
+  {
+    id: "mobilier",
+    name: "Mobilier",
+    slug: "mobilier",
+    description: "Mobilier de bureau ergonomique et fonctionnel",
+    image: "/placeholder.svg?height=200&width=200",
+    count: products.filter((p) => p.category === "mobilier").length,
   },
 ]
 
