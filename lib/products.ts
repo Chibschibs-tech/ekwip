@@ -54,7 +54,7 @@ const storageVariants: ProductVariant[] = [
   { id: "2tb", name: "2TB M.2 NVMe™ PCIe® 4.0 SSD", price: 250, basePrice: 250 },
 ]
 
-// Sample products data - UPDATED CATEGORIES TO MATCH URL SLUGS
+// Sample products data - USING CORRECT BLOB URLS
 export const products: Product[] = [
   {
     id: "1",
