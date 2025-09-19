@@ -11,6 +11,7 @@ import { useLanguage } from "@/contexts/language-context"
 import {
   getProductBySlug,
   calculateTotalPrice,
+  getFirstMonthPrice,
   formatPrice,
   type ProductConfiguration,
   type ProductVariant,
@@ -33,19 +34,48 @@ export default function ProductPage({ params }: ProductPageProps) {
 
   // State for product configuration
   const [selectedImage, setSelectedImage] = useState(0)
-  const [configuration, setConfiguration] = useState<ProductConfiguration>({
-    processor: product.variants.processors[0],
-    memory: product.variants.memory[0],
-    storage: product.variants.storage[0],
-  })
+  const [selectedConfigIndex, setSelectedConfigIndex] = useState(0)
 
-  const totalPrice = calculateTotalPrice(product, configuration)
+  // For Dell Precision, use predefined configurations
+  const isDellPrecision = product.slug === "dell-precision-5690"
+
+  const [configuration, setConfiguration] = useState<ProductConfiguration>(
+    isDellPrecision && product.configurations
+      ? product.configurations[0]
+      : {
+          processor: product.variants.processors[0],
+          memory: product.variants.memory[0],
+          storage: product.variants.storage[0],
+          graphics: product.variants.graphics?.[0],
+        },
+  )
+
+  const monthlyPrice = calculateTotalPrice(product, configuration)
+  const firstMonthPrice = getFirstMonthPrice(product, configuration)
+
+  const handleConfigurationChange = (configIndex: number) => {
+    if (isDellPrecision && product.configurations) {
+      setSelectedConfigIndex(configIndex)
+      setConfiguration(product.configurations[configIndex])
+    }
+  }
 
   const handleVariantChange = (type: keyof ProductConfiguration, variant: ProductVariant) => {
-    setConfiguration((prev) => ({
-      ...prev,
-      [type]: variant,
-    }))
+    if (!isDellPrecision) {
+      setConfiguration((prev) => ({
+        ...prev,
+        [type]: variant,
+      }))
+    }
+  }
+
+  // Get available memory options based on selected processor (for Dell Precision)
+  const getAvailableMemoryOptions = () => {
+    if (!isDellPrecision || !product.configurations) return product.variants.memory
+
+    return product.configurations
+      .map((config) => config.memory)
+      .filter((memory, index, self) => index === self.findIndex((m) => m.id === memory.id))
   }
 
   return (
@@ -63,9 +93,9 @@ export default function ProductPage({ params }: ProductPageProps) {
             </Link>
             <span className="text-gray-400">/</span>
             <Link href={`/catalogue/${product.category}`} className="text-gray-500 hover:text-ekwip">
-              {product.category === "laptops"
+              {product.category === "ordinateurs-portables"
                 ? "Ordinateurs portables"
-                : product.category === "desktops"
+                : product.category === "ordinateurs-de-bureau"
                   ? "Ordinateurs de bureau"
                   : product.category === "smartphones"
                     ? "Smartphones"
@@ -143,88 +173,143 @@ export default function ProductPage({ params }: ProductPageProps) {
 
               {/* Configuration Options */}
               <div className="space-y-6">
-                {/* Processor */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Processeur</h3>
-                  <div className="grid grid-cols-1 gap-2">
-                    {product.variants.processors.map((processor) => (
-                      <button
-                        key={processor.id}
-                        onClick={() => handleVariantChange("processor", processor)}
-                        className={`p-3 rounded-lg border-2 text-left transition-colors ${
-                          configuration.processor.id === processor.id
-                            ? "border-ekwip bg-ekwip-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">{processor.name}</span>
-                          {processor.price > 0 && (
-                            <span className="text-ekwip font-semibold">+{formatPrice(processor.price)}</span>
-                          )}
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                {isDellPrecision && product.configurations ? (
+                  /* Dell Precision Predefined Configurations */
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-3">Configurations disponibles</h3>
+                    <div className="space-y-3">
+                      {product.configurations.map((config, index) => {
+                        const configMonthlyPrice = calculateTotalPrice(product, config)
+                        const configFirstMonthPrice = getFirstMonthPrice(product, config)
 
-                {/* Memory */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Mémoire</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {product.variants.memory.map((memory) => (
-                      <button
-                        key={memory.id}
-                        onClick={() => handleVariantChange("memory", memory)}
-                        className={`p-3 rounded-lg border-2 text-center transition-colors ${
-                          configuration.memory.id === memory.id
-                            ? "border-ekwip bg-ekwip-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="font-medium">{memory.name}</div>
-                        {memory.price > 0 && (
-                          <div className="text-sm text-ekwip font-semibold">+{formatPrice(memory.price)}</div>
-                        )}
-                      </button>
-                    ))}
+                        return (
+                          <button
+                            key={index}
+                            onClick={() => handleConfigurationChange(index)}
+                            className={`w-full p-4 rounded-lg border-2 text-left transition-colors ${
+                              selectedConfigIndex === index
+                                ? "border-ekwip bg-ekwip-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <div className="flex justify-between items-start mb-2">
+                              <div className="font-medium text-lg">Configuration {index + 1}</div>
+                              <div className="text-right">
+                                <div className="text-ekwip font-bold text-lg">
+                                  {formatPrice(configMonthlyPrice)}/mois
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                  {formatPrice(configFirstMonthPrice)} le 1er mois
+                                </div>
+                              </div>
+                            </div>
+                            <div className="space-y-1 text-sm text-gray-600">
+                              <div>• {config.processor.name}</div>
+                              <div>• {config.memory.name}</div>
+                              <div>• {config.storage.name}</div>
+                              {config.graphics && <div>• {config.graphics.name}</div>}
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  /* Standard Configuration Options */
+                  <>
+                    {/* Processor */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-3">Processeur</h3>
+                      <div className="grid grid-cols-1 gap-2">
+                        {product.variants.processors.map((processor) => (
+                          <button
+                            key={processor.id}
+                            onClick={() => handleVariantChange("processor", processor)}
+                            className={`p-3 rounded-lg border-2 text-left transition-colors ${
+                              configuration.processor.id === processor.id
+                                ? "border-ekwip bg-ekwip-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <span className="font-medium">{processor.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
 
-                {/* Storage */}
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-800 mb-3">Stockage</h3>
-                  <div className="grid grid-cols-1 gap-2">
-                    {product.variants.storage.map((storage) => (
-                      <button
-                        key={storage.id}
-                        onClick={() => handleVariantChange("storage", storage)}
-                        className={`p-3 rounded-lg border-2 text-left transition-colors ${
-                          configuration.storage.id === storage.id
-                            ? "border-ekwip bg-ekwip-50"
-                            : "border-gray-200 hover:border-gray-300"
-                        }`}
-                      >
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium">{storage.name}</span>
-                          {storage.price > 0 && (
-                            <span className="text-ekwip font-semibold">+{formatPrice(storage.price)}</span>
-                          )}
+                    {/* Memory */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-3">Mémoire</h3>
+                      <div className="grid grid-cols-2 gap-2">
+                        {getAvailableMemoryOptions().map((memory) => (
+                          <button
+                            key={memory.id}
+                            onClick={() => handleVariantChange("memory", memory)}
+                            className={`p-3 rounded-lg border-2 text-center transition-colors ${
+                              configuration.memory.id === memory.id
+                                ? "border-ekwip bg-ekwip-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <div className="font-medium">{memory.name}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Storage */}
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-800 mb-3">Stockage</h3>
+                      <div className="grid grid-cols-1 gap-2">
+                        {product.variants.storage.map((storage) => (
+                          <button
+                            key={storage.id}
+                            onClick={() => handleVariantChange("storage", storage)}
+                            className={`p-3 rounded-lg border-2 text-left transition-colors ${
+                              configuration.storage.id === storage.id
+                                ? "border-ekwip bg-ekwip-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <span className="font-medium">{storage.name}</span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Graphics (if available) */}
+                    {product.variants.graphics && (
+                      <div>
+                        <h3 className="text-lg font-semibold text-gray-800 mb-3">Carte graphique</h3>
+                        <div className="grid grid-cols-1 gap-2">
+                          {product.variants.graphics.map((graphics) => (
+                            <button
+                              key={graphics.id}
+                              onClick={() => handleVariantChange("graphics", graphics)}
+                              className={`p-3 rounded-lg border-2 text-left transition-colors ${
+                                configuration.graphics?.id === graphics.id
+                                  ? "border-ekwip bg-ekwip-50"
+                                  : "border-gray-200 hover:border-gray-300"
+                              }`}
+                            >
+                              <span className="font-medium">{graphics.name}</span>
+                            </button>
+                          ))}
                         </div>
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                      </div>
+                    )}
+                  </>
+                )}
               </div>
 
               {/* Price and CTA */}
               <div className="bg-gray-50 rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="text-sm text-gray-500">Prix de location</div>
-                    <div className="text-3xl font-bold text-ekwip">
-                      {formatPrice(totalPrice)} <span className="text-lg font-normal">({product.rentalDuration})</span>
-                    </div>
+                    <div className="text-sm text-gray-500">Prix de location mensuel</div>
+                    <div className="text-3xl font-bold text-ekwip">{formatPrice(monthlyPrice)}/mois</div>
+                    <div className="text-sm text-gray-600 mt-1">{formatPrice(firstMonthPrice)} le premier mois</div>
+                    <div className="text-xs text-gray-500 mt-1">Contrat {product.rentalDuration}</div>
                   </div>
                   <div
                     className={`px-3 py-1 rounded-full text-sm ${
@@ -307,6 +392,12 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <span className="text-gray-600">Stockage:</span>
                     <span className="font-medium">{configuration.storage.name}</span>
                   </div>
+                  {configuration.graphics && (
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Carte graphique:</span>
+                      <span className="font-medium">{configuration.graphics.name}</span>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>

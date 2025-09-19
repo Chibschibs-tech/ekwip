@@ -10,6 +10,7 @@ export interface ProductConfiguration {
   processor: ProductVariant
   memory: ProductVariant
   storage: ProductVariant
+  graphics?: ProductVariant
 }
 
 export interface Product {
@@ -19,6 +20,8 @@ export interface Product {
   description: string
   shortDescription: string
   basePrice: number
+  monthlyPrice: number
+  firstMonthPrice: number
   image: string
   images: string[]
   category: string
@@ -30,31 +33,36 @@ export interface Product {
     processors: ProductVariant[]
     memory: ProductVariant[]
     storage: ProductVariant[]
+    graphics?: ProductVariant[]
   }
   specifications: Record<string, string>
   rentalDuration: string
+  configurations?: ProductConfiguration[]
 }
 
-// Product variants data
-const processorVariants: ProductVariant[] = [
-  { id: "i7-155h", name: "Intel® Core™ Ultra 7-155H", price: 0, basePrice: 0 },
-  { id: "i9-185h", name: "Intel® Core™ Ultra 9 Processor 185H", price: 200, basePrice: 200 },
-  { id: "i9-285h", name: "Intel® Core™ Ultra 9 Processor 285H", price: 400, basePrice: 400 },
+// Dell Precision 5690 configurations based on the screenshot
+const dellPrecisionConfigurations: ProductConfiguration[] = [
+  {
+    processor: { id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 },
+    memory: { id: "16gb", name: "16 Go de mémoire LPDDR5X", price: 0 },
+    storage: { id: "1tb", name: "SSD 1 To", price: 0 },
+    graphics: { id: "rtx1000", name: "NVIDIA® RTX™ 1000 Ada Generation", price: 0 },
+  },
+  {
+    processor: { id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 },
+    memory: { id: "32gb", name: "32 Go de mémoire LPDDR5X", price: 0 },
+    storage: { id: "1tb", name: "SSD 1 To", price: 0 },
+    graphics: { id: "rtx2000", name: "NVIDIA® RTX™ 2000 Ada Generation", price: 0 },
+  },
+  {
+    processor: { id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 },
+    memory: { id: "32gb", name: "32 Go de mémoire LPDDR5X", price: 0 },
+    storage: { id: "1tb", name: "SSD 1 To", price: 0 },
+    graphics: { id: "rtx1000", name: "NVIDIA® RTX™ 1000 Ada Generation", price: 0 },
+  },
 ]
 
-const memoryVariants: ProductVariant[] = [
-  { id: "16gb", name: "16GB LPDDR5X", price: 0, basePrice: 0 },
-  { id: "32gb", name: "32GB LPDDR5X", price: 150, basePrice: 150 },
-  { id: "64gb", name: "64GB LPDDR5X", price: 350, basePrice: 350 },
-]
-
-const storageVariants: ProductVariant[] = [
-  { id: "512gb", name: "512GB M.2 NVMe™ PCIe® 4.0 SSD", price: 0, basePrice: 0 },
-  { id: "1tb", name: "1TB M.2 NVMe™ PCIe® 4.0 SSD", price: 100, basePrice: 100 },
-  { id: "2tb", name: "2TB M.2 NVMe™ PCIe® 4.0 SSD", price: 250, basePrice: 250 },
-]
-
-// Sample products data - USING CORRECT BLOB URLS
+// Sample products data - USING CORRECT VERCEL BLOB STORAGE URLS
 export const products: Product[] = [
   {
     id: "1",
@@ -64,13 +72,20 @@ export const products: Product[] = [
       'Station de travail mobile haute performance avec processeur Intel Core Ultra et écran 16" 4K+. Idéale pour les professionnels créatifs et techniques.',
     shortDescription: 'Station de travail mobile 16" haute performance pour professionnels',
     basePrice: 2500,
-    image: "/images/dell-precision-5690-main.png",
+    monthlyPrice: 1150, // Configuration 1
+    firstMonthPrice: 2770,
+    image:
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-2.avif",
     images: [
-      "/images/dell-precision-5690-main.png",
-      "/images/dell-precision-5690-side.png",
-      "/images/dell-precision-5690-keyboard.png",
-      "/images/dell-precision-5690-ports.png",
-      "/images/dell-precision-5690-screen.png",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-1.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-2.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-3.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-5.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-6.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-7.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-8.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-9.avif",
+      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-10.avif",
     ],
     category: "ordinateurs-portables",
     brand: "Dell",
@@ -78,13 +93,21 @@ export const products: Product[] = [
     isNew: true,
     isFeatured: true,
     variants: {
-      processors: processorVariants,
-      memory: memoryVariants,
-      storage: storageVariants,
+      processors: [{ id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 }],
+      memory: [
+        { id: "16gb", name: "16 Go de mémoire LPDDR5X", price: 0 },
+        { id: "32gb", name: "32 Go de mémoire LPDDR5X", price: 0 },
+      ],
+      storage: [{ id: "1tb", name: "SSD 1 To", price: 0 }],
+      graphics: [
+        { id: "rtx1000", name: "NVIDIA® RTX™ 1000 Ada Generation", price: 0 },
+        { id: "rtx2000", name: "NVIDIA® RTX™ 2000 Ada Generation", price: 0 },
+      ],
     },
+    configurations: dellPrecisionConfigurations,
     specifications: {
-      Écran: '16" 4K+ (3840 x 2400) InfinityEdge',
-      "Système d'exploitation": "Windows 11 Pro",
+      Écran: "16,0 pouces non-tactile FHD+",
+      "Système d'exploitation": "Windows 11 Professionnel",
       Connectivité: "Wi-Fi 6E, Bluetooth 5.3",
       Ports: "2x Thunderbolt 4, 1x USB 3.2, 1x HDMI 2.1, 1x SD Card",
       Batterie: "90Wh, jusqu'à 12h d'autonomie",
@@ -102,6 +125,8 @@ export const products: Product[] = [
       "Le MacBook Pro 16 pouces avec puce M3 Pro offre des performances exceptionnelles pour les professionnels créatifs.",
     shortDescription: 'MacBook Pro 16" avec puce M3 Pro pour créatifs',
     basePrice: 2800,
+    monthlyPrice: 1400,
+    firstMonthPrice: 3200,
     image: "/images/macbook-pro.png",
     images: ["/images/macbook-pro.png"],
     category: "ordinateurs-portables",
@@ -112,15 +137,15 @@ export const products: Product[] = [
     variants: {
       processors: [
         { id: "m3-pro", name: "Apple M3 Pro", price: 0 },
-        { id: "m3-max", name: "Apple M3 Max", price: 500 },
+        { id: "m3-max", name: "Apple M3 Max", price: 0 },
       ],
       memory: [
         { id: "18gb", name: "18GB Unified Memory", price: 0 },
-        { id: "36gb", name: "36GB Unified Memory", price: 400 },
+        { id: "36gb", name: "36GB Unified Memory", price: 0 },
       ],
       storage: [
         { id: "512gb-ssd", name: "512GB SSD", price: 0 },
-        { id: "1tb-ssd", name: "1TB SSD", price: 200 },
+        { id: "1tb-ssd", name: "1TB SSD", price: 0 },
       ],
     },
     specifications: {
@@ -139,6 +164,8 @@ export const products: Product[] = [
     description: "Ultrabook premium avec écran InfinityEdge et performances exceptionnelles dans un format compact.",
     shortDescription: 'Ultrabook premium 13" compact et performant',
     basePrice: 1800,
+    monthlyPrice: 900,
+    firstMonthPrice: 2100,
     image: "/images/dell-xps.png",
     images: ["/images/dell-xps.png"],
     category: "ordinateurs-portables",
@@ -149,15 +176,15 @@ export const products: Product[] = [
     variants: {
       processors: [
         { id: "i5-1340p", name: "Intel Core i5-1340P", price: 0 },
-        { id: "i7-1360p", name: "Intel Core i7-1360P", price: 200 },
+        { id: "i7-1360p", name: "Intel Core i7-1360P", price: 0 },
       ],
       memory: [
         { id: "16gb-lpddr5", name: "16GB LPDDR5", price: 0 },
-        { id: "32gb-lpddr5", name: "32GB LPDDR5", price: 300 },
+        { id: "32gb-lpddr5", name: "32GB LPDDR5", price: 0 },
       ],
       storage: [
         { id: "512gb-nvme", name: "512GB NVMe SSD", price: 0 },
-        { id: "1tb-nvme", name: "1TB NVMe SSD", price: 150 },
+        { id: "1tb-nvme", name: "1TB NVMe SSD", price: 0 },
       ],
     },
     specifications: {
@@ -176,6 +203,8 @@ export const products: Product[] = [
     description: "iMac tout-en-un avec écran Retina 4.5K et puce M3 pour une expérience desktop exceptionnelle.",
     shortDescription: 'iMac 24" tout-en-un avec écran Retina 4.5K',
     basePrice: 2200,
+    monthlyPrice: 1100,
+    firstMonthPrice: 2500,
     image: "/images/imac.png",
     images: ["/images/imac.png"],
     category: "ordinateurs-de-bureau",
@@ -186,17 +215,17 @@ export const products: Product[] = [
     variants: {
       processors: [
         { id: "m3-8core", name: "Apple M3 8-core CPU", price: 0 },
-        { id: "m3-10core", name: "Apple M3 10-core CPU", price: 300 },
+        { id: "m3-10core", name: "Apple M3 10-core CPU", price: 0 },
       ],
       memory: [
         { id: "8gb-unified", name: "8GB Unified Memory", price: 0 },
-        { id: "16gb-unified", name: "16GB Unified Memory", price: 200 },
-        { id: "24gb-unified", name: "24GB Unified Memory", price: 400 },
+        { id: "16gb-unified", name: "16GB Unified Memory", price: 0 },
+        { id: "24gb-unified", name: "24GB Unified Memory", price: 0 },
       ],
       storage: [
         { id: "256gb-ssd", name: "256GB SSD", price: 0 },
-        { id: "512gb-ssd", name: "512GB SSD", price: 200 },
-        { id: "1tb-ssd", name: "1TB SSD", price: 400 },
+        { id: "512gb-ssd", name: "512GB SSD", price: 0 },
+        { id: "1tb-ssd", name: "1TB SSD", price: 0 },
       ],
     },
     specifications: {
@@ -215,6 +244,8 @@ export const products: Product[] = [
     description: "iPhone 15 Pro avec puce A17 Pro, appareil photo professionnel et design en titane.",
     shortDescription: "iPhone 15 Pro avec puce A17 Pro et design titane",
     basePrice: 800,
+    monthlyPrice: 400,
+    firstMonthPrice: 900,
     image: "/images/iphone.png",
     images: ["/images/iphone.png"],
     category: "smartphones",
@@ -227,9 +258,9 @@ export const products: Product[] = [
       memory: [{ id: "8gb-ram", name: "8GB RAM", price: 0 }],
       storage: [
         { id: "128gb-storage", name: "128GB", price: 0 },
-        { id: "256gb-storage", name: "256GB", price: 100 },
-        { id: "512gb-storage", name: "512GB", price: 200 },
-        { id: "1tb-storage", name: "1TB", price: 400 },
+        { id: "256gb-storage", name: "256GB", price: 0 },
+        { id: "512gb-storage", name: "512GB", price: 0 },
+        { id: "1tb-storage", name: "1TB", price: 0 },
       ],
     },
     specifications: {
@@ -265,11 +296,47 @@ export function getNewProducts(): Product[] {
 }
 
 export function calculateTotalPrice(product: Product, configuration: ProductConfiguration): number {
-  const processorPrice = configuration.processor?.price || 0
-  const memoryPrice = configuration.memory?.price || 0
-  const storagePrice = configuration.storage?.price || 0
+  // For Dell Precision, return specific prices based on configuration
+  if (product.slug === "dell-precision-5690" && product.configurations) {
+    const configIndex = product.configurations.findIndex(
+      (config) => config.memory.id === configuration.memory.id && config.graphics?.id === configuration.graphics?.id,
+    )
 
-  return product.basePrice + processorPrice + memoryPrice + storagePrice
+    switch (configIndex) {
+      case 0:
+        return 1150 // 16GB + RTX 1000
+      case 1:
+        return 1200 // 32GB + RTX 2000
+      case 2:
+        return 1250 // 32GB + RTX 1000
+      default:
+        return product.monthlyPrice
+    }
+  }
+
+  return product.monthlyPrice
+}
+
+export function getFirstMonthPrice(product: Product, configuration: ProductConfiguration): number {
+  // For Dell Precision, return specific first month prices
+  if (product.slug === "dell-precision-5690" && product.configurations) {
+    const configIndex = product.configurations.findIndex(
+      (config) => config.memory.id === configuration.memory.id && config.graphics?.id === configuration.graphics?.id,
+    )
+
+    switch (configIndex) {
+      case 0:
+        return 2770 // 16GB + RTX 1000
+      case 1:
+        return 2850 // 32GB + RTX 2000
+      case 2:
+        return 3000 // 32GB + RTX 1000
+      default:
+        return product.firstMonthPrice
+    }
+  }
+
+  return product.firstMonthPrice
 }
 
 export function formatPrice(price: number | undefined): string {
@@ -279,13 +346,13 @@ export function formatPrice(price: number | undefined): string {
   return `${price.toLocaleString("fr-FR")} DH`
 }
 
-// Categories data - UPDATED TO MATCH URL SLUGS
-export const categories = [
+// Categories data - DYNAMIC PRODUCT COUNTS
+export const getCategories = () => [
   {
     id: "ordinateurs-portables",
     name: "Ordinateurs portables",
     slug: "ordinateurs-portables",
-    description: "Laptops et ultrabooks pour tous vos besoins professionnels",
+    description: "Ordinateurs portables professionnels pour tous vos besoins",
     image: "/images/laptop-hero.png",
     count: products.filter((p) => p.category === "ordinateurs-portables").length,
   },
@@ -340,5 +407,5 @@ export const categories = [
 ]
 
 export function getCategoryBySlug(slug: string) {
-  return categories.find((category) => category.slug === slug)
+  return getCategories().find((category) => category.slug === slug)
 }
