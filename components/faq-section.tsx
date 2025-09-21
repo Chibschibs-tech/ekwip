@@ -2,43 +2,56 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 
 const faqs = [
   {
-    question: "Quelle est la durée minimum de location ?",
-    answer: "La durée minimum de location est de 12 mois pour la plupart de nos équipements.",
+    question: "Comment fonctionne la location d'équipement chez Ekwip ?",
+    answer:
+      "Vous choisissez votre équipement, signez un contrat de location, et recevez votre matériel sous 48h. Nous nous occupons de la maintenance et du support technique.",
+  },
+  {
+    question: "Quelle est la durée minimale de location ?",
+    answer:
+      "La durée minimale de location est de 12 mois pour la plupart des équipements. Nous proposons également des contrats flexibles adaptés à vos besoins.",
   },
   {
     question: "Que se passe-t-il en cas de panne ?",
     answer:
-      "Nous remplaçons l'équipement défaillant sous 48h ouvrées. Un équipement de remplacement peut être fourni immédiatement si nécessaire.",
+      "Notre équipe technique intervient sous 24h. Si la réparation prend plus de 48h, nous vous fournissons un équipement de remplacement.",
   },
   {
-    question: "Puis-je upgrader mon équipement en cours de contrat ?",
+    question: "Puis-je acheter l'équipement en fin de contrat ?",
     answer:
-      "Oui, vous pouvez upgrader votre équipement à tout moment. Nous ajustons alors la mensualité en conséquence.",
+      "Oui, vous avez la possibilité d'acheter l'équipement à sa valeur résiduelle en fin de contrat, ou de le renouveler avec du matériel plus récent.",
   },
   {
-    question: "Comment fonctionne la maintenance ?",
+    question: "Quels sont les avantages fiscaux de la location ?",
     answer:
-      "La maintenance et le support technique sont inclus dans votre mensualité. Notre équipe intervient rapidement en cas de problème.",
-  },
-  {
-    question: "Que devient l'équipement en fin de contrat ?",
-    answer:
-      "En fin de contrat, vous pouvez renouveler, upgrader vers un équipement plus récent, ou nous restituons l'équipement.",
+      "Les loyers sont déductibles à 100% des bénéfices imposables, ce qui optimise votre trésorerie et votre fiscalité d'entreprise.",
   },
 ]
 
-export default function FAQSection() {
+export function FAQSection() {
   return (
-    <div className="w-full">
-      <h3 className="text-2xl font-bold text-gray-900 mb-8">Questions fréquentes</h3>
-      <Accordion type="single" collapsible className="w-full space-y-4">
-        {faqs.map((faq, index) => (
-          <AccordionItem key={index} value={`item-${index}`} className="border border-gray-200 rounded-lg px-6">
-            <AccordionTrigger className="text-left font-medium hover:no-underline">{faq.question}</AccordionTrigger>
-            <AccordionContent className="text-gray-600 pb-4">{faq.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </div>
+    <section className="py-20">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold mb-4 text-gray-800">Questions fréquentes</h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Trouvez les réponses aux questions les plus courantes sur nos services de location d'équipement
+          </p>
+        </div>
+
+        <div className="max-w-3xl mx-auto">
+          <Accordion type="single" collapsible className="w-full">
+            {faqs.map((faq, index) => (
+              <AccordionItem key={index} value={`item-${index}`}>
+                <AccordionTrigger className="text-left text-lg font-semibold">{faq.question}</AccordionTrigger>
+                <AccordionContent className="text-gray-600 text-base leading-relaxed">{faq.answer}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+    </section>
   )
 }
+
+export default FAQSection

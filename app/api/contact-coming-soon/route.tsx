@@ -7,27 +7,35 @@ export async function POST(request: NextRequest) {
   try {
     const { name, email, company, message } = await request.json()
 
+    // Validate required fields
     if (!name || !email) {
-      return NextResponse.json({ error: "Name and email are required" }, { status: 400 })
+      return NextResponse.json({ error: "Nom et email sont requis" }, { status: 400 })
     }
 
-    await resend.emails.send({
-      from: "noreply@ekwip.ma",
-      to: "sales@ekwip.ma",
-      subject: "Nouveau contact - Page Coming Soon",
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: "contact@ekwip.ma",
+      to: ["sales@ekwip.ma"],
+      subject: `Nouveau contact - Page Coming Soon - ${name}`,
       html: `
         <h2>Nouveau contact depuis la page Coming Soon</h2>
         <p><strong>Nom:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Entreprise:</strong> ${company || "Non spécifiée"}</p>
-        <p><strong>Message:</strong></p>
-        <p>${message || "Aucun message"}</p>
+        ${company ? `<p><strong>Entreprise:</strong> ${company}</p>` : ""}
+        ${message ? `<p><strong>Message:</strong></p><p>${message}</p>` : ""}
+        <hr>
+        <p><em>Envoyé depuis ekwip.ma</em></p>
       `,
     })
 
-    return NextResponse.json({ success: true })
+    if (error) {
+      console.error("Resend error:", error)
+      return NextResponse.json({ error: "Erreur lors de l'envoi de l'email" }, { status: 500 })
+    }
+
+    return NextResponse.json({ message: "Message envoyé avec succès" }, { status: 200 })
   } catch (error) {
-    console.error("Error sending email:", error)
-    return NextResponse.json({ error: "Failed to send email" }, { status: 500 })
+    console.error("API error:", error)
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 })
   }
 }

@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { formatPrice } from "@/lib/products"
 
 interface ProductProps {
-  id: number
+  id: number | string
   name: string
   description: string
   shortDescription: string
@@ -22,7 +22,7 @@ interface ProductProps {
   new: boolean
 }
 
-export default function ProductCard({ product }: { product: ProductProps }) {
+export function ProductCard({ product }: { product: ProductProps }) {
   const [isHovered, setIsHovered] = useState(false)
 
   return (
@@ -46,13 +46,13 @@ export default function ProductCard({ product }: { product: ProductProps }) {
           </Badge>
         )}
         {product.new && (
-          <Badge className="absolute top-3 left-3 bg-blue-100 text-blue-600 hover:bg-blue-100 rounded-full px-3 py-1 font-medium shadow-sm">
+          <Badge className="absolute top-3 left-3 bg-green-100 text-green-600 hover:bg-green-100 rounded-full px-3 py-1 font-medium shadow-sm">
             Nouveau
           </Badge>
         )}
       </div>
       <div className="p-6">
-        <p className="text-sm text-blue-600 font-medium mb-2">{product.category}</p>
+        <p className="text-sm text-[#1f3b57] font-medium mb-2">{product.category}</p>
         <h3 className="text-xl font-bold mb-3 text-gray-800">{product.name}</h3>
         <p className="text-gray-600 text-sm mb-5 line-clamp-2">{product.shortDescription}</p>
         <div className="flex justify-between items-end">
@@ -70,7 +70,7 @@ export default function ProductCard({ product }: { product: ProductProps }) {
           <Link href={`/catalogue/product/${product.slug}`}>
             <Button
               size="sm"
-              className="rounded-full shadow-md hover:shadow-lg bg-[#334e68] hover:bg-[#2a3f5f] text-white"
+              className="rounded-full shadow-md hover:shadow-lg bg-[#1f3b57] hover:bg-[#1a3249] text-white"
             >
               Voir détails
             </Button>
@@ -80,3 +80,5 @@ export default function ProductCard({ product }: { product: ProductProps }) {
     </div>
   )
 }
+
+export default ProductCard

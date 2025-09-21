@@ -10,7 +10,7 @@ interface TestimonialCardProps {
   className?: string
 }
 
-export default function TestimonialCard({
+export function TestimonialCard({
   quote,
   author,
   role,
@@ -35,3 +35,5 @@ export default function TestimonialCard({
     </div>
   )
 }
+
+export default TestimonialCard
