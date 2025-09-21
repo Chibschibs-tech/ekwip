@@ -1,312 +1,226 @@
 "use client"
-import Image from "next/image"
-import Link from "next/link"
+
 import { Button } from "@/components/ui/button"
-import FeatureCard from "@/components/feature-card"
-import ProductTabs from "@/components/product-tabs"
-import ClientLogoSlider from "@/components/client-logo-slider"
-import TestimonialsSection from "@/components/testimonials-section"
-import FAQSection from "@/components/faq-section"
-import { ArrowRight, Banknote, Server, RefreshCw, HeadphonesIcon } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import Image from "next/image"
 import { useLanguage } from "@/contexts/language-context"
+import { ProductTabs } from "@/components/product-tabs"
+import { ClientLogoSlider } from "@/components/client-logo-slider"
+import { TestimonialsSection } from "@/components/testimonials-section"
+import { FAQSection } from "@/components/faq-section"
+import { CustomOfferBanner } from "@/components/custom-offer-banner"
+import { FeatureCard } from "@/components/feature-card"
 
 export default function Home() {
   const { t } = useLanguage()
 
   return (
-    <div>
+    <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
-              Équipez-vous, sans ruiner votre trésorerie!
-            </h1>
-            <p className="mt-6 text-lg text-gray-600 max-w-lg">
-              Optez pour la location et accédez aux meilleures technologies avec une solution flexible et sans
-              engagement lourd.
-            </p>
-            <div className="mt-8 flex flex-col sm:flex-row gap-4">
-              <Link href="/catalogue">
-                <Button variant="gradient" size="xl" className="shadow-lg">
-                  Découvrir nos offres
+      <section className="relative bg-gradient-to-br from-slate-50 to-blue-50 py-20 px-4">
+        <div className="container mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+                  {t("home.hero.badge")}
+                </Badge>
+                <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">{t("home.hero.title")}</h1>
+                <p className="text-xl text-gray-600 leading-relaxed">{t("home.hero.description")}</p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+                  {t("home.hero.cta.primary")}
                 </Button>
-              </Link>
-              <Link href="/comment-ca-marche">
-                <Button variant="outline" size="xl">
-                  Comment ça marche
+                <Button variant="outline" size="lg" className="px-8 py-3 bg-transparent">
+                  {t("home.hero.cta.secondary")}
                 </Button>
-              </Link>
-            </div>
-          </div>
-          <div className="relative">
-            <div className="bg-white rounded-3xl overflow-hidden shadow-xl transform transition-all duration-500 hover:rotate-1 hover:shadow-2xl">
-              <div className="relative">
-                <Image
-                  src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/Hero%20office"
-                  alt="Équipement informatique professionnel pour entreprises"
-                  width={600}
-                  height={600}
-                  className="w-full h-auto object-cover brightness-105 contrast-105"
-                  priority
-                />
-                {/* Overlay with brand color */}
-                <div className="absolute inset-0 bg-ekwip opacity-10"></div>
               </div>
             </div>
+            <div className="relative">
+              <Image
+                src="/images/laptop-hero.png"
+                alt="Équipements informatiques"
+                width={600}
+                height={400}
+                className="w-full h-auto"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Feature Cards Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <FeatureCard
-              title="Préservez votre trésorerie"
-              description="Transformez vos dépenses d'investissement en coûts opérationnels prévisibles avec des mensualités fixes."
-              icon={<Banknote className="w-10 h-10 text-ekwip" />}
-              iconBgColor="bg-blue-100"
-              className="shadow-md"
-            />
-
-            <FeatureCard
-              title="Pilotez votre flotte IT"
-              description="Gérez et optimisez tout votre parc informatique depuis une interface unique."
-              icon={<Server className="w-10 h-10 text-ekwip" />}
-              iconBgColor="bg-indigo-100"
-              className="shadow-md"
-            />
-
-            <FeatureCard
-              title="Upgradez à tout moment"
-              description="Échangez ou upgradez votre équipement selon vos besoins, sans contrainte."
-              icon={<RefreshCw className="w-10 h-10 text-white" />}
-              iconBgColor="bg-white/20"
-              bgColor="bg-ekwip"
-              textColor="text-white"
-              className="shadow-md"
-            />
-
-            <FeatureCard
-              title="Support et maintenance inclus"
-              description="Assistance technique et remplacement rapide en cas de problème."
-              icon={<HeadphonesIcon className="w-10 h-10 text-ekwip" />}
-              iconBgColor="bg-indigo-100"
-              className="shadow-md"
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Product Catalog Section */}
-      <section className="py-20 md:py-28 px-4 md:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
-        <div className="max-w-7xl mx-auto">
+      {/* Features Section */}
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-6">
-              Découvrez notre catalogue d'équipements en location
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Laptops, tablettes, smartphones et bien plus, disponibles en location pour accompagner votre activité. Que
-              vous ayez besoin d'un ordinateur puissant pour le travail, d'une tablette pour la mobilité ou d'un
-              smartphone dernier cri, nous avons l'équipement adapté à vos besoins.
-            </p>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{t("home.features.title")}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">{t("home.features.description")}</p>
           </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FeatureCard
+              icon="/images/icon-cash.png"
+              title={t("home.features.card1.title")}
+              description={t("home.features.card1.description")}
+            />
+            <FeatureCard
+              icon="/images/icon-fleet.png"
+              title={t("home.features.card2.title")}
+              description={t("home.features.card2.description")}
+            />
+            <FeatureCard
+              icon="/images/icon-upgrade.png"
+              title={t("home.features.card3.title")}
+              description={t("home.features.card3.description")}
+            />
+            <FeatureCard
+              icon="/images/icon-support.png"
+              title={t("home.features.card4.title")}
+              description={t("home.features.card4.description")}
+            />
+          </div>
+        </div>
+      </section>
 
-          <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8">
-            <ProductTabs />
+      {/* Products Section */}
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{t("home.products.title")}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">{t("home.products.description")}</p>
           </div>
-
-          <div className="mt-16 text-center">
-            <Link href="/catalogue">
-              <Button variant="gradient" size="lg" className="shadow-lg px-8 py-6 text-lg">
-                Voir tout le catalogue <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
+          <ProductTabs />
         </div>
       </section>
 
       {/* Clients Section */}
-      <section className="py-16 md:py-20 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Ils nous font confiance</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Rejoignez les entreprises qui ont choisi Ekwip pour leur équipement IT
-            </p>
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{t("home.clients.title")}</h2>
+            <p className="text-xl text-gray-600">{t("home.clients.description")}</p>
           </div>
-
           <ClientLogoSlider />
         </div>
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl mx-4 md:mx-8 lg:mx-12">
-        <div className="max-w-7xl mx-auto">
+      <section className="py-20 px-4 bg-gray-50">
+        <div className="container mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Comment ça marche</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Un processus simple et transparent pour équiper votre entreprise
-            </p>
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">{t("home.howItWorks.title")}</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">{t("home.howItWorks.description")}</p>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
-              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 1
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Choisissez votre équipement</h3>
-              <p className="text-gray-600">
-                Parcourez notre catalogue et sélectionnez les équipements adaptés à vos besoins.
-              </p>
+              <h3 className="text-xl font-semibold mb-4">{t("home.howItWorks.step1.title")}</h3>
+              <p className="text-gray-600">{t("home.howItWorks.step1.description")}</p>
             </div>
-
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
-              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 2
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Définissez votre durée</h3>
-              <p className="text-gray-600">
-                Choisissez la durée de location qui vous convient, de 1 à 36 mois selon vos projets.
-              </p>
+              <h3 className="text-xl font-semibold mb-4">{t("home.howItWorks.step2.title")}</h3>
+              <p className="text-gray-600">{t("home.howItWorks.step2.description")}</p>
             </div>
-
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
-              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 3
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Recevez et utilisez</h3>
-              <p className="text-gray-600">
-                Nous livrons et installons votre équipement. Profitez d'un support technique pendant toute la durée.
-              </p>
+              <h3 className="text-xl font-semibold mb-4">{t("home.howItWorks.step3.title")}</h3>
+              <p className="text-gray-600">{t("home.howItWorks.step3.description")}</p>
             </div>
-          </div>
-
-          <div className="mt-12 text-center">
-            <Link href="/comment-ca-marche">
-              <Button variant="outline" size="lg" className="bg-white">
-                En savoir plus
-              </Button>
-            </Link>
           </div>
         </div>
       </section>
 
-      {/* Enterprise Section with FAQ */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Plus de 10 collaborateurs?</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Contactez-nous pour étudier ensemble votre besoin et obtenir une offre sur-mesure.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
-            <div>
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Solutions pour entreprises</h3>
-              <p className="text-gray-600 mb-6">
-                Ekwip propose des solutions de location d'équipement IT adaptées aux besoins spécifiques des moyennes et
-                grandes entreprises. Nos experts vous accompagnent dans la définition de votre parc informatique et vous
-                proposent des solutions sur mesure.
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Gestion de parc informatique complète</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Tarifs dégressifs selon le volume</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Support technique dédié</span>
-                </li>
-                <li className="flex items-start">
-                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
-                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                  </div>
-                  <span className="text-gray-700">Portail client personnalisé</span>
-                </li>
-              </ul>
-              <Button variant="gradient" size="lg">
-                Obtenir un devis
-              </Button>
-            </div>
-            <div className="relative">
-              <div className="bg-white rounded-3xl overflow-hidden shadow-xl">
-                <Image
-                  src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/collaborators.jpg"
-                  alt="Équipe de collaborateurs travaillant ensemble"
-                  width={500}
-                  height={500}
-                  className="w-full h-auto object-cover"
-                />
+      {/* Enterprise Section */}
+      <section className="py-20 px-4 bg-white">
+        <div className="container mx-auto">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900">{t("home.enterprise.title")}</h2>
+                <p className="text-xl text-gray-600">{t("home.enterprise.description")}</p>
               </div>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700">{t("home.enterprise.feature1")}</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700">{t("home.enterprise.feature2")}</p>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path
+                        fillRule="evenodd"
+                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <p className="text-gray-700">{t("home.enterprise.feature3")}</p>
+                </div>
+              </div>
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+                {t("home.enterprise.cta")}
+              </Button>
+            </div>
+            <div className="space-y-8">
+              <FAQSection />
             </div>
           </div>
-
-          {/* FAQ Section */}
-          <FAQSection />
         </div>
       </section>
 
-      {/* Custom Offer Banner - Updated with the site's blue color */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-ekwip text-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Prêt à équiper votre entreprise?</h2>
-            <p className="text-lg opacity-90 max-w-2xl mx-auto">
-              Contactez-nous dès aujourd'hui pour discuter de vos besoins et obtenir un devis personnalisé.
-            </p>
+      {/* Custom Offer Banner */}
+      <CustomOfferBanner />
+
+      {/* Testimonials */}
+      <TestimonialsSection />
+
+      {/* Final CTA Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+        <div className="container mx-auto text-center">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <h2 className="text-3xl lg:text-4xl font-bold">{t("home.finalCta.title")}</h2>
+            <p className="text-xl text-blue-100">{t("home.finalCta.description")}</p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
+                {t("home.finalCta.primary")}
+              </Button>
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
+              >
+                {t("home.finalCta.secondary")}
+              </Button>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="xl" className="bg-white text-ekwip hover:bg-gray-100">
-              Demander un devis
-            </Button>
-            <Button variant="outline" size="xl" className="border-white text-white hover:bg-white/10 bg-transparent">
-              Nous contacter
-            </Button>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <TestimonialsSection />
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 md:p-12 text-center shadow-xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Prêt à équiper votre entreprise?</h2>
-          <p className="text-white text-lg max-w-2xl mx-auto mb-8 opacity-90">
-            Contactez-nous dès aujourd'hui pour obtenir un devis personnalisé et découvrir comment Ekwip peut vous
-            aider.
-          </p>
-          <Link href="/contact">
-            <Button size="xl" className="bg-white text-blue-600 hover:bg-gray-100 shadow-lg">
-              Contactez-nous
-            </Button>
-          </Link>
         </div>
       </section>
     </div>
