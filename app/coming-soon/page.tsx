@@ -3,13 +3,13 @@
 import type React from "react"
 
 import { useState } from "react"
+import { motion } from "framer-motion"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent } from "@/components/ui/card"
-import { Mail, Phone, CheckCircle, Wrench, Sparkles } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Mail, Phone, Clock, MapPin } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
 
 export default function ComingSoon() {
@@ -20,53 +20,38 @@ export default function ComingSoon() {
     email: "",
     message: "",
   })
-
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
     try {
-      // Here you would typically send the email to sales@ekwip.ma
-      // For now, we'll simulate the API call
       const response = await fetch("/api/contact-coming-soon", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          ...formData,
-          to: "sales@ekwip.ma",
-          subject: "Nouveau contact depuis la page Coming Soon",
-        }),
+        body: JSON.stringify(formData),
       })
 
       if (response.ok) {
         setIsSubmitted(true)
-        setFormData({
-          name: "",
-          company: "",
-          email: "",
-          message: "",
-        })
+        setFormData({ name: "", company: "", email: "", message: "" })
       }
     } catch (error) {
-      console.error("Error sending email:", error)
+      console.error("Error submitting form:", error)
     } finally {
       setIsSubmitting(false)
     }
+  }
 
-    // Reset success message after 5 seconds
-    setTimeout(() => {
-      setIsSubmitted(false)
-    }, 5000)
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    })
   }
 
   return (
@@ -79,221 +64,215 @@ export default function ComingSoon() {
       </header>
 
       {/* Main Content */}
-      <main className="py-12 md:py-20 px-4 md:px-6 lg:px-8">
+      <main className="py-16 px-4 md:px-6 lg:px-8">
         <div className="max-w-6xl mx-auto">
           {/* Hero Section */}
-          <div className="text-center mb-16">
-            <div className="flex justify-center mb-8">
-              <div className="relative">
-                <div className="absolute inset-0 bg-ekwip/20 rounded-full blur-xl"></div>
-                <div className="relative bg-ekwip text-white p-6 rounded-full">
-                  <Wrench className="h-12 w-12" />
-                </div>
-              </div>
-            </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">{t("coming_soon.title")}</h1>
-
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">{t("coming_soon.subtitle")}</p>
-
-            <p className="text-lg text-gray-500 max-w-2xl mx-auto">{t("coming_soon.description")}</p>
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6">Ekwip se refait une peau neuve</h1>
+            <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto">
+              Notre nouveau site arrive bientôt avec une expérience encore meilleure
+            </p>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
+              Nous travaillons dur pour vous offrir une nouvelle expérience de location d'équipements informatiques. En
+              attendant, contactez-nous pour tous vos besoins.
+            </p>
+          </motion.div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
             {/* Contact Form */}
-            <Card className="shadow-xl border-0 bg-white/80 backdrop-blur-sm">
-              <CardContent className="p-8">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="bg-ekwip text-white p-2 rounded-lg">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-800">{t("coming_soon.form.title")}</h2>
-                    <p className="text-gray-600">{t("coming_soon.form.description")}</p>
-                  </div>
-                </div>
-
-                {isSubmitted ? (
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-6 flex items-center">
-                    <CheckCircle className="h-8 w-8 text-green-500 mr-4" />
-                    <div>
-                      <h3 className="font-bold text-green-800 text-lg">{t("coming_soon.form.success")}</h3>
-                    </div>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-gray-700">
-                          {t("coming_soon.form.name")}
-                        </Label>
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <Card className="shadow-xl border-ekwip-200">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-gray-800">Restez informé</CardTitle>
+                  <p className="text-gray-600">
+                    Laissez-nous vos coordonnées et nous vous contacterons dès que le nouveau site sera disponible
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  {isSubmitted ? (
+                    <motion.div
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="text-center py-8"
+                    >
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2">Merci !</h3>
+                      <p className="text-gray-600">Nous vous recontacterons bientôt.</p>
+                    </motion.div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div>
+                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                          Nom complet *
+                        </label>
                         <Input
                           id="name"
                           name="name"
-                          placeholder={t("coming_soon.form.name")}
+                          type="text"
                           required
                           value={formData.name}
                           onChange={handleChange}
-                          className="rounded-xl"
+                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="company" className="text-gray-700">
-                          {t("coming_soon.form.company")}
-                        </Label>
+
+                      <div>
+                        <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
+                          Entreprise *
+                        </label>
                         <Input
                           id="company"
                           name="company"
-                          placeholder={t("coming_soon.form.company")}
+                          type="text"
                           required
                           value={formData.company}
                           onChange={handleChange}
-                          className="rounded-xl"
+                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
                         />
                       </div>
-                    </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="email" className="text-gray-700">
-                        {t("coming_soon.form.email")}
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="votre@email.com"
-                        required
-                        value={formData.email}
-                        onChange={handleChange}
-                        className="rounded-xl"
-                      />
-                    </div>
+                      <div>
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                          Email *
+                        </label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          required
+                          value={formData.email}
+                          onChange={handleChange}
+                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
+                        />
+                      </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="message" className="text-gray-700">
-                        {t("coming_soon.form.message")}
-                      </Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        placeholder="Parlez-nous de vos besoins..."
-                        rows={4}
-                        required
-                        value={formData.message}
-                        onChange={handleChange}
-                        className="rounded-xl"
-                      />
-                    </div>
+                      <div>
+                        <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                          Message
+                        </label>
+                        <Textarea
+                          id="message"
+                          name="message"
+                          rows={4}
+                          value={formData.message}
+                          onChange={handleChange}
+                          placeholder="Parlez-nous de vos besoins en équipements informatiques..."
+                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
+                        />
+                      </div>
 
-                    <Button type="submit" variant="gradient" size="lg" className="w-full" disabled={isSubmitting}>
-                      {isSubmitting ? (
-                        <span className="flex items-center">
-                          <svg
-                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          {t("coming_soon.form.submitting")}
-                        </span>
-                      ) : (
-                        t("coming_soon.form.submit")
-                      )}
-                    </Button>
-                  </form>
-                )}
-              </CardContent>
-            </Card>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-ekwip hover:bg-ekwip-600 text-white"
+                        size="lg"
+                      >
+                        {isSubmitting ? "Envoi en cours..." : "Envoyer"}
+                      </Button>
+                    </form>
+                  )}
+                </CardContent>
+              </Card>
+            </motion.div>
 
             {/* Contact Information */}
-            <div className="space-y-8">
-              <Card className="shadow-lg border-0 bg-ekwip text-white">
-                <CardContent className="p-8">
-                  <div className="flex items-center gap-3 mb-6">
-                    <Phone className="h-6 w-6" />
-                    <h3 className="text-xl font-bold">{t("coming_soon.contact.title")}</h3>
-                  </div>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="space-y-8"
+            >
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6">Besoin d'aide maintenant ?</h2>
+                <p className="text-gray-600 mb-8">Notre équipe reste disponible pour répondre à vos besoins</p>
 
-                  <p className="mb-6 opacity-90">{t("coming_soon.contact.description")}</p>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <Phone className="h-5 w-5" />
-                      <div>
-                        <div className="font-medium">{t("coming_soon.contact.phone")}</div>
-                      </div>
+                <div className="space-y-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
+                      <Phone className="w-6 h-6 text-ekwip" />
                     </div>
-
-                    <div className="flex items-center gap-3">
-                      <Mail className="h-5 w-5" />
-                      <div>
-                        <div className="font-medium">{t("coming_soon.contact.email")}</div>
-                      </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">Téléphone</h3>
+                      <p className="text-gray-600">+212 522 123 456</p>
                     </div>
                   </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-ekwip" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">Email</h3>
+                      <p className="text-gray-600">sales@ekwip.ma</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-ekwip" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">Adresse</h3>
+                      <p className="text-gray-600">
+                        123 Boulevard Mohammed V
+                        <br />
+                        Casablanca, Maroc
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-ekwip" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-gray-800">Horaires</h3>
+                      <p className="text-gray-600">
+                        Lun - Ven: 9h00 - 18h00
+                        <br />
+                        Sam: 9h00 - 13h00
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Services Preview */}
+              <Card className="border-ekwip-200">
+                <CardContent className="p-6">
+                  <h3 className="font-semibold text-gray-800 mb-4">Nos services</h3>
+                  <ul className="space-y-2 text-sm text-gray-600">
+                    <li>• Location d'ordinateurs portables</li>
+                    <li>• Location d'ordinateurs de bureau</li>
+                    <li>• Location de tablettes et smartphones</li>
+                    <li>• Location d'imprimantes et accessoires</li>
+                    <li>• Maintenance et support technique</li>
+                    <li>• Solutions sur mesure pour entreprises</li>
+                  </ul>
                 </CardContent>
               </Card>
-
-              {/* Features Preview */}
-              <Card className="shadow-lg border-0 bg-white/60 backdrop-blur-sm">
-                <CardContent className="p-8">
-                  <h3 className="text-xl font-bold text-gray-800 mb-6">Ce qui vous attend</h3>
-                  <div className="space-y-4">
-                    <div className="flex items-start gap-3">
-                      <div className="bg-ekwip-100 text-ekwip p-2 rounded-lg">
-                        <CheckCircle className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Interface modernisée</div>
-                        <div className="text-sm text-gray-600">Navigation plus intuitive et design responsive</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <div className="bg-ekwip-100 text-ekwip p-2 rounded-lg">
-                        <CheckCircle className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Catalogue enrichi</div>
-                        <div className="text-sm text-gray-600">Plus de produits et de configurations disponibles</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-3">
-                      <div className="bg-ekwip-100 text-ekwip p-2 rounded-lg">
-                        <CheckCircle className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <div className="font-medium text-gray-800">Portail client amélioré</div>
-                        <div className="text-sm text-gray-600">Gestion simplifiée de vos équipements</div>
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+            </motion.div>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="py-8 px-4 md:px-6 lg:px-8 text-center">
-        <div className="max-w-7xl mx-auto">
-          <p className="text-gray-500">© 2024 Ekwip. Tous droits réservés.</p>
+      <footer className="py-8 px-4 md:px-6 lg:px-8 border-t border-gray-200">
+        <div className="max-w-7xl mx-auto text-center text-gray-500">
+          <p>&copy; 2024 Ekwip. Tous droits réservés.</p>
         </div>
       </footer>
     </div>

@@ -1,411 +1,455 @@
-// Local product data with variants
+export interface Product {
+  id: string
+  name: string
+  description: string
+  price: number
+  originalPrice?: number
+  image: string
+  category: string
+  brand: string
+  inStock: boolean
+  isNew?: boolean
+  isPopular?: boolean
+  slug: string
+  specifications?: Record<string, string>
+  images?: string[]
+  variants?: ProductVariant[]
+  configurations?: ProductConfiguration[]
+}
+
 export interface ProductVariant {
   id: string
   name: string
   price: number
-  basePrice?: number
+  specifications: Record<string, string>
+  inStock: boolean
 }
 
 export interface ProductConfiguration {
-  processor: ProductVariant
-  memory: ProductVariant
-  storage: ProductVariant
-  graphics?: ProductVariant
-}
-
-export interface Product {
   id: string
   name: string
-  slug: string
-  description: string
-  shortDescription: string
-  basePrice: number
-  monthlyPrice: number
+  price: number
   firstMonthPrice: number
-  image: string
-  images: string[]
-  category: string
-  brand: string
+  processor: string
+  memory: string
+  storage: string
+  graphics: string
   inStock: boolean
-  isNew: boolean
-  isFeatured: boolean
-  variants: {
-    processors: ProductVariant[]
-    memory: ProductVariant[]
-    storage: ProductVariant[]
-    graphics?: ProductVariant[]
-  }
-  specifications: Record<string, string>
-  rentalDuration: string
-  configurations?: ProductConfiguration[]
 }
 
-// Dell Precision 5690 configurations based on the screenshot
-const dellPrecisionConfigurations: ProductConfiguration[] = [
-  {
-    processor: { id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 },
-    memory: { id: "16gb", name: "16 Go de mémoire LPDDR5X", price: 0 },
-    storage: { id: "1tb", name: "SSD 1 To", price: 0 },
-    graphics: { id: "rtx1000", name: "NVIDIA® RTX™ 1000 Ada Generation", price: 0 },
-  },
-  {
-    processor: { id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 },
-    memory: { id: "32gb", name: "32 Go de mémoire LPDDR5X", price: 0 },
-    storage: { id: "1tb", name: "SSD 1 To", price: 0 },
-    graphics: { id: "rtx2000", name: "NVIDIA® RTX™ 2000 Ada Generation", price: 0 },
-  },
-  {
-    processor: { id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 },
-    memory: { id: "32gb", name: "32 Go de mémoire LPDDR5X", price: 0 },
-    storage: { id: "1tb", name: "SSD 1 To", price: 0 },
-    graphics: { id: "rtx1000", name: "NVIDIA® RTX™ 1000 Ada Generation", price: 0 },
-  },
-]
+export interface Category {
+  id: string
+  name: string
+  description: string
+  slug: string
+  image: string
+  productCount: number
+}
 
-// Sample products data - USING CORRECT VERCEL BLOB STORAGE URLS
-export const products: Product[] = [
+// Sample products data
+const products: Product[] = [
+  // Laptops
   {
-    id: "1",
+    id: "dell-precision-5690",
     name: "Dell Mobile Precision Workstation 5690",
-    slug: "dell-precision-5690",
-    description:
-      'Station de travail mobile haute performance avec processeur Intel Core Ultra et écran 16" 4K+. Idéale pour les professionnels créatifs et techniques.',
-    shortDescription: 'Station de travail mobile 16" haute performance pour professionnels',
-    basePrice: 2500,
-    monthlyPrice: 1150, // Configuration 1
-    firstMonthPrice: 2770,
-    image:
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-2.avif",
-    images: [
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-1.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-2.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-3.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-5.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-6.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-7.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-8.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-9.avif",
-      "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/products/precision-5690-workstation/workstation-precision-16-5690-black-gallery-10.avif",
-    ],
+    description: "Station de travail mobile ultra-performante pour les professionnels exigeants",
+    price: 1150,
+    image: "/images/dell-precision-5690.png",
     category: "ordinateurs-portables",
     brand: "Dell",
     inStock: true,
-    isNew: true,
-    isFeatured: true,
-    variants: {
-      processors: [{ id: "i7-165h", name: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs", price: 0 }],
-      memory: [
-        { id: "16gb", name: "16 Go de mémoire LPDDR5X", price: 0 },
-        { id: "32gb", name: "32 Go de mémoire LPDDR5X", price: 0 },
-      ],
-      storage: [{ id: "1tb", name: "SSD 1 To", price: 0 }],
-      graphics: [
-        { id: "rtx1000", name: "NVIDIA® RTX™ 1000 Ada Generation", price: 0 },
-        { id: "rtx2000", name: "NVIDIA® RTX™ 2000 Ada Generation", price: 0 },
-      ],
-    },
-    configurations: dellPrecisionConfigurations,
+    isPopular: true,
+    slug: "dell-precision-5690",
     specifications: {
-      Écran: "16,0 pouces non-tactile FHD+",
+      Écran: "16 pouces non-tactile FHD+",
       "Système d'exploitation": "Windows 11 Professionnel",
+      Stockage: "SSD 1 To",
       Connectivité: "Wi-Fi 6E, Bluetooth 5.3",
-      Ports: "2x Thunderbolt 4, 1x USB 3.2, 1x HDMI 2.1, 1x SD Card",
-      Batterie: "90Wh, jusqu'à 12h d'autonomie",
-      Poids: "2.0 kg",
-      Dimensions: "355.3 x 230.0 x 18.3 mm",
-      Garantie: "3 ans ProSupport Plus",
+      Ports: "USB-C, USB-A, HDMI, Ethernet",
+      Batterie: "Jusqu'à 10 heures d'autonomie",
+      Poids: "2.1 kg",
+      Garantie: "3 ans sur site",
     },
-    rentalDuration: "36 mois",
+    images: [
+      "/images/dell-precision-5690-main.png",
+      "/images/dell-precision-5690-side.png",
+      "/images/dell-precision-5690-keyboard.png",
+      "/images/dell-precision-5690-ports.png",
+      "/images/dell-precision-5690-screen.png",
+    ],
+    configurations: [
+      {
+        id: "config-1",
+        name: "Configuration Standard",
+        price: 1150,
+        firstMonthPrice: 2770,
+        processor: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs",
+        memory: "16 Go de mémoire LPDDR5X",
+        storage: "SSD 1 To",
+        graphics: "NVIDIA® RTX™ 1000 Ada Generation",
+        inStock: true,
+      },
+      {
+        id: "config-2",
+        name: "Configuration Performance",
+        price: 1200,
+        firstMonthPrice: 2850,
+        processor: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs",
+        memory: "32 Go de mémoire LPDDR5X",
+        storage: "SSD 1 To",
+        graphics: "NVIDIA® RTX™ 2000 Ada Generation",
+        inStock: true,
+      },
+      {
+        id: "config-3",
+        name: "Configuration Premium",
+        price: 1250,
+        firstMonthPrice: 3000,
+        processor: "Intel® Core™ Ultra 7 165H vPro® Enterprise, 16 cœurs",
+        memory: "32 Go de mémoire LPDDR5X",
+        storage: "SSD 1 To",
+        graphics: "NVIDIA® RTX™ 1000 Ada Generation",
+        inStock: true,
+      },
+    ],
   },
   {
-    id: "2",
+    id: "macbook-pro-16",
     name: 'MacBook Pro 16"',
-    slug: "macbook-pro-16",
-    description:
-      "Le MacBook Pro 16 pouces avec puce M3 Pro offre des performances exceptionnelles pour les professionnels créatifs.",
-    shortDescription: 'MacBook Pro 16" avec puce M3 Pro pour créatifs',
-    basePrice: 2800,
-    monthlyPrice: 1400,
-    firstMonthPrice: 3200,
+    description: "Le MacBook Pro le plus puissant jamais conçu, avec la puce M3 Pro",
+    price: 899,
     image: "/images/macbook-pro.png",
-    images: ["/images/macbook-pro.png"],
     category: "ordinateurs-portables",
     brand: "Apple",
     inStock: true,
-    isNew: false,
-    isFeatured: true,
-    variants: {
-      processors: [
-        { id: "m3-pro", name: "Apple M3 Pro", price: 0 },
-        { id: "m3-max", name: "Apple M3 Max", price: 0 },
-      ],
-      memory: [
-        { id: "18gb", name: "18GB Unified Memory", price: 0 },
-        { id: "36gb", name: "36GB Unified Memory", price: 0 },
-      ],
-      storage: [
-        { id: "512gb-ssd", name: "512GB SSD", price: 0 },
-        { id: "1tb-ssd", name: "1TB SSD", price: 0 },
-      ],
-    },
+    isNew: true,
+    slug: "macbook-pro-16",
     specifications: {
-      Écran: '16.2" Liquid Retina XDR',
-      Processeur: "Puce Apple M3 Pro",
-      Mémoire: "18GB de mémoire unifiée",
-      Stockage: "512GB SSD",
+      Processeur: "Apple M3 Pro",
+      Mémoire: "18 Go de mémoire unifiée",
+      Stockage: "SSD 512 Go",
+      Écran: "16 pouces Liquid Retina XDR",
       Autonomie: "Jusqu'à 22 heures",
+      Poids: "2.16 kg",
     },
-    rentalDuration: "24 mois",
+    variants: [
+      {
+        id: "mbp-16-512",
+        name: "512 Go",
+        price: 899,
+        specifications: { Stockage: "SSD 512 Go", Mémoire: "18 Go" },
+        inStock: true,
+      },
+      {
+        id: "mbp-16-1tb",
+        name: "1 To",
+        price: 1099,
+        specifications: { Stockage: "SSD 1 To", Mémoire: "18 Go" },
+        inStock: true,
+      },
+    ],
   },
   {
-    id: "3",
+    id: "dell-xps-13",
     name: "Dell XPS 13",
-    slug: "dell-xps-13",
-    description: "Ultrabook premium avec écran InfinityEdge et performances exceptionnelles dans un format compact.",
-    shortDescription: 'Ultrabook premium 13" compact et performant',
-    basePrice: 1800,
-    monthlyPrice: 900,
-    firstMonthPrice: 2100,
+    description: "Ultrabook premium avec écran InfinityEdge et performances exceptionnelles",
+    price: 649,
     image: "/images/dell-xps.png",
-    images: ["/images/dell-xps.png"],
     category: "ordinateurs-portables",
     brand: "Dell",
     inStock: true,
-    isNew: false,
-    isFeatured: false,
-    variants: {
-      processors: [
-        { id: "i5-1340p", name: "Intel Core i5-1340P", price: 0 },
-        { id: "i7-1360p", name: "Intel Core i7-1360P", price: 0 },
-      ],
-      memory: [
-        { id: "16gb-lpddr5", name: "16GB LPDDR5", price: 0 },
-        { id: "32gb-lpddr5", name: "32GB LPDDR5", price: 0 },
-      ],
-      storage: [
-        { id: "512gb-nvme", name: "512GB NVMe SSD", price: 0 },
-        { id: "1tb-nvme", name: "1TB NVMe SSD", price: 0 },
-      ],
-    },
+    slug: "dell-xps-13",
     specifications: {
-      Écran: '13.4" FHD+ InfinityEdge',
-      Processeur: "Intel Core i5-1340P",
-      Mémoire: "16GB LPDDR5",
-      Stockage: "512GB NVMe SSD",
-      Poids: "1.19 kg",
+      Processeur: "Intel Core i7-1360P",
+      Mémoire: "16 Go LPDDR5",
+      Stockage: "SSD 512 Go",
+      Écran: "13.4 pouces FHD+",
+      Poids: "1.17 kg",
     },
-    rentalDuration: "24 mois",
   },
   {
-    id: "4",
+    id: "hp-elitebook-840",
+    name: "HP EliteBook 840 G10",
+    description: "Ordinateur portable professionnel sécurisé avec Intel vPro",
+    price: 729,
+    image: "/images/laptop-hero.png",
+    category: "ordinateurs-portables",
+    brand: "HP",
+    inStock: true,
+    slug: "hp-elitebook-840",
+  },
+  {
+    id: "lenovo-thinkpad-x1",
+    name: "Lenovo ThinkPad X1 Carbon",
+    description: "Ultrabook professionnel léger et robuste",
+    price: 799,
+    image: "/images/laptop-hero.png",
+    category: "ordinateurs-portables",
+    brand: "Lenovo",
+    inStock: false,
+    slug: "lenovo-thinkpad-x1",
+  },
+
+  // Desktops
+  {
+    id: "imac-24",
     name: 'iMac 24"',
-    slug: "imac-24",
-    description: "iMac tout-en-un avec écran Retina 4.5K et puce M3 pour une expérience desktop exceptionnelle.",
-    shortDescription: 'iMac 24" tout-en-un avec écran Retina 4.5K',
-    basePrice: 2200,
-    monthlyPrice: 1100,
-    firstMonthPrice: 2500,
+    description: "iMac tout-en-un avec puce M3 et écran Retina 4.5K",
+    price: 799,
     image: "/images/imac.png",
-    images: ["/images/imac.png"],
     category: "ordinateurs-de-bureau",
     brand: "Apple",
     inStock: true,
-    isNew: true,
-    isFeatured: true,
-    variants: {
-      processors: [
-        { id: "m3-8core", name: "Apple M3 8-core CPU", price: 0 },
-        { id: "m3-10core", name: "Apple M3 10-core CPU", price: 0 },
-      ],
-      memory: [
-        { id: "8gb-unified", name: "8GB Unified Memory", price: 0 },
-        { id: "16gb-unified", name: "16GB Unified Memory", price: 0 },
-        { id: "24gb-unified", name: "24GB Unified Memory", price: 0 },
-      ],
-      storage: [
-        { id: "256gb-ssd", name: "256GB SSD", price: 0 },
-        { id: "512gb-ssd", name: "512GB SSD", price: 0 },
-        { id: "1tb-ssd", name: "1TB SSD", price: 0 },
-      ],
-    },
+    isPopular: true,
+    slug: "imac-24",
     specifications: {
-      Écran: '24" Retina 4.5K (4480 x 2520)',
-      Processeur: "Puce Apple M3",
-      Mémoire: "8GB de mémoire unifiée",
-      Stockage: "256GB SSD",
+      Processeur: "Apple M3",
+      Mémoire: "8 Go de mémoire unifiée",
+      Stockage: "SSD 256 Go",
+      Écran: "24 pouces Retina 4.5K",
       Couleurs: "7 couleurs disponibles",
     },
-    rentalDuration: "36 mois",
   },
   {
-    id: "5",
+    id: "dell-optiplex-7010",
+    name: "Dell OptiPlex 7010",
+    description: "PC de bureau compact et performant pour les entreprises",
+    price: 449,
+    image: "/images/laptop-hero.png",
+    category: "ordinateurs-de-bureau",
+    brand: "Dell",
+    inStock: true,
+    slug: "dell-optiplex-7010",
+  },
+  {
+    id: "hp-prodesk-600",
+    name: "HP ProDesk 600 G6",
+    description: "Mini PC professionnel compact et silencieux",
+    price: 399,
+    image: "/images/laptop-hero.png",
+    category: "ordinateurs-de-bureau",
+    brand: "HP",
+    inStock: true,
+    slug: "hp-prodesk-600",
+  },
+
+  // Smartphones
+  {
+    id: "iphone-15-pro",
     name: "iPhone 15 Pro",
-    slug: "iphone-15-pro",
-    description: "iPhone 15 Pro avec puce A17 Pro, appareil photo professionnel et design en titane.",
-    shortDescription: "iPhone 15 Pro avec puce A17 Pro et design titane",
-    basePrice: 800,
-    monthlyPrice: 400,
-    firstMonthPrice: 900,
+    description: "iPhone Pro avec puce A17 Pro et appareil photo révolutionnaire",
+    price: 89,
     image: "/images/iphone.png",
-    images: ["/images/iphone.png"],
     category: "smartphones",
     brand: "Apple",
     inStock: true,
     isNew: true,
-    isFeatured: true,
-    variants: {
-      processors: [{ id: "a17-pro", name: "Puce A17 Pro", price: 0 }],
-      memory: [{ id: "8gb-ram", name: "8GB RAM", price: 0 }],
-      storage: [
-        { id: "128gb-storage", name: "128GB", price: 0 },
-        { id: "256gb-storage", name: "256GB", price: 0 },
-        { id: "512gb-storage", name: "512GB", price: 0 },
-        { id: "1tb-storage", name: "1TB", price: 0 },
-      ],
-    },
+    slug: "iphone-15-pro",
     specifications: {
-      Écran: '6.1" Super Retina XDR OLED',
+      Écran: "6.1 pouces Super Retina XDR",
       Processeur: "Puce A17 Pro",
-      "Appareil photo": "Triple 48MP + 12MP + 12MP",
-      Stockage: "128GB",
-      Connectivité: "5G, Wi-Fi 6E, Bluetooth 5.3",
+      Stockage: "128 Go",
+      "Appareil photo": "48 Mpx Principal",
+      Batterie: "Jusqu'à 23h de vidéo",
     },
-    rentalDuration: "24 mois",
+  },
+  {
+    id: "samsung-galaxy-s24",
+    name: "Samsung Galaxy S24",
+    description: "Smartphone Android premium avec IA intégrée",
+    price: 79,
+    image: "/images/iphone.png",
+    category: "smartphones",
+    brand: "Samsung",
+    inStock: true,
+    slug: "samsung-galaxy-s24",
+  },
+  {
+    id: "google-pixel-8",
+    name: "Google Pixel 8",
+    description: "Smartphone Google avec photographie IA avancée",
+    price: 69,
+    image: "/images/iphone.png",
+    category: "smartphones",
+    brand: "Google",
+    inStock: true,
+    slug: "google-pixel-8",
+  },
+
+  // Tablets
+  {
+    id: "ipad-pro-12",
+    name: 'iPad Pro 12.9"',
+    description: "Tablette professionnelle avec puce M2 et écran Liquid Retina XDR",
+    price: 149,
+    image: "/images/tablet-hero.png",
+    category: "tablettes",
+    brand: "Apple",
+    inStock: true,
+    isPopular: true,
+    slug: "ipad-pro-12",
+  },
+  {
+    id: "surface-pro-9",
+    name: "Microsoft Surface Pro 9",
+    description: "Tablette 2-en-1 avec Windows 11 et processeur Intel",
+    price: 129,
+    image: "/images/tablet-hero.png",
+    category: "tablettes",
+    brand: "Microsoft",
+    inStock: true,
+    slug: "surface-pro-9",
+  },
+
+  // Accessories
+  {
+    id: "dell-monitor-27",
+    name: 'Dell UltraSharp 27"',
+    description: "Moniteur professionnel 4K avec USB-C",
+    price: 49,
+    image: "/images/accessories-hero.png",
+    category: "accessoires",
+    brand: "Dell",
+    inStock: true,
+    slug: "dell-monitor-27",
+  },
+  {
+    id: "logitech-mx-master",
+    name: "Logitech MX Master 3S",
+    description: "Souris sans fil premium pour professionnels",
+    price: 12,
+    image: "/images/accessories-hero.png",
+    category: "accessoires",
+    brand: "Logitech",
+    inStock: true,
+    slug: "logitech-mx-master",
+  },
+
+  // Printers
+  {
+    id: "hp-laserjet-pro",
+    name: "HP LaserJet Pro M404dn",
+    description: "Imprimante laser monochrome professionnelle",
+    price: 39,
+    image: "/images/printer-hero.png",
+    category: "imprimantes",
+    brand: "HP",
+    inStock: true,
+    slug: "hp-laserjet-pro",
+  },
+  {
+    id: "canon-pixma-pro",
+    name: "Canon PIXMA PRO-200",
+    description: "Imprimante photo professionnelle A3+",
+    price: 59,
+    image: "/images/printer-hero.png",
+    category: "imprimantes",
+    brand: "Canon",
+    inStock: true,
+    slug: "canon-pixma-pro",
   },
 ]
 
-// Helper functions - ALL REQUIRED EXPORTS
+// Categories with dynamic product counts
+export function getCategories(): Category[] {
+  const categoryData = [
+    {
+      id: "ordinateurs-portables",
+      name: "Ordinateurs portables",
+      description: "Ordinateurs portables professionnels pour tous vos besoins",
+      slug: "ordinateurs-portables",
+      image: "/images/laptop-hero.png",
+    },
+    {
+      id: "ordinateurs-de-bureau",
+      name: "Ordinateurs de bureau",
+      description: "Stations de travail performantes pour vos équipes",
+      slug: "ordinateurs-de-bureau",
+      image: "/images/laptop-hero.png",
+    },
+    {
+      id: "smartphones",
+      name: "Smartphones",
+      description: "Smartphones professionnels pour vos équipes mobiles",
+      slug: "smartphones",
+      image: "/images/smartphone-hero.png",
+    },
+    {
+      id: "tablettes",
+      name: "Tablettes",
+      description: "Tablettes tactiles pour une productivité en déplacement",
+      slug: "tablettes",
+      image: "/images/tablet-hero.png",
+    },
+    {
+      id: "accessoires",
+      name: "Accessoires",
+      description: "Accessoires et périphériques pour compléter votre équipement",
+      slug: "accessoires",
+      image: "/images/accessories-hero.png",
+    },
+    {
+      id: "imprimantes",
+      name: "Imprimantes",
+      description: "Solutions d'impression pour tous vos besoins professionnels",
+      slug: "imprimantes",
+      image: "/images/printer-hero.png",
+    },
+  ]
+
+  // Calculate product count for each category dynamically
+  return categoryData.map((category) => ({
+    ...category,
+    productCount: products.filter((product) => product.category === category.id).length,
+  }))
+}
+
 export function getProducts(): Product[] {
   return products
+}
+
+export function getProductsByCategory(categorySlug: string): Product[] {
+  return products.filter((product) => product.category === categorySlug)
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
   return products.find((product) => product.slug === slug)
 }
 
-export function getProductsByCategory(category: string): Product[] {
-  return products.filter((product) => product.category === category)
+export function getFeaturedProducts(): Product[] {
+  return products.filter((product) => product.isPopular || product.isNew).slice(0, 8)
 }
 
-export function getFeaturedProducts(): Product[] {
-  return products.filter((product) => product.isFeatured)
+export function getPopularProducts(): Product[] {
+  return products.filter((product) => product.isPopular)
 }
 
 export function getNewProducts(): Product[] {
   return products.filter((product) => product.isNew)
 }
 
-export function calculateTotalPrice(product: Product, configuration: ProductConfiguration): number {
-  // For Dell Precision, return specific prices based on configuration
-  if (product.slug === "dell-precision-5690" && product.configurations) {
-    const configIndex = product.configurations.findIndex(
-      (config) => config.memory.id === configuration.memory.id && config.graphics?.id === configuration.graphics?.id,
-    )
-
-    switch (configIndex) {
-      case 0:
-        return 1150 // 16GB + RTX 1000
-      case 1:
-        return 1200 // 32GB + RTX 2000
-      case 2:
-        return 1250 // 32GB + RTX 1000
-      default:
-        return product.monthlyPrice
-    }
-  }
-
-  return product.monthlyPrice
+export function searchProducts(query: string): Product[] {
+  const lowercaseQuery = query.toLowerCase()
+  return products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(lowercaseQuery) ||
+      product.description.toLowerCase().includes(lowercaseQuery) ||
+      product.brand.toLowerCase().includes(lowercaseQuery),
+  )
 }
 
-export function getFirstMonthPrice(product: Product, configuration: ProductConfiguration): number {
-  // For Dell Precision, return specific first month prices
-  if (product.slug === "dell-precision-5690" && product.configurations) {
-    const configIndex = product.configurations.findIndex(
-      (config) => config.memory.id === configuration.memory.id && config.graphics?.id === configuration.graphics?.id,
-    )
-
-    switch (configIndex) {
-      case 0:
-        return 2770 // 16GB + RTX 1000
-      case 1:
-        return 2850 // 32GB + RTX 2000
-      case 2:
-        return 3000 // 32GB + RTX 1000
-      default:
-        return product.firstMonthPrice
-    }
-  }
-
-  return product.firstMonthPrice
+export function getProductsByBrand(brand: string): Product[] {
+  return products.filter((product) => product.brand.toLowerCase() === brand.toLowerCase())
 }
 
-export function formatPrice(price: number | undefined): string {
-  if (typeof price !== "number" || isNaN(price)) {
-    return "0 DH"
-  }
-  return `${price.toLocaleString("fr-FR")} DH`
+export function getAllBrands(): string[] {
+  const brands = [...new Set(products.map((product) => product.brand))]
+  return brands.sort()
 }
 
-// Categories data - DYNAMIC PRODUCT COUNTS
-export const getCategories = () => [
-  {
-    id: "ordinateurs-portables",
-    name: "Ordinateurs portables",
-    slug: "ordinateurs-portables",
-    description: "Ordinateurs portables professionnels pour tous vos besoins",
-    image: "/images/laptop-hero.png",
-    count: products.filter((p) => p.category === "ordinateurs-portables").length,
-  },
-  {
-    id: "ordinateurs-de-bureau",
-    name: "Ordinateurs de bureau",
-    slug: "ordinateurs-de-bureau",
-    description: "Stations de travail et PC de bureau performants",
-    image: "/images/imac.png",
-    count: products.filter((p) => p.category === "ordinateurs-de-bureau").length,
-  },
-  {
-    id: "smartphones",
-    name: "Smartphones",
-    slug: "smartphones",
-    description: "Smartphones professionnels dernière génération",
-    image: "/images/iphone.png",
-    count: products.filter((p) => p.category === "smartphones").length,
-  },
-  {
-    id: "tablettes",
-    name: "Tablettes",
-    slug: "tablettes",
-    description: "Tablettes tactiles pour la mobilité professionnelle",
-    image: "/placeholder.svg?height=200&width=200",
-    count: products.filter((p) => p.category === "tablettes").length,
-  },
-  {
-    id: "imprimantes",
-    name: "Imprimantes",
-    slug: "imprimantes",
-    description: "Solutions d'impression professionnelles",
-    image: "/images/printer-hero.png",
-    count: products.filter((p) => p.category === "imprimantes").length,
-  },
-  {
-    id: "accessoires",
-    name: "Accessoires",
-    slug: "accessoires",
-    description: "Accessoires et périphériques informatiques",
-    image: "/placeholder.svg?height=200&width=200",
-    count: products.filter((p) => p.category === "accessoires").length,
-  },
-  {
-    id: "mobilier",
-    name: "Mobilier",
-    slug: "mobilier",
-    description: "Mobilier de bureau ergonomique et fonctionnel",
-    image: "/placeholder.svg?height=200&width=200",
-    count: products.filter((p) => p.category === "mobilier").length,
-  },
-]
+export function getRelatedProducts(productId: string, limit = 4): Product[] {
+  const product = products.find((p) => p.id === productId)
+  if (!product) return []
 
-export function getCategoryBySlug(slug: string) {
-  return getCategories().find((category) => category.slug === slug)
+  return products.filter((p) => p.id !== productId && p.category === product.category).slice(0, limit)
 }

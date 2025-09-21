@@ -1,245 +1,312 @@
 "use client"
-
-import { motion } from "framer-motion"
-import Link from "next/link"
 import Image from "next/image"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { ArrowRight } from "lucide-react"
-import CategoryCard from "@/components/category-card"
 import FeatureCard from "@/components/feature-card"
-import TestimonialsSection from "@/components/testimonials-section"
+import ProductTabs from "@/components/product-tabs"
 import ClientLogoSlider from "@/components/client-logo-slider"
+import TestimonialsSection from "@/components/testimonials-section"
 import FAQSection from "@/components/faq-section"
-import CustomOfferBanner from "@/components/custom-offer-banner"
+import { ArrowRight, Banknote, Server, RefreshCw, HeadphonesIcon } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
-import { getCategories, getFeaturedProducts } from "@/lib/products"
 
 export default function Home() {
   const { t } = useLanguage()
-  const categories = getCategories()
-  const featuredProducts = getFeaturedProducts()
 
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative py-20 md:py-32 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-ekwip-50 via-white to-ekwip-100 overflow-hidden">
-        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="max-w-7xl mx-auto relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-              <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 leading-tight">{t("hero.title")}</h1>
-              <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed">{t("hero.subtitle")}</p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg" variant="gradient" className="text-lg px-8">
-                  <Link href="/catalogue">
-                    {t("hero.cta_primary")} <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
+              Équipez-vous, sans ruiner votre trésorerie!
+            </h1>
+            <p className="mt-6 text-lg text-gray-600 max-w-lg">
+              Optez pour la location et accédez aux meilleures technologies avec une solution flexible et sans
+              engagement lourd.
+            </p>
+            <div className="mt-8 flex flex-col sm:flex-row gap-4">
+              <Link href="/catalogue">
+                <Button variant="gradient" size="xl" className="shadow-lg">
+                  Découvrir nos offres
                 </Button>
-                <Button asChild variant="outline" size="lg" className="text-lg px-8 bg-transparent">
-                  <Link href="/comment-ca-marche">{t("hero.cta_secondary")}</Link>
+              </Link>
+              <Link href="/comment-ca-marche">
+                <Button variant="outline" size="xl">
+                  Comment ça marche
                 </Button>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="relative bg-gradient-to-br from-ekwip-100 to-ekwip-200 rounded-3xl p-8 shadow-2xl">
+              </Link>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="bg-white rounded-3xl overflow-hidden shadow-xl transform transition-all duration-500 hover:rotate-1 hover:shadow-2xl">
+              <div className="relative">
                 <Image
-                  src="/images/laptop-hero.png"
-                  alt="Équipements informatiques Ekwip"
+                  src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/Hero%20office"
+                  alt="Équipement informatique professionnel pour entreprises"
                   width={600}
-                  height={400}
-                  className="w-full h-auto object-contain"
+                  height={600}
+                  className="w-full h-auto object-cover brightness-105 contrast-105"
                   priority
                 />
-                <div className="absolute -top-4 -right-4 bg-ekwip text-white px-4 py-2 rounded-full text-sm font-semibold shadow-lg">
-                  Nouveau !
-                </div>
+                {/* Overlay with brand color */}
+                <div className="absolute inset-0 bg-ekwip opacity-10"></div>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Categories Section */}
+      {/* Feature Cards Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{t("categories.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("categories.subtitle")}</p>
-          </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <FeatureCard
+              title="Préservez votre trésorerie"
+              description="Transformez vos dépenses d'investissement en coûts opérationnels prévisibles avec des mensualités fixes."
+              icon={<Banknote className="w-10 h-10 text-ekwip" />}
+              iconBgColor="bg-blue-100"
+              className="shadow-md"
+            />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {categories.map((category, index) => (
-              <motion.div
-                key={category.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <CategoryCard
-                  iconName={category.name}
-                  title={category.name}
-                  description={category.description}
-                  slug={category.slug}
-                />
-              </motion.div>
-            ))}
+            <FeatureCard
+              title="Pilotez votre flotte IT"
+              description="Gérez et optimisez tout votre parc informatique depuis une interface unique."
+              icon={<Server className="w-10 h-10 text-ekwip" />}
+              iconBgColor="bg-indigo-100"
+              className="shadow-md"
+            />
+
+            <FeatureCard
+              title="Upgradez à tout moment"
+              description="Échangez ou upgradez votre équipement selon vos besoins, sans contrainte."
+              icon={<RefreshCw className="w-10 h-10 text-white" />}
+              iconBgColor="bg-white/20"
+              bgColor="bg-ekwip"
+              textColor="text-white"
+              className="shadow-md"
+            />
+
+            <FeatureCard
+              title="Support et maintenance inclus"
+              description="Assistance technique et remplacement rapide en cas de problème."
+              icon={<HeadphonesIcon className="w-10 h-10 text-ekwip" />}
+              iconBgColor="bg-indigo-100"
+              className="shadow-md"
+            />
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gray-50">
+      {/* Product Catalog Section */}
+      <section className="py-20 md:py-28 px-4 md:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{t("features.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("features.subtitle")}</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <FeatureCard
-              icon="/images/icon-cash.png"
-              title={t("features.flexibility.title")}
-              description={t("features.flexibility.desc")}
-            />
-            <FeatureCard
-              icon="/images/icon-support.png"
-              title={t("features.maintenance.title")}
-              description={t("features.maintenance.desc")}
-            />
-            <FeatureCard
-              icon="/images/icon-upgrade.png"
-              title={t("features.upgrade.title")}
-              description={t("features.upgrade.desc")}
-            />
-            <FeatureCard
-              icon="/images/icon-fleet.png"
-              title={t("features.support.title")}
-              description={t("features.support.desc")}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* How it Works Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">{t("how_it_works.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("how_it_works.subtitle")}</p>
-          </motion.div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                step: "1",
-                title: t("how_it_works.step1.title"),
-                description: t("how_it_works.step1.desc"),
-                icon: "🛒",
-              },
-              {
-                step: "2",
-                title: t("how_it_works.step2.title"),
-                description: t("how_it_works.step2.desc"),
-                icon: "⚙️",
-              },
-              {
-                step: "3",
-                title: t("how_it_works.step3.title"),
-                description: t("how_it_works.step3.desc"),
-                icon: "✅",
-              },
-              {
-                step: "4",
-                title: t("how_it_works.step4.title"),
-                description: t("how_it_works.step4.desc"),
-                icon: "🚀",
-              },
-            ].map((item, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                viewport={{ once: true }}
-              >
-                <Card className="text-center h-full border-ekwip-200 hover:shadow-lg transition-shadow duration-300">
-                  <CardContent className="p-6">
-                    <div className="text-4xl mb-4">{item.icon}</div>
-                    <h3 className="text-xl font-semibold mb-3 text-gray-800">{item.title}</h3>
-                    <p className="text-gray-600">{item.description}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Client Logos */}
-      <ClientLogoSlider />
-
-      {/* Testimonials */}
-      <TestimonialsSection />
-
-      {/* Custom Offer Banner */}
-      <CustomOfferBanner />
-
-      {/* FAQ Section */}
-      <FAQSection />
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-ekwip text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Prêt à moderniser votre parc informatique ?</h2>
-            <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-              Découvrez nos solutions de location flexibles et bénéficiez de l'expertise de nos équipes.
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-gray-800 mb-6">
+              Découvrez notre catalogue d'équipements en location
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Laptops, tablettes, smartphones et bien plus, disponibles en location pour accompagner votre activité. Que
+              vous ayez besoin d'un ordinateur puissant pour le travail, d'une tablette pour la mobilité ou d'un
+              smartphone dernier cri, nous avons l'équipement adapté à vos besoins.
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button asChild size="lg" className="bg-white text-ekwip hover:bg-gray-100">
-                <Link href="/catalogue">Découvrir le catalogue</Link>
+          </div>
+
+          <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+            <ProductTabs />
+          </div>
+
+          <div className="mt-16 text-center">
+            <Link href="/catalogue">
+              <Button variant="gradient" size="lg" className="shadow-lg px-8 py-6 text-lg">
+                Voir tout le catalogue <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="border-white text-white hover:bg-white/10 bg-transparent"
-              >
-                <Link href="/contact">Parler à un expert</Link>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Clients Section */}
+      <section className="py-16 md:py-20 px-4 md:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Ils nous font confiance</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Rejoignez les entreprises qui ont choisi Ekwip pour leur équipement IT
+            </p>
+          </div>
+
+          <ClientLogoSlider />
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl mx-4 md:mx-8 lg:mx-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Comment ça marche</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Un processus simple et transparent pour équiper votre entreprise
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
+              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+                1
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Choisissez votre équipement</h3>
+              <p className="text-gray-600">
+                Parcourez notre catalogue et sélectionnez les équipements adaptés à vos besoins.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
+              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+                2
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Définissez votre durée</h3>
+              <p className="text-gray-600">
+                Choisissez la durée de location qui vous convient, de 1 à 36 mois selon vos projets.
+              </p>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 text-center shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-2">
+              <div className="h-16 w-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6 text-white font-bold text-xl">
+                3
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Recevez et utilisez</h3>
+              <p className="text-gray-600">
+                Nous livrons et installons votre équipement. Profitez d'un support technique pendant toute la durée.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link href="/comment-ca-marche">
+              <Button variant="outline" size="lg" className="bg-white">
+                En savoir plus
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Enterprise Section with FAQ */}
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Plus de 10 collaborateurs?</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Contactez-nous pour étudier ensemble votre besoin et obtenir une offre sur-mesure.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-800 mb-4">Solutions pour entreprises</h3>
+              <p className="text-gray-600 mb-6">
+                Ekwip propose des solutions de location d'équipement IT adaptées aux besoins spécifiques des moyennes et
+                grandes entreprises. Nos experts vous accompagnent dans la définition de votre parc informatique et vous
+                proposent des solutions sur mesure.
+              </p>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
+                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Gestion de parc informatique complète</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
+                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Tarifs dégressifs selon le volume</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
+                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Support technique dédié</span>
+                </li>
+                <li className="flex items-start">
+                  <div className="flex-shrink-0 h-6 w-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5">
+                    <svg className="h-4 w-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <span className="text-gray-700">Portail client personnalisé</span>
+                </li>
+              </ul>
+              <Button variant="gradient" size="lg">
+                Obtenir un devis
               </Button>
             </div>
-          </motion.div>
+            <div className="relative">
+              <div className="bg-white rounded-3xl overflow-hidden shadow-xl">
+                <Image
+                  src="https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/collaborators.jpg"
+                  alt="Équipe de collaborateurs travaillant ensemble"
+                  width={500}
+                  height={500}
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* FAQ Section */}
+          <FAQSection />
+        </div>
+      </section>
+
+      {/* Custom Offer Banner - Updated with the site's blue color */}
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-ekwip text-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Prêt à équiper votre entreprise?</h2>
+            <p className="text-lg opacity-90 max-w-2xl mx-auto">
+              Contactez-nous dès aujourd'hui pour discuter de vos besoins et obtenir un devis personnalisé.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button size="xl" className="bg-white text-ekwip hover:bg-gray-100">
+              Demander un devis
+            </Button>
+            <Button variant="outline" size="xl" className="border-white text-white hover:bg-white/10 bg-transparent">
+              Nous contacter
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <TestimonialsSection />
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 md:p-12 text-center shadow-xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Prêt à équiper votre entreprise?</h2>
+          <p className="text-white text-lg max-w-2xl mx-auto mb-8 opacity-90">
+            Contactez-nous dès aujourd'hui pour obtenir un devis personnalisé et découvrir comment Ekwip peut vous
+            aider.
+          </p>
+          <Link href="/contact">
+            <Button size="xl" className="bg-white text-blue-600 hover:bg-gray-100 shadow-lg">
+              Contactez-nous
+            </Button>
+          </Link>
         </div>
       </section>
     </div>
