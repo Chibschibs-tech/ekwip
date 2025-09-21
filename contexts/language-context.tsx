@@ -1,6 +1,7 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import type React from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 
 type Language = "fr" | "ar" | "en"
 
@@ -11,126 +12,134 @@ interface LanguageContextType {
 }
 
 const translations = {
+  // Home page translations
+  "home.hero.badge": "Nouveau",
+  "home.hero.title": "Équipez-vous sans vous ruiner",
+  "home.hero.description":
+    "Louez vos équipements IT services inclus. Flexibilité, performance et tranquillité d'esprit pour votre entreprise.",
+  "home.hero.cta.primary": "Découvrir le catalogue",
+  "home.hero.cta.secondary": "Comment ça marche",
+
+  "home.features.title": "Pourquoi choisir Ekwip ?",
+  "home.features.description": "Des solutions flexibles pour équiper votre entreprise sans contrainte",
+  "home.features.card1.title": "Préservez votre trésorerie",
+  "home.features.card1.description":
+    "Transformez vos dépenses d'investissement en coûts opérationnels prévisibles avec des mensualités fixes.",
+  "home.features.card2.title": "Pilotez votre flotte IT",
+  "home.features.card2.description": "Gérez et optimisez tout votre parc informatique depuis une interface unique.",
+  "home.features.card3.title": "Upgradez à tout moment",
+  "home.features.card3.description": "Échangez ou upgradez votre équipement selon vos besoins, sans contrainte.",
+  "home.features.card4.title": "Support et maintenance inclus",
+  "home.features.card4.description": "Assistance technique et remplacement rapide en cas de problème.",
+
+  "home.products.title": "Notre catalogue d'équipements",
+  "home.products.description": "Découvrez notre gamme complète d'équipements informatiques professionnels",
+
+  "home.clients.title": "Ils nous font confiance",
+  "home.clients.description": "Rejoignez les entreprises qui ont choisi Ekwip",
+
+  "home.howItWorks.title": "Comment ça marche",
+  "home.howItWorks.description": "Un processus simple et transparent pour équiper votre entreprise",
+  "home.howItWorks.step1.title": "Choisissez votre équipement",
+  "home.howItWorks.step1.description":
+    "Parcourez notre catalogue et sélectionnez les équipements adaptés à vos besoins.",
+  "home.howItWorks.step2.title": "Définissez votre durée",
+  "home.howItWorks.step2.description":
+    "Choisissez la durée de location qui vous convient, de 1 à 36 mois selon vos projets.",
+  "home.howItWorks.step3.title": "Recevez et utilisez",
+  "home.howItWorks.step3.description":
+    "Nous livrons et installons votre équipement. Profitez d'un support technique pendant toute la durée.",
+
+  "home.enterprise.title": "Plus de 10 collaborateurs?",
+  "home.enterprise.description": "Contactez-nous pour étudier ensemble votre besoin et obtenir une offre sur-mesure.",
+  "home.enterprise.feature1": "Gestion de parc informatique complète",
+  "home.enterprise.feature2": "Tarifs dégressifs selon le volume",
+  "home.enterprise.feature3": "Support technique dédié",
+  "home.enterprise.cta": "Obtenir un devis",
+
+  "home.finalCta.title": "Prêt à moderniser votre parc informatique ?",
+  "home.finalCta.description":
+    "Découvrez nos solutions de location flexibles et bénéficiez de l'expertise de nos équipes.",
+  "home.finalCta.primary": "Découvrir le catalogue",
+  "home.finalCta.secondary": "Parler à un expert",
+
   // Navigation
   "nav.home": "Accueil",
   "nav.catalog": "Catalogue",
-  "nav.how-it-works": "Comment ça marche",
-  "nav.about": "À propos",
+  "nav.howItWorks": "Comment ça marche",
   "nav.contact": "Contact",
-  "nav.client-portal": "Portail Client",
-  "nav.my-needs-list": "Ma liste de besoins",
-
-  // Hero Section
-  "hero.title": "Équipez votre entreprise sans investir",
-  "hero.subtitle": "Location d'équipements informatiques professionnels avec maintenance incluse",
-  "hero.cta.catalog": "Voir le catalogue",
-  "hero.cta.quote": "Demander un devis",
-
-  // Features
-  "features.title": "Pourquoi choisir Ekwip ?",
-  "features.cash.title": "Préservez votre trésorerie",
-  "features.cash.description": "Pas d'investissement initial, loyers déductibles à 100%",
-  "features.upgrade.title": "Matériel toujours à jour",
-  "features.upgrade.description": "Renouvelez votre équipement régulièrement",
-  "features.support.title": "Support technique inclus",
-  "features.support.description": "Maintenance et assistance 24/7",
-  "features.fleet.title": "Gestion de parc simplifiée",
-  "features.fleet.description": "Nous gérons votre parc informatique",
-
-  // Products
-  "products.title": "Notre catalogue d'équipements",
-  "products.subtitle": "Découvrez notre sélection d'équipements professionnels",
-  "products.view-all": "Voir tout le catalogue",
-
-  // Categories
-  "categories.laptops": "Ordinateurs portables",
-  "categories.desktops": "Ordinateurs de bureau",
-  "categories.smartphones": "Smartphones",
-  "categories.tablets": "Tablettes",
-  "categories.printers": "Imprimantes",
-  "categories.accessories": "Accessoires",
-
-  // Clients
-  "clients.title": "Ils nous font confiance",
-  "clients.subtitle": "Plus de 500 entreprises nous font confiance",
-
-  // How it works
-  "how-it-works.title": "Comment ça marche",
-  "how-it-works.step1.title": "Choisissez votre équipement",
-  "how-it-works.step1.description": "Parcourez notre catalogue et sélectionnez vos équipements",
-  "how-it-works.step2.title": "Définissez votre durée",
-  "how-it-works.step2.description": "Choisissez la durée de location qui vous convient",
-  "how-it-works.step3.title": "Recevez et utilisez",
-  "how-it-works.step3.description": "Livraison sous 48h et support technique inclus",
-
-  // Enterprise
-  "enterprise.title": "Plus de 10 collaborateurs ?",
-  "enterprise.subtitle": "Bénéficiez d'offres préférentielles et d'un accompagnement dédié",
-  "enterprise.features.dedicated": "Gestionnaire dédié",
-  "enterprise.features.volume": "Tarifs préférentiels",
-  "enterprise.features.support": "Support prioritaire",
-  "enterprise.cta": "Contactez-nous",
-
-  // Testimonials
-  "testimonials.title": "Ce que disent nos clients",
-  "testimonials.subtitle": "Découvrez les témoignages de nos clients satisfaits",
-
-  // CTA
-  "cta.title": "Prêt à équiper votre entreprise ?",
-  "cta.subtitle": "Demandez votre devis personnalisé en quelques clics",
-  "cta.button": "Demander un devis gratuit",
-
-  // Footer
-  "footer.company": "Entreprise",
-  "footer.products": "Produits",
-  "footer.support": "Support",
-  "footer.legal": "Légal",
-  "footer.description": "Ekwip, votre partenaire pour la location d'équipements informatiques professionnels au Maroc.",
+  "nav.clientPortal": "Portail Client",
+  "nav.blog": "Blog",
 
   // Common
   "common.loading": "Chargement...",
   "common.error": "Une erreur est survenue",
-  "common.try-again": "Réessayer",
-  "common.contact-us": "Nous contacter",
-  "common.learn-more": "En savoir plus",
-  "common.get-quote": "Demander un devis",
-  "common.view-details": "Voir les détails",
-  "common.add-to-cart": "Ajouter au panier",
-  "common.month": "mois",
-  "common.from": "À partir de",
-  "common.per-month": "/mois",
+  "common.retry": "Réessayer",
+  "common.close": "Fermer",
+  "common.save": "Enregistrer",
+  "common.cancel": "Annuler",
+  "common.delete": "Supprimer",
+  "common.edit": "Modifier",
+  "common.view": "Voir",
+  "common.back": "Retour",
+  "common.next": "Suivant",
+  "common.previous": "Précédent",
+  "common.search": "Rechercher",
+  "common.filter": "Filtrer",
+  "common.sort": "Trier",
+  "common.price": "Prix",
+  "common.name": "Nom",
+  "common.email": "Email",
+  "common.phone": "Téléphone",
+  "common.company": "Entreprise",
+  "common.message": "Message",
+  "common.send": "Envoyer",
+  "common.submit": "Soumettre",
 
-  // Product details
-  "product.specifications": "Caractéristiques",
-  "product.included": "Inclus",
-  "product.duration": "Durée",
-  "product.monthly-price": "Prix mensuel",
-  "product.first-month": "Premier mois",
-  "product.popular": "Populaire",
-  "product.new": "Nouveau",
-
-  // Contact
-  "contact.title": "Contactez-nous",
-  "contact.subtitle": "Notre équipe est là pour vous accompagner",
-  "contact.form.name": "Nom complet",
-  "contact.form.email": "Email",
-  "contact.form.company": "Entreprise",
-  "contact.form.message": "Message",
-  "contact.form.send": "Envoyer le message",
-  "contact.success": "Message envoyé avec succès",
-  "contact.error": "Erreur lors de l'envoi du message",
+  // Footer
+  "footer.company": "Entreprise",
+  "footer.about": "À propos",
+  "footer.careers": "Carrières",
+  "footer.press": "Presse",
+  "footer.support": "Support",
+  "footer.help": "Aide",
+  "footer.contact": "Contact",
+  "footer.legal": "Mentions légales",
+  "footer.privacy": "Politique de confidentialité",
+  "footer.terms": "Conditions d'utilisation",
+  "footer.followUs": "Suivez-nous",
+  "footer.newsletter": "Newsletter",
+  "footer.newsletterDescription": "Restez informé de nos dernières actualités",
+  "footer.subscribe": "S'abonner",
+  "footer.copyright": "© 2024 Ekwip. Tous droits réservés.",
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
   const [language, setLanguage] = useState<Language>("fr")
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("language") as Language
+    if (savedLanguage && ["fr", "ar", "en"].includes(savedLanguage)) {
+      setLanguage(savedLanguage)
+    }
+  }, [])
+
+  const handleSetLanguage = (lang: Language) => {
+    setLanguage(lang)
+    localStorage.setItem("language", lang)
+  }
 
   const t = (key: string): string => {
     return translations[key as keyof typeof translations] || key
   }
 
-  return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage: handleSetLanguage, t }}>
+      {children}
+    </LanguageContext.Provider>
+  )
 }
 
 export function useLanguage() {
