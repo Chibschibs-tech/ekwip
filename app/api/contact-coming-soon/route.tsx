@@ -7,35 +7,27 @@ export async function POST(request: NextRequest) {
   try {
     const { name, email, company, message } = await request.json()
 
-    // Validate required fields
     if (!name || !email) {
       return NextResponse.json({ error: "Name and email are required" }, { status: 400 })
     }
 
-    // Send email to sales@ekwip.ma
-    const { data, error } = await resend.emails.send({
+    await resend.emails.send({
       from: "noreply@ekwip.ma",
-      to: ["sales@ekwip.ma"],
-      subject: `Nouveau contact depuis la page Coming Soon - ${name}`,
+      to: "sales@ekwip.ma",
+      subject: "Nouveau contact - Page Coming Soon",
       html: `
         <h2>Nouveau contact depuis la page Coming Soon</h2>
         <p><strong>Nom:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        ${company ? `<p><strong>Entreprise:</strong> ${company}</p>` : ""}
-        ${message ? `<p><strong>Message:</strong></p><p>${message}</p>` : ""}
-        <hr>
-        <p><em>Ce message a été envoyé depuis la page Coming Soon du site ekwip.ma</em></p>
+        <p><strong>Entreprise:</strong> ${company || "Non spécifiée"}</p>
+        <p><strong>Message:</strong></p>
+        <p>${message || "Aucun message"}</p>
       `,
     })
 
-    if (error) {
-      console.error("Error sending email:", error)
-      return NextResponse.json({ error: "Failed to send email" }, { status: 500 })
-    }
-
-    return NextResponse.json({ message: "Email sent successfully", data }, { status: 200 })
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.error("Error in contact API:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    console.error("Error sending email:", error)
+    return NextResponse.json({ error: "Failed to send email" }, { status: 500 })
   }
 }

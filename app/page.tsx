@@ -18,12 +18,12 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-slate-50 to-blue-50 py-20 px-4">
+      <section className="relative bg-gradient-to-br from-slate-50 to-ekwip-50 py-20 px-4">
         <div className="container mx-auto">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <Badge variant="secondary" className="bg-blue-100 text-blue-800 hover:bg-blue-200">
+                <Badge variant="secondary" className="bg-ekwip-100 text-ekwip-800 hover:bg-ekwip-200">
                   Nouveau
                 </Badge>
                 <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
@@ -36,12 +36,16 @@ export default function Home() {
               </div>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/catalogue">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+                  <Button size="lg" className="bg-ekwip hover:bg-ekwip-700 text-white px-8 py-3">
                     Découvrir le catalogue
                   </Button>
                 </Link>
                 <Link href="/comment-ca-marche">
-                  <Button variant="outline" size="lg" className="px-8 py-3 bg-transparent">
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="px-8 py-3 bg-transparent border-ekwip text-ekwip hover:bg-ekwip hover:text-white"
+                  >
                     Comment ça marche
                   </Button>
                 </Link>
@@ -130,7 +134,7 @@ export default function Home() {
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+              <div className="w-16 h-16 bg-ekwip text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 1
               </div>
               <h3 className="text-xl font-semibold mb-4">Choisissez votre équipement</h3>
@@ -139,7 +143,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+              <div className="w-16 h-16 bg-ekwip text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 2
               </div>
               <h3 className="text-xl font-semibold mb-4">Définissez votre durée</h3>
@@ -148,7 +152,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
+              <div className="w-16 h-16 bg-ekwip text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6">
                 3
               </div>
               <h3 className="text-xl font-semibold mb-4">Recevez et utilisez</h3>
@@ -210,7 +214,7 @@ export default function Home() {
                 </div>
               </div>
               <Link href="/contact">
-                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button size="lg" className="bg-ekwip hover:bg-ekwip-700 text-white">
                   Obtenir un devis
                 </Button>
               </Link>
@@ -229,16 +233,16 @@ export default function Home() {
       <TestimonialsSection />
 
       {/* Final CTA Section */}
-      <section className="py-20 px-4 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+      <section className="py-20 px-4 bg-gradient-to-r from-ekwip to-ekwip-800 text-white">
         <div className="container mx-auto text-center">
           <div className="max-w-3xl mx-auto space-y-8">
             <h2 className="text-3xl lg:text-4xl font-bold">Prêt à moderniser votre parc informatique ?</h2>
-            <p className="text-xl text-blue-100">
+            <p className="text-xl text-ekwip-100">
               Découvrez nos solutions de location flexibles et bénéficiez de l'expertise de nos équipes.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/catalogue">
-                <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
+                <Button size="lg" variant="secondary" className="bg-white text-ekwip hover:bg-gray-100">
                   Découvrir le catalogue
                 </Button>
               </Link>
@@ -246,7 +250,7 @@ export default function Home() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="border-white text-white hover:bg-white hover:text-blue-600 bg-transparent"
+                  className="border-white text-white hover:bg-white hover:text-ekwip bg-transparent"
                 >
                   Parler à un expert
                 </Button>
