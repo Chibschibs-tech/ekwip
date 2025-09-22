@@ -3,47 +3,37 @@
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ProductCard } from "@/components/product-card"
-import { products, categories } from "@/lib/products"
+import { products } from "@/lib/products"
+
+const categories = [
+  { id: "all", name: "Tous", filter: () => true },
+  { id: "ordinateurs-portables", name: "Portables", filter: (p: any) => p.category === "ordinateurs-portables" },
+  { id: "ordinateurs-bureau", name: "Bureau", filter: (p: any) => p.category === "ordinateurs-bureau" },
+  { id: "smartphones-tablettes", name: "Mobiles", filter: (p: any) => p.category === "smartphones-tablettes" },
+]
 
 export function ProductTabs() {
   const [activeTab, setActiveTab] = useState("all")
 
-  const getProductsByCategory = (categoryId: string) => {
-    if (categoryId === "all") return products.slice(0, 8)
-    return products.filter((product) => product.category === categoryId).slice(0, 8)
-  }
-
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-5 mb-8">
-        <TabsTrigger value="all" className="data-[state=active]:bg-ekwip data-[state=active]:text-white">
-          Tous
-        </TabsTrigger>
+      <TabsList className="grid w-full grid-cols-4 mb-8">
         {categories.map((category) => (
-          <TabsTrigger
-            key={category.id}
-            value={category.id}
-            className="data-[state=active]:bg-ekwip data-[state=active]:text-white"
-          >
+          <TabsTrigger key={category.id} value={category.id} className="text-sm">
             {category.name}
           </TabsTrigger>
         ))}
       </TabsList>
 
-      <TabsContent value="all" className="space-y-8">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {getProductsByCategory("all").map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </TabsContent>
-
       {categories.map((category) => (
         <TabsContent key={category.id} value={category.id} className="space-y-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {getProductsByCategory(category.id).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {products
+              .filter(category.filter)
+              .slice(0, 8)
+              .map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
           </div>
         </TabsContent>
       ))}
