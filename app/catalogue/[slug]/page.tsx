@@ -9,7 +9,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import CatalogProductCard from "@/components/catalog-product-card"
 import { ArrowLeft, Search, Filter } from "lucide-react"
-import { useLanguage } from "@/contexts/language-context"
 import { getCategoryBySlug, getProductsByCategory } from "@/lib/products"
 import { notFound } from "next/navigation"
 
@@ -20,7 +19,6 @@ interface CategoryPageProps {
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState("popularity")
 
@@ -72,11 +70,11 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         <div className="max-w-7xl mx-auto">
           <nav className="flex items-center space-x-2 text-sm">
             <Link href="/" className="text-gray-500 hover:text-ekwip">
-              {t("category.breadcrumb.home")}
+              Accueil
             </Link>
             <span className="text-gray-400">/</span>
             <Link href="/catalogue" className="text-gray-500 hover:text-ekwip">
-              {t("category.breadcrumb.catalog")}
+              Catalogue
             </Link>
             <span className="text-gray-400">/</span>
             <span className="text-gray-800 font-medium">{category.name}</span>
@@ -91,7 +89,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             <div>
               <Link href="/catalogue" className="inline-flex items-center text-ekwip hover:text-ekwip-700 mb-6">
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                {t("category.back_to_catalog")}
+                Retour au catalogue
               </Link>
 
               <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">{category.name}</h1>
@@ -100,12 +98,14 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
               <div className="flex items-center gap-4 mb-8">
                 <Badge variant="outline" className="text-ekwip border-ekwip">
-                  {productCount}{" "}
-                  {productCount === 1 ? t("category.product_available") : t("category.products_available")}
+                  {productCount} {productCount === 1 ? "produit disponible" : "produits disponibles"}
                 </Badge>
               </div>
 
-              <p className="text-gray-600">{t("category.find_equipment")}</p>
+              <p className="text-gray-600">
+                Trouvez l'équipement parfait pour vos besoins professionnels dans notre sélection de{" "}
+                {category.name.toLowerCase()}
+              </p>
             </div>
 
             <div className="relative">
@@ -131,7 +131,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
-                placeholder={t("catalogue.search_placeholder")}
+                placeholder="Rechercher un produit..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="pl-10"
@@ -140,16 +140,16 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
             {/* Sort */}
             <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 whitespace-nowrap">{t("category.sort_by")}</span>
+              <span className="text-sm text-gray-600 whitespace-nowrap">Trier par</span>
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-48">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="popularity">{t("category.sort.popularity")}</SelectItem>
-                  <SelectItem value="price_asc">{t("category.sort.price_asc")}</SelectItem>
-                  <SelectItem value="price_desc">{t("category.sort.price_desc")}</SelectItem>
-                  <SelectItem value="newest">{t("category.sort.newest")}</SelectItem>
+                  <SelectItem value="popularity">Popularité</SelectItem>
+                  <SelectItem value="price_asc">Prix croissant</SelectItem>
+                  <SelectItem value="price_desc">Prix décroissant</SelectItem>
+                  <SelectItem value="newest">Nouveautés</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -172,8 +172,10 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <div className="mb-6">
                   <Filter className="h-16 w-16 text-gray-300 mx-auto" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">{t("category.no_products")}</h3>
-                <p className="text-gray-600 mb-6">{t("category.no_products_description")}</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Aucun produit trouvé</h3>
+                <p className="text-gray-600 mb-6">
+                  Essayez de modifier vos critères de recherche ou parcourez d'autres catégories
+                </p>
                 <Button onClick={() => setSearchQuery("")} variant="outline">
                   Réinitialiser les filtres
                 </Button>
@@ -188,9 +190,11 @@ export default function CategoryPage({ params }: CategoryPageProps) {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              {t("category.why_rent_title").replace("{category}", category.name.toLowerCase())}
+              Pourquoi louer vos {category.name.toLowerCase()} ?
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("category.why_rent_description")}</p>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Découvrez les avantages de la location d'équipements professionnels avec Ekwip
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -198,24 +202,26 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl">💰</span>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">{t("category.benefit1.title")}</h3>
-              <p className="text-gray-600">{t("category.benefit1.description")}</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Préservez votre trésorerie</h3>
+              <p className="text-gray-600">
+                Transformez vos dépenses d'investissement en coûts opérationnels prévisibles
+              </p>
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center shadow-md">
               <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl">🔄</span>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">{t("category.benefit2.title")}</h3>
-              <p className="text-gray-600">{t("category.benefit2.description")}</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Flexibilité maximale</h3>
+              <p className="text-gray-600">Adaptez votre parc d'équipements selon l'évolution de vos besoins</p>
             </div>
 
             <div className="bg-white rounded-2xl p-8 text-center shadow-md">
               <div className="h-16 w-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl">🛠️</span>
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">{t("category.benefit3.title")}</h3>
-              <p className="text-gray-600">{t("category.benefit3.description")}</p>
+              <h3 className="text-xl font-bold mb-3 text-gray-800">Maintenance incluse</h3>
+              <p className="text-gray-600">Bénéficiez d'un support technique complet et d'une maintenance préventive</p>
             </div>
           </div>
         </div>
@@ -224,14 +230,16 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       {/* CTA Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-ekwip text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("category.cta.title")}</h2>
-          <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">{t("category.cta.description")}</p>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Prêt à équiper votre entreprise ?</h2>
+          <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
+            Contactez nos experts pour obtenir un devis personnalisé et découvrir nos solutions de location flexibles
+          </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button size="lg" className="bg-white text-ekwip hover:bg-gray-100">
-              {t("category.cta.button1")}
+              Demander un devis
             </Button>
             <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 bg-transparent">
-              {t("category.cta.button2")}
+              Parler à un expert
             </Button>
           </div>
         </div>

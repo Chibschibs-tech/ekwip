@@ -1,133 +1,211 @@
 export interface Product {
   id: string
   name: string
-  category: string
-  price: number
-  duration: number
-  image: string
+  slug: string
   description: string
-  specifications: string[]
-  popular?: boolean
-  new?: boolean
+  price: number
+  basePrice: number
+  image: string
+  images?: string[]
+  brand: string
+  category: string
+  inStock: boolean
+  isNew?: boolean
+  isPopular?: boolean
+  isFeatured?: boolean
+  specifications?: Record<string, string>
+  variants?: Array<{
+    id: string
+    name: string
+    price: number
+  }>
+  configurations?: Array<{
+    id: string
+    name: string
+    price: number
+    firstMonthPrice: number
+    processor: string
+    memory: string
+    storage: string
+    graphics: string
+  }>
 }
 
 export interface Category {
-  id: string
+  id: number
   name: string
   slug: string
   description: string
-  image: string
-  productCount: number
+  count: number
+  parent: number
+  image?: string
 }
-
-export const categories: Category[] = [
-  {
-    id: "laptops",
-    name: "Ordinateurs portables",
-    slug: "ordinateurs-portables",
-    description: "Ordinateurs portables professionnels pour tous vos besoins",
-    image: "/images/macbook-pro.png",
-    productCount: 15,
-  },
-  {
-    id: "desktops",
-    name: "Ordinateurs de bureau",
-    slug: "ordinateurs-de-bureau",
-    description: "Stations de travail puissantes pour votre bureau",
-    image: "/images/imac.png",
-    productCount: 8,
-  },
-  {
-    id: "smartphones",
-    name: "Smartphones",
-    slug: "smartphones",
-    description: "Smartphones professionnels dernière génération",
-    image: "/images/iphone.png",
-    productCount: 12,
-  },
-  {
-    id: "tablets",
-    name: "Tablettes",
-    slug: "tablettes",
-    description: "Tablettes pour mobilité et productivité",
-    image: "/images/iphone.png",
-    productCount: 6,
-  },
-  {
-    id: "printers",
-    name: "Imprimantes",
-    slug: "imprimantes",
-    description: "Solutions d'impression professionnelles",
-    image: "/images/printer-hero.png",
-    productCount: 10,
-  },
-]
 
 export const products: Product[] = [
   {
-    id: "macbook-pro-14",
+    id: "1",
     name: 'MacBook Pro 14"',
-    category: "laptops",
-    price: 89,
-    duration: 24,
+    slug: "macbook-pro-14",
+    description: "Processeur M2 Pro, 16 Go RAM, 512 Go SSD",
+    price: 120,
+    basePrice: 120,
     image: "/images/macbook-pro.png",
-    description: "MacBook Pro 14 pouces avec puce M3 Pro",
-    specifications: ["Puce M3 Pro", "16 Go RAM", "512 Go SSD", "Écran Liquid Retina XDR"],
-    popular: true,
+    brand: "Apple",
+    category: "Ordinateurs portables",
+    inStock: true,
+    isPopular: true,
+    isFeatured: true,
+    specifications: {
+      Processeur: "Apple M2 Pro",
+      Mémoire: "16 Go RAM",
+      Stockage: "512 Go SSD",
+      Écran: "14 pouces Liquid Retina XDR",
+      Autonomie: "Jusqu'à 18 heures",
+    },
   },
   {
-    id: "dell-xps-13",
-    name: "Dell XPS 13",
-    category: "laptops",
-    price: 65,
-    duration: 24,
-    image: "/images/dell-xps.png",
-    description: "Ultrabook Dell XPS 13 haute performance",
-    specifications: ["Intel Core i7", "16 Go RAM", "512 Go SSD", 'Écran 13.3" 4K'],
-    new: true,
-  },
-  {
-    id: "imac-24",
-    name: 'iMac 24"',
-    category: "desktops",
+    id: "2",
+    name: "Dell XPS Desktop",
+    slug: "dell-xps-desktop",
+    description: "Intel i7, 32 Go RAM, 1 To SSD, RTX 3060",
     price: 95,
-    duration: 24,
-    image: "/images/imac.png",
-    description: "iMac 24 pouces avec puce M3",
-    specifications: ["Puce M3", "16 Go RAM", "512 Go SSD", "Écran Retina 4.5K"],
+    basePrice: 95,
+    image: "/images/dell-xps.png",
+    brand: "Dell",
+    category: "Ordinateurs de bureau",
+    inStock: true,
+    isNew: true,
+    specifications: {
+      Processeur: "Intel Core i7",
+      Mémoire: "32 Go RAM",
+      Stockage: "1 To SSD",
+      "Carte graphique": "NVIDIA RTX 3060",
+    },
   },
   {
-    id: "iphone-15-pro",
+    id: "3",
     name: "iPhone 15 Pro",
-    category: "smartphones",
+    slug: "iphone-15-pro",
+    description: "256 Go, forfait data 100 Go inclus",
     price: 45,
-    duration: 24,
+    basePrice: 45,
     image: "/images/iphone.png",
-    description: "iPhone 15 Pro avec puce A17 Pro",
-    specifications: ["Puce A17 Pro", "256 Go", "Caméra Pro", "Titane"],
-    popular: true,
+    brand: "Apple",
+    category: "Smartphones",
+    inStock: true,
+    isPopular: true,
+    specifications: {
+      Stockage: "256 Go",
+      Écran: "6.1 pouces Super Retina XDR",
+      Processeur: "A17 Pro",
+      Caméra: "48 Mpx",
+    },
+  },
+  {
+    id: "4",
+    name: "Dell Precision 5690",
+    slug: "dell-precision-5690",
+    description: "Station de travail mobile haute performance",
+    price: 180,
+    basePrice: 180,
+    image: "/images/dell-precision-5690-main.png",
+    images: [
+      "/images/dell-precision-5690-main.png",
+      "/images/dell-precision-5690-side.png",
+      "/images/dell-precision-5690-keyboard.png",
+      "/images/dell-precision-5690-ports.png",
+      "/images/dell-precision-5690-screen.png",
+    ],
+    brand: "Dell",
+    category: "Ordinateurs portables",
+    inStock: true,
+    isFeatured: true,
+    configurations: [
+      {
+        id: "config-1",
+        name: "Configuration Standard",
+        price: 180,
+        firstMonthPrice: 90,
+        processor: "Intel Core i7-13700H",
+        memory: "16 Go DDR5",
+        storage: "512 Go SSD NVMe",
+        graphics: "NVIDIA RTX A1000 6 Go",
+      },
+      {
+        id: "config-2",
+        name: "Configuration Performance",
+        price: 220,
+        firstMonthPrice: 110,
+        processor: "Intel Core i9-13900H",
+        memory: "32 Go DDR5",
+        storage: "1 To SSD NVMe",
+        graphics: "NVIDIA RTX A2000 8 Go",
+      },
+      {
+        id: "config-3",
+        name: "Configuration Premium",
+        price: 280,
+        firstMonthPrice: 140,
+        processor: "Intel Core i9-13900H",
+        memory: "64 Go DDR5",
+        storage: "2 To SSD NVMe",
+        graphics: "NVIDIA RTX A3000 12 Go",
+      },
+    ],
+  },
+]
+
+export const categories: Category[] = [
+  {
+    id: 1,
+    name: "Ordinateurs portables",
+    slug: "ordinateurs-portables",
+    description: "Ordinateurs portables professionnels pour tous vos besoins",
+    count: 10,
+    parent: 0,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
+  },
+  {
+    id: 2,
+    name: "Ordinateurs de bureau",
+    slug: "ordinateurs-de-bureau",
+    description: "Stations de travail performantes pour vos équipes",
+    count: 8,
+    parent: 0,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
+  },
+  {
+    id: 3,
+    name: "Smartphones",
+    slug: "smartphones",
+    description: "Smartphones professionnels pour vos équipes mobiles",
+    count: 6,
+    parent: 0,
+    image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/smartphone.webp",
   },
 ]
 
 export function formatPrice(price: number): string {
-  return `${price}€`
+  return `${price} DH`
+}
+
+export function getProductBySlug(slug: string): Product | undefined {
+  return products.find((product) => product.slug === slug)
 }
 
 export function getCategoryBySlug(slug: string): Category | undefined {
-  return categories.find((cat) => cat.slug === slug)
+  return categories.find((category) => category.slug === slug)
 }
 
-export function getProductsByCategory(categoryId: string): Product[] {
-  return products.filter((product) => product.category === categoryId)
+export function getProductsByCategory(categorySlug: string): Product[] {
+  const category = getCategoryBySlug(categorySlug)
+  if (!category) return []
+  return products.filter((product) => product.category === category.name)
 }
 
-export function getRelatedProducts(productId: string, limit = 4): Product[] {
+export function getRelatedProducts(productId: string): Product[] {
   const product = products.find((p) => p.id === productId)
   if (!product) return []
 
-  return products.filter((p) => p.id !== productId && p.category === product.category).slice(0, limit)
-}
-
-export function getPopularProducts(limit = 6): Product[] {
-  return products.filter((p) => p.popular).slice(0, limit)
+  return products.filter((p) => p.id !== productId && p.category === product.category).slice(0, 4)
 }

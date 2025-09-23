@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { ArrowLeft, Shield, Truck, Headphones, Wrench } from "lucide-react"
 import { getProductBySlug, getRelatedProducts } from "@/lib/products"
-import { useLanguage } from "@/contexts/language-context"
 import { useCart } from "@/contexts/cart-context"
 import { notFound } from "next/navigation"
 
@@ -19,7 +18,6 @@ interface ProductPageProps {
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const { t } = useLanguage()
   const { addToCart } = useCart()
   const product = getProductBySlug(params.slug)
   const [selectedImage, setSelectedImage] = useState(0)
@@ -186,15 +184,6 @@ export default function ProductPage({ params }: ProductPageProps) {
                     </div>
                   ))}
                 </div>
-              </div>
-            )}
-
-            {/* Standard Variants */}
-            {product.variants && (
-              <div className="space-y-4">
-                <h3 className="text-lg font-semibold">Options disponibles</h3>
-                {/* Placeholder for Select component */}
-                <div className="bg-gray-100 rounded-lg p-4">Select component goes here</div>
               </div>
             )}
 

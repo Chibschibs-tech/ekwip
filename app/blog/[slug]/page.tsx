@@ -6,10 +6,8 @@ import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { getBlogPosts, getBlogPostBySlug } from "@/lib/blog"
 import { ArrowLeft, Calendar, User, Tag } from "lucide-react"
-import { useLanguage } from "@/contexts/language-context"
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
-  const { t } = useLanguage()
   const post = getBlogPostBySlug(params.slug)
 
   if (!post) {
@@ -27,7 +25,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         <div className="max-w-4xl mx-auto">
           <Link href="/blog" className="inline-flex items-center text-ekwip hover:underline mb-6">
             <ArrowLeft className="h-4 w-4 mr-1" />
-            {t("blog.back_to_blog")}
+            Retour au blog
           </Link>
 
           <div className="mb-6">
@@ -49,9 +47,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
             </div>
             <div className="flex items-center">
               <Tag className="h-4 w-4 mr-1" />
-              <span>
-                {post.readingTime} {t("blog.reading_time")}
-              </span>
+              <span>{post.readingTime} min de lecture</span>
             </div>
           </div>
         </div>
@@ -90,7 +86,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
               </div>
               <div>
                 <h3 className="text-lg font-bold text-gray-800">{post.author}</h3>
-                <p className="text-gray-600">{t("blog.author_bio")}</p>
+                <p className="text-gray-600">Expert en gestion d'équipements professionnels</p>
               </div>
             </div>
           </div>
@@ -101,7 +97,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
       {relatedPosts.length > 0 && (
         <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gray-50">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">{t("blog.similar_articles")}</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8">Articles similaires</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {relatedPosts.map((relatedPost) => (
                 <Link key={relatedPost.slug} href={`/blog/${relatedPost.slug}`}>
@@ -134,12 +130,15 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
 
       {/* CTA Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-5xl mx-auto bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-8 md:p-12 text-center shadow-xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("blog.cta_title")}</h2>
-          <p className="text-white text-lg max-w-2xl mx-auto mb-8 opacity-90">{t("blog.cta_description")}</p>
+        <div className="max-w-5xl mx-auto bg-gradient-to-r from-ekwip to-ekwip-600 rounded-3xl p-8 md:p-12 text-center shadow-xl">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Besoin d'aide pour vos équipements ?</h2>
+          <p className="text-white text-lg max-w-2xl mx-auto mb-8 opacity-90">
+            Contactez nos experts pour obtenir des conseils personnalisés sur la gestion de vos équipements
+            professionnels
+          </p>
           <Link href="/contact">
-            <Button size="xl" className="bg-white text-blue-600 hover:bg-gray-100 shadow-lg">
-              {t("blog.cta_button")}
+            <Button size="lg" className="bg-white text-ekwip hover:bg-gray-100 shadow-lg">
+              Nous contacter
             </Button>
           </Link>
         </div>

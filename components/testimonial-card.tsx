@@ -1,40 +1,58 @@
+import Image from "next/image"
 import { Card, CardContent } from "@/components/ui/card"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star } from "lucide-react"
 
 interface TestimonialCardProps {
-  name: string
-  company: string
-  content: string
-  avatar?: string
-  rating?: number
+  testimonial: {
+    id: string
+    name: string
+    company: string
+    role: string
+    content: string
+    rating: number
+    avatar?: string
+  }
 }
 
-export function TestimonialCard({ name, company, content, avatar, rating = 5 }: TestimonialCardProps) {
+export function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
-    <Card className="h-full">
+    <Card className="h-full border border-gray-200 hover:shadow-lg transition-all duration-300">
       <CardContent className="p-6">
-        <div className="flex items-center mb-4">
-          {[...Array(rating)].map((_, i) => (
-            <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+        {/* Rating Stars */}
+        <div className="flex items-center gap-1 mb-4">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <Star
+              key={index}
+              className={`h-4 w-4 ${index < testimonial.rating ? "text-yellow-400 fill-current" : "text-gray-300"}`}
+            />
           ))}
         </div>
 
-        <blockquote className="text-gray-700 mb-4 italic">"{content}"</blockquote>
+        {/* Testimonial Content */}
+        <blockquote className="text-gray-700 mb-6 italic">"{testimonial.content}"</blockquote>
 
-        <div className="flex items-center">
-          <Avatar className="h-10 w-10 mr-3">
-            <AvatarImage src={avatar || "/placeholder.svg"} alt={name} />
-            <AvatarFallback>
-              {name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
+        {/* Author Info */}
+        <div className="flex items-center gap-3">
+          <div className="relative w-12 h-12 rounded-full overflow-hidden bg-gray-200">
+            {testimonial.avatar ? (
+              <Image
+                src={testimonial.avatar || "/placeholder.svg"}
+                alt={testimonial.name}
+                fill
+                className="object-cover"
+              />
+            ) : (
+              <div className="w-full h-full bg-ekwip-100 flex items-center justify-center">
+                <span className="text-ekwip font-semibold text-lg">{testimonial.name.charAt(0)}</span>
+              </div>
+            )}
+          </div>
+
           <div>
-            <div className="font-semibold text-sm">{name}</div>
-            <div className="text-gray-500 text-xs">{company}</div>
+            <p className="font-semibold text-gray-900">{testimonial.name}</p>
+            <p className="text-sm text-gray-600">
+              {testimonial.role} • {testimonial.company}
+            </p>
           </div>
         </div>
       </CardContent>
