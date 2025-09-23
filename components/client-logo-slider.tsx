@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useState } from "react"
 
 const clientLogos = [
   { name: "Client 1", logo: "/images/client-logo-1.png" },
@@ -12,29 +11,27 @@ const clientLogos = [
   { name: "Client 6", logo: "/images/client-logo-6.png" },
 ]
 
-export default function ClientLogoSlider() {
-  const [currentIndex, setCurrentIndex] = useState(0)
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % clientLogos.length)
-    }, 3000)
-
-    return () => clearInterval(timer)
-  }, [])
-
+export function ClientLogoSlider() {
   return (
-    <div className="relative overflow-hidden">
-      <div className="flex space-x-12 animate-slide">
+    <div className="overflow-hidden">
+      <div className="flex animate-scroll space-x-8 lg:space-x-12">
         {[...clientLogos, ...clientLogos].map((client, index) => (
           <div
             key={index}
-            className="flex-shrink-0 w-32 h-16 relative grayscale hover:grayscale-0 transition-all duration-300"
+            className="flex-shrink-0 w-32 h-16 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300"
           >
-            <Image src={client.logo || "/placeholder.svg"} alt={client.name} fill className="object-contain" />
+            <Image
+              src={client.logo || "/placeholder.svg"}
+              alt={client.name}
+              width={120}
+              height={60}
+              className="max-w-full max-h-full object-contain"
+            />
           </div>
         ))}
       </div>
     </div>
   )
 }
+
+export default ClientLogoSlider

@@ -4,35 +4,14 @@ import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Globe } from "lucide-react"
-import { useLanguage } from "@/contexts/language-context"
+import { Menu, X } from "lucide-react"
 import NeedsListIcon from "@/components/cart/cart-icon"
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
-  const [showLanguages, setShowLanguages] = useState(false)
-  const { language, setLanguage, t } = useLanguage()
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
-
-  const handleLanguageChange = (lang: "fr" | "en" | "es") => {
-    setLanguage(lang)
-    setShowLanguages(false)
-  }
-
-  const getLanguageFlag = (lang: string) => {
-    switch (lang) {
-      case "fr":
-        return "🇫🇷"
-      case "en":
-        return "🇬🇧"
-      case "es":
-        return "🇪🇸"
-      default:
-        return "🇫🇷"
-    }
-  }
 
   return (
     <nav className="bg-white shadow-sm border-b border-gray-100 sticky top-0 z-50">
@@ -59,82 +38,39 @@ export default function Navbar() {
                 href="/comment-ca-marche"
                 className="text-gray-700 hover:text-ekwip px-3 py-2 text-sm font-medium transition-colors"
               >
-                {t("nav.how_it_works")}
+                Comment ça marche
               </Link>
               <Link
                 href="/catalogue"
                 className="text-gray-700 hover:text-ekwip px-3 py-2 text-sm font-medium transition-colors"
               >
-                {t("nav.catalog")}
+                Catalogue
               </Link>
               <Link
                 href="/blog"
                 className="text-gray-700 hover:text-ekwip px-3 py-2 text-sm font-medium transition-colors"
               >
-                {t("nav.blog")}
+                Blog
               </Link>
               <Link
                 href="/contact"
                 className="text-gray-700 hover:text-ekwip px-3 py-2 text-sm font-medium transition-colors"
               >
-                {t("nav.contact")}
+                Contact
               </Link>
             </div>
           </div>
 
-          {/* Language Switcher & CTA */}
+          {/* CTA */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Needs List Icon */}
             <NeedsListIcon />
 
-            {/* Language Switcher */}
-            <div className="relative">
-              <button
-                onClick={() => setShowLanguages(!showLanguages)}
-                className="flex items-center space-x-1 text-gray-700 hover:text-ekwip px-2 py-1 rounded-md transition-colors"
-              >
-                <Globe className="h-4 w-4" />
-                <span className="text-sm">{getLanguageFlag(language)}</span>
-              </button>
-
-              {showLanguages && (
-                <div className="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg border border-gray-200 py-1 z-50">
-                  <button
-                    onClick={() => handleLanguageChange("fr")}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center space-x-2 ${
-                      language === "fr" ? "bg-blue-50 text-ekwip" : "text-gray-700"
-                    }`}
-                  >
-                    <span>🇫🇷</span>
-                    <span>Français</span>
-                  </button>
-                  <button
-                    onClick={() => handleLanguageChange("en")}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center space-x-2 ${
-                      language === "en" ? "bg-blue-50 text-ekwip" : "text-gray-700"
-                    }`}
-                  >
-                    <span>🇬🇧</span>
-                    <span>English</span>
-                  </button>
-                  <button
-                    onClick={() => handleLanguageChange("es")}
-                    className={`w-full text-left px-3 py-2 text-sm hover:bg-gray-50 flex items-center space-x-2 ${
-                      language === "es" ? "bg-blue-50 text-ekwip" : "text-gray-700"
-                    }`}
-                  >
-                    <span>🇪🇸</span>
-                    <span>Español</span>
-                  </button>
-                </div>
-              )}
-            </div>
-
             <Link href="/portail-client">
               <Button variant="gradient" size="sm" className="relative group">
-                {t("nav.customer_portal")}
+                Portail Client
                 <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  {t("nav.customer_portal_description")}
+                  Accédez à votre espace client
                 </div>
               </Button>
             </Link>
@@ -158,28 +94,28 @@ export default function Navbar() {
               className="text-gray-700 hover:text-ekwip block px-3 py-2 text-base font-medium transition-colors"
               onClick={closeMenu}
             >
-              {t("nav.how_it_works")}
+              Comment ça marche
             </Link>
             <Link
               href="/catalogue"
               className="text-gray-700 hover:text-ekwip block px-3 py-2 text-base font-medium transition-colors"
               onClick={closeMenu}
             >
-              {t("nav.catalog")}
+              Catalogue
             </Link>
             <Link
               href="/blog"
               className="text-gray-700 hover:text-ekwip block px-3 py-2 text-base font-medium transition-colors"
               onClick={closeMenu}
             >
-              {t("nav.blog")}
+              Blog
             </Link>
             <Link
               href="/contact"
               className="text-gray-700 hover:text-ekwip block px-3 py-2 text-base font-medium transition-colors"
               onClick={closeMenu}
             >
-              {t("nav.contact")}
+              Contact
             </Link>
 
             {/* Mobile Needs List */}
@@ -187,44 +123,10 @@ export default function Navbar() {
               <NeedsListIcon />
             </div>
 
-            {/* Mobile Language Switcher */}
-            <div className="px-3 py-2">
-              <div className="text-sm font-medium text-gray-700 mb-2">Language</div>
-              <div className="space-y-1">
-                <button
-                  onClick={() => handleLanguageChange("fr")}
-                  className={`w-full text-left px-2 py-1 text-sm rounded flex items-center space-x-2 ${
-                    language === "fr" ? "bg-blue-50 text-ekwip" : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  <span>🇫🇷</span>
-                  <span>Français</span>
-                </button>
-                <button
-                  onClick={() => handleLanguageChange("en")}
-                  className={`w-full text-left px-2 py-1 text-sm rounded flex items-center space-x-2 ${
-                    language === "en" ? "bg-blue-50 text-ekwip" : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  <span>🇬🇧</span>
-                  <span>English</span>
-                </button>
-                <button
-                  onClick={() => handleLanguageChange("es")}
-                  className={`w-full text-left px-2 py-1 text-sm rounded flex items-center space-x-2 ${
-                    language === "es" ? "bg-blue-50 text-ekwip" : "text-gray-600 hover:bg-gray-50"
-                  }`}
-                >
-                  <span>🇪🇸</span>
-                  <span>Español</span>
-                </button>
-              </div>
-            </div>
-
             <div className="px-3 py-2">
               <Link href="/portail-client" onClick={closeMenu}>
                 <Button variant="gradient" size="sm" className="w-full">
-                  {t("nav.customer_portal")}
+                  Portail Client
                 </Button>
               </Link>
             </div>

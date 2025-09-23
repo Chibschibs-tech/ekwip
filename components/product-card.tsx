@@ -1,9 +1,8 @@
 import Image from "next/image"
-import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import type { Product } from "@/types/product"
+import { formatPrice, type Product } from "@/lib/products"
 
 interface ProductCardProps {
   product: Product
@@ -11,39 +10,33 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+    <Card className="group hover:shadow-lg transition-shadow duration-300">
       <CardContent className="p-0">
-        <div className="relative aspect-square overflow-hidden rounded-t-lg">
+        <div className="relative">
           <Image
             src={product.image || "/placeholder.svg"}
             alt={product.name}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            width={300}
+            height={200}
+            className="w-full h-48 object-cover rounded-t-lg"
           />
-          {product.popular && (
-            <Badge className="absolute top-3 left-3 bg-orange-500 hover:bg-orange-600">Populaire</Badge>
-          )}
-          {product.new && <Badge className="absolute top-3 left-3 bg-green-500 hover:bg-green-600">Nouveau</Badge>}
+          {product.popular && <Badge className="absolute top-2 left-2 bg-ekwip text-white">Populaire</Badge>}
+          {product.new && <Badge className="absolute top-2 left-2 bg-green-600 text-white">Nouveau</Badge>}
         </div>
-        <div className="p-6 space-y-4">
-          <div>
-            <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#1f3b57] transition-colors">
-              {product.name}
-            </h3>
-            <p className="text-gray-600 text-sm mt-1">{product.description}</p>
-          </div>
-          <div className="flex items-center justify-between">
+
+        <div className="p-4">
+          <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+          <p className="text-gray-600 text-sm mb-3">{product.description}</p>
+
+          <div className="flex items-center justify-between mb-3">
             <div>
-              <span className="text-2xl font-bold text-[#1f3b57]">{product.price}€</span>
+              <span className="text-2xl font-bold text-ekwip">{formatPrice(product.price)}</span>
               <span className="text-gray-500 text-sm">/mois</span>
-              <div className="text-xs text-gray-500">({product.duration} mois)</div>
             </div>
-            <Link href={`/catalogue/product/${product.slug}`}>
-              <Button size="sm" className="bg-[#1f3b57] hover:bg-[#1f3b57]/90">
-                Voir détails
-              </Button>
-            </Link>
+            <span className="text-sm text-gray-500">({product.duration} mois)</span>
           </div>
+
+          <Button className="w-full bg-ekwip hover:bg-ekwip/90">Demander un devis</Button>
         </div>
       </CardContent>
     </Card>

@@ -1,5 +1,3 @@
-"use client"
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
 const faqs = [
@@ -15,20 +13,32 @@ const faqs = [
     question: "Puis-je acheter l'équipement en fin de contrat ?",
     answer: "Oui, vous avez la possibilité d'acquérir l'équipement à sa valeur résiduelle en fin de contrat.",
   },
+  {
+    question: "Le support technique est-il inclus ?",
+    answer: "Oui, le support technique est inclus dans tous nos contrats de location.",
+  },
 ]
 
-export default function FAQSection() {
+export function FAQSection() {
   return (
-    <div className="space-y-6">
-      <h3 className="text-2xl font-bold text-gray-900">Questions fréquentes</h3>
-      <Accordion type="single" collapsible className="w-full">
-        {faqs.map((faq, index) => (
-          <AccordionItem key={index} value={`item-${index}`}>
-            <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-            <AccordionContent>{faq.answer}</AccordionContent>
-          </AccordionItem>
-        ))}
-      </Accordion>
-    </div>
+    <section className="py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Questions fréquentes</h2>
+          <p className="text-xl text-gray-600">Trouvez les réponses aux questions les plus courantes</p>
+        </div>
+
+        <Accordion type="single" collapsible className="w-full">
+          {faqs.map((faq, index) => (
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
+              <AccordionContent>{faq.answer}</AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </section>
   )
 }
+
+export default FAQSection
