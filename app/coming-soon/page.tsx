@@ -10,10 +10,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Mail, Phone, Clock, MapPin } from "lucide-react"
-import { useLanguage } from "@/contexts/language-context"
 
 export default function ComingSoon() {
-  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: "",
     company: "",
@@ -55,7 +53,7 @@ export default function ComingSoon() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-ekwip-50 via-white to-ekwip-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       {/* Header */}
       <header className="py-6 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex justify-center">
@@ -90,7 +88,7 @@ export default function ComingSoon() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <Card className="shadow-xl border-ekwip-200">
+              <Card className="shadow-xl border-slate-200">
                 <CardHeader>
                   <CardTitle className="text-2xl text-gray-800">Restez informé</CardTitle>
                   <p className="text-gray-600">
@@ -125,7 +123,7 @@ export default function ComingSoon() {
                           required
                           value={formData.name}
                           onChange={handleChange}
-                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
+                          className="border-slate-200 focus:border-[#1f3b57] focus:ring-[#1f3b57]"
                         />
                       </div>
 
@@ -140,7 +138,7 @@ export default function ComingSoon() {
                           required
                           value={formData.company}
                           onChange={handleChange}
-                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
+                          className="border-slate-200 focus:border-[#1f3b57] focus:ring-[#1f3b57]"
                         />
                       </div>
 
@@ -155,7 +153,7 @@ export default function ComingSoon() {
                           required
                           value={formData.email}
                           onChange={handleChange}
-                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
+                          className="border-slate-200 focus:border-[#1f3b57] focus:ring-[#1f3b57]"
                         />
                       </div>
 
@@ -170,14 +168,14 @@ export default function ComingSoon() {
                           value={formData.message}
                           onChange={handleChange}
                           placeholder="Parlez-nous de vos besoins en équipements informatiques..."
-                          className="border-ekwip-200 focus:border-ekwip focus:ring-ekwip"
+                          className="border-slate-200 focus:border-[#1f3b57] focus:ring-[#1f3b57]"
                         />
                       </div>
 
                       <Button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full bg-ekwip hover:bg-ekwip-600 text-white"
+                        className="w-full bg-[#1f3b57] hover:bg-[#1a3249] text-white"
                         size="lg"
                       >
                         {isSubmitting ? "Envoi en cours..." : "Envoyer"}
@@ -201,8 +199,8 @@ export default function ComingSoon() {
 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
-                      <Phone className="w-6 h-6 text-ekwip" />
+                    <div className="flex-shrink-0 w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                      <Phone className="w-6 h-6 text-[#1f3b57]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Téléphone</h3>
@@ -211,8 +209,8 @@ export default function ComingSoon() {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-ekwip" />
+                    <div className="flex-shrink-0 w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                      <Mail className="w-6 h-6 text-[#1f3b57]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Email</h3>
@@ -221,8 +219,8 @@ export default function ComingSoon() {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
-                      <MapPin className="w-6 h-6 text-ekwip" />
+                    <div className="flex-shrink-0 w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                      <MapPin className="w-6 h-6 text-[#1f3b57]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Adresse</h3>
@@ -235,8 +233,8 @@ export default function ComingSoon() {
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-12 h-12 bg-ekwip-100 rounded-lg flex items-center justify-center">
-                      <Clock className="w-6 h-6 text-ekwip" />
+                    <div className="flex-shrink-0 w-12 h-12 bg-slate-100 rounded-lg flex items-center justify-center">
+                      <Clock className="w-6 h-6 text-[#1f3b57]" />
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-800">Horaires</h3>
@@ -251,7 +249,7 @@ export default function ComingSoon() {
               </div>
 
               {/* Services Preview */}
-              <Card className="border-ekwip-200">
+              <Card className="border-slate-200">
                 <CardContent className="p-6">
                   <h3 className="font-semibold text-gray-800 mb-4">Nos services</h3>
                   <ul className="space-y-2 text-sm text-gray-600">
@@ -272,7 +270,7 @@ export default function ComingSoon() {
       {/* Footer */}
       <footer className="py-8 px-4 md:px-6 lg:px-8 border-t border-gray-200">
         <div className="max-w-7xl mx-auto text-center text-gray-500">
-          <p>&copy; 2024 Ekwip. Tous droits réservés.</p>
+          <p>&copy; 2025 Ekwip. Tous droits réservés.</p>
         </div>
       </footer>
     </div>

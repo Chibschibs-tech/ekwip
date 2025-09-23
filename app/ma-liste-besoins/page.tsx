@@ -4,7 +4,6 @@ import type React from "react"
 
 import { useState } from "react"
 import { useNeedsList } from "@/contexts/cart-context"
-import { useLanguage } from "@/contexts/language-context"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -16,7 +15,6 @@ import Image from "next/image"
 
 export default function NeedsListPage() {
   const { items, removeFromNeedsList, updateQuantity, updateDuration, clearNeedsList, getTotalPrice } = useNeedsList()
-  const { t } = useLanguage()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [formData, setFormData] = useState({
@@ -56,10 +54,12 @@ export default function NeedsListPage() {
         <div className="max-w-2xl mx-auto px-4 text-center">
           <div className="bg-white rounded-lg shadow-sm p-8">
             <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">{t("needs_list.request_sent")}</h1>
-            <p className="text-gray-600 mb-6">{t("needs_list.request_sent_description")}</p>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">Demande envoyée avec succès !</h1>
+            <p className="text-gray-600 mb-6">
+              Nous avons bien reçu votre demande de devis. Notre équipe vous contactera dans les plus brefs délais.
+            </p>
             <Link href="/catalogue">
-              <Button>{t("needs_list.browse_more")}</Button>
+              <Button>Parcourir plus d'équipements</Button>
             </Link>
           </div>
         </div>
@@ -72,13 +72,13 @@ export default function NeedsListPage() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
-          <Link href="/catalogue" className="inline-flex items-center text-ekwip hover:text-ekwip-dark mb-4">
+          <Link href="/catalogue" className="inline-flex items-center text-[#1f3b57] hover:text-[#1a3249] mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Retour au catalogue
           </Link>
 
           <div className="flex items-center mb-2">
-            <ClipboardList className="h-8 w-8 text-ekwip mr-3" />
+            <ClipboardList className="h-8 w-8 text-[#1f3b57] mr-3" />
             <h1 className="text-3xl font-bold text-gray-900">Ma liste d'équipements</h1>
           </div>
           <p className="text-gray-600">Sélectionnez vos équipements et demandez un devis personnalisé</p>
@@ -91,7 +91,7 @@ export default function NeedsListPage() {
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Votre liste est vide</h2>
             <p className="text-gray-600 mb-6">Parcourez notre catalogue et ajoutez des équipements à votre liste</p>
             <Link href="/catalogue">
-              <Button size="lg">{t("needs_list.browse_catalog")}</Button>
+              <Button size="lg">Parcourir le catalogue</Button>
             </Link>
           </div>
         ) : (
@@ -102,13 +102,13 @@ export default function NeedsListPage() {
                 <CardHeader className="flex flex-row items-center justify-between">
                   <CardTitle className="flex items-center">
                     <ClipboardList className="h-5 w-5 mr-2" />
-                    {t("needs_list.selected_equipment")} ({items.length})
+                    Équipements sélectionnés ({items.length})
                   </CardTitle>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={clearNeedsList}
-                    className="text-red-600 hover:text-red-700"
+                    className="text-red-600 hover:text-red-700 bg-transparent"
                   >
                     <Trash2 className="h-4 w-4 mr-2" />
                     Vider la liste
@@ -130,15 +130,13 @@ export default function NeedsListPage() {
                         <p className="text-sm text-gray-600">
                           {item.brand} • {item.category}
                         </p>
-                        <p className="text-sm font-medium text-ekwip">
-                          {item.price}€ {t("common.per_month")}
-                        </p>
+                        <p className="text-sm font-medium text-[#1f3b57]">{item.price}€ par mois</p>
                       </div>
 
                       <div className="flex items-center space-x-4">
                         {/* Quantity */}
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">{t("needs_list.quantity")}:</span>
+                          <span className="text-sm text-gray-600">Quantité:</span>
                           <div className="flex items-center border rounded">
                             <Button
                               variant="ghost"
@@ -162,7 +160,7 @@ export default function NeedsListPage() {
 
                         {/* Duration */}
                         <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">{t("needs_list.duration")}:</span>
+                          <span className="text-sm text-gray-600">Durée:</span>
                           <select
                             value={item.duration}
                             onChange={(e) => updateDuration(item.id, Number.parseInt(e.target.value))}
@@ -170,8 +168,7 @@ export default function NeedsListPage() {
                           >
                             {[6, 12, 18, 24, 36].map((months) => (
                               <option key={months} value={months}>
-                                {months} {t("common.month")}
-                                {months > 1 ? "s" : ""}
+                                {months} mois
                               </option>
                             ))}
                           </select>
@@ -196,11 +193,9 @@ export default function NeedsListPage() {
             <div className="lg:col-span-1">
               <Card className="sticky top-8">
                 <CardHeader>
-                  <CardTitle>{t("needs_list.quote_form_title")}</CardTitle>
-                  <div className="text-2xl font-bold text-ekwip">
-                    {t("needs_list.total_estimate")}: {getTotalPrice()}€/mois
-                  </div>
-                  <p className="text-xs text-gray-500">{t("needs_list.estimate_note")}</p>
+                  <CardTitle>Demander un devis</CardTitle>
+                  <div className="text-2xl font-bold text-[#1f3b57]">Estimation totale: {getTotalPrice()}€/mois</div>
+                  <p className="text-xs text-gray-500">Prix indicatif, devis personnalisé sur demande</p>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-4">
@@ -238,7 +233,7 @@ export default function NeedsListPage() {
                     <div>
                       <Textarea
                         name="message"
-                        placeholder={t("needs_list.message_placeholder")}
+                        placeholder="Décrivez vos besoins spécifiques ou posez vos questions..."
                         value={formData.message}
                         onChange={handleInputChange}
                         rows={4}
@@ -247,16 +242,21 @@ export default function NeedsListPage() {
 
                     <Separator />
 
-                    <Button type="submit" className="w-full" size="lg" disabled={isSubmitting}>
+                    <Button
+                      type="submit"
+                      className="w-full bg-[#1f3b57] hover:bg-[#1a3249]"
+                      size="lg"
+                      disabled={isSubmitting}
+                    >
                       {isSubmitting ? (
                         <>
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          {t("needs_list.sending_request")}
+                          Envoi en cours...
                         </>
                       ) : (
                         <>
                           <Send className="h-4 w-4 mr-2" />
-                          {t("needs_list.send_request")}
+                          Envoyer la demande
                         </>
                       )}
                     </Button>

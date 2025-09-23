@@ -8,10 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react"
-import { useLanguage } from "@/contexts/language-context"
 
 export default function Contact() {
-  const { t } = useLanguage()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -57,10 +55,12 @@ export default function Contact() {
   return (
     <div>
       {/* Hero Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-ekwip-50 to-ekwip-100">
+      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-slate-100">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">{t("contact.title")}</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("contact.description")}</p>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Contactez-nous</h1>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Notre équipe est là pour répondre à toutes vos questions et vous accompagner dans vos projets
+          </p>
         </div>
       </section>
 
@@ -69,15 +69,18 @@ export default function Contact() {
         <div className="max-w-7xl mx-auto">
           <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="p-8 md:p-12 bg-gradient-to-br from-ekwip to-ekwip-700 text-white">
-                <h2 className="text-2xl md:text-3xl font-bold mb-6">{t("contact.info.title")}</h2>
-                <p className="mb-8 opacity-90">{t("contact.info.description")}</p>
+              <div className="p-8 md:p-12 bg-gradient-to-br from-[#1f3b57] to-[#1a3249] text-white">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6">Informations de contact</h2>
+                <p className="mb-8 opacity-90">
+                  Nous sommes là pour vous aider à trouver les meilleures solutions pour vos besoins en équipement
+                  informatique
+                </p>
 
                 <div className="space-y-6">
                   <div className="flex items-start">
                     <MapPin className="h-6 w-6 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-1">{t("contact.info.address")}</h3>
+                      <h3 className="font-bold text-lg mb-1">Adresse</h3>
                       <p className="opacity-90">
                         123 Avenue Mohammed V<br />
                         Casablanca, 20000
@@ -90,7 +93,7 @@ export default function Contact() {
                   <div className="flex items-start">
                     <Phone className="h-6 w-6 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-1">{t("contact.info.phone")}</h3>
+                      <h3 className="font-bold text-lg mb-1">Téléphone</h3>
                       <p className="opacity-90">
                         +212 522 123 456
                         <br />
@@ -102,7 +105,7 @@ export default function Contact() {
                   <div className="flex items-start">
                     <Mail className="h-6 w-6 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-1">{t("contact.info.email")}</h3>
+                      <h3 className="font-bold text-lg mb-1">Email</h3>
                       <p className="opacity-90">
                         contact@ekwip.ma
                         <br />
@@ -114,7 +117,7 @@ export default function Contact() {
                   <div className="flex items-start">
                     <Clock className="h-6 w-6 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-1">{t("contact.info.hours")}</h3>
+                      <h3 className="font-bold text-lg mb-1">Horaires d'ouverture</h3>
                       <p className="opacity-90">
                         Lundi - Vendredi: 9h00 - 18h00
                         <br />
@@ -128,15 +131,17 @@ export default function Contact() {
               </div>
 
               <div className="p-8 md:p-12">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">{t("contact.form.title")}</h2>
-                <p className="text-gray-600 mb-8">{t("contact.form.description")}</p>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Envoyez-nous un message</h2>
+                <p className="text-gray-600 mb-8">
+                  Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais
+                </p>
 
                 {isSubmitted ? (
                   <div className="bg-green-50 border border-green-200 rounded-xl p-6 flex items-center">
                     <CheckCircle className="h-8 w-8 text-green-500 mr-4" />
                     <div>
-                      <h3 className="font-bold text-green-800 text-lg">{t("contact.form.success")}</h3>
-                      <p className="text-green-700">{t("contact.form.success_description")}</p>
+                      <h3 className="font-bold text-green-800 text-lg">Message envoyé avec succès !</h3>
+                      <p className="text-green-700">Nous vous répondrons dans les plus brefs délais.</p>
                     </div>
                   </div>
                 ) : (
@@ -144,12 +149,12 @@ export default function Contact() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="name" className="text-gray-700">
-                          {t("contact.form.name")}
+                          Nom complet
                         </Label>
                         <Input
                           id="name"
                           name="name"
-                          placeholder={t("contact.form.name")}
+                          placeholder="Votre nom complet"
                           required
                           value={formData.name}
                           onChange={handleChange}
@@ -158,7 +163,7 @@ export default function Contact() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="email" className="text-gray-700">
-                          {t("contact.form.email")}
+                          Email
                         </Label>
                         <Input
                           id="email"
@@ -176,12 +181,12 @@ export default function Contact() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="phone" className="text-gray-700">
-                          {t("contact.form.phone")}
+                          Téléphone
                         </Label>
                         <Input
                           id="phone"
                           name="phone"
-                          placeholder={t("contact.form.phone")}
+                          placeholder="Votre numéro de téléphone"
                           value={formData.phone}
                           onChange={handleChange}
                           className="rounded-xl"
@@ -189,12 +194,12 @@ export default function Contact() {
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor="company" className="text-gray-700">
-                          {t("contact.form.company")}
+                          Entreprise
                         </Label>
                         <Input
                           id="company"
                           name="company"
-                          placeholder={t("contact.form.company")}
+                          placeholder="Nom de votre entreprise"
                           value={formData.company}
                           onChange={handleChange}
                           className="rounded-xl"
@@ -204,7 +209,7 @@ export default function Contact() {
 
                     <div className="space-y-2">
                       <Label htmlFor="message" className="text-gray-700">
-                        {t("contact.form.message")}
+                        Message
                       </Label>
                       <Textarea
                         id="message"
@@ -218,7 +223,12 @@ export default function Contact() {
                       />
                     </div>
 
-                    <Button type="submit" variant="gradient" size="lg" className="w-full" disabled={isSubmitting}>
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full bg-[#1f3b57] hover:bg-[#1a3249]"
+                      disabled={isSubmitting}
+                    >
                       {isSubmitting ? (
                         <span className="flex items-center">
                           <svg
@@ -241,11 +251,11 @@ export default function Contact() {
                               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                             ></path>
                           </svg>
-                          {t("contact.form.submitting")}
+                          Envoi en cours...
                         </span>
                       ) : (
                         <span className="flex items-center">
-                          {t("contact.form.submit")} <Send className="ml-2 h-5 w-5" />
+                          Envoyer le message <Send className="ml-2 h-5 w-5" />
                         </span>
                       )}
                     </Button>
@@ -261,8 +271,10 @@ export default function Contact() {
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">{t("contact.map.title")}</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t("contact.map.description")}</p>
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Notre localisation</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Venez nous rendre visite dans nos bureaux au cœur de Casablanca
+            </p>
           </div>
 
           <div className="bg-white h-96 rounded-3xl shadow-md flex items-center justify-center">

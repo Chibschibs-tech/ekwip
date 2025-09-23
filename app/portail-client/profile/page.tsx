@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useLanguage } from "@/contexts/language-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -13,7 +12,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Camera } from "lucide-react"
 
 export default function ProfilePage() {
-  const { t } = useLanguage()
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -42,7 +40,7 @@ export default function ProfilePage() {
                   <AvatarImage src="/images/placeholder.svg?height=96&width=96" alt="John Doe" />
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
-                <button className="absolute bottom-0 right-0 rounded-full bg-ekwip p-1.5 text-white shadow-sm">
+                <button className="absolute bottom-0 right-0 rounded-full bg-[#1f3b57] p-1.5 text-white shadow-sm">
                   <Camera className="h-4 w-4" />
                 </button>
               </div>
@@ -101,7 +99,7 @@ export default function ProfilePage() {
                 </div>
               </div>
               <div className="flex justify-end">
-                <Button type="submit" disabled={loading}>
+                <Button type="submit" disabled={loading} className="bg-[#1f3b57] hover:bg-[#1a3249]">
                   {loading ? "Enregistrement..." : "Enregistrer les modifications"}
                 </Button>
               </div>
