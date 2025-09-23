@@ -1,18 +1,21 @@
 export interface Product {
   id: string
   name: string
-  description: string
-  price: number
-  image: string
+  slug: string
   category: string
-  specifications?: Record<string, string>
-  monthlyPrice?: number
-  duration?: string
+  price: number
+  duration: number
+  image: string
+  description: string
+  specifications: string[]
+  popular?: boolean
+  new?: boolean
 }
 
 export interface Category {
   id: string
   name: string
+  slug: string
   description: string
   image: string
   productCount: number
@@ -20,32 +23,52 @@ export interface Category {
 
 export const categories: Category[] = [
   {
-    id: "ordinateurs-portables",
+    id: "laptops",
     name: "Ordinateurs portables",
-    description: "MacBook, ThinkPad, et autres ordinateurs portables professionnels",
-    image: "/images/macbook-pro.png",
-    productCount: 15,
+    slug: "ordinateurs-portables",
+    description: "Ordinateurs portables professionnels pour tous vos besoins",
+    image: "/images/laptop-hero.png",
+    productCount: 25,
   },
   {
-    id: "ordinateurs-bureau",
+    id: "desktops",
     name: "Ordinateurs de bureau",
-    description: "iMac, PC de bureau et stations de travail",
+    slug: "ordinateurs-de-bureau",
+    description: "Stations de travail puissantes pour votre bureau",
     image: "/images/imac.png",
-    productCount: 8,
+    productCount: 18,
   },
   {
-    id: "smartphones-tablettes",
-    name: "Smartphones & Tablettes",
-    description: "iPhone, iPad, Samsung Galaxy et autres appareils mobiles",
+    id: "smartphones",
+    name: "Smartphones",
+    slug: "smartphones",
+    description: "Smartphones professionnels dernière génération",
     image: "/images/iphone.png",
     productCount: 12,
   },
   {
-    id: "imprimantes-scanners",
-    name: "Imprimantes & Scanners",
-    description: "Imprimantes laser, jet d'encre et scanners professionnels",
+    id: "tablets",
+    name: "Tablettes",
+    slug: "tablettes",
+    description: "Tablettes pour la mobilité professionnelle",
+    image: "/placeholder.svg?height=200&width=200",
+    productCount: 8,
+  },
+  {
+    id: "printers",
+    name: "Imprimantes",
+    slug: "imprimantes",
+    description: "Solutions d'impression professionnelles",
     image: "/images/printer-hero.png",
-    productCount: 6,
+    productCount: 15,
+  },
+  {
+    id: "accessories",
+    name: "Accessoires",
+    slug: "accessoires",
+    description: "Accessoires et périphériques informatiques",
+    image: "/placeholder.svg?height=200&width=200",
+    productCount: 30,
   },
 ]
 
@@ -53,84 +76,64 @@ export const products: Product[] = [
   {
     id: "macbook-pro-14",
     name: 'MacBook Pro 14"',
-    description: 'MacBook Pro 14" avec puce M3 Pro, 18 Go de mémoire unifiée, SSD 512 Go',
-    price: 2499,
-    monthlyPrice: 89,
-    duration: "36 mois",
+    slug: "macbook-pro-14",
+    category: "laptops",
+    price: 89,
+    duration: 24,
     image: "/images/macbook-pro.png",
-    category: "ordinateurs-portables",
-    specifications: {
-      Processeur: "Apple M3 Pro",
-      Mémoire: "18 Go",
-      Stockage: "512 Go SSD",
-      Écran: '14.2" Liquid Retina XDR',
-    },
+    description: "MacBook Pro 14 pouces avec puce M3 Pro",
+    specifications: ["Puce M3 Pro", "16 Go RAM", "512 Go SSD", "Écran Liquid Retina XDR"],
+    popular: true,
   },
   {
     id: "dell-xps-13",
     name: "Dell XPS 13",
-    description: "Dell XPS 13 avec processeur Intel Core i7, 16 Go RAM, SSD 512 Go",
-    price: 1899,
-    monthlyPrice: 67,
-    duration: "36 mois",
+    slug: "dell-xps-13",
+    category: "laptops",
+    price: 65,
+    duration: 24,
     image: "/images/dell-xps.png",
-    category: "ordinateurs-portables",
-    specifications: {
-      Processeur: "Intel Core i7-1360P",
-      Mémoire: "16 Go LPDDR5",
-      Stockage: "512 Go SSD",
-      Écran: '13.4" FHD+',
-    },
-  },
-  {
-    id: "imac-24",
-    name: 'iMac 24"',
-    description: 'iMac 24" avec puce M3, 8 Go de mémoire unifiée, SSD 256 Go',
-    price: 1599,
-    monthlyPrice: 57,
-    duration: "36 mois",
-    image: "/images/imac.png",
-    category: "ordinateurs-bureau",
-    specifications: {
-      Processeur: "Apple M3",
-      Mémoire: "8 Go",
-      Stockage: "256 Go SSD",
-      Écran: '24" 4.5K Retina',
-    },
+    description: "Ultrabook Dell XPS 13 dernière génération",
+    specifications: ["Intel Core i7", "16 Go RAM", "512 Go SSD", 'Écran 13.3" 4K'],
+    new: true,
   },
   {
     id: "iphone-15-pro",
     name: "iPhone 15 Pro",
-    description: "iPhone 15 Pro 128 Go avec puce A17 Pro et appareil photo professionnel",
-    price: 1229,
-    monthlyPrice: 44,
-    duration: "36 mois",
+    slug: "iphone-15-pro",
+    category: "smartphones",
+    price: 45,
+    duration: 24,
     image: "/images/iphone.png",
-    category: "smartphones-tablettes",
-    specifications: {
-      Processeur: "A17 Pro",
-      Stockage: "128 Go",
-      Écran: '6.1" Super Retina XDR',
-      "Appareil photo": "48 Mpx Principal",
-    },
+    description: "iPhone 15 Pro avec puce A17 Pro",
+    specifications: ["Puce A17 Pro", "128 Go", "Caméra 48 Mpx", "Titane"],
+    popular: true,
+  },
+  {
+    id: "imac-24",
+    name: 'iMac 24"',
+    slug: "imac-24",
+    category: "desktops",
+    price: 95,
+    duration: 24,
+    image: "/images/imac.png",
+    description: "iMac 24 pouces avec puce M3",
+    specifications: ["Puce M3", "16 Go RAM", "512 Go SSD", "Écran Retina 4.5K"],
   },
 ]
 
 export function formatPrice(price: number): string {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency: "EUR",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(price)
-}
-
-export function getProductsByCategory(categoryId: string): Product[] {
-  return products.filter((product) => product.category === categoryId)
+  return `${price}€`
 }
 
 export function getCategoryBySlug(slug: string): Category | undefined {
-  return categories.find((category) => category.id === slug)
+  return categories.find((category) => category.slug === slug)
+}
+
+export function getProductsByCategory(categorySlug: string): Product[] {
+  const category = getCategoryBySlug(categorySlug)
+  if (!category) return []
+  return products.filter((product) => product.category === category.id)
 }
 
 export function getRelatedProducts(productId: string, limit = 4): Product[] {
@@ -141,5 +144,5 @@ export function getRelatedProducts(productId: string, limit = 4): Product[] {
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((product) => product.id === slug)
+  return products.find((product) => product.slug === slug)
 }

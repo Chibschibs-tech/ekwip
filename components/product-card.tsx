@@ -3,8 +3,7 @@ import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { formatPrice } from "@/lib/products"
-import type { Product } from "@/lib/products"
+import type { Product } from "@/types/product"
 
 interface ProductCardProps {
   product: Product
@@ -13,41 +12,36 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-      <CardContent className="p-6">
-        <div className="aspect-square relative mb-4 bg-gray-50 rounded-lg overflow-hidden">
+      <CardContent className="p-0">
+        <div className="relative aspect-square overflow-hidden rounded-t-lg">
           <Image
             src={product.image || "/placeholder.svg"}
             alt={product.name}
             fill
-            className="object-contain p-4 group-hover:scale-105 transition-transform duration-300"
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
+          {product.popular && (
+            <Badge className="absolute top-3 left-3 bg-orange-500 hover:bg-orange-600">Populaire</Badge>
+          )}
+          {product.new && <Badge className="absolute top-3 left-3 bg-green-500 hover:bg-green-600">Nouveau</Badge>}
         </div>
-
-        <div className="space-y-3">
+        <div className="p-6 space-y-4">
           <div>
             <h3 className="font-semibold text-lg text-gray-900 group-hover:text-[#1f3b57] transition-colors">
               {product.name}
             </h3>
-            <p className="text-sm text-gray-600 line-clamp-2">{product.description}</p>
+            <p className="text-gray-600 text-sm mt-1">{product.description}</p>
           </div>
-
           <div className="flex items-center justify-between">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl font-bold text-[#1f3b57]">{formatPrice(product.monthlyPrice || 0)}/mois</span>
-                {product.duration && (
-                  <Badge variant="secondary" className="text-xs">
-                    {product.duration}
-                  </Badge>
-                )}
-              </div>
-              <p className="text-sm text-gray-500">Prix d'achat: {formatPrice(product.price)}</p>
+            <div>
+              <span className="text-2xl font-bold text-[#1f3b57]">{product.price}€</span>
+              <span className="text-gray-500 text-sm">/mois</span>
+              <div className="text-xs text-gray-500">({product.duration} mois)</div>
             </div>
-          </div>
-
-          <div className="pt-2">
-            <Link href={`/store/product/${product.id}`}>
-              <Button className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90 text-white">Voir les détails</Button>
+            <Link href={`/catalogue/product/${product.slug}`}>
+              <Button size="sm" className="bg-[#1f3b57] hover:bg-[#1f3b57]/90">
+                Voir détails
+              </Button>
             </Link>
           </div>
         </div>

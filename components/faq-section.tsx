@@ -5,40 +5,30 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 const faqs = [
   {
     question: "Quelle est la durée minimum de location ?",
-    answer:
-      "La durée minimum de location est de 12 mois. Nous proposons des contrats flexibles de 12 à 36 mois selon vos besoins.",
+    answer: "La durée minimum de location est de 12 mois pour la plupart de nos équipements.",
   },
   {
     question: "Que se passe-t-il en cas de panne ?",
-    answer:
-      "En cas de panne, nous remplaçons votre équipement sous 48h ouvrées. Le support technique et la maintenance sont inclus dans tous nos contrats.",
+    answer: "Nous remplaçons l'équipement défaillant sous 24h ouvrées et prenons en charge toutes les réparations.",
   },
   {
-    question: "Puis-je upgrader mon équipement en cours de contrat ?",
-    answer:
-      "Oui, vous pouvez upgrader votre équipement à tout moment. Nous ajustons simplement votre mensualité en fonction du nouvel équipement.",
-  },
-  {
-    question: "Comment fonctionne la facturation ?",
-    answer:
-      "La facturation est mensuelle et inclut l'équipement, la maintenance, le support technique et l'assurance. Aucun frais caché.",
+    question: "Puis-je acheter l'équipement en fin de contrat ?",
+    answer: "Oui, vous avez la possibilité d'acquérir l'équipement à sa valeur résiduelle en fin de contrat.",
   },
 ]
 
-export function FAQSection() {
+export default function FAQSection() {
   return (
-    <div className="w-full">
-      <h3 className="text-2xl font-bold text-gray-900 mb-6">Questions fréquentes</h3>
+    <div className="space-y-6">
+      <h3 className="text-2xl font-bold text-gray-900">Questions fréquentes</h3>
       <Accordion type="single" collapsible className="w-full">
         {faqs.map((faq, index) => (
           <AccordionItem key={index} value={`item-${index}`}>
             <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-            <AccordionContent className="text-gray-600">{faq.answer}</AccordionContent>
+            <AccordionContent>{faq.answer}</AccordionContent>
           </AccordionItem>
         ))}
       </Accordion>
     </div>
   )
 }
-
-export default FAQSection

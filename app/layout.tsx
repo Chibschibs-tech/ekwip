@@ -4,7 +4,6 @@ import { Inter } from "next/font/google"
 import "./globals.css"
 import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
-import { LanguageProvider } from "@/contexts/language-context"
 import { AuthProvider } from "@/contexts/auth-context"
 import { CartProvider } from "@/contexts/cart-context"
 
@@ -14,7 +13,7 @@ export const metadata: Metadata = {
   title: "Ekwip - Location d'équipements IT pour entreprises",
   description:
     "Louez vos équipements informatiques avec Ekwip. Solutions flexibles pour ordinateurs, smartphones, tablettes et plus encore.",
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -25,15 +24,13 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body className={inter.className}>
-        <LanguageProvider>
-          <AuthProvider>
-            <CartProvider>
-              <Navbar />
-              <main>{children}</main>
-              <Footer />
-            </CartProvider>
-          </AuthProvider>
-        </LanguageProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   )

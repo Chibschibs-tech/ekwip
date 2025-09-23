@@ -2,43 +2,35 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ProductCard } from "@/components/product-card"
-import { products } from "@/lib/products"
+import ProductCard from "@/components/product-card"
+import { products, categories } from "@/lib/products"
 
-const categories = [
-  { id: "all", name: "Tous", filter: () => true },
-  { id: "ordinateurs-portables", name: "Portables", filter: (p: any) => p.category === "ordinateurs-portables" },
-  { id: "ordinateurs-bureau", name: "Bureau", filter: (p: any) => p.category === "ordinateurs-bureau" },
-  { id: "smartphones-tablettes", name: "Mobiles", filter: (p: any) => p.category === "smartphones-tablettes" },
-]
-
-export function ProductTabs() {
+export default function ProductTabs() {
   const [activeTab, setActiveTab] = useState("all")
+
+  const filteredProducts =
+    activeTab === "all"
+      ? products.slice(0, 8)
+      : products.filter((product) => product.category === activeTab).slice(0, 4)
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="grid w-full grid-cols-4 mb-8">
-        {categories.map((category) => (
-          <TabsTrigger key={category.id} value={category.id} className="text-sm">
+      <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7 mb-8">
+        <TabsTrigger value="all">Tous</TabsTrigger>
+        {categories.slice(0, 6).map((category) => (
+          <TabsTrigger key={category.id} value={category.id} className="text-xs lg:text-sm">
             {category.name}
           </TabsTrigger>
         ))}
       </TabsList>
 
-      {categories.map((category) => (
-        <TabsContent key={category.id} value={category.id} className="space-y-8">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products
-              .filter(category.filter)
-              .slice(0, 8)
-              .map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-          </div>
-        </TabsContent>
-      ))}
+      <TabsContent value={activeTab} className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </TabsContent>
     </Tabs>
   )
 }
-
-export default ProductTabs

@@ -17,14 +17,14 @@ export default function FeatureCard({
   description,
   icon,
   className,
-  iconBgColor = "bg-ekwip-100",
+  iconBgColor = "bg-[#1f3b57]/10",
   textColor = "text-slate-800",
   bgColor = "bg-white",
 }: FeatureCardProps) {
   return (
     <div
       className={cn(
-        "feature-card rounded-2xl p-8 h-full flex flex-col items-center text-center",
+        "feature-card rounded-2xl p-8 h-full flex flex-col items-center text-center shadow-lg hover:shadow-xl transition-all duration-300",
         bgColor,
         textColor,
         className,
