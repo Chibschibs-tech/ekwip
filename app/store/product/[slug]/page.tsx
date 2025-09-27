@@ -9,11 +9,8 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, Star, ShoppingCart, Heart, Share2, Check, Truck, Shield, Headphones } from "lucide-react"
 import { getProductBySlug, getProductsByCategory } from "@/lib/products"
-import { useLanguage } from "@/contexts/language-context"
 
 export default function ProductDetailPage({ params }: { params: { slug: string } }) {
-  const { t } = useLanguage()
-
   const product = getProductBySlug(params.slug)
 
   if (!product) {
@@ -31,17 +28,17 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Link href="/" className="hover:text-ekwip">
+            <Link href="/" className="hover:text-[#1f3b57]">
               Accueil
             </Link>
             <span>/</span>
-            <Link href="/store" className="hover:text-ekwip">
+            <Link href="/store" className="hover:text-[#1f3b57]">
               Boutique
             </Link>
             <span>/</span>
             <Link
               href={`/catalogue/${product.category.toLowerCase().replace(/\s+/g, "-")}`}
-              className="hover:text-ekwip"
+              className="hover:text-[#1f3b57]"
             >
               {product.category}
             </Link>
@@ -77,7 +74,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
                   <Badge className="absolute top-4 left-4 bg-green-500 hover:bg-green-600">Nouveau</Badge>
                 )}
                 {product.featured && (
-                  <Badge className="absolute top-4 right-4 bg-ekwip hover:bg-ekwip-700">
+                  <Badge className="absolute top-4 right-4 bg-[#1f3b57] hover:bg-[#1f3b57]/80">
                     <Star className="h-3 w-3 mr-1" />
                     Populaire
                   </Badge>
@@ -100,7 +97,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-sm text-gray-500">Prix de location mensuel</p>
-                    <p className="text-3xl font-bold text-ekwip">
+                    <p className="text-3xl font-bold text-[#1f3b57]">
                       {product.price}€<span className="text-lg font-normal">/mois</span>
                     </p>
                   </div>
@@ -122,7 +119,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
                 </div>
 
                 <div className="flex gap-3">
-                  <Button className="flex-1 bg-ekwip hover:bg-ekwip-700">
+                  <Button className="flex-1 bg-[#1f3b57] hover:bg-[#1f3b57]/80">
                     <ShoppingCart className="h-4 w-4 mr-2" />
                     Demander un devis
                   </Button>
@@ -138,17 +135,17 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
               {/* Features */}
               <div className="grid grid-cols-3 gap-4">
                 <div className="text-center p-4 bg-white rounded-lg border">
-                  <Truck className="h-8 w-8 text-ekwip mx-auto mb-2" />
+                  <Truck className="h-8 w-8 text-[#1f3b57] mx-auto mb-2" />
                   <p className="text-sm font-medium">Livraison rapide</p>
                   <p className="text-xs text-gray-500">24-48h</p>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg border">
-                  <Shield className="h-8 w-8 text-ekwip mx-auto mb-2" />
+                  <Shield className="h-8 w-8 text-[#1f3b57] mx-auto mb-2" />
                   <p className="text-sm font-medium">Garantie totale</p>
                   <p className="text-xs text-gray-500">Incluse</p>
                 </div>
                 <div className="text-center p-4 bg-white rounded-lg border">
-                  <Headphones className="h-8 w-8 text-ekwip mx-auto mb-2" />
+                  <Headphones className="h-8 w-8 text-[#1f3b57] mx-auto mb-2" />
                   <p className="text-sm font-medium">Support 24/7</p>
                   <p className="text-xs text-gray-500">Inclus</p>
                 </div>
@@ -280,12 +277,12 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
                       />
                     </div>
                     <div className="p-4">
-                      <h3 className="font-semibold mb-2 group-hover:text-ekwip transition-colors">
+                      <h3 className="font-semibold mb-2 group-hover:text-[#1f3b57] transition-colors">
                         {relatedProduct.name}
                       </h3>
                       <p className="text-gray-600 text-sm mb-3 line-clamp-2">{relatedProduct.shortDescription}</p>
                       <div className="flex items-center justify-between">
-                        <p className="text-lg font-bold text-ekwip">
+                        <p className="text-lg font-bold text-[#1f3b57]">
                           {relatedProduct.price}€<span className="text-sm font-normal">/mois</span>
                         </p>
                         <Link href={`/store/product/${relatedProduct.slug}`}>

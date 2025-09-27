@@ -3,7 +3,6 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useLanguage } from "@/contexts/language-context"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -15,7 +14,6 @@ import { Separator } from "@/components/ui/separator"
 import { User, Bell, Shield, Globe } from "lucide-react"
 
 export default function SettingsPage() {
-  const { t } = useLanguage()
   const [loading, setLoading] = useState(false)
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -31,8 +29,8 @@ export default function SettingsPage() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">{t("portal.settings.title")}</h1>
-        <p className="mt-1 text-gray-500">{t("portal.settings.description")}</p>
+        <h1 className="text-2xl font-bold text-gray-900">Paramètres</h1>
+        <p className="mt-1 text-gray-500">Gérez vos préférences et paramètres de compte</p>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
@@ -361,7 +359,7 @@ export default function SettingsPage() {
                         </div>
                       </div>
                     </div>
-                    <Button variant="outline" className="w-full">
+                    <Button variant="outline" className="w-full bg-transparent">
                       Déconnecter toutes les autres sessions
                     </Button>
                   </div>

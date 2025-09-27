@@ -3,21 +3,50 @@
 import type React from "react"
 
 import { useState } from "react"
-import { useNeedsList } from "@/contexts/cart-context"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, Trash2, Plus, Minus, ClipboardList, Send, CheckCircle } from "lucide-react"
-import Link from "next/link"
+import { Trash2, Plus, Minus, Send, ShoppingCart } from "lucide-react"
 import Image from "next/image"
+import Link from "next/link"
 
-export default function NeedsListPage() {
-  const { items, removeFromNeedsList, updateQuantity, updateDuration, clearNeedsList, getTotalPrice } = useNeedsList()
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [formData, setFormData] = useState({
+interface CartItem {
+  id: string
+  name: string
+  image: string
+  price: number
+  quantity: number
+  duration: number
+  category: string
+}
+
+export default function WishlistPage() {
+  const [cartItems, setCartItems] = useState<CartItem[]>([
+    {
+      id: "1",
+      name: 'MacBook Pro 14"',
+      image: "/images/macbook-pro.png",
+      price: 299,
+      quantity: 2,
+      duration: 12,
+      category: "Ordinateurs portables",
+    },
+    {
+      id: "2",
+      name: "Dell Precision 5690",
+      image: "/images/dell-precision-5690.png",
+      price: 399,
+      quantity: 1,
+      duration: 24,
+      category: "Workstations",
+    },
+  ])
+
+  const [contactInfo, setContactInfo] = useState({
     name: "",
     email: "",
     company: "",
@@ -25,238 +54,326 @@ export default function NeedsListPage() {
     message: "",
   })
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const updateQuantity = (id: string, newQuantity: number) => {
+    if (newQuantity < 1) return
+    setCartItems((items) => items.map((item) => (item.id === id ? { ...item, quantity: newQuantity } : item)))
+  }
+
+  const updateDuration = (id: string, newDuration: number) => {
+    if (newDuration < 1) return
+    setCartItems((items) => items.map((item) => (item.id === id ? { ...item, duration: newDuration } : item)))
+  }
+
+  const removeItem = (id: string) => {
+    setCartItems((items) => items.filter((item) => item.id !== id))
+  }
+
+  const getTotalMonthly = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+  }
+
+  const getTotalContract = () => {
+    return cartItems.reduce((total, item) => total + item.price * item.quantity * item.duration, 0)
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setContactInfo((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setIsSubmitted(true)
-    setIsSubmitting(false)
-
-    // Clear the needs list after successful submission
+    // Simulate form submission
     setTimeout(() => {
-      clearNeedsList()
-    }, 3000)
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }))
+      setIsSubmitted(true)
+      setIsSubmitting(false)
+    }, 2000)
   }
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-2xl mx-auto px-4 text-center">
-          <div className="bg-white rounded-lg shadow-sm p-8">
-            <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Demande envoyée avec succès !</h1>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <Card className="max-w-md w-full text-center">
+          <CardContent className="p-8">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Demande envoyée !</h2>
             <p className="text-gray-600 mb-6">
-              Nous avons bien reçu votre demande de devis. Notre équipe vous contactera dans les plus brefs délais.
+              Merci pour votre demande de devis. Notre équipe commerciale vous contactera dans les 24h.
             </p>
-            <Link href="/catalogue">
-              <Button>Parcourir plus d'équipements</Button>
-            </Link>
-          </div>
-        </div>
+            <div className="space-y-3">
+              <Link href="/catalogue">
+                <Button className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/80">Continuer mes achats</Button>
+              </Link>
+              <Button
+                variant="outline"
+                className="w-full bg-transparent"
+                onClick={() => {
+                  setIsSubmitted(false)
+                  setCartItems([])
+                  setContactInfo({
+                    name: "",
+                    email: "",
+                    company: "",
+                    phone: "",
+                    message: "",
+                  })
+                }}
+              >
+                Nouvelle demande
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <Link href="/catalogue" className="inline-flex items-center text-[#1f3b57] hover:text-[#1a3249] mb-4">
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour au catalogue
-          </Link>
-
-          <div className="flex items-center mb-2">
-            <ClipboardList className="h-8 w-8 text-[#1f3b57] mr-3" />
-            <h1 className="text-3xl font-bold text-gray-900">Ma liste d'équipements</h1>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <section className="py-12 px-4 md:px-6 lg:px-8 bg-white border-b">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">Ma liste de besoins</h1>
+              <p className="text-gray-600">Gérez vos équipements sélectionnés et demandez un devis personnalisé</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <ShoppingCart className="h-5 w-5 text-[#1f3b57]" />
+              <Badge variant="secondary">
+                {cartItems.length} article{cartItems.length > 1 ? "s" : ""}
+              </Badge>
+            </div>
           </div>
-          <p className="text-gray-600">Sélectionnez vos équipements et demandez un devis personnalisé</p>
         </div>
+      </section>
 
-        {items.length === 0 ? (
-          /* Empty State */
-          <div className="text-center py-12">
-            <ClipboardList className="h-24 w-24 text-gray-300 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Votre liste est vide</h2>
-            <p className="text-gray-600 mb-6">Parcourez notre catalogue et ajoutez des équipements à votre liste</p>
-            <Link href="/catalogue">
-              <Button size="lg">Parcourir le catalogue</Button>
-            </Link>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+        {cartItems.length === 0 ? (
+          <Card className="text-center py-12">
+            <CardContent>
+              <ShoppingCart className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-gray-900 mb-2">Votre liste est vide</h2>
+              <p className="text-gray-600 mb-6">
+                Parcourez notre catalogue et ajoutez des équipements à votre liste de besoins.
+              </p>
+              <Link href="/catalogue">
+                <Button className="bg-[#1f3b57] hover:bg-[#1f3b57]/80">Parcourir le catalogue</Button>
+              </Link>
+            </CardContent>
+          </Card>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Equipment List */}
-            <div className="lg:col-span-2">
+            {/* Cart Items */}
+            <div className="lg:col-span-2 space-y-4">
               <Card>
-                <CardHeader className="flex flex-row items-center justify-between">
-                  <CardTitle className="flex items-center">
-                    <ClipboardList className="h-5 w-5 mr-2" />
-                    Équipements sélectionnés ({items.length})
-                  </CardTitle>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={clearNeedsList}
-                    className="text-red-600 hover:text-red-700 bg-transparent"
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Vider la liste
-                  </Button>
+                <CardHeader>
+                  <CardTitle>Équipements sélectionnés</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  {items.map((item) => (
-                    <div key={item.id} className="flex items-center space-x-4 p-4 border rounded-lg">
-                      <Image
-                        src={item.image || "/placeholder.svg"}
-                        alt={item.name}
-                        width={80}
-                        height={80}
-                        className="rounded-md object-cover"
-                      />
+                <CardContent className="space-y-6">
+                  {cartItems.map((item) => (
+                    <div key={item.id}>
+                      <div className="flex items-start space-x-4">
+                        <div className="flex-shrink-0">
+                          <Image
+                            src={item.image || "/placeholder.svg"}
+                            alt={item.name}
+                            width={80}
+                            height={80}
+                            className="rounded-lg bg-gray-100 p-2"
+                          />
+                        </div>
 
-                      <div className="flex-1">
-                        <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                        <p className="text-sm text-gray-600">
-                          {item.brand} • {item.category}
-                        </p>
-                        <p className="text-sm font-medium text-[#1f3b57]">{item.price}€ par mois</p>
-                      </div>
-
-                      <div className="flex items-center space-x-4">
-                        {/* Quantity */}
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">Quantité:</span>
-                          <div className="flex items-center border rounded">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
+                              <p className="text-sm text-gray-500">{item.category}</p>
+                              <p className="text-lg font-bold text-[#1f3b57] mt-1">{item.price}€/mois</p>
+                            </div>
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                              className="h-8 w-8 p-0"
+                              onClick={() => removeItem(item.id)}
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
                             >
-                              <Minus className="h-3 w-3" />
-                            </Button>
-                            <span className="px-3 py-1 text-sm font-medium">{item.quantity}</span>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="h-8 w-8 p-0"
-                            >
-                              <Plus className="h-3 w-3" />
+                              <Trash2 className="h-4 w-4" />
                             </Button>
                           </div>
-                        </div>
 
-                        {/* Duration */}
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm text-gray-600">Durée:</span>
-                          <select
-                            value={item.duration}
-                            onChange={(e) => updateDuration(item.id, Number.parseInt(e.target.value))}
-                            className="border rounded px-2 py-1 text-sm"
-                          >
-                            {[6, 12, 18, 24, 36].map((months) => (
-                              <option key={months} value={months}>
-                                {months} mois
-                              </option>
-                            ))}
-                          </select>
-                        </div>
+                          <div className="flex items-center space-x-6 mt-4">
+                            <div className="flex items-center space-x-2">
+                              <Label className="text-sm font-medium">Quantité:</Label>
+                              <div className="flex items-center space-x-1">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                  disabled={item.quantity <= 1}
+                                >
+                                  <Minus className="h-3 w-3" />
+                                </Button>
+                                <span className="w-8 text-center text-sm font-medium">{item.quantity}</span>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                >
+                                  <Plus className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
 
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeFromNeedsList(item.id)}
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                            <div className="flex items-center space-x-2">
+                              <Label className="text-sm font-medium">Durée (mois):</Label>
+                              <div className="flex items-center space-x-1">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => updateDuration(item.id, item.duration - 1)}
+                                  disabled={item.duration <= 1}
+                                >
+                                  <Minus className="h-3 w-3" />
+                                </Button>
+                                <span className="w-8 text-center text-sm font-medium">{item.duration}</span>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => updateDuration(item.id, item.duration + 1)}
+                                >
+                                  <Plus className="h-3 w-3" />
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="mt-3 text-sm text-gray-600">
+                            Sous-total:{" "}
+                            <span className="font-semibold">{item.price * item.quantity * item.duration}€</span>
+                            <span className="text-gray-500"> ({item.duration} mois)</span>
+                          </div>
+                        </div>
                       </div>
+                      {cartItems.indexOf(item) < cartItems.length - 1 && <Separator className="mt-6" />}
                     </div>
                   ))}
                 </CardContent>
               </Card>
             </div>
 
-            {/* Quote Form */}
-            <div className="lg:col-span-1">
-              <Card className="sticky top-8">
+            {/* Summary and Contact Form */}
+            <div className="space-y-6">
+              {/* Price Summary */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Récapitulatif</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between">
+                    <span>Total mensuel:</span>
+                    <span className="font-semibold">{getTotalMonthly()}€/mois</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Total contrat:</span>
+                    <span className="font-semibold">{getTotalContract()}€</span>
+                  </div>
+                  <Separator />
+                  <div className="text-sm text-gray-600">
+                    <p>• Installation et configuration incluses</p>
+                    <p>• Support technique 24/7</p>
+                    <p>• Maintenance et réparations incluses</p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contact Form */}
+              <Card>
                 <CardHeader>
                   <CardTitle>Demander un devis</CardTitle>
-                  <div className="text-2xl font-bold text-[#1f3b57]">Estimation totale: {getTotalPrice()}€/mois</div>
-                  <p className="text-xs text-gray-500">Prix indicatif, devis personnalisé sur demande</p>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
+                      <Label htmlFor="name">Nom complet *</Label>
                       <Input
+                        id="name"
                         name="name"
-                        placeholder="Nom complet *"
-                        value={formData.name}
-                        onChange={handleInputChange}
                         required
+                        value={contactInfo.name}
+                        onChange={handleInputChange}
+                        className="mt-1"
                       />
                     </div>
+
                     <div>
+                      <Label htmlFor="email">Email *</Label>
                       <Input
+                        id="email"
                         name="email"
                         type="email"
-                        placeholder="Email professionnel *"
-                        value={formData.email}
-                        onChange={handleInputChange}
                         required
+                        value={contactInfo.email}
+                        onChange={handleInputChange}
+                        className="mt-1"
                       />
                     </div>
+
                     <div>
+                      <Label htmlFor="company">Entreprise *</Label>
                       <Input
+                        id="company"
                         name="company"
-                        placeholder="Entreprise *"
-                        value={formData.company}
-                        onChange={handleInputChange}
                         required
-                      />
-                    </div>
-                    <div>
-                      <Input name="phone" placeholder="Téléphone" value={formData.phone} onChange={handleInputChange} />
-                    </div>
-                    <div>
-                      <Textarea
-                        name="message"
-                        placeholder="Décrivez vos besoins spécifiques ou posez vos questions..."
-                        value={formData.message}
+                        value={contactInfo.company}
                         onChange={handleInputChange}
-                        rows={4}
+                        className="mt-1"
                       />
                     </div>
 
-                    <Separator />
+                    <div>
+                      <Label htmlFor="phone">Téléphone</Label>
+                      <Input
+                        id="phone"
+                        name="phone"
+                        type="tel"
+                        value={contactInfo.phone}
+                        onChange={handleInputChange}
+                        className="mt-1"
+                      />
+                    </div>
 
-                    <Button
-                      type="submit"
-                      className="w-full bg-[#1f3b57] hover:bg-[#1a3249]"
-                      size="lg"
-                      disabled={isSubmitting}
-                    >
+                    <div>
+                      <Label htmlFor="message">Message</Label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        rows={3}
+                        value={contactInfo.message}
+                        onChange={handleInputChange}
+                        placeholder="Précisez vos besoins spécifiques..."
+                        className="mt-1"
+                      />
+                    </div>
+
+                    <Button type="submit" disabled={isSubmitting} className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/80">
                       {isSubmitting ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          Envoi en cours...
-                        </>
+                        "Envoi en cours..."
                       ) : (
                         <>
-                          <Send className="h-4 w-4 mr-2" />
-                          Envoyer la demande
+                          Demander un devis
+                          <Send className="ml-2 h-4 w-4" />
                         </>
                       )}
                     </Button>

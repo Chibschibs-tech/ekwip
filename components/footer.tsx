@@ -5,11 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Facebook, Twitter, Linkedin, Instagram, Send } from "lucide-react"
 import Image from "next/image"
-import { useLanguage } from "@/contexts/language-context"
 
 export default function Footer() {
-  const { t } = useLanguage()
-
   return (
     <footer className="bg-gray-900 text-white py-16 px-4 md:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
@@ -18,58 +15,60 @@ export default function Footer() {
             <Link href="/" className="flex items-center text-2xl font-semibold mb-6">
               <Image src="/images/logo-white.png" alt="Ekwip" width={120} height={40} className="h-10 w-auto" />
             </Link>
-            <p className="text-gray-400 mb-6 max-w-md">{t("footer.description")}</p>
+            <p className="text-gray-400 mb-6 max-w-md">
+              Votre partenaire de confiance pour la location d'équipements informatiques professionnels au Maroc.
+            </p>
             <div className="flex space-x-4">
               <a href="#" className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-colors">
-                <Facebook className="h-5 w-5 text-ekwip-300" />
+                <Facebook className="h-5 w-5 text-[#1f3b57]" />
               </a>
               <a href="#" className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-colors">
-                <Twitter className="h-5 w-5 text-ekwip-300" />
+                <Twitter className="h-5 w-5 text-[#1f3b57]" />
               </a>
               <a href="#" className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-colors">
-                <Linkedin className="h-5 w-5 text-ekwip-300" />
+                <Linkedin className="h-5 w-5 text-[#1f3b57]" />
               </a>
               <a href="#" className="bg-gray-800 hover:bg-gray-700 p-2 rounded-full transition-colors">
-                <Instagram className="h-5 w-5 text-ekwip-300" />
+                <Instagram className="h-5 w-5 text-[#1f3b57]" />
               </a>
             </div>
           </div>
 
           <div>
-            <h3 className="font-bold text-lg mb-6">{t("footer.services")}</h3>
+            <h3 className="font-bold text-lg mb-6">Services</h3>
             <ul className="space-y-4">
               <li>
                 <Link href="/comment-ca-marche" className="text-gray-400 hover:text-white transition-colors">
-                  {t("nav.how_it_works")}
+                  Comment ça marche
                 </Link>
               </li>
               <li>
                 <a href="https://ekwip.ma/catalogue" className="text-gray-400 hover:text-white transition-colors">
-                  {t("nav.catalog")}
+                  Catalogue
                 </a>
               </li>
               <li>
                 <Link href="/store" className="text-gray-400 hover:text-white transition-colors">
-                  {t("nav.store")}
+                  Boutique
                 </Link>
               </li>
               <li>
                 <Link href="/portail-client" className="text-gray-400 hover:text-white transition-colors">
-                  {t("nav.customer_portal")}
+                  Portail client
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h3 className="font-bold text-lg mb-6">{t("footer.newsletter")}</h3>
-            <p className="text-gray-400 mb-4">{t("footer.newsletter_description")}</p>
+            <h3 className="font-bold text-lg mb-6">Newsletter</h3>
+            <p className="text-gray-400 mb-4">Restez informé de nos dernières offres et nouveautés</p>
             <div className="flex">
               <Input
-                placeholder={t("footer.newsletter_placeholder")}
-                className="rounded-l-full rounded-r-none border-gray-700 bg-gray-800 text-white focus:border-ekwip"
+                placeholder="Votre email"
+                className="rounded-l-full rounded-r-none border-gray-700 bg-gray-800 text-white focus:border-[#1f3b57]"
               />
-              <Button variant="gradient" size="icon" className="rounded-l-none rounded-r-full">
+              <Button className="rounded-l-none rounded-r-full bg-[#1f3b57] hover:bg-[#1f3b57]/80" size="icon">
                 <Send className="h-4 w-4" />
               </Button>
             </div>
@@ -78,20 +77,20 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-gray-500 text-sm mb-4 md:mb-0">
-            © {new Date().getFullYear()} Ekwip. {t("footer.rights")}
+            © {new Date().getFullYear()} Ekwip. Tous droits réservés.
           </p>
           <div className="flex space-x-6">
             <Link href="/mentions-legales" className="text-gray-500 hover:text-white text-sm transition-colors">
-              {t("footer.legal_notice")}
+              Mentions légales
             </Link>
             <Link
               href="/politique-de-confidentialite"
               className="text-gray-500 hover:text-white text-sm transition-colors"
             >
-              {t("footer.privacy_policy")}
+              Politique de confidentialité
             </Link>
             <Link href="/cgv" className="text-gray-500 hover:text-white text-sm transition-colors">
-              {t("footer.terms")}
+              CGV
             </Link>
           </div>
         </div>

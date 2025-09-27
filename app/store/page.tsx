@@ -10,10 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Search, Filter, Star, ShoppingCart, Grid, List } from "lucide-react"
 import { products } from "@/lib/products"
-import { useLanguage } from "@/contexts/language-context"
 
 export default function StorePage() {
-  const { t } = useLanguage()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [sortBy, setSortBy] = useState("name")
@@ -205,28 +203,28 @@ export default function StorePage() {
                             <Badge className="absolute top-3 left-3 bg-green-500 hover:bg-green-600">Nouveau</Badge>
                           )}
                           {product.featured && (
-                            <Badge className="absolute top-3 right-3 bg-ekwip hover:bg-ekwip-700">
+                            <Badge className="absolute top-3 right-3 bg-[#1f3b57] hover:bg-[#1f3b57]/80">
                               <Star className="h-3 w-3 mr-1" />
                               Populaire
                             </Badge>
                           )}
                         </div>
                         <div className="p-6">
-                          <h3 className="font-semibold text-lg mb-2 group-hover:text-ekwip transition-colors">
+                          <h3 className="font-semibold text-lg mb-2 group-hover:text-[#1f3b57] transition-colors">
                             {product.name}
                           </h3>
                           <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.shortDescription}</p>
                           <div className="flex items-center justify-between mb-4">
                             <div>
                               <p className="text-sm text-gray-500">À partir de</p>
-                              <p className="text-xl font-bold text-ekwip">
+                              <p className="text-xl font-bold text-[#1f3b57]">
                                 {product.price}€<span className="text-sm font-normal">/mois</span>
                               </p>
                             </div>
                           </div>
                           <div className="flex gap-2">
                             <Link href={`/store/product/${product.slug}`} className="flex-1">
-                              <Button className="w-full bg-ekwip hover:bg-ekwip-700">Voir détails</Button>
+                              <Button className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/80">Voir détails</Button>
                             </Link>
                             <Button variant="outline" size="icon">
                               <ShoppingCart className="h-4 w-4" />
@@ -248,13 +246,13 @@ export default function StorePage() {
                           </div>
                           <div className="flex-1 p-6">
                             <div className="flex justify-between items-start mb-2">
-                              <h3 className="font-semibold text-xl group-hover:text-ekwip transition-colors">
+                              <h3 className="font-semibold text-xl group-hover:text-[#1f3b57] transition-colors">
                                 {product.name}
                               </h3>
                               <div className="flex gap-2">
                                 {product.new && <Badge className="bg-green-500 hover:bg-green-600">Nouveau</Badge>}
                                 {product.featured && (
-                                  <Badge className="bg-ekwip hover:bg-ekwip-700">
+                                  <Badge className="bg-[#1f3b57] hover:bg-[#1f3b57]/80">
                                     <Star className="h-3 w-3 mr-1" />
                                     Populaire
                                   </Badge>
@@ -265,13 +263,13 @@ export default function StorePage() {
                             <div className="flex items-center justify-between">
                               <div>
                                 <p className="text-sm text-gray-500">À partir de</p>
-                                <p className="text-2xl font-bold text-ekwip">
+                                <p className="text-2xl font-bold text-[#1f3b57]">
                                   {product.price}€<span className="text-sm font-normal">/mois</span>
                                 </p>
                               </div>
                               <div className="flex gap-2">
                                 <Link href={`/store/product/${product.slug}`}>
-                                  <Button className="bg-ekwip hover:bg-ekwip-700">Voir détails</Button>
+                                  <Button className="bg-[#1f3b57] hover:bg-[#1f3b57]/80">Voir détails</Button>
                                 </Link>
                                 <Button variant="outline" size="icon">
                                   <ShoppingCart className="h-4 w-4" />

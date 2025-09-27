@@ -6,279 +6,299 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Mail, Phone, MapPin, Clock, Send } from "lucide-react"
 
-export default function Contact() {
+export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
     company: "",
+    phone: "",
+    subject: "",
     message: "",
   })
-
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+  }
+
+  const handleSelectChange = (value: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      subject: value,
+    }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-
-    console.log("Form submitted:", formData)
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-
-    // Reset form after submission
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      company: "",
-      message: "",
-    })
-
-    // Reset success message after 5 seconds
+    // Simulate form submission
     setTimeout(() => {
-      setIsSubmitted(false)
-    }, 5000)
+      setIsSubmitted(true)
+      setIsSubmitting(false)
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        phone: "",
+        subject: "",
+        message: "",
+      })
+    }, 1000)
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-slate-100">
+      <section className="py-16 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-[#1f3b57] to-[#1f3b57]/80 text-white">
         <div className="max-w-7xl mx-auto text-center">
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">Contactez-nous</h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Notre équipe est là pour répondre à toutes vos questions et vous accompagner dans vos projets
+          <h1 className="text-4xl md:text-5xl font-bold mb-6">Contactez-nous</h1>
+          <p className="text-xl text-white/90 max-w-2xl mx-auto">
+            Notre équipe d'experts est là pour vous accompagner dans tous vos projets d'équipements informatiques.
           </p>
         </div>
       </section>
 
-      {/* Contact Form Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 -mt-16">
+      {/* Contact Content */}
+      <section className="py-16 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="p-8 md:p-12 bg-gradient-to-br from-[#1f3b57] to-[#1a3249] text-white">
-                <h2 className="text-2xl md:text-3xl font-bold mb-6">Informations de contact</h2>
-                <p className="mb-8 opacity-90">
-                  Nous sommes là pour vous aider à trouver les meilleures solutions pour vos besoins en équipement
-                  informatique
-                </p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            {/* Contact Information */}
+            <div className="lg:col-span-1">
+              <div className="sticky top-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-8">Nos coordonnées</h2>
 
                 <div className="space-y-6">
-                  <div className="flex items-start">
-                    <MapPin className="h-6 w-6 mr-4 mt-1" />
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
+                        <Mail className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Adresse</h3>
-                      <p className="opacity-90">
+                      <h3 className="text-lg font-semibold text-gray-900">Email</h3>
+                      <p className="text-gray-600">contact@ekwip.ma</p>
+                      <p className="text-gray-600">sales@ekwip.ma</p>
+                      <p className="text-sm text-gray-500">Réponse sous 24h</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
+                        <Phone className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Téléphone</h3>
+                      <p className="text-gray-600">+212 5 22 XX XX XX</p>
+                      <p className="text-gray-600">+212 6 XX XX XX XX</p>
+                      <p className="text-sm text-gray-500">Lun-Ven 9h-18h</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
+                        <MapPin className="h-6 w-6 text-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Adresse</h3>
+                      <p className="text-gray-600">
                         123 Avenue Mohammed V<br />
-                        Casablanca, 20000
+                        Casablanca 20000
                         <br />
                         Maroc
                       </p>
+                      <p className="text-sm text-gray-500">Rendez-vous sur demande</p>
                     </div>
                   </div>
 
-                  <div className="flex items-start">
-                    <Phone className="h-6 w-6 mr-4 mt-1" />
-                    <div>
-                      <h3 className="font-bold text-lg mb-1">Téléphone</h3>
-                      <p className="opacity-90">
-                        +212 522 123 456
-                        <br />
-                        +212 661 789 012
-                      </p>
+                  <div className="flex items-start space-x-4">
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
+                        <Clock className="h-6 w-6 text-white" />
+                      </div>
                     </div>
-                  </div>
-
-                  <div className="flex items-start">
-                    <Mail className="h-6 w-6 mr-4 mt-1" />
                     <div>
-                      <h3 className="font-bold text-lg mb-1">Email</h3>
-                      <p className="opacity-90">
-                        contact@ekwip.ma
+                      <h3 className="text-lg font-semibold text-gray-900">Horaires</h3>
+                      <p className="text-gray-600">
+                        Lundi - Vendredi: 9h - 18h
                         <br />
-                        support@ekwip.ma
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start">
-                    <Clock className="h-6 w-6 mr-4 mt-1" />
-                    <div>
-                      <h3 className="font-bold text-lg mb-1">Horaires d'ouverture</h3>
-                      <p className="opacity-90">
-                        Lundi - Vendredi: 9h00 - 18h00
-                        <br />
-                        Samedi: 9h00 - 13h00
+                        Samedi: 9h - 13h
                         <br />
                         Dimanche: Fermé
                       </p>
                     </div>
                   </div>
                 </div>
+
+                <div className="mt-8 p-6 bg-gradient-to-r from-[#1f3b57] to-[#1f3b57]/80 rounded-lg text-white">
+                  <h3 className="text-lg font-semibold mb-2">Support d'urgence</h3>
+                  <p className="text-sm text-white/90 mb-3">Pour nos clients, support technique disponible 24/7</p>
+                  <p className="font-semibold">+212 6 XX XX XX XX</p>
+                </div>
               </div>
+            </div>
 
-              <div className="p-8 md:p-12">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Envoyez-nous un message</h2>
-                <p className="text-gray-600 mb-8">
-                  Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais
-                </p>
-
-                {isSubmitted ? (
-                  <div className="bg-green-50 border border-green-200 rounded-xl p-6 flex items-center">
-                    <CheckCircle className="h-8 w-8 text-green-500 mr-4" />
-                    <div>
-                      <h3 className="font-bold text-green-800 text-lg">Message envoyé avec succès !</h3>
-                      <p className="text-green-700">Nous vous répondrons dans les plus brefs délais.</p>
+            {/* Contact Form */}
+            <div className="lg:col-span-2">
+              <Card className="shadow-xl">
+                <CardHeader>
+                  <CardTitle className="text-2xl text-gray-900">Envoyez-nous un message</CardTitle>
+                  <CardDescription>
+                    Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isSubmitted ? (
+                    <div className="text-center py-12">
+                      <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Message envoyé avec succès !</h3>
+                      <p className="text-gray-600 mb-6">
+                        Merci pour votre message. Notre équipe vous contactera très bientôt.
+                      </p>
+                      <Button onClick={() => setIsSubmitted(false)} variant="outline">
+                        Envoyer un autre message
+                      </Button>
                     </div>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="name" className="text-gray-700">
-                          Nom complet
-                        </Label>
-                        <Input
-                          id="name"
-                          name="name"
-                          placeholder="Votre nom complet"
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="name">Nom complet *</Label>
+                          <Input
+                            id="name"
+                            name="name"
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={handleInputChange}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="email">Email *</Label>
+                          <Input
+                            id="email"
+                            name="email"
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={handleInputChange}
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <Label htmlFor="company">Entreprise</Label>
+                          <Input
+                            id="company"
+                            name="company"
+                            type="text"
+                            value={formData.company}
+                            onChange={handleInputChange}
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="phone">Téléphone</Label>
+                          <Input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            value={formData.phone}
+                            onChange={handleInputChange}
+                            className="mt-1"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="subject">Sujet *</Label>
+                        <Select value={formData.subject} onValueChange={handleSelectChange}>
+                          <SelectTrigger className="mt-1">
+                            <SelectValue placeholder="Sélectionnez un sujet" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="devis">Demande de devis</SelectItem>
+                            <SelectItem value="info">Demande d'informations</SelectItem>
+                            <SelectItem value="support">Support technique</SelectItem>
+                            <SelectItem value="partenariat">Partenariat</SelectItem>
+                            <SelectItem value="autre">Autre</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+
+                      <div>
+                        <Label htmlFor="message">Message *</Label>
+                        <Textarea
+                          id="message"
+                          name="message"
+                          rows={6}
                           required
-                          value={formData.name}
-                          onChange={handleChange}
-                          className="rounded-xl"
+                          value={formData.message}
+                          onChange={handleInputChange}
+                          placeholder="Décrivez votre projet ou votre demande en détail..."
+                          className="mt-1"
                         />
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email" className="text-gray-700">
-                          Email
-                        </Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          placeholder="votre@email.com"
-                          required
-                          value={formData.email}
-                          onChange={handleChange}
-                          className="rounded-xl"
-                        />
-                      </div>
-                    </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                      <div className="space-y-2">
-                        <Label htmlFor="phone" className="text-gray-700">
-                          Téléphone
-                        </Label>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          placeholder="Votre numéro de téléphone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          className="rounded-xl"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="company" className="text-gray-700">
-                          Entreprise
-                        </Label>
-                        <Input
-                          id="company"
-                          name="company"
-                          placeholder="Nom de votre entreprise"
-                          value={formData.company}
-                          onChange={handleChange}
-                          className="rounded-xl"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="message" className="text-gray-700">
-                        Message
-                      </Label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        placeholder="Comment pouvons-nous vous aider ?"
-                        rows={6}
-                        required
-                        value={formData.message}
-                        onChange={handleChange}
-                        className="rounded-xl"
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      size="lg"
-                      className="w-full bg-[#1f3b57] hover:bg-[#1a3249]"
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? (
-                        <span className="flex items-center">
-                          <svg
-                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                          >
-                            <circle
-                              className="opacity-25"
-                              cx="12"
-                              cy="12"
-                              r="10"
-                              stroke="currentColor"
-                              strokeWidth="4"
-                            ></circle>
-                            <path
-                              className="opacity-75"
-                              fill="currentColor"
-                              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                            ></path>
-                          </svg>
-                          Envoi en cours...
-                        </span>
-                      ) : (
-                        <span className="flex items-center">
-                          Envoyer le message <Send className="ml-2 h-5 w-5" />
-                        </span>
-                      )}
-                    </Button>
-                  </form>
-                )}
-              </div>
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/80"
+                        size="lg"
+                      >
+                        {isSubmitting ? (
+                          "Envoi en cours..."
+                        ) : (
+                          <>
+                            Envoyer le message
+                            <Send className="ml-2 h-4 w-4" />
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  )}
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
       {/* Map Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gray-50">
+      <section className="py-16 px-4 md:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-800 mb-4">Notre localisation</h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Venez nous rendre visite dans nos bureaux au cœur de Casablanca
-            </p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Notre localisation</h2>
+            <p className="text-lg text-gray-600">Venez nous rendre visite dans nos bureaux à Casablanca</p>
           </div>
 
-          <div className="bg-white h-96 rounded-3xl shadow-md flex items-center justify-center">
-            <p className="text-gray-500">Carte interactive ici</p>
+          <div className="bg-gray-200 rounded-lg h-96 flex items-center justify-center">
+            <div className="text-center">
+              <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <p className="text-gray-600">Carte interactive bientôt disponible</p>
+              <p className="text-sm text-gray-500">123 Avenue Mohammed V, Casablanca</p>
+            </div>
           </div>
         </div>
       </section>

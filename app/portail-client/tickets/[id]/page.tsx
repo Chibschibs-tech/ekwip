@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { useLanguage } from "@/contexts/language-context"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
@@ -11,7 +10,6 @@ import { ArrowLeft, Paperclip, Send } from "lucide-react"
 import Link from "next/link"
 
 export default function TicketDetailPage({ params }: { params: { id: string } }) {
-  const { t } = useLanguage()
   const ticketId = params.id
   const [newMessage, setNewMessage] = useState("")
   const [sending, setSending] = useState(false)
@@ -31,7 +29,7 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
         id: 1,
         sender: {
           name: "John Doe",
-          avatar: "/images/placeholder.svg?height=40&width=40",
+          avatar: "/placeholder.svg?height=40&width=40",
           role: "client",
         },
         date: "2023-06-10 14:30",
@@ -43,7 +41,7 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
         id: 2,
         sender: {
           name: "Support Ekwip",
-          avatar: "/images/placeholder.svg?height=40&width=40",
+          avatar: "/placeholder.svg?height=40&width=40",
           role: "support",
         },
         date: "2023-06-10 15:45",
@@ -55,7 +53,7 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
         id: 3,
         sender: {
           name: "John Doe",
-          avatar: "/images/placeholder.svg?height=40&width=40",
+          avatar: "/placeholder.svg?height=40&width=40",
           role: "client",
         },
         date: "2023-06-11 09:15",
@@ -67,7 +65,7 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
         id: 4,
         sender: {
           name: "Support Ekwip",
-          avatar: "/images/placeholder.svg?height=40&width=40",
+          avatar: "/placeholder.svg?height=40&width=40",
           role: "support",
         },
         date: "2023-06-11 10:30",
@@ -129,7 +127,7 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
   return (
     <div>
       <div className="mb-8">
-        <Link href="/portail-client/tickets" className="inline-flex items-center text-ekwip hover:underline mb-4">
+        <Link href="/portail-client/tickets" className="inline-flex items-center text-[#1f3b57] hover:underline mb-4">
           <ArrowLeft className="h-4 w-4 mr-1" />
           Retour aux tickets
         </Link>
@@ -156,11 +154,11 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
                     className={`flex max-w-[80%] ${message.sender.role === "client" ? "flex-row-reverse" : "flex-row"}`}
                   >
                     <Avatar className={`h-10 w-10 ${message.sender.role === "client" ? "ml-4" : "mr-4"}`}>
-                      <AvatarImage src={message.sender.avatar} alt={message.sender.name} />
+                      <AvatarImage src={message.sender.avatar || "/placeholder.svg"} alt={message.sender.name} />
                       <AvatarFallback>{message.sender.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div
-                      className={`rounded-lg p-4 ${message.sender.role === "client" ? "bg-ekwip text-white" : "bg-gray-100 text-gray-800"}`}
+                      className={`rounded-lg p-4 ${message.sender.role === "client" ? "bg-[#1f3b57] text-white" : "bg-gray-100 text-gray-800"}`}
                     >
                       <div className="flex items-center justify-between mb-2">
                         <span className="font-medium">{message.sender.name}</span>
@@ -235,7 +233,7 @@ export default function TicketDetailPage({ params }: { params: { id: string } })
                 <dd className="mt-1 text-sm text-gray-900">
                   <Link
                     href={`/portail-client/equipment/${ticket.equipment.split(" ")[2].replace(/[()]/g, "")}`}
-                    className="text-ekwip hover:underline"
+                    className="text-[#1f3b57] hover:underline"
                   >
                     {ticket.equipment}
                   </Link>
