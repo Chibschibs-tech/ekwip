@@ -1,28 +1,41 @@
 "use client"
 
 import Image from "next/image"
+import { useEffect, useState } from "react"
+
+const clientLogos = [
+  { name: "Client 1", logo: "/images/client-logo-1.png" },
+  { name: "Client 2", logo: "/images/client-logo-2.png" },
+  { name: "Client 3", logo: "/images/client-logo-3.png" },
+  { name: "Client 4", logo: "/images/client-logo-4.png" },
+  { name: "Client 5", logo: "/images/client-logo-5.png" },
+  { name: "Client 6", logo: "/images/client-logo-6.png" },
+]
 
 export function ClientLogoSlider() {
-  const logos = [
-    { name: "Client 1", src: "/images/client-logo-1.png" },
-    { name: "Client 2", src: "/images/client-logo-2.png" },
-    { name: "Client 3", src: "/images/client-logo-3.png" },
-    { name: "Client 4", src: "/images/client-logo-4.png" },
-    { name: "Client 5", src: "/images/client-logo-5.png" },
-    { name: "Client 6", src: "/images/client-logo-6.png" },
-  ]
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % clientLogos.length)
+    }, 3000)
+
+    return () => clearInterval(timer)
+  }, [])
 
   return (
-    <div className="overflow-hidden">
-      <div className="flex animate-scroll space-x-12">
-        {[...logos, ...logos].map((logo, index) => (
-          <div key={index} className="flex-shrink-0">
+    <div className="relative overflow-hidden">
+      <div className="flex space-x-8 md:space-x-12 justify-center items-center">
+        {clientLogos.map((client, index) => (
+          <div
+            key={index}
+            className="flex-shrink-0 w-24 h-16 md:w-32 md:h-20 relative opacity-60 hover:opacity-100 transition-opacity"
+          >
             <Image
-              src={logo.src || "/placeholder.svg"}
-              alt={logo.name}
-              width={120}
-              height={60}
-              className="h-12 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity"
+              src={client.logo || "/placeholder.svg"}
+              alt={client.name}
+              fill
+              className="object-contain filter grayscale hover:grayscale-0 transition-all"
             />
           </div>
         ))}

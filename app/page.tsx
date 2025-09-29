@@ -39,13 +39,15 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="py-20 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-blue-50">
+      <section className="py-20 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-ekwip-50">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <Badge className="mb-6 bg-blue-100 text-blue-800 hover:bg-blue-200">Solutions IT professionnelles</Badge>
+              <Badge className="mb-6 bg-ekwip-100 text-ekwip-800 hover:bg-ekwip-200">
+                Solutions IT professionnelles
+              </Badge>
               <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-                Équipez-vous, sans ruiner votre <span className="text-blue-600">trésorerie!</span>
+                Équipez-vous, sans ruiner votre <span className="text-ekwip">trésorerie!</span>
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
                 Louez vos équipements IT sur-mesure avec Ekwip. Flexibilité, performance et tranquillité d'esprit
@@ -53,7 +55,7 @@ export default function HomePage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link href="/catalogue">
-                  <Button size="lg" className="bg-blue-600 hover:bg-blue-700">
+                  <Button size="lg" className="bg-ekwip hover:bg-ekwip-700">
                     Découvrir le catalogue
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
@@ -62,7 +64,7 @@ export default function HomePage() {
                   <Button
                     size="lg"
                     variant="outline"
-                    className="border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent"
+                    className="border-ekwip text-ekwip hover:bg-ekwip-50 bg-transparent"
                   >
                     Obtenir un devis
                   </Button>
@@ -185,7 +187,7 @@ export default function HomePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl font-bold text-white">1</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Choisissez vos équipements</h3>
@@ -194,7 +196,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl font-bold text-white">2</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Recevez votre devis</h3>
@@ -203,7 +205,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="w-16 h-16 bg-ekwip rounded-full flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl font-bold text-white">3</span>
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Profitez de vos équipements</h3>
