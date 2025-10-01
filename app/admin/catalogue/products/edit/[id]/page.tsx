@@ -1,7 +1,5 @@
 "use client"
 
-import Link from "next/link"
-
 import type React from "react"
 
 import { useState, useEffect } from "react"
@@ -14,37 +12,57 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { mockCategories, mockBrands, mockAttributes } from "@/lib/mock-data"
-import { Upload, X } from "lucide-react"
-import type { Attribute } from "@/types/admin"
+import { mockCategories, mockBrands, mockAttributes, mockProducts } from "@/lib/mock-data"
+import { Upload, X, Loader2 } from "lucide-react"
+import type { Attribute, Product } from "@/types/admin"
 import { useToast } from "@/hooks/use-toast"
 
-export default function CreateProductPage() {
+export default function EditProductPage({ params }: { params: { id: string } }) {
   const router = useRouter()
   const { toast } = useToast()
+  const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [product, setProduct] = useState<Product | null>(null)
   const [selectedCategory, setSelectedCategory] = useState("")
   const [availableAttributes, setAvailableAttributes] = useState<Attribute[]>([])
   const [productAttributes, setProductAttributes] = useState<Record<string, string>>({})
-  const [formData, setFormData] = useState({
-    name: "",
-    sku: "",
-    slug: "",
-    shortDescription: "",
-    description: "",
-    price: "",
-    compareAtPrice: "",
-    costPrice: "",
-    stock: "",
-    lowStock: "5",
-    categoryId: "",
-    brandId: "",
-    tags: "",
-    status: "active",
-    isFeatured: false,
-  })
   const [imageFiles, setImageFiles] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
+
+  // Charger les données du produit
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        // Dans une implémentation réelle, ceci serait un appel API
+        const foundProduct = mockProducts.find((p) => p.id === params.id)
+
+        if (foundProduct) {
+          setProduct(foundProduct)
+          setSelectedCategory(foundProduct.categoryId)
+          setProductAttributes(foundProduct.attributes || {})
+          setImagePreviews(foundProduct.images || [])
+        } else {
+          toast({
+            title: "Erreur",
+            description: "Produit non trouvé",
+            variant: "destructive",
+          })
+          router.push("/admin/catalogue/products")
+        }
+      } catch (error) {
+        console.error("Error fetching product:", error)
+        toast({
+          title: "Erreur",
+          description: "Impossible de charger les données du produit",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    fetchProduct()
+  }, [params.id])
 
   // Filtrer les attributs disponibles quand la catégorie change
   useEffect(() => {
@@ -54,19 +72,8 @@ export default function CreateProductPage() {
         (attr) => attr.categories && attr.categories.includes(selectedCategory),
       )
       setAvailableAttributes(filteredAttributes)
-
-      // Réinitialise les attributs du produit si nécessaire
-      const newProductAttributes: Record<string, string> = {}
-      filteredAttributes.forEach((attr) => {
-        // Conserve les valeurs existantes pour les attributs qui existent toujours
-        if (productAttributes[attr.id]) {
-          newProductAttributes[attr.id] = productAttributes[attr.id]
-        }
-      })
-      setProductAttributes(newProductAttributes)
     } else {
       setAvailableAttributes([])
-      setProductAttributes({})
     }
   }, [selectedCategory])
 
@@ -81,25 +88,32 @@ export default function CreateProductPage() {
   }
 
   const removeImage = (index: number) => {
-    const newFiles = [...imageFiles]
     const newPreviews = [...imagePreviews]
 
-    // Libère l'URL d'objet pour éviter les fuites de mémoire
-    URL.revokeObjectURL(newPreviews[index])
+    // Si c'est un fichier local, libère l'URL d'objet
+    if (index >= (product?.images.length || 0)) {
+      URL.revokeObjectURL(newPreviews[index])
+    }
 
-    newFiles.splice(index, 1)
     newPreviews.splice(index, 1)
-
-    setImageFiles(newFiles)
     setImagePreviews(newPreviews)
+
+    // Mettre également à jour les fichiers uploadés
+    if (index >= (product?.images.length || 0)) {
+      const newFiles = [...imageFiles]
+      newFiles.splice(index - (product?.images.length || 0), 1)
+      setImageFiles(newFiles)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!product) return
+
     setIsSubmitting(true)
 
     // Validation des champs obligatoires
-    if (!formData.name || !formData.sku || !formData.price || !formData.stock || !formData.categoryId) {
+    if (!product.name || !product.sku || !product.price || !product.stockQuantity || !product.categoryId) {
       toast({
         title: "Erreur de validation",
         description: "Veuillez remplir tous les champs obligatoires",
@@ -124,45 +138,69 @@ export default function CreateProductPage() {
       return
     }
 
-    // TODO: Implement actual product creation with API
-    // Simulation d'envoi à l'API
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      // TODO: Implement actual product update with API
+      // Simulation d'envoi à l'API
+      await new Promise((resolve) => setTimeout(resolve, 1000))
 
-    toast({
-      title: "Produit créé",
-      description: `Le produit ${formData.name} a été créé avec succès.`,
-    })
+      // Mise à jour du produit avec les nouveaux attributs
+      const updatedProduct = {
+        ...product,
+        attributes: productAttributes,
+      }
 
-    setIsSubmitting(false)
-    router.push("/admin/catalogue/products")
+      toast({
+        title: "Produit mis à jour",
+        description: `Le produit ${product.name} a été mis à jour avec succès.`,
+      })
+
+      router.push("/admin/catalogue/products")
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de mettre à jour le produit",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-
-    // Génère automatiquement le slug à partir du nom si le champ slug est vide
-    if (name === "name" && !formData.slug) {
-      const slug = value
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w-]+/g, "")
-      setFormData({ ...formData, name: value, slug })
+  const updateProduct = (field: string, value: any) => {
+    if (product) {
+      setProduct({ ...product, [field]: value })
     }
+  }
 
-    // Génère automatiquement le SKU à partir du nom si le champ SKU est vide
-    if (name === "name" && !formData.sku) {
-      const sku = value.substring(0, 3).toUpperCase() + "-" + Date.now().toString().slice(-4)
-      setFormData({ ...formData, name: value, sku })
-    }
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-[50vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <span className="ml-2">Chargement du produit...</span>
+      </div>
+    )
+  }
+
+  if (!product) {
+    return (
+      <div className="text-center p-6">
+        <h2 className="text-2xl font-bold text-red-600">Produit non trouvé</h2>
+        <p className="mt-2">Ce produit n'existe pas ou a été supprimé.</p>
+        <Button className="mt-4" onClick={() => router.push("/admin/catalogue/products")}>
+          Retour à la liste
+        </Button>
+      </div>
+    )
   }
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Ajouter un produit</h1>
-          <p className="text-gray-600">Créez un nouveau produit dans votre catalogue</p>
+          <h1 className="text-3xl font-bold">Modifier un produit</h1>
+          <p className="text-gray-600">
+            #{product.sku} - {product.name}
+          </p>
         </div>
       </div>
 
@@ -187,10 +225,8 @@ export default function CreateProductPage() {
                   <Label htmlFor="name">Nom du produit *</Label>
                   <Input
                     id="name"
-                    name="name"
-                    placeholder="MacBook Pro 14 pouces"
-                    value={formData.name}
-                    onChange={handleChange}
+                    value={product.name}
+                    onChange={(e) => updateProduct("name", e.target.value)}
                     required
                   />
                 </div>
@@ -200,22 +236,14 @@ export default function CreateProductPage() {
                     <Label htmlFor="sku">SKU *</Label>
                     <Input
                       id="sku"
-                      name="sku"
-                      placeholder="MBP-14-001"
-                      value={formData.sku}
-                      onChange={handleChange}
+                      value={product.sku}
+                      onChange={(e) => updateProduct("sku", e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="slug">Slug</Label>
-                    <Input
-                      id="slug"
-                      name="slug"
-                      placeholder="macbook-pro-14"
-                      value={formData.slug}
-                      onChange={handleChange}
-                    />
+                    <Input id="slug" value={product.slug} onChange={(e) => updateProduct("slug", e.target.value)} />
                   </div>
                 </div>
 
@@ -223,11 +251,9 @@ export default function CreateProductPage() {
                   <Label htmlFor="shortDescription">Description courte</Label>
                   <Textarea
                     id="shortDescription"
-                    name="shortDescription"
-                    placeholder="Ordinateur portable professionnel"
+                    value={product.shortDescription}
+                    onChange={(e) => updateProduct("shortDescription", e.target.value)}
                     rows={2}
-                    value={formData.shortDescription}
-                    onChange={handleChange}
                   />
                 </div>
 
@@ -235,11 +261,9 @@ export default function CreateProductPage() {
                   <Label htmlFor="description">Description complète</Label>
                   <Textarea
                     id="description"
-                    name="description"
-                    placeholder="Description détaillée du produit..."
+                    value={product.description}
+                    onChange={(e) => updateProduct("description", e.target.value)}
                     rows={6}
-                    value={formData.description}
-                    onChange={handleChange}
                   />
                 </div>
               </CardContent>
@@ -253,9 +277,9 @@ export default function CreateProductPage() {
                 <div className="space-y-2">
                   <Label htmlFor="category">Catégorie *</Label>
                   <Select
-                    value={formData.categoryId}
+                    value={product.categoryId}
                     onValueChange={(value) => {
-                      setFormData({ ...formData, categoryId: value })
+                      updateProduct("categoryId", value)
                       setSelectedCategory(value)
                     }}
                     required
@@ -275,10 +299,7 @@ export default function CreateProductPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="brand">Marque</Label>
-                  <Select
-                    value={formData.brandId}
-                    onValueChange={(value) => setFormData({ ...formData, brandId: value })}
-                  >
+                  <Select value={product.brandId} onValueChange={(value) => updateProduct("brandId", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Sélectionner une marque" />
                     </SelectTrigger>
@@ -296,19 +317,19 @@ export default function CreateProductPage() {
                   <Label htmlFor="tags">Tags (séparés par des virgules)</Label>
                   <Input
                     id="tags"
-                    name="tags"
-                    placeholder="laptop, apple, pro"
-                    value={formData.tags}
-                    onChange={handleChange}
+                    value={product.tags.join(", ")}
+                    onChange={(e) =>
+                      updateProduct(
+                        "tags",
+                        e.target.value.split(",").map((t) => t.trim()),
+                      )
+                    }
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="status">Statut</Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) => setFormData({ ...formData, status: value })}
-                  >
+                  <Select value={product.status} onValueChange={(value) => updateProduct("status", value)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -324,8 +345,8 @@ export default function CreateProductPage() {
                   <Label htmlFor="featured">Produit en vedette</Label>
                   <Switch
                     id="featured"
-                    checked={formData.isFeatured}
-                    onCheckedChange={(checked) => setFormData({ ...formData, isFeatured: checked })}
+                    checked={product.isFeatured}
+                    onCheckedChange={(checked) => updateProduct("isFeatured", checked)}
                   />
                 </div>
               </CardContent>
@@ -344,11 +365,9 @@ export default function CreateProductPage() {
                     <Label htmlFor="price">Prix de location (DH/mois) *</Label>
                     <Input
                       id="price"
-                      name="price"
                       type="number"
-                      placeholder="450"
-                      value={formData.price}
-                      onChange={handleChange}
+                      value={product.price}
+                      onChange={(e) => updateProduct("price", Number(e.target.value))}
                       required
                     />
                   </div>
@@ -356,22 +375,20 @@ export default function CreateProductPage() {
                     <Label htmlFor="compareAtPrice">Prix barré</Label>
                     <Input
                       id="compareAtPrice"
-                      name="compareAtPrice"
                       type="number"
-                      placeholder="500"
-                      value={formData.compareAtPrice}
-                      onChange={handleChange}
+                      value={product.compareAtPrice || ""}
+                      onChange={(e) =>
+                        updateProduct("compareAtPrice", e.target.value ? Number(e.target.value) : undefined)
+                      }
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="costPrice">Prix de revient</Label>
                     <Input
                       id="costPrice"
-                      name="costPrice"
                       type="number"
-                      placeholder="350"
-                      value={formData.costPrice}
-                      onChange={handleChange}
+                      value={product.costPrice}
+                      onChange={(e) => updateProduct("costPrice", Number(e.target.value))}
                     />
                   </div>
                 </div>
@@ -388,11 +405,9 @@ export default function CreateProductPage() {
                     <Label htmlFor="stock">Stock disponible *</Label>
                     <Input
                       id="stock"
-                      name="stock"
                       type="number"
-                      placeholder="15"
-                      value={formData.stock}
-                      onChange={handleChange}
+                      value={product.stockQuantity}
+                      onChange={(e) => updateProduct("stockQuantity", Number(e.target.value))}
                       required
                     />
                   </div>
@@ -400,11 +415,9 @@ export default function CreateProductPage() {
                     <Label htmlFor="lowStock">Seuil de stock bas</Label>
                     <Input
                       id="lowStock"
-                      name="lowStock"
                       type="number"
-                      placeholder="5"
-                      value={formData.lowStock}
-                      onChange={handleChange}
+                      value={product.lowStockThreshold}
+                      onChange={(e) => updateProduct("lowStockThreshold", Number(e.target.value))}
                     />
                   </div>
                 </div>
@@ -418,15 +431,10 @@ export default function CreateProductPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle>Attributs du produit</CardTitle>
-                  {!selectedCategory && (
-                    <p className="text-sm text-amber-600">
-                      Veuillez d'abord sélectionner une catégorie pour voir les attributs disponibles
-                    </p>
-                  )}
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {selectedCategory && availableAttributes.length > 0 ? (
+                {availableAttributes.length > 0 ? (
                   <div className="space-y-6">
                     {availableAttributes.map((attr) => (
                       <div key={attr.id} className="space-y-2">
@@ -514,18 +522,17 @@ export default function CreateProductPage() {
                       </div>
                     ))}
                   </div>
-                ) : selectedCategory ? (
-                  <div className="py-8 text-center text-gray-500">
-                    <p>Aucun attribut disponible pour cette catégorie.</p>
-                    <p className="mt-2">
-                      <Link href="/admin/catalogue/attributs" className="text-blue-600 hover:underline">
-                        Créer des attributs
-                      </Link>
-                    </p>
-                  </div>
                 ) : (
                   <div className="py-8 text-center text-gray-500">
-                    <p>Veuillez d'abord sélectionner une catégorie pour voir les attributs disponibles.</p>
+                    <p>Aucun attribut disponible pour cette catégorie.</p>
+                    <Button
+                      variant="link"
+                      className="px-0"
+                      type="button"
+                      onClick={() => router.push("/admin/catalogue/attributs")}
+                    >
+                      Créer des attributs
+                    </Button>
                   </div>
                 )}
               </CardContent>
@@ -558,20 +565,20 @@ export default function CreateProductPage() {
                       className="mt-4 bg-transparent"
                       onClick={() => document.getElementById("image-upload")?.click()}
                     >
-                      Sélectionner des images
+                      Ajouter des images
                     </Button>
                   </div>
 
                   {/* Aperçu des images */}
                   {imagePreviews.length > 0 && (
                     <div className="mt-6">
-                      <h4 className="text-sm font-medium mb-3">Aperçu des images ({imagePreviews.length})</h4>
+                      <h4 className="text-sm font-medium mb-3">Images du produit ({imagePreviews.length})</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         {imagePreviews.map((src, index) => (
                           <div key={index} className="relative rounded-md overflow-hidden border">
                             <img
                               src={src || "/placeholder.svg"}
-                              alt={`Preview ${index}`}
+                              alt={`Product image ${index}`}
                               className="h-24 w-full object-cover"
                             />
                             <Button

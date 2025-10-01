@@ -11,13 +11,21 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const products = mockProducts
+  const [products, setProducts] = useState(mockProducts)
+  const router = useRouter()
+
+  const filteredProducts = products.filter(
+    (product) =>
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.sku.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   const exportToCSV = () => {
-    // TODO: Implement CSV export
+    // Implement CSV export
     const csv = [
       ["SKU", "Nom", "Prix", "Stock", "Statut"].join(","),
       ...products.map((p) => [p.sku, p.name, p.price, p.stockQuantity, p.status].join(",")),
@@ -29,6 +37,19 @@ export default function ProductsPage() {
     a.href = url
     a.download = "products.csv"
     a.click()
+  }
+
+  const handleEdit = (productId: string) => {
+    router.push(`/admin/catalogue/products/edit/${productId}`)
+  }
+
+  const handleView = (productId: string) => {
+    router.push(`/admin/catalogue/products/view/${productId}`)
+  }
+
+  const handleDelete = (productId: string) => {
+    // Add confirmation dialog in real implementation
+    setProducts(products.filter((p) => p.id !== productId))
   }
 
   return (
@@ -49,7 +70,7 @@ export default function ProductsPage() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Liste des produits ({products.length})</CardTitle>
+            <CardTitle>Liste des produits ({filteredProducts.length})</CardTitle>
             <div className="flex items-center space-x-2">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
@@ -57,7 +78,7 @@ export default function ProductsPage() {
                   placeholder="Rechercher..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 w-64"
                 />
               </div>
               <Button variant="outline" size="icon">
@@ -84,7 +105,7 @@ export default function ProductsPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <TableRow key={product.id}>
                   <TableCell>
                     <img
@@ -104,7 +125,9 @@ export default function ProductsPage() {
                     </span>
                   </TableCell>
                   <TableCell>
-                    <Badge variant={product.status === "active" ? "default" : "secondary"}>{product.status}</Badge>
+                    <Badge variant={product.status === "active" ? "default" : "secondary"}>
+                      {product.status === "active" ? "Actif" : product.status === "draft" ? "Brouillon" : "Archivé"}
+                    </Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
@@ -114,15 +137,15 @@ export default function ProductsPage() {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleView(product.id)}>
                           <Eye className="mr-2 h-4 w-4" />
                           Voir
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleEdit(product.id)}>
                           <Edit className="mr-2 h-4 w-4" />
                           Modifier
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
+                        <DropdownMenuItem className="text-red-600" onClick={() => handleDelete(product.id)}>
                           <Trash2 className="mr-2 h-4 w-4" />
                           Supprimer
                         </DropdownMenuItem>
@@ -131,6 +154,13 @@ export default function ProductsPage() {
                   </TableCell>
                 </TableRow>
               ))}
+              {filteredProducts.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={7} className="text-center py-8 text-gray-500">
+                    Aucun produit trouvé
+                  </TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </CardContent>

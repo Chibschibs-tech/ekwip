@@ -69,6 +69,7 @@ export interface Attribute {
   isRequired: boolean
   isFilterable: boolean
   order: number
+  categories?: string[] // Liste des IDs de catégories où cet attribut s'applique
   createdAt: string
   updatedAt: string
 }
