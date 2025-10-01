@@ -73,33 +73,126 @@
   body {
     @apply bg-background text-foreground;
   }
-  a {
-    @apply transition-colors duration-200 hover:text-ekwip;
+}
+
+@layer components {
+  .feature-card {
+    @apply transition-all duration-300 transform-gpu;
+    transform-origin: center;
+    backface-visibility: hidden;
+  }
+
+  .feature-card:hover {
+    @apply -translate-y-2.5;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .feature-card .icon-container {
+    @apply transition-all duration-300;
+  }
+
+  .feature-card:hover .icon-container {
+    @apply scale-110;
+  }
+
+  .client-logo-slider {
+    @apply flex;
+    animation: scroll 30s linear infinite;
+  }
+
+  .testimonial-card {
+    @apply transition-all duration-300;
+  }
+
+  .testimonial-card:hover {
+    @apply -translate-y-1.5;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .product-card {
+    @apply transition-all duration-300;
+  }
+
+  .product-card:hover {
+    @apply -translate-y-2;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  .product-card .product-image {
+    @apply transition-all duration-500;
+  }
+
+  .product-card:hover .product-image {
+    @apply scale-105;
+  }
+
+  .tab-button {
+    @apply transition-all duration-300 relative;
+  }
+
+  .tab-button::after {
+    content: "";
+    @apply absolute -bottom-0.5 left-0 w-0 h-0.5 bg-[#1f3b57] transition-all duration-300;
+  }
+
+  .tab-button.active::after,
+  .tab-button:hover::after {
+    @apply w-full;
+  }
+
+  .modern-button {
+    @apply transition-all duration-300 relative overflow-hidden;
+  }
+
+  .modern-button::before {
+    content: "";
+    @apply absolute top-0 -left-full w-full h-full transition-all duration-700;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+  }
+
+  .modern-button:hover::before {
+    @apply left-full;
+  }
+
+  .navbar-fixed {
+    @apply fixed top-0 left-0 w-full z-50 transition-all duration-300;
+  }
+
+  .navbar-scrolled {
+    @apply bg-white shadow-md;
+  }
+
+  .highlighted-card {
+    @apply bg-[#1f3b57] text-white;
+  }
+
+  .highlighted-card h3,
+  .highlighted-card p {
+    @apply text-white;
+  }
+
+  .highlighted-card .icon-container {
+    @apply bg-white/20;
   }
 }
 
-.feature-card {
-  transition: all 0.3s ease;
-  transform-origin: center;
-  backface-visibility: hidden;
-}
+@layer utilities {
+  .mobile-touch-target {
+    @apply min-h-11 min-w-11;
+  }
 
-.feature-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
+  .mobile-padding {
+    @apply px-4;
+  }
 
-.feature-card .icon-container {
-  transition: all 0.3s ease;
-}
-
-.feature-card:hover .icon-container {
-  transform: scale(1.1);
-}
-
-.client-logo-slider {
-  display: flex;
-  animation: scroll 30s linear infinite;
+  .mobile-section {
+    @apply py-12;
+  }
 }
 
 @keyframes scroll {
@@ -109,118 +202,4 @@
   100% {
     transform: translateX(calc(-250px * 7));
   }
-}
-
-.testimonial-card {
-  transition: all 0.3s ease;
-}
-
-.testimonial-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.product-card {
-  transition: all 0.3s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-.product-card .product-image {
-  transition: all 0.5s ease;
-}
-
-.product-card:hover .product-image {
-  transform: scale(1.05);
-}
-
-.tab-button {
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.tab-button::after {
-  content: "";
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: #1f3b57;
-  transition: width 0.3s ease;
-}
-
-.tab-button.active::after,
-.tab-button:hover::after {
-  width: 100%;
-}
-
-.modern-button {
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.modern-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.2) 50%,
-    rgba(255, 255, 255, 0) 100%
-  );
-  transition: left 0.7s ease;
-}
-
-.modern-button:hover::before {
-  left: 100%;
-}
-
-/* Mobile optimizations */
-@layer utilities {
-  .mobile-touch-target {
-    min-height: 44px;
-    min-width: 44px;
-  }
-
-  .mobile-padding {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .mobile-section {
-    padding-top: 3rem;
-    padding-bottom: 3rem;
-  }
-}
-
-/* Navbar scroll effect */
-.navbar-fixed {
-  @apply fixed top-0 left-0 w-full z-50 transition-all duration-300;
-}
-
-.navbar-scrolled {
-  @apply bg-white shadow-md;
-}
-
-/* Highlighted card styles */
-.highlighted-card {
-  @apply bg-ekwip text-white;
-}
-
-.highlighted-card h3,
-.highlighted-card p {
-  @apply text-white;
-}
-
-.highlighted-card .icon-container {
-  @apply bg-white/20;
 }
