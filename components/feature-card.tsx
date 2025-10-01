@@ -9,11 +9,17 @@ interface FeatureCardProps {
 
 export function FeatureCard({ title, description, icon }: FeatureCardProps) {
   return (
-    <Card className="text-center hover:shadow-lg transition-shadow duration-300">
+    <Card className="text-center hover:shadow-lg transition-shadow duration-300 border-gray-200">
       <CardContent className="p-6">
         <div className="mb-4 flex justify-center">
-          <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center">
-            <Image src={icon || "/placeholder.svg"} alt={title} width={32} height={32} className="w-8 h-8" />
+          <div className="w-16 h-16 bg-ekwip-50 rounded-full flex items-center justify-center">
+            <Image
+              src={icon || "/placeholder.svg"}
+              alt={title}
+              width={32}
+              height={32}
+              className="w-8 h-8 object-contain"
+            />
           </div>
         </div>
         <h3 className="text-xl font-semibold mb-3 text-gray-900">{title}</h3>

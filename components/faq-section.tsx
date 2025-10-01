@@ -1,35 +1,37 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const faqs = [
   {
-    question: "Quels sont les avantages de la location ?",
+    question: "Quelles sont les durées minimales de location ?",
     answer:
-      "La location vous permet de préserver votre trésorerie, de bénéficier des dernières technologies, d'avoir un support technique inclus et de déduire fiscalement vos mensualités.",
+      "Nos contrats de location sont flexibles et s'adaptent à vos besoins. La durée minimale est généralement de 12 mois, mais nous proposons également des contrats de 24 et 36 mois avec des tarifs dégressifs.",
   },
   {
-    question: "Que comprend le service de location ?",
+    question: "Que se passe-t-il en cas de panne ?",
     answer:
-      "Nos contrats incluent l'équipement, la maintenance, le support technique, les mises à jour logicielles et la possibilité de renouvellement ou d'upgrade.",
+      "Nous assurons le support technique et la maintenance de tous nos équipements. En cas de panne, nous intervenons rapidement et fournissons un équipement de remplacement si nécessaire pour assurer la continuité de votre activité.",
   },
   {
-    question: "Puis-je acheter l'équipement en cours de contrat ?",
+    question: "Puis-je changer d'équipement en cours de contrat ?",
     answer:
-      "Oui, vous pouvez racheter vos équipements à tout moment pendant la durée du contrat. Le prix de rachat sera calculé en fonction de la durée restante.",
+      "Oui, nos contrats sont flexibles. Vous pouvez faire évoluer votre parc informatique en cours de contrat selon vos besoins. Contactez-nous pour discuter des modalités de mise à niveau ou de changement d'équipement.",
   },
   {
     question: "Les logiciels sont-ils inclus ?",
     answer:
-      "Oui, nous fournissons les équipements avec les logiciels de base installés et configurés. Les licences spécialisées peuvent être ajoutées selon vos besoins.",
+      "Nous livrons les équipements avec le système d'exploitation de base. Selon vos besoins, nous pouvons également inclure des licences logicielles professionnelles (suite Office, logiciels métiers, etc.) dans votre contrat de location.",
   },
   {
     question: "Proposez-vous un service de livraison ?",
     answer:
-      "Oui, nous livrons et installons vos équipements partout au Maroc. Notre équipe technique se charge de la configuration et de la mise en service.",
+      "Oui, nous assurons la livraison et l'installation de tous vos équipements. Notre équipe technique peut également vous accompagner dans la configuration et la mise en service de votre matériel.",
   },
   {
     question: "Comment fonctionne la facturation ?",
     answer:
-      "La facturation est mensuelle et comprend tous les services inclus dans votre contrat. Vous recevez une facture unique pour tous vos équipements.",
+      "La facturation est mensuelle et débute dès la réception de vos équipements. Vous recevez une facture détaillée par email chaque mois. Nous proposons également des facilités de paiement adaptées aux besoins des entreprises.",
   },
 ]
 
@@ -38,19 +40,31 @@ export function FAQSection() {
     <section className="py-20 px-4 md:px-6 lg:px-8 bg-gray-50">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Questions fréquentes</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Questions fréquentes</h2>
           <p className="text-lg text-gray-600">
-            Trouvez rapidement les réponses à vos questions sur nos services de location IT
+            Trouvez rapidement les réponses à vos questions sur la location d'équipements IT
           </p>
         </div>
-        <Accordion type="single" collapsible className="w-full">
+
+        <Accordion type="single" collapsible className="w-full space-y-4">
           {faqs.map((faq, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-              <AccordionContent className="text-gray-600">{faq.answer}</AccordionContent>
+            <AccordionItem key={index} value={`item-${index}`} className="bg-white border rounded-lg px-6">
+              <AccordionTrigger className="text-left hover:no-underline">
+                <span className="font-semibold text-gray-900">{faq.question}</span>
+              </AccordionTrigger>
+              <AccordionContent className="text-gray-600 leading-relaxed">{faq.answer}</AccordionContent>
             </AccordionItem>
           ))}
         </Accordion>
+
+        <div className="text-center mt-12">
+          <p className="text-gray-600 mb-4">Vous ne trouvez pas la réponse à votre question ?</p>
+          <Link href="/contact">
+            <Button size="lg" className="bg-ekwip hover:bg-ekwip-700">
+              Contactez-nous
+            </Button>
+          </Link>
+        </div>
       </div>
     </section>
   )
