@@ -1,249 +1,172 @@
 "use client"
 
-import { useState, useMemo } from "react"
-import Image from "next/image"
+import { useEffect, useState } from "react"
+import { useParams } from "next/navigation"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import Image from "next/image"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import CatalogProductCard from "@/components/catalog-product-card"
-import { ArrowLeft, Search, Filter } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import { getCategoryBySlug, getProductsByCategory } from "@/lib/products"
-import { notFound } from "next/navigation"
+import { ArrowLeft, Package, ShoppingCart } from "lucide-react"
+import { useCart } from "@/contexts/cart-context"
+import { useToast } from "@/hooks/use-toast"
 
-interface CategoryPageProps {
-  params: {
-    slug: string
-  }
-}
+export default function CategoryPage() {
+  const params = useParams()
+  const slug = params.slug as string
+  const [category, setCategory] = useState<any>(null)
+  const [products, setProducts] = useState<any[]>([])
+  const { addItem } = useCart()
+  const { toast } = useToast()
 
-export default function CategoryPage({ params }: CategoryPageProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [sortBy, setSortBy] = useState("popularity")
+  useEffect(() => {
+    const loadData = () => {
+      const cat = getCategoryBySlug(slug)
+      setCategory(cat)
 
-  const category = getCategoryBySlug(params.slug)
-  const allProducts = getProductsByCategory(params.slug)
-
-  if (!category) {
-    notFound()
-  }
-
-  // Filter and sort products
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = allProducts
-
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.brand.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+      if (cat) {
+        const prods = getProductsByCategory(slug)
+        setProducts(prods)
+      }
     }
 
-    // Apply sorting
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "price_asc":
-          return a.basePrice - b.basePrice
-        case "price_desc":
-          return b.basePrice - a.basePrice
-        case "newest":
-          return a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
-        case "popularity":
-        default:
-          return a.isFeatured === b.isFeatured ? 0 : a.isFeatured ? -1 : 1
-      }
+    loadData()
+
+    const handleStorageChange = () => {
+      loadData()
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => window.removeEventListener("storage", handleStorageChange)
+  }, [slug])
+
+  const handleAddToCart = (product: any) => {
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images?.[0] || "/placeholder.svg",
+      quantity: 1,
     })
 
-    return sorted
-  }, [allProducts, searchQuery, sortBy])
+    toast({
+      title: "Produit ajouté",
+      description: `${product.name} a été ajouté à votre liste de besoins.`,
+    })
+  }
 
-  const productCount = filteredAndSortedProducts.length
+  if (!category) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4 py-16">
+          <Card className="border-dashed">
+            <CardContent className="py-12 text-center">
+              <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Catégorie non trouvée</h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">Cette catégorie n'existe pas ou a été supprimée.</p>
+              <Link href="/catalogue">
+                <Button>
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Retour au catalogue
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div>
-      {/* Breadcrumb */}
-      <section className="py-6 px-4 md:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <nav className="flex items-center space-x-2 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-ekwip">
-              Accueil
-            </Link>
-            <span className="text-gray-400">/</span>
-            <Link href="/catalogue" className="text-gray-500 hover:text-ekwip">
-              Catalogue
-            </Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-800 font-medium">{category.name}</span>
-          </nav>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto px-4 py-16">
+        {/* Fil d'Ariane */}
+        <div className="mb-8">
+          <Link
+            href="/catalogue"
+            className="inline-flex items-center text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Retour au catalogue
+          </Link>
         </div>
-      </section>
 
-      {/* Category Header */}
-      <section className="py-12 md:py-16 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-ekwip-50 to-ekwip-100">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Link href="/catalogue" className="inline-flex items-center text-ekwip hover:text-ekwip-700 mb-6">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Retour au catalogue
-              </Link>
-
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-6">{category.name}</h1>
-
-              <p className="text-lg text-gray-600 mb-6">{category.description}</p>
-
-              <div className="flex items-center gap-4 mb-8">
-                <Badge variant="outline" className="text-ekwip border-ekwip">
-                  {productCount} {productCount === 1 ? "produit disponible" : "produits disponibles"}
-                </Badge>
-              </div>
-
-              <p className="text-gray-600">
-                Trouvez l'équipement parfait pour vos besoins professionnels dans notre sélection de{" "}
-                {category.name.toLowerCase()}
-              </p>
-            </div>
-
-            <div className="relative">
-              <div className="bg-white rounded-3xl overflow-hidden shadow-xl">
-                <Image
-                  src={category.image || "/placeholder.svg"}
-                  alt={category.name}
-                  width={500}
-                  height={400}
-                  className="w-full h-80 object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Filters and Search */}
-      <section className="py-8 px-4 md:px-6 lg:px-8 bg-white border-b">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Rechercher un produit..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            {/* Sort */}
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 whitespace-nowrap">Trier par</span>
-              <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-48">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="popularity">Popularité</SelectItem>
-                  <SelectItem value="price_asc">Prix croissant</SelectItem>
-                  <SelectItem value="price_desc">Prix décroissant</SelectItem>
-                  <SelectItem value="newest">Nouveautés</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {filteredAndSortedProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {filteredAndSortedProducts.map((product) => (
-                <CatalogProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="max-w-md mx-auto">
-                <div className="mb-6">
-                  <Filter className="h-16 w-16 text-gray-300 mx-auto" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Aucun produit trouvé</h3>
-                <p className="text-gray-600 mb-6">
-                  Essayez de modifier vos critères de recherche ou parcourez d'autres catégories
-                </p>
-                <Button onClick={() => setSearchQuery("")} variant="outline">
-                  Réinitialiser les filtres
-                </Button>
-              </div>
-            </div>
+        {/* En-tête de la catégorie */}
+        <div className="mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+            {category.name}
+          </h1>
+          {category.description && (
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl">{category.description}</p>
           )}
-        </div>
-      </section>
-
-      {/* Why Rent Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Pourquoi louer vos {category.name.toLowerCase()} ?
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Découvrez les avantages de la location d'équipements professionnels avec Ekwip
-            </p>
+          <div className="mt-4">
+            <Badge variant="secondary" className="text-base px-4 py-2">
+              {products.length} {products.length === 1 ? "produit" : "produits"}
+            </Badge>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md">
-              <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">💰</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Préservez votre trésorerie</h3>
-              <p className="text-gray-600">
-                Transformez vos dépenses d'investissement en coûts opérationnels prévisibles
+        {/* Liste des produits */}
+        {products.length === 0 ? (
+          <Card className="border-dashed">
+            <CardContent className="py-12 text-center">
+              <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Aucun produit disponible</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Il n'y a actuellement aucun produit dans cette catégorie.
               </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md">
-              <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🔄</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Flexibilité maximale</h3>
-              <p className="text-gray-600">Adaptez votre parc d'équipements selon l'évolution de vos besoins</p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md">
-              <div className="h-16 w-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🛠️</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Maintenance incluse</h3>
-              <p className="text-gray-600">Bénéficiez d'un support technique complet et d'une maintenance préventive</p>
-            </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map((product) => (
+              <Card key={product.id} className="group hover:shadow-lg transition-all">
+                <CardHeader className="p-0">
+                  <Link href={`/catalogue/product/${product.slug}`}>
+                    <div className="relative h-48 overflow-hidden rounded-t-lg bg-gray-100 dark:bg-gray-800">
+                      <Image
+                        src={product.images?.[0] || "/placeholder.svg"}
+                        alt={product.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                      {product.stock === 0 && (
+                        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                          <Badge variant="destructive">Rupture de stock</Badge>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                </CardHeader>
+                <CardContent className="p-4">
+                  <Link href={`/catalogue/product/${product.slug}`}>
+                    <CardTitle className="mb-2 group-hover:text-blue-600 transition-colors">{product.name}</CardTitle>
+                  </Link>
+                  {product.description && (
+                    <CardDescription className="mb-4 line-clamp-2">{product.description}</CardDescription>
+                  )}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-2xl font-bold text-blue-600">{product.price.toFixed(2)} MAD</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">par {product.rentalPeriod || "mois"}</p>
+                    </div>
+                    <Button onClick={() => handleAddToCart(product)} disabled={product.stock === 0} size="sm">
+                      <ShoppingCart className="h-4 w-4 mr-2" />
+                      Ajouter
+                    </Button>
+                  </div>
+                  {product.brand && (
+                    <div className="mt-4">
+                      <Badge variant="outline">{product.brand}</Badge>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            ))}
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-ekwip text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Prêt à équiper votre entreprise ?</h2>
-          <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-            Contactez nos experts pour obtenir un devis personnalisé et découvrir nos solutions de location flexibles
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="bg-white text-ekwip hover:bg-gray-100">
-              Demander un devis
-            </Button>
-            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 bg-transparent">
-              Parler à un expert
-            </Button>
-          </div>
-        </div>
-      </section>
+        )}
+      </div>
     </div>
   )
 }

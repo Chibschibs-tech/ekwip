@@ -1,264 +1,252 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+import Link from "next/link"
 import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useProducts } from "@/contexts/products-context"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, Edit, Trash2 } from "lucide-react"
-import { useProducts } from "@/contexts/products-context"
-import { useCategories } from "@/contexts/categories-context"
-import { useBrands } from "@/contexts/brands-context"
-import { useAttributes } from "@/contexts/attributes-context"
+import { ArrowLeft, Edit, Trash2, Package, DollarSign, Calendar, Tag } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
-import { notFound } from "next/navigation"
 
-export default function ViewProductPage({ params }: { params: { id: string } }) {
+export default function ViewProductPage() {
+  const params = useParams()
   const router = useRouter()
-  const { getProduct, deleteProduct } = useProducts()
-  const { getCategory } = useCategories()
-  const { getBrand } = useBrands()
-  const { getAttribute } = useAttributes()
+  const { products, deleteProduct } = useProducts()
   const { toast } = useToast()
-  const [selectedImage, setSelectedImage] = useState(0)
+  const [product, setProduct] = useState<any>(null)
 
-  const product = getProduct(params.id)
-
-  if (!product) {
-    notFound()
-  }
-
-  const category = product.categoryId ? getCategory(product.categoryId) : null
-  const brand = product.brandId ? getBrand(product.brandId) : null
+  useEffect(() => {
+    const foundProduct = products.find((p) => p.id === params.id)
+    setProduct(foundProduct)
+  }, [params.id, products])
 
   const handleDelete = () => {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer le produit "${product.name}" ?`)) {
-      deleteProduct(product.id)
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+      deleteProduct(params.id as string)
       toast({
         title: "Produit supprimé",
-        description: `Le produit ${product.name} a été supprimé`,
+        description: "Le produit a été supprimé avec succès.",
       })
       router.push("/admin/catalogue/products")
     }
   }
 
+  if (!product) {
+    return (
+      <div className="container mx-auto py-8">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <Package className="h-16 w-16 mx-auto text-gray-400 mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Produit non trouvé</h3>
+            <p className="text-gray-600 mb-4">Ce produit n'existe pas ou a été supprimé.</p>
+            <Link href="/admin/catalogue/products">
+              <Button>
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Retour à la liste
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="container mx-auto py-8 space-y-6">
+      {/* En-tête */}
       <div className="flex items-center justify-between">
-        <Button variant="ghost" onClick={() => router.back()}>
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Retour
-        </Button>
+        <div className="flex items-center gap-4">
+          <Link href="/admin/catalogue/products">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-3xl font-bold">{product.name}</h1>
+            <p className="text-gray-600">SKU: {product.sku}</p>
+          </div>
+        </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={() => router.push(`/admin/catalogue/products/edit/${product.id}`)}>
-            <Edit className="mr-2 h-4 w-4" />
-            Modifier
-          </Button>
+          <Link href={`/admin/catalogue/products/edit/${product.id}`}>
+            <Button>
+              <Edit className="h-4 w-4 mr-2" />
+              Modifier
+            </Button>
+          </Link>
           <Button variant="destructive" onClick={handleDelete}>
-            <Trash2 className="mr-2 h-4 w-4" />
+            <Trash2 className="h-4 w-4 mr-2" />
             Supprimer
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="space-y-4">
-          <Card>
-            <CardContent className="p-6">
-              <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4">
-                <Image
-                  src={product.images[selectedImage] || product.thumbnail || "/placeholder.svg"}
-                  alt={product.name}
-                  width={500}
-                  height={500}
-                  className="w-full h-full object-contain p-4"
-                />
-              </div>
-              {product.images.length > 1 && (
-                <div className="flex gap-2 overflow-x-auto">
-                  {product.images.map((image, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setSelectedImage(index)}
-                      className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                        selectedImage === index ? "border-blue-600" : "border-gray-200"
-                      }`}
-                    >
-                      <Image
-                        src={image || "/placeholder.svg"}
-                        alt={`${product.name} ${index + 1}`}
-                        width={80}
-                        height={80}
-                        className="w-full h-full object-contain p-2"
-                      />
-                    </button>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        <div className="space-y-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Colonne principale */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Images */}
           <Card>
             <CardHeader>
-              <div className="flex items-start justify-between">
-                <div>
-                  <CardTitle className="text-2xl">{product.name}</CardTitle>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge
-                      variant={
-                        product.status === "active" ? "default" : product.status === "draft" ? "secondary" : "outline"
-                      }
-                    >
-                      {product.status === "active" ? "Actif" : product.status === "draft" ? "Brouillon" : "Archivé"}
-                    </Badge>
-                    {product.isFeatured && <Badge className="bg-yellow-500">En vedette</Badge>}
-                  </div>
-                </div>
-              </div>
+              <CardTitle>Images du produit</CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">SKU</p>
-                <p className="font-mono">{product.sku}</p>
-              </div>
-
-              {product.shortDescription && (
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Description courte</p>
-                  <p>{product.shortDescription}</p>
+            <CardContent>
+              {product.images && product.images.length > 0 ? (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {product.images.map((image: string, index: number) => (
+                    <div key={index} className="relative aspect-square rounded-lg overflow-hidden bg-gray-100">
+                      <Image
+                        src={image || "/placeholder.svg"}
+                        alt={`${product.name} - Image ${index + 1}`}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ))}
                 </div>
+              ) : (
+                <div className="text-center py-8 text-gray-500">Aucune image disponible</div>
               )}
-
-              <Separator />
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Catégorie</p>
-                  <p className="font-medium">{category?.name || "Non défini"}</p>
-                </div>
-                {brand && (
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Marque</p>
-                    <p className="font-medium">{brand.name}</p>
-                  </div>
-                )}
-              </div>
-
-              <Separator />
-
-              <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Prix</p>
-                  <p className="text-2xl font-bold text-blue-600">{product.price} DH/mois</p>
-                </div>
-                {product.compareAtPrice && (
-                  <div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Prix barré</p>
-                    <p className="text-lg line-through text-gray-500">{product.compareAtPrice} DH</p>
-                  </div>
-                )}
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Prix de revient</p>
-                  <p className="font-medium">{product.costPrice} DH</p>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Stock disponible</p>
-                  <p
-                    className={`text-xl font-bold ${
-                      product.stockQuantity <= product.lowStockThreshold ? "text-red-600" : "text-green-600"
-                    }`}
-                  >
-                    {product.stockQuantity} unités
-                  </p>
-                  {product.stockQuantity <= product.lowStockThreshold && (
-                    <p className="text-xs text-red-600">Stock bas</p>
-                  )}
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Seuil de stock bas</p>
-                  <p className="font-medium">{product.lowStockThreshold} unités</p>
-                </div>
-              </div>
             </CardContent>
           </Card>
 
-          {product.tags && product.tags.length > 0 && (
+          {/* Description */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Description</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-gray-700 whitespace-pre-wrap">
+                {product.description || "Aucune description disponible"}
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Spécifications */}
+          {product.specifications && product.specifications.length > 0 && (
             <Card>
               <CardHeader>
-                <CardTitle>Tags</CardTitle>
+                <CardTitle>Spécifications techniques</CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {product.tags.map((tag, index) => (
-                    <Badge key={index} variant="secondary">
-                      {tag}
-                    </Badge>
+                <div className="space-y-3">
+                  {product.specifications.map((spec: any, index: number) => (
+                    <div key={index} className="flex justify-between py-2 border-b last:border-0">
+                      <span className="font-medium">{spec.key}</span>
+                      <span className="text-gray-600">{spec.value}</span>
+                    </div>
                   ))}
                 </div>
               </CardContent>
             </Card>
           )}
         </div>
+
+        {/* Colonne latérale */}
+        <div className="space-y-6">
+          {/* Informations principales */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Informations</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                  <DollarSign className="h-4 w-4" />
+                  Prix de location
+                </div>
+                <p className="text-2xl font-bold text-blue-600">{product.price.toFixed(2)} MAD</p>
+                <p className="text-sm text-gray-500">par {product.rentalPeriod || "mois"}</p>
+              </div>
+
+              <Separator />
+
+              <div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                  <Package className="h-4 w-4" />
+                  Stock disponible
+                </div>
+                <p className="text-xl font-semibold">{product.stock} unités</p>
+                <Badge variant={product.stock > 0 ? "default" : "destructive"} className="mt-2">
+                  {product.stock > 0 ? "En stock" : "Rupture de stock"}
+                </Badge>
+              </div>
+
+              <Separator />
+
+              <div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-1">
+                  <Tag className="h-4 w-4" />
+                  Marque
+                </div>
+                <p className="font-medium">{product.brand || "Non spécifiée"}</p>
+              </div>
+
+              <Separator />
+
+              <div>
+                <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
+                  <Calendar className="h-4 w-4" />
+                  Catégories
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {product.categories && product.categories.length > 0 ? (
+                    product.categories.map((cat: string, index: number) => (
+                      <Badge key={index} variant="outline">
+                        {cat}
+                      </Badge>
+                    ))
+                  ) : (
+                    <span className="text-sm text-gray-500">Aucune catégorie</span>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Statut */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Statut</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">Publié</span>
+                <Badge variant={product.status === "published" ? "default" : "secondary"}>
+                  {product.status === "published" ? "Oui" : "Non"}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600">En vedette</span>
+                <Badge variant={product.featured ? "default" : "secondary"}>{product.featured ? "Oui" : "Non"}</Badge>
+              </div>
+              <Separator />
+              <div>
+                <p className="text-xs text-gray-500">Créé le</p>
+                <p className="text-sm font-medium">
+                  {new Date(product.createdAt).toLocaleDateString("fr-FR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+              <div>
+                <p className="text-xs text-gray-500">Dernière modification</p>
+                <p className="text-sm font-medium">
+                  {new Date(product.updatedAt).toLocaleDateString("fr-FR", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
-
-      {product.description && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Description complète</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="whitespace-pre-wrap">{product.description}</p>
-          </CardContent>
-        </Card>
-      )}
-
-      {product.attributes && Object.keys(product.attributes).length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Attributs</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {Object.entries(product.attributes).map(([attrId, value]) => {
-                const attribute = getAttribute(attrId)
-                return (
-                  <div key={attrId} className="border rounded-lg p-4">
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">{attribute?.name || attrId}</p>
-                    <p className="font-medium">{value}</p>
-                  </div>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Informations système</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <p className="text-gray-600 dark:text-gray-400">Date de création</p>
-              <p>{new Date(product.createdAt).toLocaleString("fr-FR")}</p>
-            </div>
-            <div>
-              <p className="text-gray-600 dark:text-gray-400">Dernière modification</p>
-              <p>{new Date(product.updatedAt).toLocaleString("fr-FR")}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }
