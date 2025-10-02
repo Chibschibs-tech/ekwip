@@ -11,13 +11,14 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Upload, X } from "lucide-react"
-import type { Attribute, Product } from "@/types/admin"
+import { Upload, X, Plus, Trash2 } from "lucide-react"
+import type { Attribute, Product, ProductVariation } from "@/types/admin"
 import { useProducts } from "@/contexts/products-context"
 import { useCategories } from "@/contexts/categories-context"
 import { useBrands } from "@/contexts/brands-context"
 import { useAttributes } from "@/contexts/attributes-context"
 import { useToast } from "@/hooks/use-toast"
+import { resizeImage } from "@/lib/image-utils"
 
 export default function CreateProductPage() {
   const router = useRouter()
@@ -30,9 +31,11 @@ export default function CreateProductPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("")
   const [availableAttributes, setAvailableAttributes] = useState<Attribute[]>([])
+  const [variationAttributes, setVariationAttributes] = useState<Attribute[]>([])
   const [productAttributes, setProductAttributes] = useState<Record<string, string>>({})
-  const [imageFiles, setImageFiles] = useState<File[]>([])
-  const [imagePreviews, setImagePreviews] = useState<string[]>([])
+  const [imageFiles, setImageFiles] = useState<string[]>([])
+  const [variations, setVariations] = useState<ProductVariation[]>([])
+  const [hasVariations, setHasVariations] = useState(false)
 
   const [formData, setFormData] = useState({
     name: "",
@@ -56,8 +59,10 @@ export default function CreateProductPage() {
     if (selectedCategory) {
       const filteredAttributes = getAttributesByCategory(selectedCategory)
       setAvailableAttributes(filteredAttributes)
+      setVariationAttributes(filteredAttributes.filter((attr) => attr.isVariation))
     } else {
       setAvailableAttributes([])
+      setVariationAttributes([])
     }
   }, [selectedCategory, getAttributesByCategory])
 
@@ -73,27 +78,56 @@ export default function CreateProductPage() {
     }
   }, [formData.name])
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const filesArray = Array.from(e.target.files)
-      const newImagePreviews = filesArray.map((file) => URL.createObjectURL(file))
+      const files = Array.from(e.target.files)
 
-      setImageFiles([...imageFiles, ...filesArray])
-      setImagePreviews([...imagePreviews, ...newImagePreviews])
+      try {
+        const base64Images = await Promise.all(files.map((file) => resizeImage(file, 800, 800)))
+        setImageFiles([...imageFiles, ...base64Images])
+        toast({
+          title: "Images ajoutées",
+          description: `${files.length} image(s) téléchargée(s) avec succès`,
+        })
+      } catch (error) {
+        console.error("Error uploading images:", error)
+        toast({
+          title: "Erreur",
+          description: "Impossible de télécharger les images",
+          variant: "destructive",
+        })
+      }
     }
   }
 
   const removeImage = (index: number) => {
-    const newFiles = [...imageFiles]
-    const newPreviews = [...imagePreviews]
+    const newImages = [...imageFiles]
+    newImages.splice(index, 1)
+    setImageFiles(newImages)
+  }
 
-    URL.revokeObjectURL(newPreviews[index])
+  const addVariation = () => {
+    const newVariation: ProductVariation = {
+      id: `var-${Date.now()}`,
+      name: "",
+      sku: `${formData.sku}-VAR${variations.length + 1}`,
+      price: formData.price,
+      stockQuantity: 0,
+      attributes: {},
+    }
+    setVariations([...variations, newVariation])
+  }
 
-    newFiles.splice(index, 1)
-    newPreviews.splice(index, 1)
+  const updateVariation = (index: number, updates: Partial<ProductVariation>) => {
+    const newVariations = [...variations]
+    newVariations[index] = { ...newVariations[index], ...updates }
+    setVariations(newVariations)
+  }
 
-    setImageFiles(newFiles)
-    setImagePreviews(newPreviews)
+  const removeVariation = (index: number) => {
+    const newVariations = [...variations]
+    newVariations.splice(index, 1)
+    setVariations(newVariations)
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,6 +148,16 @@ export default function CreateProductPage() {
       toast({
         title: "Erreur de validation",
         description: "Le prix de location doit être supérieur à 0",
+        variant: "destructive",
+      })
+      setIsSubmitting(false)
+      return
+    }
+
+    if (hasVariations && variations.length === 0) {
+      toast({
+        title: "Erreur de validation",
+        description: "Veuillez ajouter au moins une variation",
         variant: "destructive",
       })
       setIsSubmitting(false)
@@ -149,14 +193,15 @@ export default function CreateProductPage() {
         price: formData.price,
         compareAtPrice: formData.compareAtPrice || undefined,
         costPrice: formData.costPrice,
-        thumbnail: imagePreviews[0] || "/placeholder.svg",
-        images: imagePreviews.length > 0 ? imagePreviews : ["/placeholder.svg"],
+        thumbnail: imageFiles[0] || "/placeholder.svg",
+        images: imageFiles.length > 0 ? imageFiles : ["/placeholder.svg"],
         stockQuantity: formData.stockQuantity,
         lowStockThreshold: formData.lowStockThreshold,
         status: formData.status,
         isFeatured: formData.isFeatured,
         tags: formData.tags,
         attributes: productAttributes,
+        variations: hasVariations ? variations : undefined,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }
@@ -198,10 +243,11 @@ export default function CreateProductPage() {
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="general">Général</TabsTrigger>
             <TabsTrigger value="pricing">Prix & Stock</TabsTrigger>
             <TabsTrigger value="attributes">Attributs</TabsTrigger>
+            <TabsTrigger value="variations">Variations</TabsTrigger>
             <TabsTrigger value="images">Images</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
@@ -373,7 +419,7 @@ export default function CreateProductPage() {
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
                     <Label htmlFor="price">
-                      Prix de location (DH/mois) <span className="text-red-500">*</span>
+                      Prix de location (MAD/mois) <span className="text-red-500">*</span>
                     </Label>
                     <Input
                       id="price"
@@ -465,64 +511,66 @@ export default function CreateProductPage() {
               <CardContent className="space-y-4">
                 {availableAttributes.length > 0 ? (
                   <div className="space-y-6">
-                    {availableAttributes.map((attr) => (
-                      <div key={attr.id} className="space-y-2">
-                        <Label htmlFor={`attr-${attr.id}`}>
-                          {attr.name} {attr.isRequired && <span className="text-red-500">*</span>}
-                        </Label>
+                    {availableAttributes
+                      .filter((attr) => !attr.isVariation)
+                      .map((attr) => (
+                        <div key={attr.id} className="space-y-2">
+                          <Label htmlFor={`attr-${attr.id}`}>
+                            {attr.name} {attr.isRequired && <span className="text-red-500">*</span>}
+                          </Label>
 
-                        {attr.type === "select" ? (
-                          <Select
-                            value={productAttributes[attr.id] || ""}
-                            onValueChange={(value) =>
-                              setProductAttributes({
-                                ...productAttributes,
-                                [attr.id]: value,
-                              })
-                            }
-                            required={attr.isRequired}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder={`Sélectionner ${attr.name.toLowerCase()}`} />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {attr.values.map((value) => (
-                                <SelectItem key={`${attr.id}-${value}`} value={value}>
-                                  {value}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        ) : attr.type === "text" ? (
-                          <Input
-                            id={`attr-${attr.id}`}
-                            placeholder={`Saisir ${attr.name.toLowerCase()}`}
-                            value={productAttributes[attr.id] || ""}
-                            onChange={(e) =>
-                              setProductAttributes({
-                                ...productAttributes,
-                                [attr.id]: e.target.value,
-                              })
-                            }
-                            required={attr.isRequired}
-                          />
-                        ) : attr.type === "number" ? (
-                          <Input
-                            id={`attr-${attr.id}`}
-                            type="number"
-                            placeholder={`Saisir ${attr.name.toLowerCase()}`}
-                            value={productAttributes[attr.id] || ""}
-                            onChange={(e) =>
-                              setProductAttributes({
-                                ...productAttributes,
-                                [attr.id]: e.target.value,
-                              })
-                            }
-                            required={attr.isRequired}
-                          />
-                        ) : null}
-                      </div>
-                    ))}
+                          {attr.type === "select" ? (
+                            <Select
+                              value={productAttributes[attr.id] || ""}
+                              onValueChange={(value) =>
+                                setProductAttributes({
+                                  ...productAttributes,
+                                  [attr.id]: value,
+                                })
+                              }
+                              required={attr.isRequired}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder={`Sélectionner ${attr.name.toLowerCase()}`} />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {attr.values.map((value) => (
+                                  <SelectItem key={`${attr.id}-${value}`} value={value}>
+                                    {value}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          ) : attr.type === "text" ? (
+                            <Input
+                              id={`attr-${attr.id}`}
+                              placeholder={`Saisir ${attr.name.toLowerCase()}`}
+                              value={productAttributes[attr.id] || ""}
+                              onChange={(e) =>
+                                setProductAttributes({
+                                  ...productAttributes,
+                                  [attr.id]: e.target.value,
+                                })
+                              }
+                              required={attr.isRequired}
+                            />
+                          ) : attr.type === "number" ? (
+                            <Input
+                              id={`attr-${attr.id}`}
+                              type="number"
+                              placeholder={`Saisir ${attr.name.toLowerCase()}`}
+                              value={productAttributes[attr.id] || ""}
+                              onChange={(e) =>
+                                setProductAttributes({
+                                  ...productAttributes,
+                                  [attr.id]: e.target.value,
+                                })
+                              }
+                              required={attr.isRequired}
+                            />
+                          ) : null}
+                        </div>
+                      ))}
                   </div>
                 ) : (
                   <div className="py-8 text-center text-gray-500">
@@ -532,6 +580,151 @@ export default function CreateProductPage() {
                         : "Veuillez sélectionner une catégorie dans l'onglet Général."}
                     </p>
                   </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="variations" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Variations du produit</CardTitle>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Créez des variations de ce produit (ex: différentes configurations processeur/RAM)
+                </p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="hasVariations">Activer les variations</Label>
+                  <Switch
+                    id="hasVariations"
+                    checked={hasVariations}
+                    onCheckedChange={(checked) => {
+                      setHasVariations(checked)
+                      if (!checked) {
+                        setVariations([])
+                      }
+                    }}
+                  />
+                </div>
+
+                {hasVariations && (
+                  <>
+                    {variationAttributes.length > 0 ? (
+                      <>
+                        <div className="space-y-4">
+                          {variations.map((variation, index) => (
+                            <Card key={variation.id}>
+                              <CardContent className="pt-6 space-y-4">
+                                <div className="flex justify-between items-start">
+                                  <h4 className="font-semibold">Variation {index + 1}</h4>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => removeVariation(index)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+
+                                <div className="grid gap-4 md:grid-cols-2">
+                                  <div className="space-y-2">
+                                    <Label>Nom de la variation</Label>
+                                    <Input
+                                      placeholder="Ex: i5 / 16GB / 512GB"
+                                      value={variation.name}
+                                      onChange={(e) => updateVariation(index, { name: e.target.value })}
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label>SKU</Label>
+                                    <Input
+                                      placeholder="Ex: MBP-i5-16-512"
+                                      value={variation.sku}
+                                      onChange={(e) => updateVariation(index, { sku: e.target.value })}
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="grid gap-4 md:grid-cols-2">
+                                  <div className="space-y-2">
+                                    <Label>Prix (MAD/mois)</Label>
+                                    <Input
+                                      type="number"
+                                      value={variation.price || ""}
+                                      onChange={(e) => updateVariation(index, { price: Number(e.target.value) })}
+                                      min="0"
+                                      step="0.01"
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label>Stock</Label>
+                                    <Input
+                                      type="number"
+                                      value={variation.stockQuantity || ""}
+                                      onChange={(e) =>
+                                        updateVariation(index, { stockQuantity: Number(e.target.value) })
+                                      }
+                                      min="0"
+                                    />
+                                  </div>
+                                </div>
+
+                                <div className="space-y-4">
+                                  <Label>Attributs de variation</Label>
+                                  {variationAttributes.map((attr) => (
+                                    <div key={attr.id} className="space-y-2">
+                                      <Label className="text-sm">{attr.name}</Label>
+                                      <Select
+                                        value={variation.attributes[attr.id] || ""}
+                                        onValueChange={(value) =>
+                                          updateVariation(index, {
+                                            attributes: {
+                                              ...variation.attributes,
+                                              [attr.id]: value,
+                                            },
+                                          })
+                                        }
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder={`Sélectionner ${attr.name.toLowerCase()}`} />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {attr.values.map((value) => (
+                                            <SelectItem key={value} value={value}>
+                                              {value}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                  ))}
+                                </div>
+                              </CardContent>
+                            </Card>
+                          ))}
+                        </div>
+
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={addVariation}
+                          className="w-full bg-transparent"
+                        >
+                          <Plus className="mr-2 h-4 w-4" />
+                          Ajouter une variation
+                        </Button>
+                      </>
+                    ) : (
+                      <div className="py-8 text-center text-gray-500">
+                        <p>
+                          Aucun attribut de variation défini pour cette catégorie. Veuillez créer des attributs avec
+                          l'option "Utiliser pour les variations" dans la section Attributs.
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>
@@ -568,11 +761,11 @@ export default function CreateProductPage() {
                     </Button>
                   </div>
 
-                  {imagePreviews.length > 0 && (
+                  {imageFiles.length > 0 && (
                     <div>
-                      <h4 className="text-sm font-medium mb-3">Images sélectionnées ({imagePreviews.length})</h4>
+                      <h4 className="text-sm font-medium mb-3">Images sélectionnées ({imageFiles.length})</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                        {imagePreviews.map((src, index) => (
+                        {imageFiles.map((src, index) => (
                           <div key={index} className="relative rounded-md overflow-hidden border">
                             <img
                               src={src || "/placeholder.svg"}

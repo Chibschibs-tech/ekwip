@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,8 @@ import { ArrowLeft, Shield, Truck, Headphones, Wrench } from "lucide-react"
 import { getProductBySlug, getRelatedProducts } from "@/lib/products"
 import { useCart } from "@/contexts/cart-context"
 import { notFound } from "next/navigation"
+import type { Product } from "@/lib/products"
+import type { Attribute } from "@/types/admin"
 
 interface ProductPageProps {
   params: {
@@ -19,16 +21,39 @@ interface ProductPageProps {
 
 export default function ProductPage({ params }: ProductPageProps) {
   const { addToCart } = useCart()
-  const product = getProductBySlug(params.slug)
+  const [product, setProduct] = useState<Product | undefined>()
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+  const [attributes, setAttributes] = useState<Attribute[]>([])
   const [selectedImage, setSelectedImage] = useState(0)
   const [selectedVariant, setSelectedVariant] = useState<string>("")
   const [selectedConfiguration, setSelectedConfiguration] = useState<string>("")
 
+  useEffect(() => {
+    const prod = getProductBySlug(params.slug)
+    if (!prod) {
+      notFound()
+    }
+    setProduct(prod)
+
+    const related = getRelatedProducts(prod.id)
+    setRelatedProducts(related)
+
+    // Charger les attributs depuis localStorage
+    try {
+      const stored = localStorage.getItem("ekwip_admin_attributes")
+      if (stored) {
+        const allAttributes = JSON.parse(stored)
+        setAttributes(allAttributes)
+      }
+    } catch (error) {
+      console.error("Error loading attributes:", error)
+    }
+  }, [params.slug])
+
   if (!product) {
-    notFound()
+    return <div>Chargement...</div>
   }
 
-  const relatedProducts = getRelatedProducts(product.id)
   const images = product.images || [product.image]
 
   const handleAddToCart = () => {
@@ -78,17 +103,23 @@ export default function ProductPage({ params }: ProductPageProps) {
     return null
   }
 
+  // Fonction pour obtenir le nom d'un attribut
+  const getAttributeName = (attributeId: string): string => {
+    const attribute = attributes.find((attr) => attr.id === attributeId)
+    return attribute?.name || attributeId
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Breadcrumb */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4">
           <nav className="flex items-center space-x-2 text-sm text-gray-500">
-            <Link href="/" className="hover:text-ekwip">
+            <Link href="/" className="hover:text-[#1f3b57]">
               Accueil
             </Link>
             <span>/</span>
-            <Link href="/catalogue" className="hover:text-ekwip">
+            <Link href="/catalogue" className="hover:text-[#1f3b57]">
               Catalogue
             </Link>
             <span>/</span>
@@ -100,7 +131,7 @@ export default function ProductPage({ params }: ProductPageProps) {
       <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
         <Link
           href="/catalogue"
-          className="inline-flex items-center text-ekwip hover:text-ekwip-600 mb-8 transition-colors"
+          className="inline-flex items-center text-[#1f3b57] hover:text-[#1f3b57]/80 mb-8 transition-colors"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Retour au catalogue
@@ -125,7 +156,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === index ? "border-ekwip" : "border-gray-200"
+                      selectedImage === index ? "border-[#1f3b57]" : "border-gray-200"
                     }`}
                   >
                     <Image
@@ -163,7 +194,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                       key={config.id}
                       className={`border rounded-lg p-4 cursor-pointer transition-colors ${
                         selectedConfiguration === config.id
-                          ? "border-ekwip bg-ekwip-50"
+                          ? "border-[#1f3b57] bg-blue-50"
                           : "border-gray-200 hover:border-gray-300"
                       }`}
                       onClick={() => setSelectedConfiguration(config.id)}
@@ -171,8 +202,8 @@ export default function ProductPage({ params }: ProductPageProps) {
                       <div className="flex justify-between items-start mb-2">
                         <h4 className="font-semibold">{config.name}</h4>
                         <div className="text-right">
-                          <div className="text-lg font-bold text-ekwip">{config.price} DH/mois</div>
-                          <div className="text-sm text-gray-500">({config.firstMonthPrice} DH le premier mois)</div>
+                          <div className="text-lg font-bold text-[#1f3b57]">{config.price} MAD/mois</div>
+                          <div className="text-sm text-gray-500">({config.firstMonthPrice} MAD le premier mois)</div>
                         </div>
                       </div>
                       <div className="space-y-1 text-sm text-gray-600">
@@ -190,12 +221,12 @@ export default function ProductPage({ params }: ProductPageProps) {
             {/* Pricing */}
             <div className="bg-gray-50 rounded-lg p-6">
               <div className="flex items-baseline gap-2 mb-2">
-                <span className="text-3xl font-bold text-ekwip">{getCurrentPrice()} DH</span>
+                <span className="text-3xl font-bold text-[#1f3b57]">{getCurrentPrice()} MAD</span>
                 <span className="text-gray-600">par mois</span>
               </div>
               {getFirstMonthPrice() && (
                 <div className="text-sm text-gray-600">
-                  Premier mois : <span className="font-semibold">{getFirstMonthPrice()} DH</span>
+                  Premier mois : <span className="font-semibold">{getFirstMonthPrice()} MAD</span>
                 </div>
               )}
               <div className="text-sm text-gray-500 mt-2">Prix indicatif - Devis détaillé sur demande</div>
@@ -206,7 +237,7 @@ export default function ProductPage({ params }: ProductPageProps) {
               <Button
                 onClick={handleAddToCart}
                 size="lg"
-                className="w-full bg-ekwip hover:bg-ekwip-600"
+                className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90"
                 disabled={
                   !product.inStock ||
                   (product.configurations && !selectedConfiguration) ||
@@ -229,19 +260,19 @@ export default function ProductPage({ params }: ProductPageProps) {
             {/* Features */}
             <div className="grid grid-cols-2 gap-4 pt-6 border-t">
               <div className="flex items-center space-x-2">
-                <Shield className="w-5 h-5 text-ekwip" />
+                <Shield className="w-5 h-5 text-[#1f3b57]" />
                 <span className="text-sm">Assurance incluse</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Truck className="w-5 h-5 text-ekwip" />
+                <Truck className="w-5 h-5 text-[#1f3b57]" />
                 <span className="text-sm">Livraison gratuite</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Wrench className="w-5 h-5 text-ekwip" />
+                <Wrench className="w-5 h-5 text-[#1f3b57]" />
                 <span className="text-sm">Maintenance incluse</span>
               </div>
               <div className="flex items-center space-x-2">
-                <Headphones className="w-5 h-5 text-ekwip" />
+                <Headphones className="w-5 h-5 text-[#1f3b57]" />
                 <span className="text-sm">Support 24/7</span>
               </div>
             </div>
@@ -249,7 +280,7 @@ export default function ProductPage({ params }: ProductPageProps) {
         </div>
 
         {/* Specifications */}
-        {product.specifications && (
+        {product.specifications && Object.keys(product.specifications).length > 0 && (
           <div className="mt-16">
             <Card>
               <CardContent className="p-8">
@@ -257,7 +288,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {Object.entries(product.specifications).map(([key, value]) => (
                     <div key={key} className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="font-medium text-gray-700">{key}</span>
+                      <span className="font-medium text-gray-700">{getAttributeName(key)}</span>
                       <span className="text-gray-900">{value}</span>
                     </div>
                   ))}
@@ -287,7 +318,7 @@ export default function ProductPage({ params }: ProductPageProps) {
                     <h3 className="font-semibold mb-2 line-clamp-2">{relatedProduct.name}</h3>
                     <p className="text-sm text-gray-600 mb-3 line-clamp-2">{relatedProduct.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-bold text-ekwip">{relatedProduct.price} DH/mois</span>
+                      <span className="text-lg font-bold text-[#1f3b57]">{relatedProduct.price} MAD/mois</span>
                       <Link href={`/catalogue/product/${relatedProduct.slug}`}>
                         <Button size="sm" variant="outline">
                           Voir
@@ -303,14 +334,14 @@ export default function ProductPage({ params }: ProductPageProps) {
 
         {/* CTA Section */}
         <div className="mt-16">
-          <Card className="bg-gradient-to-r from-ekwip to-ekwip-600 text-white">
+          <Card className="bg-gradient-to-r from-[#1f3b57] to-[#2d5a7b] text-white">
             <CardContent className="p-8 text-center">
               <h2 className="text-2xl font-bold mb-4">Intéressé par ce produit ?</h2>
               <p className="text-lg opacity-90 mb-6 max-w-2xl mx-auto">
                 Contactez nos experts pour obtenir un devis personnalisé et découvrir nos offres de location flexibles.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Button size="lg" className="bg-white text-ekwip hover:bg-gray-100">
+                <Button size="lg" className="bg-white text-[#1f3b57] hover:bg-gray-100">
                   Demander un devis
                 </Button>
                 <Button

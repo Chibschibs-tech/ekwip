@@ -1,15 +1,16 @@
 "use client"
 
-import { useState, useMemo, useEffect } from "react"
-import Image from "next/image"
+import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
+import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import CatalogProductCard from "@/components/catalog-product-card"
-import { ArrowLeft, Search, Filter } from "lucide-react"
-import { getCategoryBySlug, getProductsByCategory } from "@/lib/products"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Slider } from "@/components/ui/slider"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { getCategoryBySlug, getProductsByCategory, formatPrice, type Category, type Product } from "@/lib/products"
 import { notFound } from "next/navigation"
 
 interface CategoryPageProps {
@@ -18,256 +19,366 @@ interface CategoryPageProps {
   }
 }
 
+interface FilterState {
+  brands: string[]
+  priceRange: { min: number; max: number }
+  attributes: Record<string, string[]>
+  inStock: boolean
+}
+
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [sortBy, setSortBy] = useState("popularity")
-  const [category, setCategory] = useState<any>(null)
-  const [allProducts, setAllProducts] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [category, setCategory] = useState<Category | undefined>()
+  const [products, setProducts] = useState<Product[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const [sortBy, setSortBy] = useState("name")
+  const [attributes, setAttributes] = useState<any[]>([])
+
+  const [filters, setFilters] = useState<FilterState>({
+    brands: [],
+    priceRange: { min: 0, max: 1000 },
+    attributes: {},
+    inStock: false,
+  })
 
   useEffect(() => {
-    const loadData = () => {
-      const cat = getCategoryBySlug(params.slug)
-      const prods = getProductsByCategory(params.slug)
+    const cat = getCategoryBySlug(params.slug)
+    if (!cat) {
+      notFound()
+    }
+    setCategory(cat)
 
-      setCategory(cat)
-      setAllProducts(prods)
-      setIsLoading(false)
+    const prods = getProductsByCategory(params.slug)
+    setProducts(prods)
+    setFilteredProducts(prods)
+
+    // Charger les attributs depuis localStorage
+    try {
+      const stored = localStorage.getItem("ekwip_admin_attributes")
+      if (stored) {
+        const allAttributes = JSON.parse(stored)
+        const categoryAttributes = allAttributes.filter((attr: any) => attr.isFilterable)
+        setAttributes(categoryAttributes)
+      }
+    } catch (error) {
+      console.error("Error loading attributes:", error)
     }
 
-    loadData()
+    // Calculer le prix min/max
+    if (prods.length > 0) {
+      const prices = prods.map((p) => p.price)
+      setFilters((prev) => ({
+        ...prev,
+        priceRange: {
+          min: Math.floor(Math.min(...prices)),
+          max: Math.ceil(Math.max(...prices)),
+        },
+      }))
+    }
   }, [params.slug])
 
-  // Filter and sort products
-  const filteredAndSortedProducts = useMemo(() => {
-    let filtered = allProducts
+  useEffect(() => {
+    let filtered = [...products]
 
-    // Apply search filter
-    if (searchQuery) {
-      filtered = filtered.filter(
-        (product) =>
-          product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.brand.toLowerCase().includes(searchQuery.toLowerCase()),
-      )
+    // Filtre par marque
+    if (filters.brands.length > 0) {
+      filtered = filtered.filter((p) => filters.brands.includes(p.brand))
     }
 
-    // Apply sorting
-    const sorted = [...filtered].sort((a, b) => {
-      switch (sortBy) {
-        case "price_asc":
-          return a.basePrice - b.basePrice
-        case "price_desc":
-          return b.basePrice - a.basePrice
-        case "newest":
-          return a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1
-        case "popularity":
-        default:
-          return a.isFeatured === b.isFeatured ? 0 : a.isFeatured ? -1 : 1
+    // Filtre par prix
+    filtered = filtered.filter((p) => p.price >= filters.priceRange.min && p.price <= filters.priceRange.max)
+
+    // Filtre par stock
+    if (filters.inStock) {
+      filtered = filtered.filter((p) => p.inStock)
+    }
+
+    // Filtre par attributs
+    Object.entries(filters.attributes).forEach(([attrId, values]) => {
+      if (values.length > 0) {
+        filtered = filtered.filter((p) => {
+          const productAttrValue = p.specifications?.[attrId]
+          return productAttrValue && values.includes(productAttrValue)
+        })
       }
     })
 
-    return sorted
-  }, [allProducts, searchQuery, sortBy])
+    // Tri
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case "price-low":
+          return a.price - b.price
+        case "price-high":
+          return b.price - a.price
+        case "name":
+        default:
+          return a.name.localeCompare(b.name)
+      }
+    })
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Chargement...</p>
-        </div>
-      </div>
-    )
+    setFilteredProducts(filtered)
+  }, [products, filters, sortBy])
+
+  const handleBrandChange = (brand: string, checked: boolean) => {
+    if (checked) {
+      setFilters({
+        ...filters,
+        brands: [...filters.brands, brand],
+      })
+    } else {
+      setFilters({
+        ...filters,
+        brands: filters.brands.filter((b) => b !== brand),
+      })
+    }
   }
+
+  const handleAttributeChange = (attrId: string, value: string, checked: boolean) => {
+    const currentValues = filters.attributes[attrId] || []
+
+    if (checked) {
+      setFilters({
+        ...filters,
+        attributes: {
+          ...filters.attributes,
+          [attrId]: [...currentValues, value],
+        },
+      })
+    } else {
+      setFilters({
+        ...filters,
+        attributes: {
+          ...filters.attributes,
+          [attrId]: currentValues.filter((v) => v !== value),
+        },
+      })
+    }
+  }
+
+  const handlePriceRangeChange = (value: number[]) => {
+    setFilters({
+      ...filters,
+      priceRange: {
+        min: value[0],
+        max: value[1],
+      },
+    })
+  }
+
+  const resetFilters = () => {
+    const prices = products.map((p) => p.price)
+    setFilters({
+      brands: [],
+      priceRange: {
+        min: Math.floor(Math.min(...prices)),
+        max: Math.ceil(Math.max(...prices)),
+      },
+      attributes: {},
+      inStock: false,
+    })
+  }
+
+  // Get unique brands
+  const brands = Array.from(new Set(products.map((p) => p.brand))).sort()
 
   if (!category) {
-    notFound()
+    return <div>Chargement...</div>
   }
 
-  const productCount = filteredAndSortedProducts.length
-
   return (
-    <div>
-      {/* Breadcrumb */}
-      <section className="py-6 px-4 md:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <nav className="flex items-center space-x-2 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-gray-900">
-              Accueil
-            </Link>
-            <span className="text-gray-400">/</span>
-            <Link href="/catalogue" className="text-gray-500 hover:text-gray-900">
-              Catalogue
-            </Link>
-            <span className="text-gray-400">/</span>
-            <span className="text-gray-800 font-medium">{category.name}</span>
-          </nav>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4">
+          <Link href="/catalogue" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-4">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Retour au catalogue
+          </Link>
         </div>
-      </section>
+      </div>
 
       {/* Category Header */}
-      <section className="py-12 md:py-16 px-4 md:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Link href="/catalogue" className="inline-flex items-center text-gray-600 hover:text-gray-900 mb-6">
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Retour au catalogue
-              </Link>
+      <div className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">{category.name}</h1>
+          <p className="text-lg text-gray-600">{category.description}</p>
+        </div>
+      </div>
 
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">{category.name}</h1>
+      <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
+        <div className="flex gap-8">
+          {/* Sidebar Filters */}
+          <div className="hidden lg:block w-64 flex-shrink-0">
+            <div className="sticky top-4 space-y-6">
+              {/* Marques */}
+              {brands.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">Marques</h3>
+                  <div className="space-y-2">
+                    {brands.map((brand) => (
+                      <div key={brand} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={`brand-${brand}`}
+                          checked={filters.brands.includes(brand)}
+                          onCheckedChange={(checked) => handleBrandChange(brand, checked === true)}
+                        />
+                        <label
+                          htmlFor={`brand-${brand}`}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                        >
+                          {brand}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-              <p className="text-lg text-gray-600 mb-6">{category.description}</p>
-
-              <div className="flex items-center gap-4 mb-8">
-                <Badge variant="outline" className="text-gray-900 border-gray-900">
-                  {productCount} {productCount === 1 ? "produit disponible" : "produits disponibles"}
-                </Badge>
+              {/* Prix */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Prix (MAD/mois)</h3>
+                <div className="px-2">
+                  <Slider
+                    value={[filters.priceRange.min, filters.priceRange.max]}
+                    onValueChange={handlePriceRangeChange}
+                    min={Math.floor(Math.min(...products.map((p) => p.price)))}
+                    max={Math.ceil(Math.max(...products.map((p) => p.price)))}
+                    step={10}
+                    className="mb-6"
+                  />
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">{formatPrice(filters.priceRange.min)}</span>
+                    <span className="text-sm">{formatPrice(filters.priceRange.max)}</span>
+                  </div>
+                </div>
               </div>
 
-              <p className="text-gray-600">
-                Trouvez l'équipement parfait pour vos besoins professionnels dans notre sélection de{" "}
-                {category.name.toLowerCase()}
-              </p>
-            </div>
+              {/* Attributs filtrables */}
+              {attributes.map((attr) => {
+                // Get unique values for this attribute from products
+                const uniqueValues = Array.from(
+                  new Set(
+                    products
+                      .map((p) => p.specifications?.[attr.id])
+                      .filter(Boolean)
+                      .flat(),
+                  ),
+                ).sort()
 
-            <div className="relative">
-              <div className="bg-white rounded-3xl overflow-hidden shadow-xl">
-                <Image
-                  src={category.image || "/placeholder.svg"}
-                  alt={category.name}
-                  width={500}
-                  height={400}
-                  className="w-full h-80 object-cover"
-                />
+                if (uniqueValues.length === 0) return null
+
+                return (
+                  <div key={attr.id}>
+                    <h3 className="text-lg font-semibold mb-3">{attr.name}</h3>
+                    <div className="space-y-2">
+                      {uniqueValues.map((value) => (
+                        <div key={value} className="flex items-center space-x-2">
+                          <Checkbox
+                            id={`attr-${attr.id}-${value}`}
+                            checked={filters.attributes[attr.id]?.includes(value) || false}
+                            onCheckedChange={(checked) => handleAttributeChange(attr.id, value, checked === true)}
+                          />
+                          <label
+                            htmlFor={`attr-${attr.id}-${value}`}
+                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                          >
+                            {value}
+                          </label>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+
+              {/* Disponibilité */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3">Disponibilité</h3>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="in-stock"
+                    checked={filters.inStock}
+                    onCheckedChange={(checked) => setFilters({ ...filters, inStock: checked === true })}
+                  />
+                  <label
+                    htmlFor="in-stock"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+                  >
+                    En stock uniquement
+                  </label>
+                </div>
               </div>
+
+              <button
+                onClick={resetFilters}
+                className="w-full py-2 text-sm text-gray-600 hover:text-gray-800 transition-colors underline"
+              >
+                Réinitialiser les filtres
+              </button>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Filters and Search */}
-      <section className="py-8 px-4 md:px-6 lg:px-8 bg-white border-b">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Rechercher un produit..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-
-            {/* Sort */}
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-gray-600 whitespace-nowrap">Trier par</span>
+          {/* Products Grid */}
+          <div className="flex-1">
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-gray-600">
+                {filteredProducts.length} produit{filteredProducts.length > 1 ? "s" : ""}
+              </p>
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger className="w-48">
-                  <SelectValue />
+                  <SelectValue placeholder="Trier par" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="popularity">Popularité</SelectItem>
-                  <SelectItem value="price_asc">Prix croissant</SelectItem>
-                  <SelectItem value="price_desc">Prix décroissant</SelectItem>
-                  <SelectItem value="newest">Nouveautés</SelectItem>
+                  <SelectItem value="name">Nom A-Z</SelectItem>
+                  <SelectItem value="price-low">Prix croissant</SelectItem>
+                  <SelectItem value="price-high">Prix décroissant</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Products Grid */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {filteredAndSortedProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {filteredAndSortedProducts.map((product) => (
-                <CatalogProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16">
-              <div className="max-w-md mx-auto">
-                <div className="mb-6">
-                  <Filter className="h-16 w-16 text-gray-300 mx-auto" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-800 mb-2">Aucun produit trouvé</h3>
-                <p className="text-gray-600 mb-6">
-                  Essayez de modifier vos critères de recherche ou parcourez d'autres catégories
-                </p>
-                <Button onClick={() => setSearchQuery("")} variant="outline">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-12">
+                <p className="text-gray-500 mb-4">Aucun produit trouvé avec ces critères.</p>
+                <Button variant="outline" onClick={resetFilters}>
                   Réinitialiser les filtres
                 </Button>
               </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Why Rent Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gray-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
-              Pourquoi louer vos {category.name.toLowerCase()} ?
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Découvrez les avantages de la location d'équipements professionnels avec Ekwip
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md">
-              <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">💰</span>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
+                  <Card key={product.id} className="group hover:shadow-lg transition-shadow">
+                    <CardContent className="p-4">
+                      <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden relative">
+                        <Image
+                          src={product.image || "/placeholder.svg"}
+                          alt={product.name}
+                          fill
+                          className="object-contain p-4 group-hover:scale-105 transition-transform"
+                        />
+                        {product.isNew && <Badge className="absolute top-2 left-2 bg-green-500">Nouveau</Badge>}
+                        {product.isPopular && <Badge className="absolute top-2 right-2 bg-blue-500">Populaire</Badge>}
+                      </div>
+                      <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+                      <div className="flex items-center justify-between mb-4">
+                        <div>
+                          <span className="text-lg font-bold text-gray-900">{formatPrice(product.price)}</span>
+                          <span className="text-sm text-gray-500">/mois</span>
+                        </div>
+                        <Badge variant={product.inStock ? "default" : "secondary"}>
+                          {product.inStock ? "En stock" : "Rupture"}
+                        </Badge>
+                      </div>
+                      <Link href={`/catalogue/product/${product.slug}`}>
+                        <Button className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90">Voir détails</Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Préservez votre trésorerie</h3>
-              <p className="text-gray-600">
-                Transformez vos dépenses d'investissement en coûts opérationnels prévisibles
-              </p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md">
-              <div className="h-16 w-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🔄</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Flexibilité maximale</h3>
-              <p className="text-gray-600">Adaptez votre parc d'équipements selon l'évolution de vos besoins</p>
-            </div>
-
-            <div className="bg-white rounded-2xl p-8 text-center shadow-md">
-              <div className="h-16 w-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl">🛠️</span>
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-800">Maintenance incluse</h3>
-              <p className="text-gray-600">Bénéficiez d'un support technique complet et d'une maintenance préventive</p>
-            </div>
+            )}
           </div>
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gray-900 text-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Prêt à équiper votre entreprise ?</h2>
-          <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
-            Contactez nos experts pour obtenir un devis personnalisé et découvrir nos solutions de location flexibles
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
-              Demander un devis
-            </Button>
-            <Button variant="outline" size="lg" className="border-white text-white hover:bg-white/10 bg-transparent">
-              Parler à un expert
-            </Button>
-          </div>
-        </div>
-      </section>
+      </div>
     </div>
   )
 }
