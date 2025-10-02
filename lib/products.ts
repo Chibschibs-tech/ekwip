@@ -186,6 +186,14 @@ export const categories: Category[] = [
   },
 ]
 
+export function getAllProducts(): Product[] {
+  return products
+}
+
+export function getAllCategories(): Category[] {
+  return categories
+}
+
 export function formatPrice(price: number): string {
   return `${price} DH`
 }

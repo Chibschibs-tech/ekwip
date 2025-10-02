@@ -4,11 +4,13 @@ import { useEffect } from "react"
 
 export function DataSync() {
   useEffect(() => {
-    // Cette fonction sera appelée côté client uniquement
-    // Elle peut écouter les changements dans localStorage
-    const handleStorageChange = () => {
-      // Forcer un rechargement des données si nécessaire
-      window.dispatchEvent(new Event("ekwip-data-updated"))
+    // Ce composant écoute les changements dans localStorage
+    // et force un rafraîchissement quand les données changent
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "ekwip_admin_products" || e.key === "ekwip_admin_categories" || e.key === "ekwip_admin_brands") {
+        // Recharger la page pour mettre à jour les données
+        window.location.reload()
+      }
     }
 
     window.addEventListener("storage", handleStorageChange)
