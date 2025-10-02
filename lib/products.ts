@@ -32,7 +32,7 @@ export interface Product {
 }
 
 export interface Category {
-  id: number
+  id: string
   name: string
   slug: string
   description: string
@@ -42,7 +42,7 @@ export interface Category {
 }
 
 // Mock data par défaut
-export const products: Product[] = [
+const defaultProducts: Product[] = [
   {
     id: "1",
     name: 'MacBook Pro 14"',
@@ -156,9 +156,9 @@ export const products: Product[] = [
   },
 ]
 
-export const categories: Category[] = [
+const defaultCategories: Category[] = [
   {
-    id: 1,
+    id: "cat-1",
     name: "Ordinateurs portables",
     slug: "ordinateurs-portables",
     description: "Ordinateurs portables professionnels pour tous vos besoins",
@@ -167,7 +167,7 @@ export const categories: Category[] = [
     image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptop.png",
   },
   {
-    id: 2,
+    id: "cat-2",
     name: "Ordinateurs de bureau",
     slug: "ordinateurs-de-bureau",
     description: "Stations de travail performantes pour vos équipes",
@@ -176,7 +176,7 @@ export const categories: Category[] = [
     image: "https://hs6evtdbiabuzmxs.public.blob.vercel-storage.com/Hero/laptops",
   },
   {
-    id: 3,
+    id: "cat-3",
     name: "Smartphones",
     slug: "smartphones",
     description: "Smartphones professionnels pour vos équipes mobiles",
@@ -186,12 +186,87 @@ export const categories: Category[] = [
   },
 ]
 
+// Fonction pour charger les catégories depuis localStorage
+function loadCategoriesFromStorage(): Category[] {
+  if (typeof window === "undefined") return defaultCategories
+
+  try {
+    const stored = localStorage.getItem("ekwip_admin_categories")
+    if (!stored) return defaultCategories
+
+    const adminCategories = JSON.parse(stored)
+
+    return adminCategories
+      .filter((cat: any) => cat.isActive)
+      .map((cat: any) => ({
+        id: cat.id,
+        name: cat.name,
+        slug: cat.slug,
+        description: cat.description || "",
+        count: cat.productCount || 0,
+        parent: 0,
+        image: cat.image || undefined,
+      }))
+  } catch (error) {
+    console.error("Error loading categories:", error)
+    return defaultCategories
+  }
+}
+
+// Fonction pour charger les produits depuis localStorage
+function loadProductsFromStorage(): Product[] {
+  if (typeof window === "undefined") return defaultProducts
+
+  try {
+    const storedProducts = localStorage.getItem("ekwip_admin_products")
+    const storedCategories = localStorage.getItem("ekwip_admin_categories")
+    const storedBrands = localStorage.getItem("ekwip_admin_brands")
+
+    if (!storedProducts) return defaultProducts
+
+    const adminProducts = JSON.parse(storedProducts)
+    const adminCategories = storedCategories ? JSON.parse(storedCategories) : []
+    const adminBrands = storedBrands ? JSON.parse(storedBrands) : []
+
+    return adminProducts
+      .filter((p: any) => p.status === "active")
+      .map((p: any) => {
+        const category = adminCategories.find((c: any) => c.id === p.categoryId)
+        const brand = adminBrands.find((b: any) => b.id === p.brandId)
+
+        return {
+          id: p.id,
+          name: p.name,
+          slug: p.slug,
+          description: p.shortDescription || p.description || "",
+          price: p.price || 0,
+          basePrice: p.price || 0,
+          image: p.thumbnail || p.images?.[0] || "/placeholder.svg",
+          images: p.images || [p.thumbnail || "/placeholder.svg"],
+          brand: brand?.name || "Sans marque",
+          category: category?.name || "Sans catégorie",
+          inStock: (p.stockQuantity || 0) > 0,
+          isNew: false,
+          isPopular: false,
+          isFeatured: p.isFeatured || false,
+          specifications: p.attributes || undefined,
+        }
+      })
+  } catch (error) {
+    console.error("Error loading products:", error)
+    return defaultProducts
+  }
+}
+
+export const products = loadProductsFromStorage()
+export const categories = loadCategoriesFromStorage()
+
 export function getAllProducts(): Product[] {
-  return products
+  return loadProductsFromStorage()
 }
 
 export function getAllCategories(): Category[] {
-  return categories
+  return loadCategoriesFromStorage()
 }
 
 export function formatPrice(price: number): string {
@@ -199,22 +274,23 @@ export function formatPrice(price: number): string {
 }
 
 export function getProductBySlug(slug: string): Product | undefined {
-  return products.find((product) => product.slug === slug)
+  return loadProductsFromStorage().find((product) => product.slug === slug)
 }
 
 export function getCategoryBySlug(slug: string): Category | undefined {
-  return categories.find((category) => category.slug === slug)
+  return loadCategoriesFromStorage().find((category) => category.slug === slug)
 }
 
 export function getProductsByCategory(categorySlug: string): Product[] {
   const category = getCategoryBySlug(categorySlug)
   if (!category) return []
-  return products.filter((product) => product.category === category.name)
+  return loadProductsFromStorage().filter((product) => product.category === category.name)
 }
 
 export function getRelatedProducts(productId: string): Product[] {
-  const product = products.find((p) => p.id === productId)
+  const allProducts = loadProductsFromStorage()
+  const product = allProducts.find((p) => p.id === productId)
   if (!product) return []
 
-  return products.filter((p) => p.id !== productId && p.category === product.category).slice(0, 4)
+  return allProducts.filter((p) => p.id !== productId && p.category === product.category).slice(0, 4)
 }
