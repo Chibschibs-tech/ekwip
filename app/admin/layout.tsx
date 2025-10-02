@@ -7,9 +7,9 @@ import { ProductsProvider } from "@/contexts/products-context"
 import { CategoriesProvider } from "@/contexts/categories-context"
 import { BrandsProvider } from "@/contexts/brands-context"
 import { AttributesProvider } from "@/contexts/attributes-context"
-import AdminSidebar from "@/components/admin/admin-sidebar"
-import AdminTopbar from "@/components/admin/admin-topbar"
-import AdminBreadcrumb from "@/components/admin/admin-breadcrumb"
+import { AdminSidebar } from "@/components/admin/admin-sidebar"
+import { AdminTopbar } from "@/components/admin/admin-topbar"
+import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb"
 import { Toaster } from "@/components/ui/toaster"
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
