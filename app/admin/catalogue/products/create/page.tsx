@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import type React from "react"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -15,56 +14,64 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { mockCategories, mockBrands, mockAttributes } from "@/lib/mock-data"
 import { Upload, X } from "lucide-react"
 import type { Attribute, Product } from "@/types/admin"
-import { useToast } from "@/hooks/use-toast"
 import { useProducts } from "@/contexts/products-context"
+import { useToast } from "@/hooks/use-toast"
 
 export default function CreateProductPage() {
   const router = useRouter()
-  const { toast } = useToast()
   const { addProduct } = useProducts()
+  const { toast } = useToast()
+
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("")
   const [availableAttributes, setAvailableAttributes] = useState<Attribute[]>([])
   const [productAttributes, setProductAttributes] = useState<Record<string, string>>({})
+  const [imageFiles, setImageFiles] = useState<File[]>([])
+  const [imagePreviews, setImagePreviews] = useState<string[]>([])
+
+  // Form fields
   const [formData, setFormData] = useState({
     name: "",
     sku: "",
     slug: "",
     shortDescription: "",
     description: "",
-    price: "",
-    compareAtPrice: "",
-    costPrice: "",
-    stock: "",
-    lowStock: "5",
     categoryId: "",
     brandId: "",
-    tags: "",
-    status: "active",
+    price: 0,
+    compareAtPrice: 0,
+    costPrice: 0,
+    stockQuantity: 0,
+    lowStockThreshold: 5,
+    status: "active" as "active" | "draft" | "archived",
     isFeatured: false,
+    tags: [] as string[],
   })
-  const [imageFiles, setImageFiles] = useState<File[]>([])
-  const [imagePreviews, setImagePreviews] = useState<string[]>([])
 
+  // Filtrer les attributs disponibles quand la catégorie change
   useEffect(() => {
     if (selectedCategory) {
       const filteredAttributes = mockAttributes.filter(
         (attr) => attr.categories && attr.categories.includes(selectedCategory),
       )
       setAvailableAttributes(filteredAttributes)
-
-      const newProductAttributes: Record<string, string> = {}
-      filteredAttributes.forEach((attr) => {
-        if (productAttributes[attr.id]) {
-          newProductAttributes[attr.id] = productAttributes[attr.id]
-        }
-      })
-      setProductAttributes(newProductAttributes)
     } else {
       setAvailableAttributes([])
-      setProductAttributes({})
     }
   }, [selectedCategory])
+
+  // Auto-générer le slug à partir du nom
+  useEffect(() => {
+    if (formData.name && !formData.slug) {
+      const generatedSlug = formData.name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "")
+      setFormData((prev) => ({ ...prev, slug: generatedSlug }))
+    }
+  }, [formData.name])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -80,6 +87,7 @@ export default function CreateProductPage() {
     const newFiles = [...imageFiles]
     const newPreviews = [...imagePreviews]
 
+    // Libérer l'URL d'objet
     URL.revokeObjectURL(newPreviews[index])
 
     newFiles.splice(index, 1)
@@ -93,16 +101,28 @@ export default function CreateProductPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    if (!formData.name || !formData.sku || !formData.price || !formData.stock || !formData.categoryId) {
+    // Validation des champs obligatoires
+    if (!formData.name || !formData.sku || !formData.categoryId) {
       toast({
         title: "Erreur de validation",
-        description: "Veuillez remplir tous les champs obligatoires",
+        description: "Veuillez remplir tous les champs obligatoires (Nom, SKU, Catégorie)",
         variant: "destructive",
       })
       setIsSubmitting(false)
       return
     }
 
+    if (formData.price <= 0) {
+      toast({
+        title: "Erreur de validation",
+        description: "Le prix de location doit être supérieur à 0",
+        variant: "destructive",
+      })
+      setIsSubmitting(false)
+      return
+    }
+
+    // Validation des attributs obligatoires
     const missingRequiredAttributes = availableAttributes.filter(
       (attr) => attr.isRequired && !productAttributes[attr.id],
     )
@@ -110,64 +130,69 @@ export default function CreateProductPage() {
     if (missingRequiredAttributes.length > 0) {
       toast({
         title: "Attributs obligatoires manquants",
-        description: `Veuillez remplir les attributs obligatoires : ${missingRequiredAttributes.map((a) => a.name).join(", ")}`,
+        description: `Veuillez remplir : ${missingRequiredAttributes.map((a) => a.name).join(", ")}`,
         variant: "destructive",
       })
       setIsSubmitting(false)
       return
     }
 
-    const newProduct: Product = {
-      id: `prod-${Date.now()}`,
-      name: formData.name,
-      sku: formData.sku,
-      slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, "-"),
-      shortDescription: formData.shortDescription,
-      description: formData.description,
-      price: Number.parseFloat(formData.price),
-      compareAtPrice: formData.compareAtPrice ? Number.parseFloat(formData.compareAtPrice) : undefined,
-      costPrice: formData.costPrice ? Number.parseFloat(formData.costPrice) : 0,
-      categoryId: formData.categoryId,
-      brandId: formData.brandId || "",
-      thumbnail: imagePreviews[0] || "/placeholder.svg",
-      images: imagePreviews.length > 0 ? imagePreviews : ["/placeholder.svg"],
-      stockQuantity: Number.parseInt(formData.stock),
-      lowStockThreshold: Number.parseInt(formData.lowStock),
-      status: formData.status as "active" | "draft" | "archived",
-      isFeatured: formData.isFeatured,
-      tags: formData.tags ? formData.tags.split(",").map((tag) => tag.trim()) : [],
-      attributes: productAttributes,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
+    try {
+      // Générer un ID unique pour le produit
+      const productId = `prod-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+
+      // Créer le nouvel objet produit
+      const newProduct: Product = {
+        id: productId,
+        name: formData.name,
+        slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, "-"),
+        sku: formData.sku,
+        shortDescription: formData.shortDescription,
+        description: formData.description,
+        categoryId: formData.categoryId,
+        brandId: formData.brandId || undefined,
+        price: formData.price,
+        compareAtPrice: formData.compareAtPrice || undefined,
+        costPrice: formData.costPrice,
+        thumbnail: imagePreviews[0] || "/placeholder.svg",
+        images: imagePreviews.length > 0 ? imagePreviews : ["/placeholder.svg"],
+        stockQuantity: formData.stockQuantity,
+        lowStockThreshold: formData.lowStockThreshold,
+        status: formData.status,
+        isFeatured: formData.isFeatured,
+        tags: formData.tags,
+        attributes: productAttributes,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+
+      // Ajouter le produit au contexte
+      addProduct(newProduct)
+
+      toast({
+        title: "Produit créé",
+        description: `Le produit ${formData.name} a été créé avec succès`,
+      })
+
+      // Attendre un peu pour que l'utilisateur voie le toast
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      // Rediriger vers la liste des produits
+      router.push("/admin/catalogue/products")
+    } catch (error) {
+      console.error("Error creating product:", error)
+      toast({
+        title: "Erreur",
+        description: "Impossible de créer le produit",
+        variant: "destructive",
+      })
+    } finally {
+      setIsSubmitting(false)
     }
-
-    addProduct(newProduct)
-
-    toast({
-      title: "Produit créé",
-      description: `Le produit ${formData.name} a été créé avec succès.`,
-    })
-
-    setIsSubmitting(false)
-    router.push("/admin/catalogue/products")
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData({ ...formData, [name]: value })
-
-    if (name === "name" && !formData.slug) {
-      const slug = value
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^\w-]+/g, "")
-      setFormData({ ...formData, name: value, slug })
-    }
-
-    if (name === "name" && !formData.sku) {
-      const sku = value.substring(0, 3).toUpperCase() + "-" + Date.now().toString().slice(-4)
-      setFormData({ ...formData, name: value, sku })
-    }
+  const updateFormData = (field: string, value: any) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   return (
@@ -181,7 +206,7 @@ export default function CreateProductPage() {
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 mb-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="general">Général</TabsTrigger>
             <TabsTrigger value="pricing">Prix & Stock</TabsTrigger>
             <TabsTrigger value="attributes">Attributs</TabsTrigger>
@@ -189,6 +214,7 @@ export default function CreateProductPage() {
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
 
+          {/* Onglet Général */}
           <TabsContent value="general" className="space-y-6">
             <Card>
               <CardHeader>
@@ -196,26 +222,28 @@ export default function CreateProductPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nom du produit *</Label>
+                  <Label htmlFor="name">
+                    Nom du produit <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="name"
-                    name="name"
-                    placeholder="MacBook Pro 14 pouces"
+                    placeholder="Ex: MacBook Pro 14 pouces"
                     value={formData.name}
-                    onChange={handleChange}
+                    onChange={(e) => updateFormData("name", e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="sku">SKU *</Label>
+                    <Label htmlFor="sku">
+                      SKU <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="sku"
-                      name="sku"
-                      placeholder="MBP-14-001"
+                      placeholder="Ex: MBP-14-001"
                       value={formData.sku}
-                      onChange={handleChange}
+                      onChange={(e) => updateFormData("sku", e.target.value)}
                       required
                     />
                   </div>
@@ -223,10 +251,9 @@ export default function CreateProductPage() {
                     <Label htmlFor="slug">Slug</Label>
                     <Input
                       id="slug"
-                      name="slug"
                       placeholder="macbook-pro-14"
                       value={formData.slug}
-                      onChange={handleChange}
+                      onChange={(e) => updateFormData("slug", e.target.value)}
                     />
                   </div>
                 </div>
@@ -235,11 +262,10 @@ export default function CreateProductPage() {
                   <Label htmlFor="shortDescription">Description courte</Label>
                   <Textarea
                     id="shortDescription"
-                    name="shortDescription"
                     placeholder="Ordinateur portable professionnel"
-                    rows={2}
                     value={formData.shortDescription}
-                    onChange={handleChange}
+                    onChange={(e) => updateFormData("shortDescription", e.target.value)}
+                    rows={2}
                   />
                 </div>
 
@@ -247,11 +273,10 @@ export default function CreateProductPage() {
                   <Label htmlFor="description">Description complète</Label>
                   <Textarea
                     id="description"
-                    name="description"
                     placeholder="Description détaillée du produit..."
-                    rows={6}
                     value={formData.description}
-                    onChange={handleChange}
+                    onChange={(e) => updateFormData("description", e.target.value)}
+                    rows={6}
                   />
                 </div>
               </CardContent>
@@ -263,11 +288,13 @@ export default function CreateProductPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="category">Catégorie *</Label>
+                  <Label htmlFor="category">
+                    Catégorie <span className="text-red-500">*</span>
+                  </Label>
                   <Select
                     value={formData.categoryId}
                     onValueChange={(value) => {
-                      setFormData({ ...formData, categoryId: value })
+                      updateFormData("categoryId", value)
                       setSelectedCategory(value)
                     }}
                     required
@@ -287,10 +314,7 @@ export default function CreateProductPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="brand">Marque</Label>
-                  <Select
-                    value={formData.brandId}
-                    onValueChange={(value) => setFormData({ ...formData, brandId: value })}
-                  >
+                  <Select value={formData.brandId} onValueChange={(value) => updateFormData("brandId", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Sélectionner une marque" />
                     </SelectTrigger>
@@ -308,19 +332,20 @@ export default function CreateProductPage() {
                   <Label htmlFor="tags">Tags (séparés par des virgules)</Label>
                   <Input
                     id="tags"
-                    name="tags"
                     placeholder="laptop, apple, pro"
-                    value={formData.tags}
-                    onChange={handleChange}
+                    value={formData.tags.join(", ")}
+                    onChange={(e) =>
+                      updateFormData(
+                        "tags",
+                        e.target.value.split(",").map((t) => t.trim()),
+                      )
+                    }
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="status">Statut</Label>
-                  <Select
-                    value={formData.status}
-                    onValueChange={(value) => setFormData({ ...formData, status: value })}
-                  >
+                  <Select value={formData.status} onValueChange={(value: any) => updateFormData("status", value)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -337,13 +362,14 @@ export default function CreateProductPage() {
                   <Switch
                     id="featured"
                     checked={formData.isFeatured}
-                    onCheckedChange={(checked) => setFormData({ ...formData, isFeatured: checked })}
+                    onCheckedChange={(checked) => updateFormData("isFeatured", checked)}
                   />
                 </div>
               </CardContent>
             </Card>
           </TabsContent>
 
+          {/* Onglet Prix et Stock */}
           <TabsContent value="pricing" className="space-y-6">
             <Card>
               <CardHeader>
@@ -352,37 +378,44 @@ export default function CreateProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="price">Prix de location (DH/mois) *</Label>
+                    <Label htmlFor="price">
+                      Prix de location (DH/mois) <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="price"
-                      name="price"
                       type="number"
                       placeholder="450"
-                      value={formData.price}
-                      onChange={handleChange}
+                      value={formData.price || ""}
+                      onChange={(e) => updateFormData("price", Number(e.target.value))}
                       required
+                      min="0"
+                      step="0.01"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="compareAtPrice">Prix barré</Label>
                     <Input
                       id="compareAtPrice"
-                      name="compareAtPrice"
                       type="number"
                       placeholder="500"
-                      value={formData.compareAtPrice}
-                      onChange={handleChange}
+                      value={formData.compareAtPrice || ""}
+                      onChange={(e) =>
+                        updateFormData("compareAtPrice", e.target.value ? Number(e.target.value) : undefined)
+                      }
+                      min="0"
+                      step="0.01"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="costPrice">Prix de revient</Label>
                     <Input
                       id="costPrice"
-                      name="costPrice"
                       type="number"
                       placeholder="350"
-                      value={formData.costPrice}
-                      onChange={handleChange}
+                      value={formData.costPrice || ""}
+                      onChange={(e) => updateFormData("costPrice", Number(e.target.value))}
+                      min="0"
+                      step="0.01"
                     />
                   </div>
                 </div>
@@ -396,26 +429,28 @@ export default function CreateProductPage() {
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="stock">Stock disponible *</Label>
+                    <Label htmlFor="stock">
+                      Stock disponible <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="stock"
-                      name="stock"
                       type="number"
                       placeholder="15"
-                      value={formData.stock}
-                      onChange={handleChange}
+                      value={formData.stockQuantity || ""}
+                      onChange={(e) => updateFormData("stockQuantity", Number(e.target.value))}
                       required
+                      min="0"
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="lowStock">Seuil de stock bas</Label>
                     <Input
                       id="lowStock"
-                      name="lowStock"
                       type="number"
                       placeholder="5"
-                      value={formData.lowStock}
-                      onChange={handleChange}
+                      value={formData.lowStockThreshold}
+                      onChange={(e) => updateFormData("lowStockThreshold", Number(e.target.value))}
+                      min="0"
                     />
                   </div>
                 </div>
@@ -423,20 +458,19 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
+          {/* Onglet Attributs */}
           <TabsContent value="attributes" className="space-y-6">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Attributs du produit</CardTitle>
-                  {!selectedCategory && (
-                    <p className="text-sm text-amber-600">
-                      Veuillez d'abord sélectionner une catégorie pour voir les attributs disponibles
-                    </p>
-                  )}
-                </div>
+                <CardTitle>Attributs du produit</CardTitle>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {selectedCategory
+                    ? "Remplissez les attributs spécifiques à la catégorie sélectionnée"
+                    : "Sélectionnez d'abord une catégorie pour voir les attributs disponibles"}
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
-                {selectedCategory && availableAttributes.length > 0 ? (
+                {availableAttributes.length > 0 ? (
                   <div className="space-y-6">
                     {availableAttributes.map((attr) => (
                       <div key={attr.id} className="space-y-2">
@@ -493,55 +527,24 @@ export default function CreateProductPage() {
                             }
                             required={attr.isRequired}
                           />
-                        ) : attr.type === "color" ? (
-                          <div className="flex gap-2">
-                            <Input
-                              id={`attr-${attr.id}`}
-                              type="color"
-                              className="w-16 p-1 h-10"
-                              value={productAttributes[attr.id] || "#000000"}
-                              onChange={(e) =>
-                                setProductAttributes({
-                                  ...productAttributes,
-                                  [attr.id]: e.target.value,
-                                })
-                              }
-                              required={attr.isRequired}
-                            />
-                            <Input
-                              placeholder="Code couleur"
-                              value={productAttributes[attr.id] || ""}
-                              onChange={(e) =>
-                                setProductAttributes({
-                                  ...productAttributes,
-                                  [attr.id]: e.target.value,
-                                })
-                              }
-                              className="flex-1"
-                            />
-                          </div>
                         ) : null}
                       </div>
                     ))}
                   </div>
-                ) : selectedCategory ? (
-                  <div className="py-8 text-center text-gray-500">
-                    <p>Aucun attribut disponible pour cette catégorie.</p>
-                    <p className="mt-2">
-                      <Link href="/admin/catalogue/attributs" className="text-blue-600 hover:underline">
-                        Créer des attributs
-                      </Link>
-                    </p>
-                  </div>
                 ) : (
                   <div className="py-8 text-center text-gray-500">
-                    <p>Veuillez d'abord sélectionner une catégorie pour voir les attributs disponibles.</p>
+                    <p>
+                      {selectedCategory
+                        ? "Aucun attribut disponible pour cette catégorie."
+                        : "Veuillez sélectionner une catégorie dans l'onglet Général."}
+                    </p>
                   </div>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
 
+          {/* Onglet Images */}
           <TabsContent value="images" className="space-y-6">
             <Card>
               <CardHeader>
@@ -551,7 +554,9 @@ export default function CreateProductPage() {
                 <div className="space-y-4">
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
                     <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                    <p className="mt-2 text-sm text-gray-600">Cliquez pour télécharger ou glissez-déposez</p>
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                      Cliquez pour télécharger ou glissez-déposez
+                    </p>
                     <p className="text-xs text-gray-500">PNG, JPG jusqu'à 10MB</p>
                     <Input
                       type="file"
@@ -572,21 +577,21 @@ export default function CreateProductPage() {
                   </div>
 
                   {imagePreviews.length > 0 && (
-                    <div className="mt-6">
-                      <h4 className="text-sm font-medium mb-3">Aperçu des images ({imagePreviews.length})</h4>
+                    <div>
+                      <h4 className="text-sm font-medium mb-3">Images sélectionnées ({imagePreviews.length})</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         {imagePreviews.map((src, index) => (
                           <div key={index} className="relative rounded-md overflow-hidden border">
                             <img
                               src={src || "/placeholder.svg"}
-                              alt={`Preview ${index}`}
+                              alt={`Product ${index}`}
                               className="h-24 w-full object-cover"
                             />
                             <Button
                               type="button"
                               variant="destructive"
                               size="icon"
-                              className="absolute top-1 right-1 h-6 w-6 rounded-full"
+                              className="absolute top-1 right-1 h-6 w-6"
                               onClick={() => removeImage(index)}
                             >
                               <X className="h-3 w-3" />
@@ -606,6 +611,7 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
+          {/* Onglet SEO */}
           <TabsContent value="seo" className="space-y-6">
             <Card>
               <CardHeader>
@@ -633,7 +639,7 @@ export default function CreateProductPage() {
             Annuler
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Enregistrement..." : "Enregistrer"}
+            {isSubmitting ? "Création en cours..." : "Créer le produit"}
           </Button>
         </div>
       </form>

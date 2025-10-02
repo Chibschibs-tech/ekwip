@@ -2,26 +2,36 @@
 
 import type React from "react"
 
-import { AdminSidebar } from "@/components/admin/admin-sidebar"
-import { AdminTopbar } from "@/components/admin/admin-topbar"
-import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb"
+import { Inter } from "next/font/google"
 import { AdminAuthProvider } from "@/contexts/admin-auth-context"
 import { ProductsProvider } from "@/contexts/products-context"
+import AdminSidebar from "@/components/admin/admin-sidebar"
+import AdminTopbar from "@/components/admin/admin-topbar"
+import AdminBreadcrumb from "@/components/admin/admin-breadcrumb"
 import { Toaster } from "@/components/ui/toaster"
+
+const inter = Inter({ subsets: ["latin"] })
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <AdminAuthProvider>
       <ProductsProvider>
-        <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
+        <div className={`${inter.className} flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900`}>
+          {/* Sidebar */}
           <AdminSidebar />
+
+          {/* Main Content */}
           <div className="flex flex-1 flex-col overflow-hidden">
+            {/* Topbar */}
             <AdminTopbar />
-            <main className="flex-1 overflow-y-auto">
-              <div className="container mx-auto p-6">
-                <AdminBreadcrumb />
-                <div className="mt-6">{children}</div>
-              </div>
+
+            {/* Page Content */}
+            <main className="flex-1 overflow-y-auto p-6">
+              {/* Breadcrumb */}
+              <AdminBreadcrumb />
+
+              {/* Content */}
+              <div className="mt-6">{children}</div>
             </main>
           </div>
         </div>

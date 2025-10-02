@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,14 +11,17 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { mockCategories, mockBrands, mockAttributes, mockProducts } from "@/lib/mock-data"
+import { mockCategories, mockBrands, mockAttributes } from "@/lib/mock-data"
 import { Upload, X, Loader2 } from "lucide-react"
 import type { Attribute, Product } from "@/types/admin"
+import { useProducts } from "@/contexts/products-context"
 import { useToast } from "@/hooks/use-toast"
 
 export default function EditProductPage({ params }: { params: { id: string } }) {
   const router = useRouter()
+  const { getProduct, updateProduct } = useProducts()
   const { toast } = useToast()
+
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [product, setProduct] = useState<Product | null>(null)
@@ -31,10 +33,9 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
   // Charger les données du produit
   useEffect(() => {
-    const fetchProduct = async () => {
+    const loadProduct = () => {
       try {
-        // Dans une implémentation réelle, ceci serait un appel API
-        const foundProduct = mockProducts.find((p) => p.id === params.id)
+        const foundProduct = getProduct(params.id)
 
         if (foundProduct) {
           setProduct(foundProduct)
@@ -50,10 +51,10 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
           router.push("/admin/catalogue/products")
         }
       } catch (error) {
-        console.error("Error fetching product:", error)
+        console.error("Error loading product:", error)
         toast({
           title: "Erreur",
-          description: "Impossible de charger les données du produit",
+          description: "Impossible de charger le produit",
           variant: "destructive",
         })
       } finally {
@@ -61,13 +62,12 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
       }
     }
 
-    fetchProduct()
-  }, [params.id])
+    loadProduct()
+  }, [params.id, getProduct, router, toast])
 
   // Filtrer les attributs disponibles quand la catégorie change
   useEffect(() => {
     if (selectedCategory) {
-      // Filtre les attributs qui s'appliquent à la catégorie sélectionnée
       const filteredAttributes = mockAttributes.filter(
         (attr) => attr.categories && attr.categories.includes(selectedCategory),
       )
@@ -89,21 +89,18 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
   const removeImage = (index: number) => {
     const newPreviews = [...imagePreviews]
+    const existingImagesCount = product?.images.length || 0
 
-    // Si c'est un fichier local, libère l'URL d'objet
-    if (index >= (product?.images.length || 0)) {
+    // Si c'est un fichier nouvellement uploadé, libère l'URL d'objet
+    if (index >= existingImagesCount) {
       URL.revokeObjectURL(newPreviews[index])
+      const newFiles = [...imageFiles]
+      newFiles.splice(index - existingImagesCount, 1)
+      setImageFiles(newFiles)
     }
 
     newPreviews.splice(index, 1)
     setImagePreviews(newPreviews)
-
-    // Mettre également à jour les fichiers uploadés
-    if (index >= (product?.images.length || 0)) {
-      const newFiles = [...imageFiles]
-      newFiles.splice(index - (product?.images.length || 0), 1)
-      setImageFiles(newFiles)
-    }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -112,8 +109,8 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
     setIsSubmitting(true)
 
-    // Validation des champs obligatoires
-    if (!product.name || !product.sku || !product.price || !product.stockQuantity || !product.categoryId) {
+    // Validation
+    if (!product.name || !product.sku || !product.price || !product.categoryId) {
       toast({
         title: "Erreur de validation",
         description: "Veuillez remplir tous les champs obligatoires",
@@ -131,7 +128,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
     if (missingRequiredAttributes.length > 0) {
       toast({
         title: "Attributs obligatoires manquants",
-        description: `Veuillez remplir les attributs obligatoires : ${missingRequiredAttributes.map((a) => a.name).join(", ")}`,
+        description: `Veuillez remplir : ${missingRequiredAttributes.map((a) => a.name).join(", ")}`,
         variant: "destructive",
       })
       setIsSubmitting(false)
@@ -139,23 +136,28 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
     }
 
     try {
-      // TODO: Implement actual product update with API
-      // Simulation d'envoi à l'API
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-
-      // Mise à jour du produit avec les nouveaux attributs
-      const updatedProduct = {
+      // Mettre à jour le produit
+      const updatedProductData = {
         ...product,
         attributes: productAttributes,
+        images: imagePreviews,
+        thumbnail: imagePreviews[0] || product.thumbnail,
+        updatedAt: new Date().toISOString(),
       }
+
+      updateProduct(params.id, updatedProductData)
 
       toast({
         title: "Produit mis à jour",
-        description: `Le produit ${product.name} a été mis à jour avec succès.`,
+        description: `Le produit ${product.name} a été mis à jour avec succès`,
       })
+
+      // Attendre un peu pour que l'utilisateur voie le toast
+      await new Promise((resolve) => setTimeout(resolve, 500))
 
       router.push("/admin/catalogue/products")
     } catch (error) {
+      console.error("Error updating product:", error)
       toast({
         title: "Erreur",
         description: "Impossible de mettre à jour le produit",
@@ -166,7 +168,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
     }
   }
 
-  const updateProduct = (field: string, value: any) => {
+  const updateProductField = (field: string, value: any) => {
     if (product) {
       setProduct({ ...product, [field]: value })
     }
@@ -198,7 +200,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Modifier un produit</h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             #{product.sku} - {product.name}
           </p>
         </div>
@@ -206,7 +208,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5 mb-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="general">Général</TabsTrigger>
             <TabsTrigger value="pricing">Prix & Stock</TabsTrigger>
             <TabsTrigger value="attributes">Attributs</TabsTrigger>
@@ -214,7 +216,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
 
-          {/* Onglet Informations Générales */}
+          {/* Onglet Général */}
           <TabsContent value="general" className="space-y-6">
             <Card>
               <CardHeader>
@@ -222,28 +224,36 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nom du produit *</Label>
+                  <Label htmlFor="name">
+                    Nom du produit <span className="text-red-500">*</span>
+                  </Label>
                   <Input
                     id="name"
                     value={product.name}
-                    onChange={(e) => updateProduct("name", e.target.value)}
+                    onChange={(e) => updateProductField("name", e.target.value)}
                     required
                   />
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="sku">SKU *</Label>
+                    <Label htmlFor="sku">
+                      SKU <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="sku"
                       value={product.sku}
-                      onChange={(e) => updateProduct("sku", e.target.value)}
+                      onChange={(e) => updateProductField("sku", e.target.value)}
                       required
                     />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="slug">Slug</Label>
-                    <Input id="slug" value={product.slug} onChange={(e) => updateProduct("slug", e.target.value)} />
+                    <Input
+                      id="slug"
+                      value={product.slug}
+                      onChange={(e) => updateProductField("slug", e.target.value)}
+                    />
                   </div>
                 </div>
 
@@ -252,7 +262,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                   <Textarea
                     id="shortDescription"
                     value={product.shortDescription}
-                    onChange={(e) => updateProduct("shortDescription", e.target.value)}
+                    onChange={(e) => updateProductField("shortDescription", e.target.value)}
                     rows={2}
                   />
                 </div>
@@ -262,7 +272,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                   <Textarea
                     id="description"
                     value={product.description}
-                    onChange={(e) => updateProduct("description", e.target.value)}
+                    onChange={(e) => updateProductField("description", e.target.value)}
                     rows={6}
                   />
                 </div>
@@ -275,11 +285,13 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="category">Catégorie *</Label>
+                  <Label htmlFor="category">
+                    Catégorie <span className="text-red-500">*</span>
+                  </Label>
                   <Select
                     value={product.categoryId}
                     onValueChange={(value) => {
-                      updateProduct("categoryId", value)
+                      updateProductField("categoryId", value)
                       setSelectedCategory(value)
                     }}
                     required
@@ -299,7 +311,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
                 <div className="space-y-2">
                   <Label htmlFor="brand">Marque</Label>
-                  <Select value={product.brandId} onValueChange={(value) => updateProduct("brandId", value)}>
+                  <Select value={product.brandId} onValueChange={(value) => updateProductField("brandId", value)}>
                     <SelectTrigger>
                       <SelectValue placeholder="Sélectionner une marque" />
                     </SelectTrigger>
@@ -319,7 +331,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                     id="tags"
                     value={product.tags.join(", ")}
                     onChange={(e) =>
-                      updateProduct(
+                      updateProductField(
                         "tags",
                         e.target.value.split(",").map((t) => t.trim()),
                       )
@@ -329,7 +341,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
 
                 <div className="space-y-2">
                   <Label htmlFor="status">Statut</Label>
-                  <Select value={product.status} onValueChange={(value) => updateProduct("status", value)}>
+                  <Select value={product.status} onValueChange={(value) => updateProductField("status", value)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
@@ -346,7 +358,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                   <Switch
                     id="featured"
                     checked={product.isFeatured}
-                    onCheckedChange={(checked) => updateProduct("isFeatured", checked)}
+                    onCheckedChange={(checked) => updateProductField("isFeatured", checked)}
                   />
                 </div>
               </CardContent>
@@ -362,13 +374,17 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="price">Prix de location (DH/mois) *</Label>
+                    <Label htmlFor="price">
+                      Prix de location (DH/mois) <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="price"
                       type="number"
                       value={product.price}
-                      onChange={(e) => updateProduct("price", Number(e.target.value))}
+                      onChange={(e) => updateProductField("price", Number(e.target.value))}
                       required
+                      min="0"
+                      step="0.01"
                     />
                   </div>
                   <div className="space-y-2">
@@ -378,8 +394,10 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                       type="number"
                       value={product.compareAtPrice || ""}
                       onChange={(e) =>
-                        updateProduct("compareAtPrice", e.target.value ? Number(e.target.value) : undefined)
+                        updateProductField("compareAtPrice", e.target.value ? Number(e.target.value) : undefined)
                       }
+                      min="0"
+                      step="0.01"
                     />
                   </div>
                   <div className="space-y-2">
@@ -388,7 +406,9 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                       id="costPrice"
                       type="number"
                       value={product.costPrice}
-                      onChange={(e) => updateProduct("costPrice", Number(e.target.value))}
+                      onChange={(e) => updateProductField("costPrice", Number(e.target.value))}
+                      min="0"
+                      step="0.01"
                     />
                   </div>
                 </div>
@@ -402,13 +422,16 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="stock">Stock disponible *</Label>
+                    <Label htmlFor="stock">
+                      Stock disponible <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="stock"
                       type="number"
                       value={product.stockQuantity}
-                      onChange={(e) => updateProduct("stockQuantity", Number(e.target.value))}
+                      onChange={(e) => updateProductField("stockQuantity", Number(e.target.value))}
                       required
+                      min="0"
                     />
                   </div>
                   <div className="space-y-2">
@@ -417,7 +440,8 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                       id="lowStock"
                       type="number"
                       value={product.lowStockThreshold}
-                      onChange={(e) => updateProduct("lowStockThreshold", Number(e.target.value))}
+                      onChange={(e) => updateProductField("lowStockThreshold", Number(e.target.value))}
+                      min="0"
                     />
                   </div>
                 </div>
@@ -429,9 +453,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
           <TabsContent value="attributes" className="space-y-6">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle>Attributs du produit</CardTitle>
-                </div>
+                <CardTitle>Attributs du produit</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {availableAttributes.length > 0 ? (
@@ -491,33 +513,6 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                             }
                             required={attr.isRequired}
                           />
-                        ) : attr.type === "color" ? (
-                          <div className="flex gap-2">
-                            <Input
-                              id={`attr-${attr.id}`}
-                              type="color"
-                              className="w-16 p-1 h-10"
-                              value={productAttributes[attr.id] || "#000000"}
-                              onChange={(e) =>
-                                setProductAttributes({
-                                  ...productAttributes,
-                                  [attr.id]: e.target.value,
-                                })
-                              }
-                              required={attr.isRequired}
-                            />
-                            <Input
-                              placeholder="Code couleur"
-                              value={productAttributes[attr.id] || ""}
-                              onChange={(e) =>
-                                setProductAttributes({
-                                  ...productAttributes,
-                                  [attr.id]: e.target.value,
-                                })
-                              }
-                              className="flex-1"
-                            />
-                          </div>
                         ) : null}
                       </div>
                     ))}
@@ -525,14 +520,6 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                 ) : (
                   <div className="py-8 text-center text-gray-500">
                     <p>Aucun attribut disponible pour cette catégorie.</p>
-                    <Button
-                      variant="link"
-                      className="px-0"
-                      type="button"
-                      onClick={() => router.push("/admin/catalogue/attributs")}
-                    >
-                      Créer des attributs
-                    </Button>
                   </div>
                 )}
               </CardContent>
@@ -549,7 +536,9 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                 <div className="space-y-4">
                   <div className="border-2 border-dashed rounded-lg p-8 text-center">
                     <Upload className="mx-auto h-12 w-12 text-gray-400" />
-                    <p className="mt-2 text-sm text-gray-600">Cliquez pour télécharger ou glissez-déposez</p>
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                      Cliquez pour télécharger ou glissez-déposez
+                    </p>
                     <p className="text-xs text-gray-500">PNG, JPG jusqu'à 10MB</p>
                     <Input
                       type="file"
@@ -569,23 +558,22 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
                     </Button>
                   </div>
 
-                  {/* Aperçu des images */}
                   {imagePreviews.length > 0 && (
-                    <div className="mt-6">
+                    <div>
                       <h4 className="text-sm font-medium mb-3">Images du produit ({imagePreviews.length})</h4>
                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                         {imagePreviews.map((src, index) => (
                           <div key={index} className="relative rounded-md overflow-hidden border">
                             <img
                               src={src || "/placeholder.svg"}
-                              alt={`Product image ${index}`}
+                              alt={`Product ${index}`}
                               className="h-24 w-full object-cover"
                             />
                             <Button
                               type="button"
                               variant="destructive"
                               size="icon"
-                              className="absolute top-1 right-1 h-6 w-6 rounded-full"
+                              className="absolute top-1 right-1 h-6 w-6"
                               onClick={() => removeImage(index)}
                             >
                               <X className="h-3 w-3" />
@@ -633,7 +621,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
             Annuler
           </Button>
           <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Enregistrement..." : "Enregistrer"}
+            {isSubmitting ? "Enregistrement..." : "Enregistrer les modifications"}
           </Button>
         </div>
       </form>
