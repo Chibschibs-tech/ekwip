@@ -11,15 +11,20 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { mockCategories, mockBrands, mockAttributes } from "@/lib/mock-data"
 import { Upload, X } from "lucide-react"
 import type { Attribute, Product } from "@/types/admin"
 import { useProducts } from "@/contexts/products-context"
+import { useCategories } from "@/contexts/categories-context"
+import { useBrands } from "@/contexts/brands-context"
+import { useAttributes } from "@/contexts/attributes-context"
 import { useToast } from "@/hooks/use-toast"
 
 export default function CreateProductPage() {
   const router = useRouter()
   const { addProduct } = useProducts()
+  const { categories } = useCategories()
+  const { brands } = useBrands()
+  const { getAttributesByCategory } = useAttributes()
   const { toast } = useToast()
 
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -29,7 +34,6 @@ export default function CreateProductPage() {
   const [imageFiles, setImageFiles] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
 
-  // Form fields
   const [formData, setFormData] = useState({
     name: "",
     sku: "",
@@ -48,19 +52,15 @@ export default function CreateProductPage() {
     tags: [] as string[],
   })
 
-  // Filtrer les attributs disponibles quand la catégorie change
   useEffect(() => {
     if (selectedCategory) {
-      const filteredAttributes = mockAttributes.filter(
-        (attr) => attr.categories && attr.categories.includes(selectedCategory),
-      )
+      const filteredAttributes = getAttributesByCategory(selectedCategory)
       setAvailableAttributes(filteredAttributes)
     } else {
       setAvailableAttributes([])
     }
-  }, [selectedCategory])
+  }, [selectedCategory, getAttributesByCategory])
 
-  // Auto-générer le slug à partir du nom
   useEffect(() => {
     if (formData.name && !formData.slug) {
       const generatedSlug = formData.name
@@ -87,7 +87,6 @@ export default function CreateProductPage() {
     const newFiles = [...imageFiles]
     const newPreviews = [...imagePreviews]
 
-    // Libérer l'URL d'objet
     URL.revokeObjectURL(newPreviews[index])
 
     newFiles.splice(index, 1)
@@ -101,7 +100,6 @@ export default function CreateProductPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Validation des champs obligatoires
     if (!formData.name || !formData.sku || !formData.categoryId) {
       toast({
         title: "Erreur de validation",
@@ -122,7 +120,6 @@ export default function CreateProductPage() {
       return
     }
 
-    // Validation des attributs obligatoires
     const missingRequiredAttributes = availableAttributes.filter(
       (attr) => attr.isRequired && !productAttributes[attr.id],
     )
@@ -138,10 +135,8 @@ export default function CreateProductPage() {
     }
 
     try {
-      // Générer un ID unique pour le produit
       const productId = `prod-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
 
-      // Créer le nouvel objet produit
       const newProduct: Product = {
         id: productId,
         name: formData.name,
@@ -150,7 +145,7 @@ export default function CreateProductPage() {
         shortDescription: formData.shortDescription,
         description: formData.description,
         categoryId: formData.categoryId,
-        brandId: formData.brandId || undefined,
+        brandId: formData.brandId || "",
         price: formData.price,
         compareAtPrice: formData.compareAtPrice || undefined,
         costPrice: formData.costPrice,
@@ -166,7 +161,6 @@ export default function CreateProductPage() {
         updatedAt: new Date().toISOString(),
       }
 
-      // Ajouter le produit au contexte
       addProduct(newProduct)
 
       toast({
@@ -174,10 +168,8 @@ export default function CreateProductPage() {
         description: `Le produit ${formData.name} a été créé avec succès`,
       })
 
-      // Attendre un peu pour que l'utilisateur voie le toast
       await new Promise((resolve) => setTimeout(resolve, 500))
 
-      // Rediriger vers la liste des produits
       router.push("/admin/catalogue/products")
     } catch (error) {
       console.error("Error creating product:", error)
@@ -214,7 +206,6 @@ export default function CreateProductPage() {
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
 
-          {/* Onglet Général */}
           <TabsContent value="general" className="space-y-6">
             <Card>
               <CardHeader>
@@ -303,11 +294,13 @@ export default function CreateProductPage() {
                       <SelectValue placeholder="Sélectionner une catégorie" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockCategories.map((cat) => (
-                        <SelectItem key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </SelectItem>
-                      ))}
+                      {categories
+                        .filter((cat) => cat.isActive)
+                        .map((cat) => (
+                          <SelectItem key={cat.id} value={cat.id}>
+                            {cat.name}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -319,11 +312,13 @@ export default function CreateProductPage() {
                       <SelectValue placeholder="Sélectionner une marque" />
                     </SelectTrigger>
                     <SelectContent>
-                      {mockBrands.map((brand) => (
-                        <SelectItem key={brand.id} value={brand.id}>
-                          {brand.name}
-                        </SelectItem>
-                      ))}
+                      {brands
+                        .filter((b) => b.isActive)
+                        .map((brand) => (
+                          <SelectItem key={brand.id} value={brand.id}>
+                            {brand.name}
+                          </SelectItem>
+                        ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -369,7 +364,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet Prix et Stock */}
           <TabsContent value="pricing" className="space-y-6">
             <Card>
               <CardHeader>
@@ -458,7 +452,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet Attributs */}
           <TabsContent value="attributes" className="space-y-6">
             <Card>
               <CardHeader>
@@ -544,7 +537,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet Images */}
           <TabsContent value="images" className="space-y-6">
             <Card>
               <CardHeader>
@@ -611,7 +603,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet SEO */}
           <TabsContent value="seo" className="space-y-6">
             <Card>
               <CardHeader>

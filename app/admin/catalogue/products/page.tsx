@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Download, Filter, MoreVertical, Pencil, Plus, Search, Trash2 } from "lucide-react"
+import { Download, Filter, MoreVertical, Pencil, Plus, Search, Trash2, Eye } from "lucide-react"
 import { useProducts } from "@/contexts/products-context"
 import { useToast } from "@/hooks/use-toast"
 
@@ -181,6 +181,12 @@ export default function ProductsPage() {
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() => router.push(`/admin/catalogue/products/view/${product.id}`)}
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              Voir
+                            </DropdownMenuItem>
                             <DropdownMenuItem
                               onClick={() => router.push(`/admin/catalogue/products/edit/${product.id}`)}
                             >
