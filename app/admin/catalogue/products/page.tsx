@@ -6,17 +6,19 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Plus, Search, Filter, Download, Edit, Trash2, Eye } from "lucide-react"
 import Link from "next/link"
-import { mockProducts } from "@/lib/mock-data"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { MoreHorizontal } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { useProducts } from "@/contexts/products-context"
+import { useToast } from "@/hooks/use-toast"
 
 export default function ProductsPage() {
   const [searchQuery, setSearchQuery] = useState("")
-  const [products, setProducts] = useState(mockProducts)
+  const { products, deleteProduct } = useProducts()
   const router = useRouter()
+  const { toast } = useToast()
 
   const filteredProducts = products.filter(
     (product) =>
@@ -25,18 +27,18 @@ export default function ProductsPage() {
   )
 
   const exportToCSV = () => {
-    // Implement CSV export
     const csv = [
       ["SKU", "Nom", "Prix", "Stock", "Statut"].join(","),
-      ...products.map((p) => [p.sku, p.name, p.price, p.stockQuantity, p.status].join(",")),
+      ...products.map((p) => [p.sku, `"${p.name}"`, p.price, p.stockQuantity, p.status].join(",")),
     ].join("\n")
 
-    const blob = new Blob([csv], { type: "text/csv" })
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" })
     const url = window.URL.createObjectURL(blob)
     const a = document.createElement("a")
     a.href = url
-    a.download = "products.csv"
+    a.download = `produits-${new Date().toISOString().split("T")[0]}.csv`
     a.click()
+    window.URL.revokeObjectURL(url)
   }
 
   const handleEdit = (productId: string) => {
@@ -48,8 +50,13 @@ export default function ProductsPage() {
   }
 
   const handleDelete = (productId: string) => {
-    // Add confirmation dialog in real implementation
-    setProducts(products.filter((p) => p.id !== productId))
+    if (confirm("Êtes-vous sûr de vouloir supprimer ce produit ?")) {
+      deleteProduct(productId)
+      toast({
+        title: "Produit supprimé",
+        description: "Le produit a été supprimé avec succès",
+      })
+    }
   }
 
   return (
@@ -57,7 +64,7 @@ export default function ProductsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Produits</h1>
-          <p className="text-gray-600">Gérez votre catalogue de produits</p>
+          <p className="text-gray-600 dark:text-gray-400">Gérez votre catalogue de produits</p>
         </div>
         <Link href="/admin/catalogue/products/create">
           <Button>

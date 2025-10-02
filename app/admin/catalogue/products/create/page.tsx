@@ -1,9 +1,7 @@
 "use client"
 
 import Link from "next/link"
-
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -16,12 +14,14 @@ import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { mockCategories, mockBrands, mockAttributes } from "@/lib/mock-data"
 import { Upload, X } from "lucide-react"
-import type { Attribute } from "@/types/admin"
+import type { Attribute, Product } from "@/types/admin"
 import { useToast } from "@/hooks/use-toast"
+import { useProducts } from "@/contexts/products-context"
 
 export default function CreateProductPage() {
   const router = useRouter()
   const { toast } = useToast()
+  const { addProduct } = useProducts()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("")
   const [availableAttributes, setAvailableAttributes] = useState<Attribute[]>([])
@@ -46,19 +46,15 @@ export default function CreateProductPage() {
   const [imageFiles, setImageFiles] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
 
-  // Filtrer les attributs disponibles quand la catégorie change
   useEffect(() => {
     if (selectedCategory) {
-      // Filtre les attributs qui s'appliquent à la catégorie sélectionnée
       const filteredAttributes = mockAttributes.filter(
         (attr) => attr.categories && attr.categories.includes(selectedCategory),
       )
       setAvailableAttributes(filteredAttributes)
 
-      // Réinitialise les attributs du produit si nécessaire
       const newProductAttributes: Record<string, string> = {}
       filteredAttributes.forEach((attr) => {
-        // Conserve les valeurs existantes pour les attributs qui existent toujours
         if (productAttributes[attr.id]) {
           newProductAttributes[attr.id] = productAttributes[attr.id]
         }
@@ -84,7 +80,6 @@ export default function CreateProductPage() {
     const newFiles = [...imageFiles]
     const newPreviews = [...imagePreviews]
 
-    // Libère l'URL d'objet pour éviter les fuites de mémoire
     URL.revokeObjectURL(newPreviews[index])
 
     newFiles.splice(index, 1)
@@ -98,7 +93,6 @@ export default function CreateProductPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Validation des champs obligatoires
     if (!formData.name || !formData.sku || !formData.price || !formData.stock || !formData.categoryId) {
       toast({
         title: "Erreur de validation",
@@ -109,7 +103,6 @@ export default function CreateProductPage() {
       return
     }
 
-    // Validation des attributs obligatoires
     const missingRequiredAttributes = availableAttributes.filter(
       (attr) => attr.isRequired && !productAttributes[attr.id],
     )
@@ -124,9 +117,31 @@ export default function CreateProductPage() {
       return
     }
 
-    // TODO: Implement actual product creation with API
-    // Simulation d'envoi à l'API
-    await new Promise((resolve) => setTimeout(resolve, 1000))
+    const newProduct: Product = {
+      id: `prod-${Date.now()}`,
+      name: formData.name,
+      sku: formData.sku,
+      slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, "-"),
+      shortDescription: formData.shortDescription,
+      description: formData.description,
+      price: Number.parseFloat(formData.price),
+      compareAtPrice: formData.compareAtPrice ? Number.parseFloat(formData.compareAtPrice) : undefined,
+      costPrice: formData.costPrice ? Number.parseFloat(formData.costPrice) : 0,
+      categoryId: formData.categoryId,
+      brandId: formData.brandId || "",
+      thumbnail: imagePreviews[0] || "/placeholder.svg",
+      images: imagePreviews.length > 0 ? imagePreviews : ["/placeholder.svg"],
+      stockQuantity: Number.parseInt(formData.stock),
+      lowStockThreshold: Number.parseInt(formData.lowStock),
+      status: formData.status as "active" | "draft" | "archived",
+      isFeatured: formData.isFeatured,
+      tags: formData.tags ? formData.tags.split(",").map((tag) => tag.trim()) : [],
+      attributes: productAttributes,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    }
+
+    addProduct(newProduct)
 
     toast({
       title: "Produit créé",
@@ -141,7 +156,6 @@ export default function CreateProductPage() {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
 
-    // Génère automatiquement le slug à partir du nom si le champ slug est vide
     if (name === "name" && !formData.slug) {
       const slug = value
         .toLowerCase()
@@ -150,7 +164,6 @@ export default function CreateProductPage() {
       setFormData({ ...formData, name: value, slug })
     }
 
-    // Génère automatiquement le SKU à partir du nom si le champ SKU est vide
     if (name === "name" && !formData.sku) {
       const sku = value.substring(0, 3).toUpperCase() + "-" + Date.now().toString().slice(-4)
       setFormData({ ...formData, name: value, sku })
@@ -162,7 +175,7 @@ export default function CreateProductPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Ajouter un produit</h1>
-          <p className="text-gray-600">Créez un nouveau produit dans votre catalogue</p>
+          <p className="text-gray-600 dark:text-gray-400">Créez un nouveau produit dans votre catalogue</p>
         </div>
       </div>
 
@@ -176,7 +189,6 @@ export default function CreateProductPage() {
             <TabsTrigger value="seo">SEO</TabsTrigger>
           </TabsList>
 
-          {/* Onglet Informations Générales */}
           <TabsContent value="general" className="space-y-6">
             <Card>
               <CardHeader>
@@ -332,7 +344,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet Prix et Stock */}
           <TabsContent value="pricing" className="space-y-6">
             <Card>
               <CardHeader>
@@ -412,7 +423,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet Attributs */}
           <TabsContent value="attributes" className="space-y-6">
             <Card>
               <CardHeader>
@@ -532,7 +542,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet Images */}
           <TabsContent value="images" className="space-y-6">
             <Card>
               <CardHeader>
@@ -562,7 +571,6 @@ export default function CreateProductPage() {
                     </Button>
                   </div>
 
-                  {/* Aperçu des images */}
                   {imagePreviews.length > 0 && (
                     <div className="mt-6">
                       <h4 className="text-sm font-medium mb-3">Aperçu des images ({imagePreviews.length})</h4>
@@ -598,7 +606,6 @@ export default function CreateProductPage() {
             </Card>
           </TabsContent>
 
-          {/* Onglet SEO */}
           <TabsContent value="seo" className="space-y-6">
             <Card>
               <CardHeader>

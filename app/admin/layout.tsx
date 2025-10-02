@@ -6,31 +6,27 @@ import { AdminSidebar } from "@/components/admin/admin-sidebar"
 import { AdminTopbar } from "@/components/admin/admin-topbar"
 import { AdminBreadcrumb } from "@/components/admin/admin-breadcrumb"
 import { AdminAuthProvider } from "@/contexts/admin-auth-context"
-import { ThemeProvider } from "@/components/theme-provider"
+import { ProductsProvider } from "@/contexts/products-context"
+import { Toaster } from "@/components/ui/toaster"
 
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-      <AdminAuthProvider>
-        <div className="flex h-screen overflow-hidden">
+    <AdminAuthProvider>
+      <ProductsProvider>
+        <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900">
           <AdminSidebar />
           <div className="flex flex-1 flex-col overflow-hidden">
             <AdminTopbar />
-            <div className="flex-1 overflow-auto">
+            <main className="flex-1 overflow-y-auto">
               <div className="container mx-auto p-6">
-                <div className="mb-6">
-                  <AdminBreadcrumb />
-                </div>
-                {children}
+                <AdminBreadcrumb />
+                <div className="mt-6">{children}</div>
               </div>
-            </div>
+            </main>
           </div>
         </div>
-      </AdminAuthProvider>
-    </ThemeProvider>
+        <Toaster />
+      </ProductsProvider>
+    </AdminAuthProvider>
   )
 }
