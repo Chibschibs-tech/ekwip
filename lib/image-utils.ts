@@ -1,25 +1,10 @@
-/**
- * Convert a File object to a base64 string
- */
-export async function fileToBase64(file: File): Promise<string> {
+export async function resizeImage(file: File, maxWidth: number, maxHeight: number): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = (error) => reject(error)
-  })
-}
 
-/**
- * Resize an image file to a maximum width/height while maintaining aspect ratio
- */
-export async function resizeImage(file: File, maxWidth = 800, maxHeight = 800): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.readAsDataURL(file)
     reader.onload = (e) => {
       const img = new Image()
-      img.src = e.target?.result as string
+
       img.onload = () => {
         const canvas = document.createElement("canvas")
         let width = img.width
@@ -27,49 +12,56 @@ export async function resizeImage(file: File, maxWidth = 800, maxHeight = 800): 
 
         if (width > height) {
           if (width > maxWidth) {
-            height *= maxWidth / width
+            height = (height * maxWidth) / width
             width = maxWidth
           }
         } else {
           if (height > maxHeight) {
-            width *= maxHeight / height
+            width = (width * maxHeight) / height
             height = maxHeight
           }
         }
 
         canvas.width = width
         canvas.height = height
+
         const ctx = canvas.getContext("2d")
-        ctx?.drawImage(img, 0, 0, width, height)
-        resolve(canvas.toDataURL(file.type))
+        if (!ctx) {
+          reject(new Error("Failed to get canvas context"))
+          return
+        }
+
+        ctx.drawImage(img, 0, 0, width, height)
+
+        const base64 = canvas.toDataURL(file.type, 0.85)
+        resolve(base64)
       }
-      img.onerror = reject
+
+      img.onerror = () => {
+        reject(new Error("Failed to load image"))
+      }
+
+      img.src = e.target?.result as string
     }
-    reader.onerror = reject
+
+    reader.onerror = () => {
+      reject(new Error("Failed to read file"))
+    }
+
+    reader.readAsDataURL(file)
   })
 }
 
-/**
- * Create a thumbnail from an image file
- */
-export async function createThumbnail(file: File, size = 200): Promise<string> {
-  return resizeImage(file, size, size)
-}
+export function base64ToFile(base64: string, filename: string): File {
+  const arr = base64.split(",")
+  const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png"
+  const bstr = atob(arr[1])
+  let n = bstr.length
+  const u8arr = new Uint8Array(n)
 
-/**
- * Validate image file
- */
-export function validateImageFile(file: File): { valid: boolean; error?: string } {
-  const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
-  const maxSize = 5 * 1024 * 1024 // 5MB
-
-  if (!validTypes.includes(file.type)) {
-    return { valid: false, error: "Type de fichier non supporté. Utilisez JPG, PNG, WebP ou GIF." }
+  while (n--) {
+    u8arr[n] = bstr.charCodeAt(n)
   }
 
-  if (file.size > maxSize) {
-    return { valid: false, error: "Le fichier est trop volumineux. Taille maximum: 5MB." }
-  }
-
-  return { valid: true }
+  return new File([u8arr], filename, { type: mime })
 }
