@@ -7,12 +7,11 @@ import { mockAttributes } from "@/lib/mock-data"
 interface AttributesContextType {
   attributes: Attribute[]
   addAttribute: (attribute: Attribute) => void
-  updateAttribute: (id: string, updates: Partial<Attribute>) => void
+  updateAttribute: (id: string, attribute: Partial<Attribute>) => void
   deleteAttribute: (id: string) => void
   getAttribute: (id: string) => Attribute | undefined
+  getAttributeName: (slug: string) => string
   getAttributesByCategory: (categoryId: string) => Attribute[]
-  getAttributeName: (attributeId: string) => string
-  getAttributeLabel: (attributeId: string, value: string) => string
 }
 
 const AttributesContext = createContext<AttributesContextType | undefined>(undefined)
@@ -21,65 +20,66 @@ const STORAGE_KEY = "ekwip_admin_attributes"
 
 export function AttributesProvider({ children }: { children: ReactNode }) {
   const [attributes, setAttributes] = useState<Attribute[]>([])
+  const [isInitialized, setIsInitialized] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) {
-      try {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY)
+      if (stored) {
         setAttributes(JSON.parse(stored))
-      } catch (error) {
-        console.error("Error loading attributes:", error)
+      } else {
         setAttributes(mockAttributes)
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(mockAttributes))
       }
-    } else {
+    } catch (error) {
+      console.error("Error loading attributes:", error)
       setAttributes(mockAttributes)
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(mockAttributes))
+    } finally {
+      setIsInitialized(true)
     }
   }, [])
 
-  const saveToStorage = (newAttributes: Attribute[]) => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(newAttributes))
-  }
+  useEffect(() => {
+    if (isInitialized && attributes.length > 0) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(attributes))
+      } catch (error) {
+        console.error("Error saving attributes:", error)
+      }
+    }
+  }, [attributes, isInitialized])
 
   const addAttribute = (attribute: Attribute) => {
-    const newAttributes = [...attributes, attribute]
-    setAttributes(newAttributes)
-    saveToStorage(newAttributes)
+    setAttributes((prev) => [...prev, attribute])
   }
 
-  const updateAttribute = (id: string, updates: Partial<Attribute>) => {
-    const newAttributes = attributes.map((attr) => (attr.id === id ? { ...attr, ...updates } : attr))
-    setAttributes(newAttributes)
-    saveToStorage(newAttributes)
+  const updateAttribute = (id: string, updatedAttribute: Partial<Attribute>) => {
+    setAttributes((prev) => prev.map((a) => (a.id === id ? { ...a, ...updatedAttribute } : a)))
   }
 
   const deleteAttribute = (id: string) => {
-    const newAttributes = attributes.filter((attr) => attr.id !== id)
-    setAttributes(newAttributes)
-    saveToStorage(newAttributes)
+    setAttributes((prev) => prev.filter((a) => a.id !== id))
   }
 
   const getAttribute = (id: string) => {
-    return attributes.find((attr) => attr.id === id)
+    return attributes.find((a) => a.id === id)
+  }
+
+  const getAttributeName = (slug: string) => {
+    const attribute = attributes.find((a) => a.slug === slug)
+    return attribute?.name || slug
   }
 
   const getAttributesByCategory = (categoryId: string) => {
-    return attributes.filter((attr) => attr.categories && attr.categories.includes(categoryId))
+    return attributes.filter((a) => a.categories.includes(categoryId) || a.categories.length === 0)
   }
 
-  const getAttributeName = (attributeId: string): string => {
-    const attribute = getAttribute(attributeId)
-    return attribute?.name || attributeId
-  }
-
-  const getAttributeLabel = (attributeId: string, value: string): string => {
-    const attribute = getAttribute(attributeId)
-    if (!attribute) return value
-
-    if (attribute.type === "select" && attribute.values.includes(value)) {
-      return value
-    }
-    return value
+  if (!isInitialized) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      </div>
+    )
   }
 
   return (
@@ -90,9 +90,8 @@ export function AttributesProvider({ children }: { children: ReactNode }) {
         updateAttribute,
         deleteAttribute,
         getAttribute,
-        getAttributesByCategory,
         getAttributeName,
-        getAttributeLabel,
+        getAttributesByCategory,
       }}
     >
       {children}

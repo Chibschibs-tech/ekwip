@@ -37,10 +37,14 @@ export default function CategoriesPage() {
 
   const filteredCategories = categories.filter((cat) => cat.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
+  const handleInputChange = (field: string, value: string | number | boolean) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    if (!formData.name) {
+    if (!formData.name.trim()) {
       toast({
         title: "Erreur",
         description: "Le nom de la catégorie est requis",
@@ -49,10 +53,17 @@ export default function CategoriesPage() {
       return
     }
 
+    const slug =
+      formData.slug.trim() ||
+      formData.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+
     if (editingCategory) {
       updateCategory(editingCategory.id, {
         ...formData,
-        slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, "-"),
+        slug,
         updatedAt: new Date().toISOString(),
       })
       toast({
@@ -64,9 +75,9 @@ export default function CategoriesPage() {
       const newCategory: Category = {
         id: `cat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         name: formData.name,
-        slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, "-"),
-        description: formData.description,
-        image: formData.image,
+        slug,
+        description: formData.description || undefined,
+        image: formData.image || undefined,
         parentId: null,
         order: formData.order,
         isActive: formData.isActive,
@@ -121,6 +132,25 @@ export default function CategoriesPage() {
     }
   }
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    try {
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        handleInputChange("image", reader.result as string)
+      }
+      reader.readAsDataURL(file)
+    } catch (error) {
+      toast({
+        title: "Erreur",
+        description: "Impossible de charger l'image",
+        variant: "destructive",
+      })
+    }
+  }
+
   const CategoryForm = () => (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="space-y-2">
@@ -130,9 +160,10 @@ export default function CategoriesPage() {
         <Input
           id="name"
           value={formData.name}
-          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+          onChange={(e) => handleInputChange("name", e.target.value)}
           placeholder="Ex: Ordinateurs portables"
           required
+          autoComplete="off"
         />
       </div>
 
@@ -141,8 +172,9 @@ export default function CategoriesPage() {
         <Input
           id="slug"
           value={formData.slug}
-          onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+          onChange={(e) => handleInputChange("slug", e.target.value)}
           placeholder="ordinateurs-portables"
+          autoComplete="off"
         />
         <p className="text-xs text-gray-500">Laissez vide pour générer automatiquement</p>
       </div>
@@ -152,25 +184,37 @@ export default function CategoriesPage() {
         <Textarea
           id="description"
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          onChange={(e) => handleInputChange("description", e.target.value)}
           placeholder="Description de la catégorie"
           rows={3}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="image">URL de l'image</Label>
+        <Label htmlFor="image">Image</Label>
         <div className="flex gap-2">
           <Input
             id="image"
             value={formData.image}
-            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+            onChange={(e) => handleInputChange("image", e.target.value)}
             placeholder="https://..."
+            autoComplete="off"
           />
-          <Button type="button" variant="outline" size="icon">
+          <Button
+            type="button"
+            variant="outline"
+            size="icon"
+            onClick={() => document.getElementById("image-upload")?.click()}
+          >
             <Upload className="h-4 w-4" />
           </Button>
+          <input id="image-upload" type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
         </div>
+        {formData.image && (
+          <div className="mt-2 relative w-32 h-32 border rounded-lg overflow-hidden">
+            <img src={formData.image || "/placeholder.svg"} alt="Preview" className="w-full h-full object-cover" />
+          </div>
+        )}
       </div>
 
       <div className="space-y-2">
@@ -179,7 +223,7 @@ export default function CategoriesPage() {
           id="order"
           type="number"
           value={formData.order}
-          onChange={(e) => setFormData({ ...formData, order: Number.parseInt(e.target.value) })}
+          onChange={(e) => handleInputChange("order", Number.parseInt(e.target.value) || 0)}
           min="0"
         />
       </div>
@@ -189,7 +233,7 @@ export default function CategoriesPage() {
         <Switch
           id="isActive"
           checked={formData.isActive}
-          onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+          onCheckedChange={(checked) => handleInputChange("isActive", checked)}
         />
       </div>
 
@@ -217,14 +261,20 @@ export default function CategoriesPage() {
           <h1 className="text-3xl font-bold">Catégories</h1>
           <p className="text-gray-600 dark:text-gray-400">Gérez les catégories de produits</p>
         </div>
-        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <Dialog
+          open={isCreateDialogOpen}
+          onOpenChange={(open) => {
+            setIsCreateDialogOpen(open)
+            if (!open) resetForm()
+          }}
+        >
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
               Ajouter une catégorie
             </Button>
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Créer une nouvelle catégorie</DialogTitle>
             </DialogHeader>
@@ -313,8 +363,14 @@ export default function CategoriesPage() {
         </CardContent>
       </Card>
 
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent>
+      <Dialog
+        open={isEditDialogOpen}
+        onOpenChange={(open) => {
+          setIsEditDialogOpen(open)
+          if (!open) resetForm()
+        }}
+      >
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Modifier la catégorie</DialogTitle>
           </DialogHeader>

@@ -1,5 +1,5 @@
 /**
- * Convertit un fichier File en URL base64
+ * Convert a File object to a base64 string
  */
 export async function fileToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -11,22 +11,7 @@ export async function fileToBase64(file: File): Promise<string> {
 }
 
 /**
- * Convertit plusieurs fichiers en URLs base64
- */
-export async function filesToBase64(files: File[]): Promise<string[]> {
-  return Promise.all(files.map((file) => fileToBase64(file)))
-}
-
-/**
- * Valide si une image est valide
- */
-export function isValidImageUrl(url: string): boolean {
-  if (!url) return false
-  return url.startsWith("data:image/") || url.startsWith("http://") || url.startsWith("https://") || url.startsWith("/")
-}
-
-/**
- * Redimensionne une image pour optimiser le stockage
+ * Resize an image file to a maximum width/height while maintaining aspect ratio
  */
 export async function resizeImage(file: File, maxWidth = 800, maxHeight = 800): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -35,7 +20,6 @@ export async function resizeImage(file: File, maxWidth = 800, maxHeight = 800): 
     reader.onload = (e) => {
       const img = new Image()
       img.src = e.target?.result as string
-
       img.onload = () => {
         const canvas = document.createElement("canvas")
         let width = img.width
@@ -55,15 +39,37 @@ export async function resizeImage(file: File, maxWidth = 800, maxHeight = 800): 
 
         canvas.width = width
         canvas.height = height
-
         const ctx = canvas.getContext("2d")
         ctx?.drawImage(img, 0, 0, width, height)
-
-        resolve(canvas.toDataURL("image/jpeg", 0.8))
+        resolve(canvas.toDataURL(file.type))
       }
-
       img.onerror = reject
     }
     reader.onerror = reject
   })
+}
+
+/**
+ * Create a thumbnail from an image file
+ */
+export async function createThumbnail(file: File, size = 200): Promise<string> {
+  return resizeImage(file, size, size)
+}
+
+/**
+ * Validate image file
+ */
+export function validateImageFile(file: File): { valid: boolean; error?: string } {
+  const validTypes = ["image/jpeg", "image/png", "image/webp", "image/gif"]
+  const maxSize = 5 * 1024 * 1024 // 5MB
+
+  if (!validTypes.includes(file.type)) {
+    return { valid: false, error: "Type de fichier non supporté. Utilisez JPG, PNG, WebP ou GIF." }
+  }
+
+  if (file.size > maxSize) {
+    return { valid: false, error: "Le fichier est trop volumineux. Taille maximum: 5MB." }
+  }
+
+  return { valid: true }
 }
