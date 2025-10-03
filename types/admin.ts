@@ -1,3 +1,9 @@
+export interface RentalDuration {
+  duration: 6 | 12 | 24 | 36
+  monthlyFee: number // Prix mensuel HT
+  upfrontContribution: number // Apport initial HT
+}
+
 export interface ProductVariation {
   id: string
   name: string
@@ -7,6 +13,7 @@ export interface ProductVariation {
   stockQuantity: number
   attributes: Record<string, string>
   image?: string
+  rentalDurations?: RentalDuration[]
 }
 
 export interface Product {
@@ -14,22 +21,29 @@ export interface Product {
   name: string
   slug: string
   sku: string
-  shortDescription: string
   description: string
+  shortDescription: string
   categoryId: string
   brandId: string
-  price: number
+  price: number // Prix de base HT
   compareAtPrice?: number
   costPrice: number
-  thumbnail: string
   images: string[]
+  thumbnail: string
+  status: "active" | "draft" | "archived"
   stockQuantity: number
   lowStockThreshold: number
-  status: "active" | "draft" | "archived"
-  isFeatured: boolean
-  tags: string[]
+  weight?: number
+  dimensions?: {
+    length: number
+    width: number
+    height: number
+  }
   attributes: Record<string, string>
+  tags: string[]
+  isFeatured: boolean
   variations?: ProductVariation[]
+  rentalDurations?: RentalDuration[]
   createdAt: string
   updatedAt: string
 }
@@ -42,8 +56,8 @@ export interface Category {
   parentId: string | null
   image?: string
   icon?: string
-  isActive: boolean
   order: number
+  isActive: boolean
   productCount: number
   createdAt: string
   updatedAt: string
@@ -62,45 +76,226 @@ export interface Brand {
   updatedAt: string
 }
 
-export interface AttributeValue {
-  value: string
-  label?: string
-}
-
 export interface Attribute {
   id: string
   name: string
   slug: string
-  type: "text" | "number" | "select" | "color" | "boolean"
+  type: "select" | "text" | "number" | "color"
   values: string[]
   isRequired: boolean
   isFilterable: boolean
   isVariation: boolean
-  categories: string[]
   order: number
+  categories?: string[]
   createdAt: string
   updatedAt: string
 }
 
-export interface AnalyticsData {
-  totalRevenue: number
-  totalOrders: number
-  totalCustomers: number
-  averageOrderValue: number
-  revenueGrowth: number
-  ordersGrowth: number
-  customersGrowth: number
-  topProducts: Array<{
-    id: string
-    name: string
-    revenue: number
-    orders: number
-  }>
-  recentOrders: Array<{
-    id: string
-    customer: string
-    date: string
-    amount: number
-    status: string
-  }>
+export interface Stock {
+  id: string
+  productId: string
+  warehouseId: string
+  quantity: number
+  reserved: number
+  available: number
+  lastUpdated: string
+}
+
+export interface Warehouse {
+  id: string
+  name: string
+  code: string
+  address: string
+  city: string
+  phone: string
+  email: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface StockMovement {
+  id: string
+  productId: string
+  warehouseId: string
+  type: "in" | "out" | "adjustment" | "transfer"
+  quantity: number
+  previousQuantity: number
+  newQuantity: number
+  reason: string
+  reference?: string
+  createdBy: string
+  createdAt: string
+}
+
+export interface Order {
+  id: string
+  orderNumber: string
+  customerId: string
+  customerName: string
+  customerEmail: string
+  status: "pending" | "processing" | "shipped" | "delivered" | "cancelled"
+  paymentStatus: "pending" | "paid" | "failed" | "refunded"
+  items: OrderItem[]
+  subtotal: number
+  tax: number
+  shipping: number
+  discount: number
+  total: number
+  shippingAddress: Address
+  billingAddress: Address
+  notes?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface OrderItem {
+  id: string
+  productId: string
+  productName: string
+  sku: string
+  quantity: number
+  price: number
+  total: number
+}
+
+export interface Address {
+  fullName: string
+  phone: string
+  address: string
+  city: string
+  postalCode: string
+  country: string
+}
+
+export interface Customer {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  company?: string
+  addresses: Address[]
+  orders: number
+  totalSpent: number
+  status: "active" | "inactive" | "blocked"
+  notes?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Supplier {
+  id: string
+  name: string
+  code: string
+  email: string
+  phone: string
+  website?: string
+  address: string
+  city: string
+  contactPerson: string
+  contactPhone: string
+  contactEmail: string
+  paymentTerms: string
+  notes?: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Coupon {
+  id: string
+  code: string
+  type: "percentage" | "fixed" | "free_shipping"
+  value: number
+  description?: string
+  minimumPurchase?: number
+  usageLimit?: number
+  usageCount: number
+  perCustomerLimit?: number
+  startDate: string
+  endDate?: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Banner {
+  id: string
+  title: string
+  description?: string
+  image: string
+  link?: string
+  buttonText?: string
+  position: "hero" | "sidebar" | "footer"
+  order: number
+  startDate: string
+  endDate?: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Page {
+  id: string
+  title: string
+  slug: string
+  content: string
+  metaTitle?: string
+  metaDescription?: string
+  isPublished: boolean
+  createdAt: string
+  updatedAt: string
+}
+
+export interface DashboardStats {
+  revenue: {
+    total: number
+    change: number
+  }
+  orders: {
+    total: number
+    change: number
+  }
+  customers: {
+    total: number
+    change: number
+  }
+  products: {
+    total: number
+    change: number
+  }
+}
+
+export interface SalesData {
+  date: string
+  revenue: number
+  orders: number
+}
+
+export interface ShopSettings {
+  name: string
+  email: string
+  phone: string
+  address: string
+  city: string
+  postalCode: string
+  country: string
+  currency: string
+  timezone: string
+  language: string
+  taxRate: number
+  shippingCost: number
+  freeShippingThreshold?: number
+}
+
+export interface User {
+  id: string
+  name: string
+  email: string
+  role: string
+  avatar?: string
+  isActive: boolean
+  createdAt: string
+  updatedAt: string
 }

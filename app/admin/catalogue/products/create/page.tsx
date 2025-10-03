@@ -12,13 +12,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Upload, X, Plus, Trash2 } from "lucide-react"
-import type { Attribute, Product, ProductVariation } from "@/types/admin"
+import type { Attribute, Product, ProductVariation, RentalDuration } from "@/types/admin"
 import { useProducts } from "@/contexts/products-context"
 import { useCategories } from "@/contexts/categories-context"
 import { useBrands } from "@/contexts/brands-context"
 import { useAttributes } from "@/contexts/attributes-context"
 import { useToast } from "@/hooks/use-toast"
 import { resizeImage } from "@/lib/image-utils"
+import { RentalDurationsManager } from "@/components/admin/rental-durations-manager"
 
 export default function CreateProductPage() {
   const router = useRouter()
@@ -36,6 +37,7 @@ export default function CreateProductPage() {
   const [imageFiles, setImageFiles] = useState<string[]>([])
   const [variations, setVariations] = useState<ProductVariation[]>([])
   const [hasVariations, setHasVariations] = useState(false)
+  const [rentalDurations, setRentalDurations] = useState<RentalDuration[]>([])
 
   const [formData, setFormData] = useState({
     name: "",
@@ -144,14 +146,27 @@ export default function CreateProductPage() {
       return
     }
 
-    if (formData.price <= 0) {
+    if (formData.price <= 0 && rentalDurations.length === 0) {
       toast({
         title: "Erreur de validation",
-        description: "Le prix de location doit être supérieur à 0",
+        description: "Veuillez définir un prix de base ou au moins une durée de location",
         variant: "destructive",
       })
       setIsSubmitting(false)
       return
+    }
+
+    if (rentalDurations.length > 0) {
+      const invalidDurations = rentalDurations.filter((d) => d.monthlyFee <= 0 || d.upfrontContribution < 0)
+      if (invalidDurations.length > 0) {
+        toast({
+          title: "Erreur de validation",
+          description: "Veuillez définir un loyer mensuel valide pour toutes les durées sélectionnées",
+          variant: "destructive",
+        })
+        setIsSubmitting(false)
+        return
+      }
     }
 
     if (hasVariations && variations.length === 0) {
@@ -202,6 +217,7 @@ export default function CreateProductPage() {
         tags: formData.tags,
         attributes: productAttributes,
         variations: hasVariations ? variations : undefined,
+        rentalDurations: rentalDurations.length > 0 ? rentalDurations : undefined,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }
@@ -413,27 +429,27 @@ export default function CreateProductPage() {
           <TabsContent value="pricing" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Prix</CardTitle>
+                <CardTitle>Prix de base</CardTitle>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Prix de référence du produit (tous les prix sont HT)
+                </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="price">
-                      Prix de location (MAD/mois) <span className="text-red-500">*</span>
-                    </Label>
+                    <Label htmlFor="price">Prix de base (DH HT)</Label>
                     <Input
                       id="price"
                       type="number"
                       placeholder="450"
                       value={formData.price || ""}
                       onChange={(e) => updateFormData("price", Number(e.target.value))}
-                      required
                       min="0"
                       step="0.01"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="compareAtPrice">Prix barré</Label>
+                    <Label htmlFor="compareAtPrice">Prix barré (DH HT)</Label>
                     <Input
                       id="compareAtPrice"
                       type="number"
@@ -447,7 +463,7 @@ export default function CreateProductPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="costPrice">Prix de revient</Label>
+                    <Label htmlFor="costPrice">Prix de revient (DH HT)</Label>
                     <Input
                       id="costPrice"
                       type="number"
@@ -461,6 +477,8 @@ export default function CreateProductPage() {
                 </div>
               </CardContent>
             </Card>
+
+            <RentalDurationsManager durations={rentalDurations} onChange={setRentalDurations} />
 
             <Card>
               <CardHeader>
@@ -649,7 +667,7 @@ export default function CreateProductPage() {
 
                                 <div className="grid gap-4 md:grid-cols-2">
                                   <div className="space-y-2">
-                                    <Label>Prix (MAD/mois)</Label>
+                                    <Label>Prix (DH HT)</Label>
                                     <Input
                                       type="number"
                                       value={variation.price || ""}
