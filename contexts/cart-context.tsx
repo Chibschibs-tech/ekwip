@@ -5,8 +5,8 @@ import type { Product } from "@/types/admin"
 
 interface NeedsListItem {
   product: Product
-  quantity: number
   duration?: number
+  quantity: number
 }
 
 interface NeedsListContextType {
@@ -15,6 +15,7 @@ interface NeedsListContextType {
   removeItem: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
   clearList: () => void
+  totalItems: number
 }
 
 const NeedsListContext = createContext<NeedsListContextType | undefined>(undefined)
@@ -25,12 +26,12 @@ export function NeedsListProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     setMounted(true)
-    const savedItems = localStorage.getItem("needsList")
-    if (savedItems) {
+    const saved = localStorage.getItem("needsList")
+    if (saved) {
       try {
-        setItems(JSON.parse(savedItems))
-      } catch (error) {
-        console.error("Error loading needs list:", error)
+        setItems(JSON.parse(saved))
+      } catch (e) {
+        console.error("Failed to parse needs list:", e)
       }
     }
   }, [])
@@ -42,35 +43,39 @@ export function NeedsListProvider({ children }: { children: ReactNode }) {
   }, [items, mounted])
 
   const addItem = (product: Product, duration?: number) => {
-    setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.product.id === product.id)
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.product.id === product.id ? { ...item, quantity: item.quantity + 1, duration } : item,
+    setItems((prev) => {
+      const existing = prev.find((item) => item.product.id === product.id && item.duration === duration)
+      if (existing) {
+        return prev.map((item) =>
+          item.product.id === product.id && item.duration === duration
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
         )
       }
-      return [...prevItems, { product, quantity: 1, duration }]
+      return [...prev, { product, duration, quantity: 1 }]
     })
   }
 
   const removeItem = (productId: string) => {
-    setItems((prevItems) => prevItems.filter((item) => item.product.id !== productId))
+    setItems((prev) => prev.filter((item) => item.product.id !== productId))
   }
 
   const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
       removeItem(productId)
-      return
+    } else {
+      setItems((prev) => prev.map((item) => (item.product.id === productId ? { ...item, quantity } : item)))
     }
-    setItems((prevItems) => prevItems.map((item) => (item.product.id === productId ? { ...item, quantity } : item)))
   }
 
   const clearList = () => {
     setItems([])
   }
 
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+
   return (
-    <NeedsListContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearList }}>
+    <NeedsListContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearList, totalItems }}>
       {children}
     </NeedsListContext.Provider>
   )
@@ -84,6 +89,6 @@ export function useNeedsList() {
   return context
 }
 
-// Alias pour la compatibilité
-export const useCart = useNeedsList
+// Alias for backward compatibility
 export const CartProvider = NeedsListProvider
+export const useCart = useNeedsList

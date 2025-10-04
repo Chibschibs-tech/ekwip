@@ -1,8 +1,9 @@
 "use client"
 
-import { createContext, useContext, useState, type ReactNode } from "react"
+import type React from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 
-type Language = "fr" | "en"
+type Language = "fr" | "ar" | "en"
 
 interface LanguageContextType {
   language: Language
@@ -10,30 +11,64 @@ interface LanguageContextType {
   t: (key: string) => string
 }
 
-const translations = {
+const translations: Record<Language, Record<string, string>> = {
   fr: {
-    needsList: "Liste de besoins",
-    viewList: "Voir ma liste",
-    equipment: "équipement",
-    equipments: "équipements",
-    inYourList: "dans votre liste",
+    needs_list: "Ma liste de besoins",
+    items: "articles",
+    cart: "Panier",
+    home: "Accueil",
+    catalog: "Catalogue",
+    brands: "Marques",
+    shop: "Boutique Vente",
+    how_it_works: "Comment ça marche",
+    client_portal: "Portail Client",
+    contact: "Contact",
+  },
+  ar: {
+    needs_list: "قائمة احتياجاتي",
+    items: "عناصر",
+    cart: "السلة",
+    home: "الرئيسية",
+    catalog: "الكتالوج",
+    brands: "العلامات التجارية",
+    shop: "متجر البيع",
+    how_it_works: "كيف يعمل",
+    client_portal: "بوابة العميل",
+    contact: "اتصل بنا",
   },
   en: {
-    needsList: "Needs List",
-    viewList: "View my list",
-    equipment: "equipment",
-    equipments: "equipment",
-    inYourList: "in your list",
+    needs_list: "My needs list",
+    items: "items",
+    cart: "Cart",
+    home: "Home",
+    catalog: "Catalog",
+    brands: "Brands",
+    shop: "Shop",
+    how_it_works: "How it works",
+    client_portal: "Client Portal",
+    contact: "Contact",
   },
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>("fr")
+export function LanguageProvider({ children }: { children: React.ReactNode }) {
+  const [language, setLanguageState] = useState<Language>("fr")
+
+  useEffect(() => {
+    const saved = localStorage.getItem("language") as Language
+    if (saved && ["fr", "ar", "en"].includes(saved)) {
+      setLanguageState(saved)
+    }
+  }, [])
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang)
+    localStorage.setItem("language", lang)
+  }
 
   const t = (key: string): string => {
-    return translations[language][key as keyof typeof translations.fr] || key
+    return translations[language][key] || key
   }
 
   return <LanguageContext.Provider value={{ language, setLanguage, t }}>{children}</LanguageContext.Provider>

@@ -1,101 +1,121 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
 import { Menu, X } from "lucide-react"
-import { CartIcon } from "./cart/cart-icon"
+import CartIcon from "@/components/cart/cart-icon"
 
-export function Navbar() {
+export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container mx-auto px-4">
+        <div className="flex h-16 items-center justify-between">
+          {/* Logo */}
           <Link href="/" className="flex items-center">
-            <Image src="/images/logo-black.png" alt="Ekwip" width={120} height={40} className="h-10 w-auto" />
+            <Image src="/images/logo-black.png" alt="Ekwip Logo" width={120} height={40} className="dark:hidden" />
+            <Image
+              src="/images/logo-white.png"
+              alt="Ekwip Logo"
+              width={120}
+              height={40}
+              className="hidden dark:block"
+            />
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/comment-ca-marche" className="text-gray-700 hover:text-[#1f3b57] transition-colors">
-              Comment ça marche
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex md:items-center md:gap-6">
+            <Link href="/" className="text-sm font-medium transition-colors hover:text-primary">
+              Accueil
             </Link>
-            <Link href="/catalogue" className="text-gray-700 hover:text-[#1f3b57] transition-colors">
+            <Link href="/catalogue" className="text-sm font-medium transition-colors hover:text-primary">
               Catalogue Location
             </Link>
-            <Link href="/boutique" className="text-gray-700 hover:text-[#1f3b57] transition-colors">
+            <Link href="/boutique" className="text-sm font-medium transition-colors hover:text-primary">
               Boutique Vente
             </Link>
-            <Link href="/marques" className="text-gray-700 hover:text-[#1f3b57] transition-colors">
+            <Link href="/marques" className="text-sm font-medium transition-colors hover:text-primary">
               Marques
             </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-[#1f3b57] transition-colors">
-              Blog
+            <Link href="/comment-ca-marche" className="text-sm font-medium transition-colors hover:text-primary">
+              Comment ça marche
             </Link>
-            <Link href="/contact" className="text-gray-700 hover:text-[#1f3b57] transition-colors">
+            <Link href="/portail-client" className="text-sm font-medium transition-colors hover:text-primary">
+              Portail Client
+            </Link>
+            <Link href="/contact" className="text-sm font-medium transition-colors hover:text-primary">
               Contact
             </Link>
             <CartIcon />
-            <Link href="/portail-client">
-              <Button className="bg-[#1f3b57] hover:bg-[#1f3b57]/80">Portail Client</Button>
-            </Link>
           </div>
 
-          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {/* Mobile Menu Button */}
+          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
 
+        {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 space-y-4">
-            <Link
-              href="/comment-ca-marche"
-              className="block text-gray-700 hover:text-[#1f3b57] transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Comment ça marche
-            </Link>
-            <Link
-              href="/catalogue"
-              className="block text-gray-700 hover:text-[#1f3b57] transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Catalogue Location
-            </Link>
-            <Link
-              href="/boutique"
-              className="block text-gray-700 hover:text-[#1f3b57] transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Boutique Vente
-            </Link>
-            <Link
-              href="/marques"
-              className="block text-gray-700 hover:text-[#1f3b57] transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Marques
-            </Link>
-            <Link
-              href="/blog"
-              className="block text-gray-700 hover:text-[#1f3b57] transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Blog
-            </Link>
-            <Link
-              href="/contact"
-              className="block text-gray-700 hover:text-[#1f3b57] transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Contact
-            </Link>
-            <div className="flex items-center gap-4">
-              <CartIcon />
-              <Link href="/portail-client" onClick={() => setIsMenuOpen(false)}>
-                <Button className="bg-[#1f3b57] hover:bg-[#1f3b57]/80">Portail Client</Button>
+          <div className="border-t py-4 md:hidden">
+            <div className="flex flex-col gap-4">
+              <Link
+                href="/"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Accueil
+              </Link>
+              <Link
+                href="/catalogue"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Catalogue Location
+              </Link>
+              <Link
+                href="/boutique"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Boutique Vente
+              </Link>
+              <Link
+                href="/marques"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Marques
+              </Link>
+              <Link
+                href="/comment-ca-marche"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Comment ça marche
+              </Link>
+              <Link
+                href="/portail-client"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Portail Client
+              </Link>
+              <Link
+                href="/contact"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Contact
+              </Link>
+              <Link
+                href="/ma-liste-besoins"
+                className="text-sm font-medium transition-colors hover:text-primary"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Ma liste de besoins
               </Link>
             </div>
           </div>
