@@ -11,7 +11,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Switch } from "@/components/ui/switch"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Upload, X, Plus, Trash2 } from "lucide-react"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Upload, X, Plus, Trash2, Package, ShoppingCart } from "lucide-react"
 import type { Attribute, Product, ProductVariation, RentalDuration } from "@/types/admin"
 import { useProducts } from "@/contexts/products-context"
 import { useCategories } from "@/contexts/categories-context"
@@ -29,6 +30,7 @@ export default function CreateProductPage() {
   const { getAttributesByCategory } = useAttributes()
   const { toast } = useToast()
 
+  const [productType, setProductType] = useState<"rent" | "sale" | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("")
   const [availableAttributes, setAvailableAttributes] = useState<Attribute[]>([])
@@ -134,6 +136,15 @@ export default function CreateProductPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!productType) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez sélectionner un type de produit",
+        variant: "destructive",
+      })
+      return
+    }
+
     setIsSubmitting(true)
 
     if (!formData.name || !formData.sku || !formData.categoryId) {
@@ -146,22 +157,32 @@ export default function CreateProductPage() {
       return
     }
 
-    if (formData.price <= 0 && rentalDurations.length === 0) {
+    if (formData.price <= 0) {
       toast({
         title: "Erreur de validation",
-        description: "Veuillez définir un prix de base ou au moins une durée de location",
+        description: "Le prix doit être supérieur à 0",
         variant: "destructive",
       })
       setIsSubmitting(false)
       return
     }
 
-    if (rentalDurations.length > 0) {
-      const invalidDurations = rentalDurations.filter((d) => d.monthlyFee <= 0 || d.upfrontContribution < 0)
+    if (productType === "rent" && rentalDurations.length === 0) {
+      toast({
+        title: "Erreur de validation",
+        description: "Veuillez définir au moins une durée de location",
+        variant: "destructive",
+      })
+      setIsSubmitting(false)
+      return
+    }
+
+    if (productType === "rent" && rentalDurations.length > 0) {
+      const invalidDurations = rentalDurations.filter((d) => d.monthlyFee <= 0)
       if (invalidDurations.length > 0) {
         toast({
           title: "Erreur de validation",
-          description: "Veuillez définir un loyer mensuel valide pour toutes les durées sélectionnées",
+          description: "Veuillez définir un loyer mensuel valide pour toutes les durées",
           variant: "destructive",
         })
         setIsSubmitting(false)
@@ -205,6 +226,7 @@ export default function CreateProductPage() {
         description: formData.description,
         categoryId: formData.categoryId,
         brandId: formData.brandId || "",
+        productType: productType,
         price: formData.price,
         compareAtPrice: formData.compareAtPrice || undefined,
         costPrice: formData.costPrice,
@@ -217,7 +239,7 @@ export default function CreateProductPage() {
         tags: formData.tags,
         attributes: productAttributes,
         variations: hasVariations ? variations : undefined,
-        rentalDurations: rentalDurations.length > 0 ? rentalDurations : undefined,
+        rentalDurations: productType === "rent" ? rentalDurations : undefined,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }
@@ -248,18 +270,109 @@ export default function CreateProductPage() {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
+  if (!productType) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Ajouter un produit</h1>
+            <p className="text-gray-600 dark:text-gray-400">Sélectionnez le type de produit à créer</p>
+          </div>
+        </div>
+
+        <div className="max-w-4xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle>Type de produit</CardTitle>
+              <p className="text-sm text-gray-500">Choisissez si ce produit est destiné à la location ou à la vente</p>
+            </CardHeader>
+            <CardContent>
+              <RadioGroup value={productType || ""} onValueChange={(value: any) => setProductType(value)}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card className="cursor-pointer hover:border-blue-500 transition-colors">
+                    <CardContent className="pt-6">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="rent" id="rent" />
+                        <Label htmlFor="rent" className="flex items-center cursor-pointer flex-1">
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="p-3 bg-blue-100 dark:bg-blue-900 rounded-lg">
+                              <Package className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold">Location</p>
+                              <p className="text-sm text-gray-500">Produit destiné à la location</p>
+                            </div>
+                          </div>
+                        </Label>
+                      </div>
+                      <div className="mt-4 pl-6">
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Configuration des durées de location</li>
+                          <li>• Loyer mensuel et apport initial</li>
+                          <li>• Gestion du parc locatif</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="cursor-pointer hover:border-green-500 transition-colors">
+                    <CardContent className="pt-6">
+                      <div className="flex items-center space-x-2">
+                        <RadioGroupItem value="sale" id="sale" />
+                        <Label htmlFor="sale" className="flex items-center cursor-pointer flex-1">
+                          <div className="flex items-center gap-3 flex-1">
+                            <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
+                              <ShoppingCart className="h-6 w-6 text-green-600 dark:text-green-400" />
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-semibold">Vente</p>
+                              <p className="text-sm text-gray-500">Produit destiné à la vente</p>
+                            </div>
+                          </div>
+                        </Label>
+                      </div>
+                      <div className="mt-4 pl-6">
+                        <ul className="text-sm text-gray-600 space-y-1">
+                          <li>• Prix de vente unique</li>
+                          <li>• Gestion des stocks</li>
+                          <li>• Commandes et livraisons</li>
+                        </ul>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </RadioGroup>
+
+              <div className="mt-6 flex justify-end">
+                <Button onClick={() => router.back()} variant="outline" className="mr-2">
+                  Annuler
+                </Button>
+                <Button onClick={() => productType && undefined} disabled={!productType}>
+                  Continuer
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Ajouter un produit</h1>
+          <h1 className="text-3xl font-bold">Ajouter un produit - {productType === "rent" ? "Location" : "Vente"}</h1>
           <p className="text-gray-600 dark:text-gray-400">Créez un nouveau produit dans votre catalogue</p>
         </div>
+        <Button variant="outline" onClick={() => setProductType(null)}>
+          Changer le type
+        </Button>
       </div>
 
       <form onSubmit={handleSubmit}>
         <Tabs defaultValue="general" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className={`grid w-full ${productType === "rent" ? "grid-cols-6" : "grid-cols-5"}`}>
             <TabsTrigger value="general">Général</TabsTrigger>
             <TabsTrigger value="pricing">Prix & Stock</TabsTrigger>
             <TabsTrigger value="attributes">Attributs</TabsTrigger>
@@ -429,21 +542,27 @@ export default function CreateProductPage() {
           <TabsContent value="pricing" className="space-y-6">
             <Card>
               <CardHeader>
-                <CardTitle>Prix de base</CardTitle>
+                <CardTitle>{productType === "rent" ? "Prix de base" : "Prix de vente"}</CardTitle>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Prix de référence du produit (tous les prix sont HT)
+                  {productType === "rent"
+                    ? "Prix de référence du produit (tous les prix sont HT)"
+                    : "Prix de vente du produit (tous les prix sont HT)"}
                 </p>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-3">
                   <div className="space-y-2">
-                    <Label htmlFor="price">Prix de base (DH HT)</Label>
+                    <Label htmlFor="price">
+                      {productType === "rent" ? "Prix de base (DH HT)" : "Prix de vente (DH HT)"}{" "}
+                      <span className="text-red-500">*</span>
+                    </Label>
                     <Input
                       id="price"
                       type="number"
                       placeholder="450"
                       value={formData.price || ""}
                       onChange={(e) => updateFormData("price", Number(e.target.value))}
+                      required
                       min="0"
                       step="0.01"
                     />
@@ -478,7 +597,9 @@ export default function CreateProductPage() {
               </CardContent>
             </Card>
 
-            <RentalDurationsManager durations={rentalDurations} onChange={setRentalDurations} />
+            {productType === "rent" && (
+              <RentalDurationsManager durations={rentalDurations} onChange={setRentalDurations} />
+            )}
 
             <Card>
               <CardHeader>

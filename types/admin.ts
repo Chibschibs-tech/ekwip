@@ -1,7 +1,7 @@
 export interface RentalDuration {
   duration: 6 | 12 | 24 | 36
-  monthlyFee: number // Prix mensuel HT
-  upfrontContribution: number // Apport initial HT
+  monthlyFee: number
+  upfrontContribution: number
 }
 
 export interface ProductVariation {
@@ -25,7 +25,8 @@ export interface Product {
   shortDescription: string
   categoryId: string
   brandId: string
-  price: number // Prix de base HT
+  productType: "rent" | "sale"
+  price: number
   compareAtPrice?: number
   costPrice: number
   images: string[]
