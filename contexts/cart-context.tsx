@@ -1,128 +1,76 @@
 "use client"
 
-import type React from "react"
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import type { Product } from "@/types/admin"
 
-export interface NeedsListItem {
-  id: number
-  name: string
-  slug: string
-  price: number
-  image: string
-  category: string
-  brand: string
+interface NeedsListItem {
+  product: Product
   quantity: number
-  duration: number // rental duration in months
+  duration?: number
 }
 
-type NeedsListContextType = {
+interface NeedsListContextType {
   items: NeedsListItem[]
-  addToNeedsList: (item: Omit<NeedsListItem, "quantity" | "duration">) => void
-  removeFromNeedsList: (id: number) => void
-  updateQuantity: (id: number, quantity: number) => void
-  updateDuration: (id: number, duration: number) => void
-  clearNeedsList: () => void
-  getTotalItems: () => number
-  getTotalPrice: () => number
-  isInNeedsList: (id: number) => boolean
+  addItem: (product: Product, duration?: number) => void
+  removeItem: (productId: string) => void
+  updateQuantity: (productId: string, quantity: number) => void
+  clearList: () => void
 }
 
-const NeedsListContext = createContext<NeedsListContextType>({
-  items: [],
-  addToNeedsList: () => {},
-  removeFromNeedsList: () => {},
-  updateQuantity: () => {},
-  updateDuration: () => {},
-  clearNeedsList: () => {},
-  getTotalItems: () => 0,
-  getTotalPrice: () => 0,
-  isInNeedsList: () => false,
-})
+const NeedsListContext = createContext<NeedsListContextType | undefined>(undefined)
 
-export function NeedsListProvider({ children }: { children: React.ReactNode }) {
+export function NeedsListProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<NeedsListItem[]>([])
+  const [mounted, setMounted] = useState(false)
 
-  // Load from localStorage on mount
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("ekwip-needs-list")
-      if (saved) {
-        try {
-          setItems(JSON.parse(saved))
-        } catch (error) {
-          console.error("Error loading needs list:", error)
-        }
+    setMounted(true)
+    const savedItems = localStorage.getItem("needsList")
+    if (savedItems) {
+      try {
+        setItems(JSON.parse(savedItems))
+      } catch (error) {
+        console.error("Error loading needs list:", error)
       }
     }
   }, [])
 
-  // Save to localStorage whenever items change
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("ekwip-needs-list", JSON.stringify(items))
+    if (mounted) {
+      localStorage.setItem("needsList", JSON.stringify(items))
     }
-  }, [items])
+  }, [items, mounted])
 
-  const addToNeedsList = (newItem: Omit<NeedsListItem, "quantity" | "duration">) => {
-    setItems((currentItems) => {
-      const existingItem = currentItems.find((item) => item.id === newItem.id)
-
+  const addItem = (product: Product, duration?: number) => {
+    setItems((prevItems) => {
+      const existingItem = prevItems.find((item) => item.product.id === product.id)
       if (existingItem) {
-        // If item exists, just increase quantity
-        return currentItems.map((item) => (item.id === newItem.id ? { ...item, quantity: item.quantity + 1 } : item))
-      } else {
-        // Add new item with default values
-        return [...currentItems, { ...newItem, quantity: 1, duration: 12 }]
+        return prevItems.map((item) =>
+          item.product.id === product.id ? { ...item, quantity: item.quantity + 1, duration } : item,
+        )
       }
+      return [...prevItems, { product, quantity: 1, duration }]
     })
   }
 
-  const removeFromNeedsList = (id: number) => {
-    setItems((currentItems) => currentItems.filter((item) => item.id !== id))
+  const removeItem = (productId: string) => {
+    setItems((prevItems) => prevItems.filter((item) => item.product.id !== productId))
   }
 
-  const updateQuantity = (id: number, quantity: number) => {
+  const updateQuantity = (productId: string, quantity: number) => {
     if (quantity <= 0) {
-      removeFromNeedsList(id)
+      removeItem(productId)
       return
     }
-    setItems((currentItems) => currentItems.map((item) => (item.id === id ? { ...item, quantity } : item)))
+    setItems((prevItems) => prevItems.map((item) => (item.product.id === productId ? { ...item, quantity } : item)))
   }
 
-  const updateDuration = (id: number, duration: number) => {
-    setItems((currentItems) => currentItems.map((item) => (item.id === id ? { ...item, duration } : item)))
-  }
-
-  const clearNeedsList = () => {
+  const clearList = () => {
     setItems([])
   }
 
-  const getTotalItems = () => {
-    return items.reduce((total, item) => total + item.quantity, 0)
-  }
-
-  const getTotalPrice = () => {
-    return items.reduce((total, item) => total + item.price * item.quantity * item.duration, 0)
-  }
-
-  const isInNeedsList = (id: number) => {
-    return items.some((item) => item.id === id)
-  }
-
   return (
-    <NeedsListContext.Provider
-      value={{
-        items,
-        addToNeedsList,
-        removeFromNeedsList,
-        updateQuantity,
-        updateDuration,
-        clearNeedsList,
-        getTotalItems,
-        getTotalPrice,
-        isInNeedsList,
-      }}
-    >
+    <NeedsListContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearList }}>
       {children}
     </NeedsListContext.Provider>
   )
@@ -130,13 +78,12 @@ export function NeedsListProvider({ children }: { children: React.ReactNode }) {
 
 export function useNeedsList() {
   const context = useContext(NeedsListContext)
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useNeedsList must be used within a NeedsListProvider")
   }
   return context
 }
 
-// Keep the old exports for compatibility
+// Alias pour la compatibilité
 export const useCart = useNeedsList
 export const CartProvider = NeedsListProvider
-export type CartItem = NeedsListItem

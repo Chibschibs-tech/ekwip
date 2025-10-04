@@ -1,48 +1,30 @@
+import { Skeleton } from "@/components/ui/skeleton"
+
 export default function BoutiqueLoading() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <section className="py-16 px-4 md:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="h-12 bg-gray-200 rounded-lg w-96 mx-auto mb-6 animate-pulse" />
-          <div className="h-6 bg-gray-200 rounded-lg w-2/3 mx-auto animate-pulse" />
-        </div>
-      </section>
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <Skeleton className="h-10 w-64 mb-2" />
+        <Skeleton className="h-6 w-96" />
+      </div>
 
-      <section className="py-8 px-4 md:px-6 lg:px-8 bg-white border-b">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row gap-4 items-center justify-between">
-            <div className="h-6 bg-gray-200 rounded w-24 animate-pulse" />
-            <div className="flex flex-col sm:flex-row gap-4 flex-1 max-w-4xl">
-              <div className="h-10 bg-gray-200 rounded flex-1 animate-pulse" />
-              <div className="h-10 bg-gray-200 rounded w-48 animate-pulse" />
-              <div className="h-10 bg-gray-200 rounded w-48 animate-pulse" />
-            </div>
-            <div className="flex gap-2">
-              <div className="h-10 w-10 bg-gray-200 rounded animate-pulse" />
-              <div className="h-10 w-10 bg-gray-200 rounded animate-pulse" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="flex flex-col md:flex-row gap-4 mb-8">
+        <Skeleton className="h-10 flex-1" />
+        <Skeleton className="h-10 w-full md:w-[200px]" />
+      </div>
 
-      <section className="py-8 px-4 md:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="h-6 bg-gray-200 rounded w-48 mb-6 animate-pulse" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {[...Array(8)].map((_, i) => (
-              <div key={i} className="bg-white rounded-lg shadow-md overflow-hidden">
-                <div className="aspect-square bg-gray-200 animate-pulse" />
-                <div className="p-6 space-y-3">
-                  <div className="h-6 bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 bg-gray-200 rounded animate-pulse" />
-                  <div className="h-4 bg-gray-200 rounded w-3/4 animate-pulse" />
-                  <div className="h-8 bg-gray-200 rounded animate-pulse mt-4" />
-                </div>
-              </div>
-            ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="space-y-4">
+            <Skeleton className="aspect-square w-full" />
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-6 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-8 w-32" />
+            <Skeleton className="h-10 w-full" />
           </div>
-        </div>
-      </section>
+        ))}
+      </div>
     </div>
   )
 }
