@@ -34,26 +34,30 @@ export default function BoutiquePage() {
     )
   }
 
-  const saleProducts = products.filter((p) => p.productType === "sale" && p.status === "published")
+  // Filter only sale products with active status
+  const saleProducts = products.filter((p) => p.productType === "sale" && p.status === "active")
 
+  // Apply additional filters
   const filteredProducts = saleProducts.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.shortDescription.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesCategory = selectedCategory === "all" || product.categoryId === selectedCategory
     const matchesBrand = selectedBrand === "all" || product.brandId === selectedBrand
 
     return matchesSearch && matchesCategory && matchesBrand
   })
 
+  // Apply sorting
   filteredProducts.sort((a, b) => {
     switch (sortBy) {
       case "name":
         return a.name.localeCompare(b.name)
       case "price-asc":
-        return (a.salePrice || 0) - (b.salePrice || 0)
+        return a.price - b.price
       case "price-desc":
-        return (b.salePrice || 0) - (a.salePrice || 0)
+        return b.price - a.price
       default:
         return 0
     }
@@ -83,11 +87,13 @@ export default function BoutiquePage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Toutes les catégories</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category.id} value={category.id}>
-                {category.name}
-              </SelectItem>
-            ))}
+            {categories
+              .filter((c) => c.isActive)
+              .map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
 
@@ -97,11 +103,13 @@ export default function BoutiquePage() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">Toutes les marques</SelectItem>
-            {brands.map((brand) => (
-              <SelectItem key={brand.id} value={brand.id}>
-                {brand.name}
-              </SelectItem>
-            ))}
+            {brands
+              .filter((b) => b.isActive)
+              .map((brand) => (
+                <SelectItem key={brand.id} value={brand.id}>
+                  {brand.name}
+                </SelectItem>
+              ))}
           </SelectContent>
         </Select>
       </div>

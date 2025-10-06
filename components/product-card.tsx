@@ -1,77 +1,115 @@
+"use client"
+
+import type React from "react"
+
 import Image from "next/image"
 import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
-import type { Product } from "@/lib/products"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { ShoppingCart, Star } from "lucide-react"
+import type { Product } from "@/types/admin"
+import { useNeedsList } from "@/contexts/cart-context"
+import { useToast } from "@/hooks/use-toast"
 
 interface ProductCardProps {
   product: Product
+  href: string
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  return (
-    <Card className="group hover:shadow-lg transition-all duration-300 border border-gray-200 overflow-hidden h-full flex flex-col">
-      <CardContent className="p-0 flex flex-col flex-1">
-        {/* Product Image */}
-        <div className="relative bg-gray-50 aspect-square overflow-hidden">
-          <Image
-            src={product.image || "/placeholder.svg"}
-            alt={product.name}
-            fill
-            className="object-contain p-6 group-hover:scale-105 transition-transform duration-300"
-          />
+export default function ProductCard({ product, href }: ProductCardProps) {
+  const { addItem } = useNeedsList()
+  const { toast } = useToast()
 
-          {/* Badges */}
-          <div className="absolute top-3 left-3 flex flex-col gap-2">
-            {product.isNew && <Badge className="bg-green-100 text-green-800 border-green-200">Nouveau</Badge>}
-            {product.isPopular && <Badge className="bg-ekwip-100 text-ekwip-800 border-ekwip-200">Populaire</Badge>}
-            {product.isFeatured && <Badge className="bg-amber-100 text-amber-800 border-amber-200">Vedette</Badge>}
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    addItem(product)
+    toast({
+      title: "Produit ajouté",
+      description: `${product.name} a été ajouté à votre liste de besoins`,
+    })
+  }
+
+  const displayPrice = product.price
+  const priceWithTax = displayPrice * 1.2
+
+  return (
+    <Card className="group overflow-hidden transition-all hover:shadow-lg">
+      <CardContent className="p-0">
+        <Link href={href} className="block">
+          <div className="relative aspect-square overflow-hidden bg-gray-50">
+            {product.images && product.images.length > 0 ? (
+              <Image
+                src={product.images[0] || "/placeholder.svg"}
+                alt={product.name}
+                fill
+                className="object-contain p-4 transition-transform group-hover:scale-105"
+              />
+            ) : (
+              <div className="flex h-full items-center justify-center">
+                <span className="text-gray-400">Pas d'image</span>
+              </div>
+            )}
+
+            {product.isFeatured && (
+              <Badge className="absolute left-3 top-3 bg-[#1f3b57]">
+                <Star className="mr-1 h-3 w-3" />
+                Populaire
+              </Badge>
+            )}
+
+            {product.stockQuantity <= 0 && (
+              <Badge variant="destructive" className="absolute right-3 top-3">
+                Rupture
+              </Badge>
+            )}
+          </div>
+        </Link>
+
+        <div className="p-4 space-y-3">
+          <Link href={href}>
+            <h3 className="font-semibold text-lg line-clamp-2 group-hover:text-[#1f3b57] transition-colors">
+              {product.name}
+            </h3>
+          </Link>
+
+          {product.shortDescription && <p className="text-sm text-gray-600 line-clamp-2">{product.shortDescription}</p>}
+
+          <div className="space-y-1">
+            <div className="flex items-baseline gap-2">
+              {product.compareAtPrice && product.compareAtPrice > displayPrice && (
+                <span className="text-sm text-gray-500 line-through">{product.compareAtPrice.toFixed(2)} DH</span>
+              )}
+            </div>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-bold text-[#1f3b57]">{displayPrice.toFixed(2)} DH</span>
+              <span className="text-xs text-gray-500">HT</span>
+            </div>
+            <p className="text-sm text-gray-600">{priceWithTax.toFixed(2)} DH TTC</p>
           </div>
 
-          {/* Stock Status */}
-          {!product.inStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <Badge variant="destructive">Rupture de stock</Badge>
+          {product.stockQuantity !== undefined && (
+            <div className="text-sm">
+              {product.stockQuantity > 0 ? (
+                <span className="text-green-600">En stock ({product.stockQuantity})</span>
+              ) : (
+                <span className="text-red-600">Rupture de stock</span>
+              )}
             </div>
           )}
-        </div>
 
-        {/* Product Info */}
-        <div className="p-6 flex flex-col flex-1">
-          <div className="mb-2">
-            <Badge variant="outline" className="text-xs">
-              {product.brand}
-            </Badge>
-          </div>
-
-          <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-ekwip transition-colors">
-            {product.name}
-          </h3>
-
-          <p className="text-sm text-gray-600 mb-4 line-clamp-2">{product.description}</p>
-
-          <div className="mt-auto">
-            <div className="mb-4">
-              <p className="text-sm text-gray-500 mb-1">À partir de</p>
-              <p className="text-2xl font-bold text-ekwip">{product.price} DH/mois</p>
-              {product.basePrice && <p className="text-xs text-gray-500 mt-1">(Location {product.basePrice} mois)</p>}
-            </div>
-
-            <Link href={`/catalogue/product/${product.slug}`} className="block">
-              <Button
-                variant="outline"
-                className="w-full hover:bg-ekwip hover:text-white transition-colors border-ekwip text-ekwip bg-transparent"
-                disabled={!product.inStock}
-              >
-                Voir les détails
-              </Button>
-            </Link>
-          </div>
+          <Button
+            onClick={handleAddToCart}
+            disabled={product.stockQuantity <= 0}
+            className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90"
+          >
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            Ajouter au panier
+          </Button>
         </div>
       </CardContent>
     </Card>
   )
 }
-
-export default ProductCard

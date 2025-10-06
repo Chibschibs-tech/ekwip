@@ -2,91 +2,113 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import type { Product } from "@/types/admin"
-import { mockProducts } from "@/lib/mock-data"
 
 interface ProductsContextType {
   products: Product[]
   addProduct: (product: Product) => void
   updateProduct: (id: string, product: Partial<Product>) => void
   deleteProduct: (id: string) => void
-  getProduct: (id: string) => Product | undefined
+  getProductById: (id: string) => Product | undefined
 }
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined)
 
-const STORAGE_KEY = "ekwip_admin_products"
-
 export function ProductsProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([])
-  const [isInitialized, setIsInitialized] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // Charger les produits depuis localStorage au montage
   useEffect(() => {
-    try {
-      const storedProducts = localStorage.getItem(STORAGE_KEY)
-      if (storedProducts) {
-        const parsedProducts = JSON.parse(storedProducts)
-        setProducts(parsedProducts)
-      } else {
-        // Si aucun produit en localStorage, utiliser les mockProducts
-        setProducts(mockProducts)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(mockProducts))
-      }
-    } catch (error) {
-      console.error("Error loading products from localStorage:", error)
-      setProducts(mockProducts)
-    } finally {
-      setIsInitialized(true)
-    }
+    setMounted(true)
   }, [])
 
-  // Sauvegarder les produits dans localStorage à chaque modification
   useEffect(() => {
-    if (isInitialized && products.length > 0) {
+    if (!mounted) return
+
+    const loadProducts = () => {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(products))
+        const stored = localStorage.getItem("ekwip_admin_products")
+        if (stored) {
+          const parsedProducts = JSON.parse(stored) as Product[]
+
+          // Migration: Add productType="rent" to products that don't have it
+          const migratedProducts = parsedProducts.map((product) => {
+            if (!product.productType) {
+              return {
+                ...product,
+                productType: "rent" as const,
+              }
+            }
+            return product
+          })
+
+          // Save migrated products back to localStorage
+          if (migratedProducts.some((p, i) => p.productType !== parsedProducts[i].productType)) {
+            localStorage.setItem("ekwip_admin_products", JSON.stringify(migratedProducts))
+          }
+
+          setProducts(migratedProducts)
+        }
       } catch (error) {
-        console.error("Error saving products to localStorage:", error)
+        console.error("Error loading products:", error)
+        setProducts([])
       }
     }
-  }, [products, isInitialized])
+
+    loadProducts()
+
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "ekwip_admin_products") {
+        loadProducts()
+      }
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => window.removeEventListener("storage", handleStorageChange)
+  }, [mounted])
 
   const addProduct = (product: Product) => {
-    setProducts((prev) => {
-      const newProducts = [...prev, product]
-      return newProducts
-    })
+    const newProducts = [...products, product]
+    setProducts(newProducts)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ekwip_admin_products", JSON.stringify(newProducts))
+      window.dispatchEvent(new Event("storage"))
+    }
   }
 
-  const updateProduct = (id: string, updatedProduct: Partial<Product>) => {
-    setProducts((prev) => {
-      const newProducts = prev.map((p) => (p.id === id ? { ...p, ...updatedProduct } : p))
-      return newProducts
-    })
+  const updateProduct = (id: string, updates: Partial<Product>) => {
+    const newProducts = products.map((p) =>
+      p.id === id ? { ...p, ...updates, updatedAt: new Date().toISOString() } : p,
+    )
+    setProducts(newProducts)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ekwip_admin_products", JSON.stringify(newProducts))
+      window.dispatchEvent(new Event("storage"))
+    }
   }
 
   const deleteProduct = (id: string) => {
-    setProducts((prev) => {
-      const newProducts = prev.filter((p) => p.id !== id)
-      return newProducts
-    })
+    const newProducts = products.filter((p) => p.id !== id)
+    setProducts(newProducts)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("ekwip_admin_products", JSON.stringify(newProducts))
+      window.dispatchEvent(new Event("storage"))
+    }
   }
 
-  const getProduct = (id: string) => {
+  const getProductById = (id: string) => {
     return products.find((p) => p.id === id)
   }
 
-  // Ne pas rendre les enfants tant que les produits ne sont pas chargés
-  if (!isInitialized) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    )
-  }
-
   return (
-    <ProductsContext.Provider value={{ products, addProduct, updateProduct, deleteProduct, getProduct }}>
+    <ProductsContext.Provider
+      value={{
+        products,
+        addProduct,
+        updateProduct,
+        deleteProduct,
+        getProductById,
+      }}
+    >
       {children}
     </ProductsContext.Provider>
   )
