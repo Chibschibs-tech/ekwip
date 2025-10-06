@@ -1,253 +1,313 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useParams, useRouter } from "next/navigation"
-import Image from "next/image"
+import { useState, use } from "react"
 import { useProducts } from "@/contexts/products-context"
 import { useCategories } from "@/contexts/categories-context"
 import { useBrands } from "@/contexts/brands-context"
-import { useNeedsList } from "@/contexts/cart-context"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Card, CardContent } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ShoppingCart, Star, Truck, Shield, ArrowLeft } from "lucide-react"
+import { useCart } from "@/contexts/cart-context"
 import { useToast } from "@/hooks/use-toast"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Separator } from "@/components/ui/separator"
+import { ShoppingCart, Minus, Plus, Check } from "lucide-react"
+import Link from "next/link"
+import Image from "next/image"
+import { notFound } from "next/navigation"
 
-export default function ProductDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const slug = params.slug as string
+export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const resolvedParams = use(params)
   const { products } = useProducts()
   const { categories } = useCategories()
   const { brands } = useBrands()
-  const { addItem } = useNeedsList()
+  const { addItem } = useCart()
   const { toast } = useToast()
-  const [mounted, setMounted] = useState(false)
-  const [selectedImage, setSelectedImage] = useState(0)
+
   const [quantity, setQuantity] = useState(1)
+  const [selectedImage, setSelectedImage] = useState(0)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex items-center justify-center py-20">
-          <p className="text-muted-foreground">Chargement...</p>
-        </div>
-      </div>
-    )
-  }
-
-  const product = products.find((p) => p.slug === slug && p.productType === "sale" && p.status === "active")
+  const product = products.find((p) => p.slug === resolvedParams.slug && p.productType === "sale")
 
   if (!product) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex flex-col items-center justify-center py-20">
-          <h1 className="mb-4 text-2xl font-bold">Produit non trouvé</h1>
-          <Button onClick={() => router.push("/boutique")}>Retour à la boutique</Button>
-        </div>
-      </div>
-    )
+    notFound()
   }
 
   const category = categories.find((c) => c.id === product.categoryId)
   const brand = brands.find((b) => b.id === product.brandId)
+  const images = product.images || [product.thumbnail || "/placeholder.svg"]
 
   const handleAddToCart = () => {
-    for (let i = 0; i < quantity; i++) {
-      addItem(product)
+    if (product.stockQuantity < quantity) {
+      toast({
+        title: "Stock insuffisant",
+        description: "La quantité demandée n'est pas disponible",
+        variant: "destructive",
+      })
+      return
     }
-    toast({
-      title: "Produit ajouté",
-      description: `${quantity} × ${product.name} ajouté${quantity > 1 ? "s" : ""} à votre liste de besoins`,
+
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: quantity,
+      image: product.thumbnail || product.images?.[0] || "/placeholder.svg",
     })
+
+    toast({
+      title: "Ajouté au panier",
+      description: `${quantity} × ${product.name} ajouté${quantity > 1 ? "s" : ""} au panier`,
+    })
+
+    setQuantity(1)
   }
 
-  const displayPrice = product.price
-  const priceWithTax = displayPrice * 1.2
+  const incrementQuantity = () => {
+    if (quantity < product.stockQuantity) {
+      setQuantity(quantity + 1)
+    }
+  }
+
+  const decrementQuantity = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1)
+    }
+  }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Button variant="ghost" onClick={() => router.back()} className="mb-6">
-        <ArrowLeft className="mr-2 h-4 w-4" />
-        Retour
-      </Button>
-
-      <div className="grid gap-8 lg:grid-cols-2">
-        {/* Images */}
-        <div className="space-y-4">
-          <div className="relative aspect-square overflow-hidden rounded-lg border bg-gray-50">
-            <Image
-              src={product.images?.[selectedImage] || "/placeholder.svg"}
-              alt={product.name}
-              fill
-              className="object-contain p-8"
-            />
-          </div>
-
-          {product.images && product.images.length > 1 && (
-            <div className="grid grid-cols-4 gap-2">
-              {product.images.map((image, index) => (
-                <button
-                  key={index}
-                  onClick={() => setSelectedImage(index)}
-                  className={`relative aspect-square overflow-hidden rounded-lg border bg-gray-50 ${
-                    selectedImage === index ? "ring-2 ring-[#1f3b57]" : ""
-                  }`}
-                >
-                  <Image
-                    src={image || "/placeholder.svg"}
-                    alt={`${product.name} ${index + 1}`}
-                    fill
-                    className="object-contain p-2"
-                  />
-                </button>
-              ))}
-            </div>
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb */}
+        <nav className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-8">
+          <Link href="/" className="hover:text-blue-600 dark:hover:text-blue-400">
+            Accueil
+          </Link>
+          <span>/</span>
+          <Link href="/boutique" className="hover:text-blue-600 dark:hover:text-blue-400">
+            Boutique
+          </Link>
+          <span>/</span>
+          {category && (
+            <>
+              <Link href={`/boutique?category=${category.id}`} className="hover:text-blue-600 dark:hover:text-blue-400">
+                {category.name}
+              </Link>
+              <span>/</span>
+            </>
           )}
-        </div>
+          <span className="text-gray-900 dark:text-gray-100">{product.name}</span>
+        </nav>
 
-        {/* Product Info */}
-        <div className="space-y-6">
-          <div>
-            {brand && (
-              <Badge variant="outline" className="mb-2">
-                {brand.name}
-              </Badge>
-            )}
-            <h1 className="text-3xl font-bold">{product.name}</h1>
-            {category && <p className="text-muted-foreground">{category.name}</p>}
-          </div>
-
-          {product.isFeatured && (
-            <Badge className="bg-[#1f3b57]">
-              <Star className="mr-1 h-3 w-3" />
-              Produit populaire
-            </Badge>
-          )}
-
-          <div className="space-y-2">
-            {product.compareAtPrice && product.compareAtPrice > displayPrice && (
-              <p className="text-lg text-gray-500 line-through">{product.compareAtPrice.toFixed(2)} DH HT</p>
-            )}
-            <div className="flex items-baseline gap-3">
-              <span className="text-4xl font-bold text-[#1f3b57]">{displayPrice.toFixed(2)} DH</span>
-              <span className="text-sm text-gray-500">HT</span>
-            </div>
-            <p className="text-lg text-gray-700">{priceWithTax.toFixed(2)} DH TTC</p>
-          </div>
-
-          {product.shortDescription && <p className="text-lg text-gray-700">{product.shortDescription}</p>}
-
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+          {/* Images Gallery */}
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
-              <label className="font-medium">Quantité:</label>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1}
-                >
-                  -
-                </Button>
-                <span className="w-12 text-center font-medium">{quantity}</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setQuantity(Math.min(product.stockQuantity, quantity + 1))}
-                  disabled={quantity >= product.stockQuantity}
-                >
-                  +
-                </Button>
-              </div>
+            <div className="aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <Image
+                src={images[selectedImage] || "/placeholder.svg"}
+                alt={product.name}
+                width={800}
+                height={800}
+                className="w-full h-full object-cover"
+              />
             </div>
 
-            {product.stockQuantity !== undefined && (
-              <div className="text-sm">
-                {product.stockQuantity > 0 ? (
-                  <span className="text-green-600 font-medium">
-                    ✓ En stock ({product.stockQuantity} disponible{product.stockQuantity > 1 ? "s" : ""})
-                  </span>
-                ) : (
-                  <span className="text-red-600 font-medium">✗ Rupture de stock</span>
-                )}
+            {images.length > 1 && (
+              <div className="grid grid-cols-4 gap-4">
+                {images.map((image, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setSelectedImage(index)}
+                    className={`aspect-square rounded-lg overflow-hidden border-2 transition-all ${
+                      selectedImage === index
+                        ? "border-blue-600 ring-2 ring-blue-600 ring-offset-2"
+                        : "border-gray-200 dark:border-gray-700 hover:border-gray-400"
+                    }`}
+                  >
+                    <Image
+                      src={image || "/placeholder.svg"}
+                      alt={`${product.name} - ${index + 1}`}
+                      width={200}
+                      height={200}
+                      className="w-full h-full object-cover"
+                    />
+                  </button>
+                ))}
               </div>
             )}
-
-            <Button
-              size="lg"
-              className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90"
-              onClick={handleAddToCart}
-              disabled={product.stockQuantity <= 0}
-            >
-              <ShoppingCart className="mr-2 h-5 w-5" />
-              Ajouter au panier
-            </Button>
           </div>
 
-          <div className="grid gap-4 border-t pt-6">
-            <div className="flex items-center gap-3">
-              <Truck className="h-5 w-5 text-[#1f3b57]" />
-              <div>
-                <p className="font-medium">Livraison rapide</p>
-                <p className="text-sm text-muted-foreground">Livraison sous 48h à 72h</p>
-              </div>
+          {/* Product Info */}
+          <div className="space-y-6">
+            {brand && <p className="text-sm font-medium text-blue-600 dark:text-blue-400">{brand.name}</p>}
+
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">{product.name}</h1>
+              {product.shortDescription && (
+                <p className="text-gray-600 dark:text-gray-400">{product.shortDescription}</p>
+              )}
             </div>
-            <div className="flex items-center gap-3">
-              <Shield className="h-5 w-5 text-[#1f3b57]" />
-              <div>
-                <p className="font-medium">Garantie constructeur</p>
-                <p className="text-sm text-muted-foreground">Tous nos produits sont garantis</p>
-              </div>
+
+            <div className="flex items-center gap-4">
+              <Badge variant={product.stockQuantity > 0 ? "default" : "destructive"}>
+                {product.stockQuantity > 0 ? `${product.stockQuantity} en stock` : "Rupture de stock"}
+              </Badge>
+              {category && <Badge variant="outline">{category.name}</Badge>}
+              <span className="text-sm text-gray-500">SKU: {product.sku}</span>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Tabs */}
-      <div className="mt-12">
-        <Tabs defaultValue="description">
-          <TabsList className="w-full justify-start">
-            <TabsTrigger value="description">Description</TabsTrigger>
-            <TabsTrigger value="specifications">Spécifications</TabsTrigger>
-          </TabsList>
+            <Separator />
 
-          <TabsContent value="description" className="mt-6">
-            <Card>
-              <CardContent className="prose max-w-none pt-6">
-                {product.description ? (
-                  <div dangerouslySetInnerHTML={{ __html: product.description.replace(/\n/g, "<br>") }} />
-                ) : (
-                  <p className="text-muted-foreground">Aucune description disponible</p>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
+            <div className="space-y-2">
+              {product.compareAtPrice && product.compareAtPrice > product.price && (
+                <div className="flex items-center gap-2">
+                  <span className="text-lg text-gray-500 line-through">{product.compareAtPrice.toFixed(2)} DH HT</span>
+                  <Badge variant="destructive">
+                    -{Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)}%
+                  </Badge>
+                </div>
+              )}
 
-          <TabsContent value="specifications" className="mt-6">
+              <div className="flex items-baseline gap-3">
+                <span className="text-4xl font-bold text-blue-600 dark:text-blue-400">
+                  {product.price.toFixed(2)} DH
+                </span>
+                <span className="text-lg text-gray-600 dark:text-gray-400">HT</span>
+              </div>
+
+              <p className="text-xl text-gray-700 dark:text-gray-300">{(product.price * 1.2).toFixed(2)} DH TTC</p>
+            </div>
+
+            <Separator />
+
+            {/* Quantity Selector */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <span className="font-medium">Quantité:</span>
+                <div className="flex items-center border rounded-lg">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={decrementQuantity}
+                    disabled={quantity <= 1}
+                    className="h-10 w-10"
+                  >
+                    <Minus className="h-4 w-4" />
+                  </Button>
+                  <span className="w-12 text-center font-medium">{quantity}</span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={incrementQuantity}
+                    disabled={quantity >= product.stockQuantity}
+                    className="h-10 w-10"
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+
+              <Button size="lg" className="w-full" onClick={handleAddToCart} disabled={product.stockQuantity === 0}>
+                <ShoppingCart className="h-5 w-5 mr-2" />
+                {product.stockQuantity === 0 ? "Rupture de stock" : "Ajouter au panier"}
+              </Button>
+            </div>
+
+            {/* Features */}
             <Card>
               <CardContent className="pt-6">
-                {product.attributes && Object.keys(product.attributes).length > 0 ? (
-                  <dl className="grid gap-4">
-                    {Object.entries(product.attributes).map(([key, value]) => (
-                      <div key={key} className="grid grid-cols-2 gap-4 border-b pb-4 last:border-0">
-                        <dt className="font-medium text-gray-700">{key}</dt>
-                        <dd className="text-gray-900">{value}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                ) : (
-                  <p className="text-muted-foreground">Aucune spécification disponible</p>
-                )}
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm">Garantie fabricant incluse</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm">Support technique disponible</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm">Livraison rapide au Maroc</span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <span className="text-sm">Paiement sécurisé</span>
+                  </li>
+                </ul>
               </CardContent>
             </Card>
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
+
+        {/* Product Details Tabs */}
+        <Card>
+          <CardContent className="pt-6">
+            <Tabs defaultValue="description" className="w-full">
+              <TabsList className="grid w-full grid-cols-3">
+                <TabsTrigger value="description">Description</TabsTrigger>
+                <TabsTrigger value="specifications">Caractéristiques</TabsTrigger>
+                <TabsTrigger value="delivery">Livraison</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="description" className="space-y-4 mt-6">
+                <div className="prose dark:prose-invert max-w-none">
+                  {product.description ? (
+                    <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{product.description}</p>
+                  ) : (
+                    <p className="text-gray-500 dark:text-gray-400">Aucune description disponible.</p>
+                  )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="specifications" className="space-y-4 mt-6">
+                {product.attributes && Object.keys(product.attributes).length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {Object.entries(product.attributes).map(([key, value]) => (
+                      <div key={key} className="flex justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                        <span className="font-medium text-gray-700 dark:text-gray-300">{key}:</span>
+                        <span className="text-gray-600 dark:text-gray-400">{value}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 dark:text-gray-400">Aucune caractéristique disponible.</p>
+                )}
+              </TabsContent>
+
+              <TabsContent value="delivery" className="space-y-4 mt-6">
+                <div className="space-y-4">
+                  <div className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium mb-1">Livraison Standard</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Livraison sous 2-5 jours ouvrables au Maroc
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium mb-1">Livraison Express</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Livraison sous 24-48h pour Casablanca et Rabat
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-medium mb-1">Retrait en magasin</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">
+                        Disponible gratuitement dans nos locaux
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

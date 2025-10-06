@@ -8,7 +8,7 @@ interface ProductsContextType {
   addProduct: (product: Product) => void
   updateProduct: (id: string, product: Partial<Product>) => void
   deleteProduct: (id: string) => void
-  getProductById: (id: string) => Product | undefined
+  getProduct: (id: string) => Product | undefined
 }
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined)
@@ -95,7 +95,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const getProductById = (id: string) => {
+  const getProduct = (id: string) => {
     return products.find((p) => p.id === id)
   }
 
@@ -106,7 +106,7 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
         addProduct,
         updateProduct,
         deleteProduct,
-        getProductById,
+        getProduct,
       }}
     >
       {children}
