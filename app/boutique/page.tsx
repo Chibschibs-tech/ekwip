@@ -34,10 +34,8 @@ export default function BoutiquePage() {
     )
   }
 
-  // Filter only sale products
-  const saleProducts = products.filter((p) => p.productType === "sale")
+  const saleProducts = products.filter((p) => p.productType === "sale" && p.status === "published")
 
-  // Apply filters
   const filteredProducts = saleProducts.filter((product) => {
     const matchesSearch =
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -48,7 +46,6 @@ export default function BoutiquePage() {
     return matchesSearch && matchesCategory && matchesBrand
   })
 
-  // Apply sorting
   filteredProducts.sort((a, b) => {
     switch (sortBy) {
       case "name":
@@ -64,15 +61,12 @@ export default function BoutiquePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header */}
       <div className="mb-8">
         <h1 className="mb-2 text-4xl font-bold">Boutique Vente</h1>
         <p className="text-muted-foreground">Achetez vos équipements informatiques neufs ou reconditionnés</p>
       </div>
 
-      {/* Filters */}
       <div className="mb-8 grid gap-4 md:grid-cols-4">
-        {/* Search */}
         <div className="relative md:col-span-2">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -83,7 +77,6 @@ export default function BoutiquePage() {
           />
         </div>
 
-        {/* Category Filter */}
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger>
             <SelectValue placeholder="Catégorie" />
@@ -98,7 +91,6 @@ export default function BoutiquePage() {
           </SelectContent>
         </Select>
 
-        {/* Brand Filter */}
         <Select value={selectedBrand} onValueChange={setSelectedBrand}>
           <SelectTrigger>
             <SelectValue placeholder="Marque" />
@@ -114,7 +106,6 @@ export default function BoutiquePage() {
         </Select>
       </div>
 
-      {/* Sort and Results Count */}
       <div className="mb-6 flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
           {filteredProducts.length} produit{filteredProducts.length !== 1 ? "s" : ""} trouvé
@@ -132,7 +123,6 @@ export default function BoutiquePage() {
         </Select>
       </div>
 
-      {/* Products Grid */}
       {filteredProducts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20">
           <p className="mb-4 text-lg text-muted-foreground">Aucun produit trouvé</p>

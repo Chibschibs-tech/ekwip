@@ -13,59 +13,65 @@ interface LanguageContextType {
 
 const translations: Record<Language, Record<string, string>> = {
   fr: {
-    needs_list: "Ma liste de besoins",
-    items: "articles",
-    cart: "Panier",
-    home: "Accueil",
-    catalog: "Catalogue",
-    brands: "Marques",
-    shop: "Boutique Vente",
-    how_it_works: "Comment ça marche",
-    client_portal: "Portail Client",
-    contact: "Contact",
+    "nav.home": "Accueil",
+    "nav.catalog": "Catalogue",
+    "nav.store": "Boutique",
+    "nav.brands": "Marques",
+    "nav.how-it-works": "Comment ça marche",
+    "nav.contact": "Contact",
+    "nav.client-portal": "Portail Client",
+    "nav.my-needs": "Ma liste de besoins",
+    "cart.empty": "Votre liste de besoins est vide",
+    "cart.items": "articles",
+    "cart.view": "Voir ma liste",
   },
   ar: {
-    needs_list: "قائمة احتياجاتي",
-    items: "عناصر",
-    cart: "السلة",
-    home: "الرئيسية",
-    catalog: "الكتالوج",
-    brands: "العلامات التجارية",
-    shop: "متجر البيع",
-    how_it_works: "كيف يعمل",
-    client_portal: "بوابة العميل",
-    contact: "اتصل بنا",
+    "nav.home": "الرئيسية",
+    "nav.catalog": "الكتالوج",
+    "nav.store": "المتجر",
+    "nav.brands": "العلامات التجارية",
+    "nav.how-it-works": "كيف يعمل",
+    "nav.contact": "اتصل بنا",
+    "nav.client-portal": "بوابة العميل",
+    "nav.my-needs": "قائمة احتياجاتي",
+    "cart.empty": "قائمة احتياجاتك فارغة",
+    "cart.items": "عناصر",
+    "cart.view": "عرض قائمتي",
   },
   en: {
-    needs_list: "My needs list",
-    items: "items",
-    cart: "Cart",
-    home: "Home",
-    catalog: "Catalog",
-    brands: "Brands",
-    shop: "Shop",
-    how_it_works: "How it works",
-    client_portal: "Client Portal",
-    contact: "Contact",
+    "nav.home": "Home",
+    "nav.catalog": "Catalog",
+    "nav.store": "Store",
+    "nav.brands": "Brands",
+    "nav.how-it-works": "How it works",
+    "nav.contact": "Contact",
+    "nav.client-portal": "Client Portal",
+    "nav.my-needs": "My needs list",
+    "cart.empty": "Your needs list is empty",
+    "cart.items": "items",
+    "cart.view": "View my list",
   },
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("fr")
+  const [language, setLanguage] = useState<Language>("fr")
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const saved = localStorage.getItem("language") as Language
-    if (saved && ["fr", "ar", "en"].includes(saved)) {
-      setLanguageState(saved)
+    setMounted(true)
+    const savedLang = localStorage.getItem("language") as Language
+    if (savedLang && ["fr", "ar", "en"].includes(savedLang)) {
+      setLanguage(savedLang)
     }
   }, [])
 
-  const setLanguage = (lang: Language) => {
-    setLanguageState(lang)
-    localStorage.setItem("language", lang)
-  }
+  useEffect(() => {
+    if (mounted) {
+      localStorage.setItem("language", language)
+    }
+  }, [language, mounted])
 
   const t = (key: string): string => {
     return translations[language][key] || key

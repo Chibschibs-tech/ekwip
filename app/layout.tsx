@@ -7,6 +7,10 @@ import Footer from "@/components/footer"
 import { AuthProvider } from "@/contexts/auth-context"
 import { NeedsListProvider } from "@/contexts/cart-context"
 import { LanguageProvider } from "@/contexts/language-context"
+import { ProductsProvider } from "@/contexts/products-context"
+import { CategoriesProvider } from "@/contexts/categories-context"
+import { BrandsProvider } from "@/contexts/brands-context"
+import { AttributesProvider } from "@/contexts/attributes-context"
 import { Toaster } from "@/components/ui/toaster"
 import { DataSync } from "@/components/data-sync"
 
@@ -31,15 +35,23 @@ export default function RootLayout({
       <body className={inter.className}>
         <LanguageProvider>
           <AuthProvider>
-            <NeedsListProvider>
-              <DataSync />
-              <div className="flex flex-col min-h-screen">
-                <Navbar />
-                <main className="flex-grow">{children}</main>
-                <Footer />
-              </div>
-              <Toaster />
-            </NeedsListProvider>
+            <ProductsProvider>
+              <CategoriesProvider>
+                <BrandsProvider>
+                  <AttributesProvider>
+                    <NeedsListProvider>
+                      <DataSync />
+                      <div className="flex flex-col min-h-screen">
+                        <Navbar />
+                        <main className="flex-grow">{children}</main>
+                        <Footer />
+                      </div>
+                      <Toaster />
+                    </NeedsListProvider>
+                  </AttributesProvider>
+                </BrandsProvider>
+              </CategoriesProvider>
+            </ProductsProvider>
           </AuthProvider>
         </LanguageProvider>
       </body>

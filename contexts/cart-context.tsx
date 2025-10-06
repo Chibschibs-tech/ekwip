@@ -1,58 +1,63 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import type React from "react"
+import { createContext, useContext, useState, useEffect } from "react"
 import type { Product } from "@/types/admin"
 
-interface NeedsListItem {
+interface CartItem {
   product: Product
-  duration?: number
   quantity: number
+  duration?: number
 }
 
-interface NeedsListContextType {
-  items: NeedsListItem[]
-  addItem: (product: Product, duration?: number) => void
+interface CartContextType {
+  items: CartItem[]
+  addItem: (product: Product, quantity?: number, duration?: number) => void
   removeItem: (productId: string) => void
   updateQuantity: (productId: string, quantity: number) => void
-  clearList: () => void
+  clearCart: () => void
   totalItems: number
 }
 
-const NeedsListContext = createContext<NeedsListContextType | undefined>(undefined)
+const CartContext = createContext<CartContextType | undefined>(undefined)
 
-export function NeedsListProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<NeedsListItem[]>([])
+const STORAGE_KEY = "ekwip_needs_list"
+
+export function NeedsListProvider({ children }: { children: React.ReactNode }) {
+  const [items, setItems] = useState<CartItem[]>([])
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
-    const saved = localStorage.getItem("needsList")
-    if (saved) {
-      try {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY)
+      if (saved) {
         setItems(JSON.parse(saved))
-      } catch (e) {
-        console.error("Failed to parse needs list:", e)
       }
+    } catch (error) {
+      console.error("Error loading cart:", error)
     }
   }, [])
 
   useEffect(() => {
     if (mounted) {
-      localStorage.setItem("needsList", JSON.stringify(items))
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
+      } catch (error) {
+        console.error("Error saving cart:", error)
+      }
     }
   }, [items, mounted])
 
-  const addItem = (product: Product, duration?: number) => {
+  const addItem = (product: Product, quantity = 1, duration?: number) => {
     setItems((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id && item.duration === duration)
+      const existing = prev.find((item) => item.product.id === product.id)
       if (existing) {
         return prev.map((item) =>
-          item.product.id === product.id && item.duration === duration
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
+          item.product.id === product.id ? { ...item, quantity: item.quantity + quantity } : item,
         )
       }
-      return [...prev, { product, duration, quantity: 1 }]
+      return [...prev, { product, quantity, duration }]
     })
   }
 
@@ -68,27 +73,26 @@ export function NeedsListProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  const clearList = () => {
+  const clearCart = () => {
     setItems([])
   }
 
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
 
   return (
-    <NeedsListContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearList, totalItems }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, totalItems }}>
       {children}
-    </NeedsListContext.Provider>
+    </CartContext.Provider>
   )
 }
 
 export function useNeedsList() {
-  const context = useContext(NeedsListContext)
+  const context = useContext(CartContext)
   if (context === undefined) {
     throw new Error("useNeedsList must be used within a NeedsListProvider")
   }
   return context
 }
 
-// Alias for backward compatibility
 export const CartProvider = NeedsListProvider
 export const useCart = useNeedsList
