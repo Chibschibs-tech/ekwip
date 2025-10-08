@@ -42,7 +42,9 @@ export default function UnderConstructionPage() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">Appelez-nous</p>
-                      <p className="text-sm text-gray-600">+212 5 22 XX XX XX</p>
+                      <a href="tel:+212660703622" className="text-sm text-gray-600 hover:text-[#1f3b57]">
+                        +212 660 703 622
+                      </a>
                     </div>
                   </div>
 
@@ -52,7 +54,9 @@ export default function UnderConstructionPage() {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-gray-900">Envoyez-nous un email</p>
-                      <p className="text-sm text-gray-600">sales@ekwip.ma</p>
+                      <a href="mailto:contact@ekwip.ma" className="text-sm text-gray-600 hover:text-[#1f3b57]">
+                        contact@ekwip.ma
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -62,15 +66,6 @@ export default function UnderConstructionPage() {
                     <Button size="lg" className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90">
                       Nous contacter
                       <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </Link>
-                  <Link href="/home" className="flex-1">
-                    <Button
-                      size="lg"
-                      variant="outline"
-                      className="w-full border-[#1f3b57] text-[#1f3b57] bg-transparent"
-                    >
-                      Aperçu du site
                     </Button>
                   </Link>
                 </div>
