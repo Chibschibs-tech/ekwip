@@ -1,106 +1,109 @@
+import Link from "next/link"
+import Image from "next/image"
+import { Mail, Phone, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import Image from "next/image"
-import Link from "next/link"
-import { Wrench, Mail, Phone, ArrowRight } from "lucide-react"
 
 export default function UnderConstructionPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex items-center justify-center p-4">
-      <div className="max-w-4xl w-full">
-        <Card className="shadow-2xl border-0 overflow-hidden">
-          <CardContent className="p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              {/* Left Side - Information */}
-              <div className="p-8 lg:p-12 flex flex-col justify-center bg-white">
-                <div className="mb-8">
-                  <Image
-                    src="/images/logo-black.png"
-                    alt="Ekwip"
-                    width={150}
-                    height={50}
-                    className="h-12 w-auto mb-8"
-                  />
-                </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+      <div className="container mx-auto px-4 py-16">
+        <div className="flex flex-col items-center justify-center min-h-[80vh]">
+          {/* Logo */}
+          <div className="mb-12">
+            <Image src="/images/logo-black.png" alt="Ekwip" width={200} height={60} className="h-16 w-auto" />
+          </div>
 
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 bg-[#1f3b57]/10 rounded-full flex items-center justify-center">
-                    <Wrench className="h-6 w-6 text-[#1f3b57]" />
-                  </div>
-                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Nouveau look en cours...</h1>
-                </div>
+          {/* Main Content */}
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                <Clock className="h-4 w-4" />
+                <span>Site en maintenance</span>
+              </div>
 
-                <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                  Nous travaillons actuellement sur une toute nouvelle version de notre site web pour vous offrir une
-                  expérience encore meilleure. Notre équipe est à votre disposition pour toute demande.
-                </p>
+              <h1 className="text-5xl md:text-6xl font-bold text-slate-900 leading-tight">
+                Notre site fait peau neuve !
+              </h1>
 
-                <div className="space-y-4 mb-8">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                      <Phone className="h-5 w-5 text-green-600" />
+              <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+                Nous travaillons actuellement sur une nouvelle expérience pour vous offrir le meilleur service de
+                location d'équipements IT au Maroc.
+              </p>
+            </div>
+
+            {/* Contact Cards */}
+            <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mt-12">
+              <Card className="border-2 hover:border-blue-500 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="p-4 bg-blue-100 rounded-full">
+                      <Phone className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Appelez-nous</p>
-                      <a href="tel:+212660703622" className="text-sm text-gray-600 hover:text-[#1f3b57]">
+                      <h3 className="font-semibold text-slate-900 mb-2">Appelez-nous</h3>
+                      <a href="tel:+212660703622" className="text-blue-600 hover:text-blue-700 font-medium text-lg">
                         +212 660 703 622
                       </a>
                     </div>
                   </div>
+                </CardContent>
+              </Card>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <Mail className="h-5 w-5 text-blue-600" />
+              <Card className="border-2 hover:border-blue-500 transition-all duration-300">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col items-center text-center space-y-4">
+                    <div className="p-4 bg-blue-100 rounded-full">
+                      <Mail className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">Envoyez-nous un email</p>
-                      <a href="mailto:contact@ekwip.ma" className="text-sm text-gray-600 hover:text-[#1f3b57]">
+                      <h3 className="font-semibold text-slate-900 mb-2">Écrivez-nous</h3>
+                      <a
+                        href="mailto:contact@ekwip.ma"
+                        className="text-blue-600 hover:text-blue-700 font-medium text-lg"
+                      >
                         contact@ekwip.ma
                       </a>
                     </div>
                   </div>
-                </div>
+                </CardContent>
+              </Card>
+            </div>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/contact" className="flex-1">
-                    <Button size="lg" className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90">
-                      Nous contacter
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+            {/* CTA Button */}
+            <div className="pt-8">
+              <Link href="/home/contact">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 text-lg">
+                  Nous contacter
+                </Button>
+              </Link>
+            </div>
 
-              {/* Right Side - Visual */}
-              <div className="relative bg-gradient-to-br from-[#1f3b57] to-[#2d5a7b] p-8 lg:p-12 flex items-center justify-center">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-white/10 rounded-full blur-3xl"></div>
-                  <div className="relative">
-                    <Image
-                      src="/images/laptop-hero.png"
-                      alt="Équipements Ekwip"
-                      width={400}
-                      height={300}
-                      className="w-full h-auto drop-shadow-2xl"
-                    />
-                  </div>
-                </div>
-
-                <div className="absolute bottom-8 left-8 right-8">
-                  <div className="bg-white/95 backdrop-blur-sm rounded-lg p-6 shadow-xl">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Notre engagement</h3>
-                    <p className="text-sm text-gray-600">
-                      Location d'équipements IT professionnels avec support complet et maintenance incluse.
-                    </p>
-                  </div>
-                </div>
+            {/* Image */}
+            <div className="relative w-full max-w-3xl mx-auto mt-16">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <Image
+                  src="/images/laptop-hero.png"
+                  alt="Ekwip - Location d'équipements IT"
+                  width={1200}
+                  height={600}
+                  className="w-full h-auto"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        <div className="mt-8 text-center">
-          <p className="text-sm text-gray-600">© {new Date().getFullYear()} Ekwip. Tous droits réservés.</p>
+          {/* Bottom Note */}
+          <Card className="mt-16 max-w-2xl mx-auto bg-white/80 backdrop-blur">
+            <CardContent className="pt-6">
+              <p className="text-center text-slate-600">
+                <span className="font-semibold text-slate-900">Ekwip</span> - Votre partenaire de confiance pour la
+                location d'équipements informatiques professionnels au Maroc. Flexibilité, performance et tranquillité
+                d'esprit garanties.
+              </p>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
