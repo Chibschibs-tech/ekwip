@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -26,7 +25,6 @@ export default function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
     toast({
@@ -55,7 +53,6 @@ export default function ContactPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Contactez-nous</h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
@@ -64,7 +61,6 @@ export default function ContactPage() {
           </div>
 
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Contact Info Cards */}
             <div className="lg:col-span-1 space-y-6">
               <Card className="border-2 hover:border-blue-500 transition-all duration-300">
                 <CardContent className="pt-6">
@@ -128,7 +124,6 @@ export default function ContactPage() {
               </Card>
             </div>
 
-            {/* Contact Form */}
             <div className="lg:col-span-2">
               <Card className="shadow-xl">
                 <CardHeader>
@@ -234,7 +229,6 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Bottom Info */}
           <Card className="mt-12 bg-blue-600 text-white border-0">
             <CardContent className="pt-6">
               <div className="text-center">

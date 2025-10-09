@@ -131,13 +131,13 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/home/catalogue">
+                <Link href="/catalogue">
                   <Button size="lg" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
                     Voir le catalogue
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Button>
                 </Link>
-                <Link href="/home/comment-ca-marche">
+                <Link href="/comment-ca-marche">
                   <Button size="lg" variant="outline" className="w-full sm:w-auto border-slate-300 bg-transparent">
                     Comment ça marche
                   </Button>
@@ -229,7 +229,7 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Notre catalogue d'équipements</h2>
               <p className="text-xl text-slate-600">Des solutions adaptées à chaque besoin professionnel</p>
             </div>
-            <Link href="/home/catalogue">
+            <Link href="/catalogue">
               <Button variant="outline" className="hidden md:flex items-center bg-transparent">
                 Voir tout
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -244,7 +244,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center mt-8 md:hidden">
-            <Link href="/home/catalogue">
+            <Link href="/catalogue">
               <Button variant="outline" className="w-full bg-transparent">
                 Voir tout le catalogue
                 <ArrowRight className="ml-2 h-4 w-4" />
@@ -272,7 +272,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/home/catalogue">
+            <Link href="/catalogue">
               <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white">
                 Voir tous les produits
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -323,7 +323,7 @@ export default function HomePage() {
           </div>
 
           <div className="text-center mt-12">
-            <Link href="/home/comment-ca-marche">
+            <Link href="/comment-ca-marche">
               <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
                 En savoir plus
                 <ArrowRight className="ml-2 h-5 w-5" />
@@ -359,7 +359,7 @@ export default function HomePage() {
               Rejoignez les entreprises qui ont fait confiance à Ekwip pour leurs équipements IT
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/home/catalogue">
+              <Link href="/catalogue">
                 <Button size="lg" className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700">
                   Voir le catalogue
                   <ArrowRight className="ml-2 h-5 w-5" />
