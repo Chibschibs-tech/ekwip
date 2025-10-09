@@ -1,38 +1,53 @@
+import { Skeleton } from "@/components/ui/skeleton"
+
 export default function HomeLoading() {
   return (
     <div className="min-h-screen">
-      {/* Hero Section Skeleton */}
-      <section className="py-20 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-blue-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <div className="h-8 w-48 bg-gray-200 rounded mb-6 animate-pulse" />
-              <div className="h-16 bg-gray-200 rounded mb-4 animate-pulse" />
-              <div className="h-16 bg-gray-200 rounded mb-8 animate-pulse" />
+      {/* Hero Skeleton */}
+      <section className="py-20 md:py-32 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <Skeleton className="h-8 w-48" />
+              <Skeleton className="h-16 w-full" />
+              <Skeleton className="h-16 w-5/6" />
+              <Skeleton className="h-24 w-full" />
               <div className="flex gap-4">
-                <div className="h-12 w-48 bg-gray-200 rounded animate-pulse" />
-                <div className="h-12 w-48 bg-gray-200 rounded animate-pulse" />
+                <Skeleton className="h-12 w-40" />
+                <Skeleton className="h-12 w-40" />
               </div>
             </div>
-            <div className="h-96 bg-gray-200 rounded-lg animate-pulse" />
+            <Skeleton className="h-96 w-full rounded-2xl" />
           </div>
         </div>
       </section>
 
-      {/* Features Section Skeleton */}
-      <section className="py-20 px-4 md:px-6 lg:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
+      {/* Features Skeleton */}
+      <section className="py-20 bg-white">
+        <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <div className="h-12 w-96 bg-gray-200 rounded mx-auto mb-6 animate-pulse" />
-            <div className="h-6 w-128 bg-gray-200 rounded mx-auto animate-pulse" />
+            <Skeleton className="h-12 w-96 mx-auto mb-4" />
+            <Skeleton className="h-6 w-2xl mx-auto" />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="p-6 bg-gray-50 rounded-lg">
-                <div className="h-16 w-16 bg-gray-200 rounded-full mb-4 animate-pulse" />
-                <div className="h-6 bg-gray-200 rounded mb-2 animate-pulse" />
-                <div className="h-20 bg-gray-200 rounded animate-pulse" />
+              <div key={i} className="space-y-4">
+                <Skeleton className="h-16 w-16 mx-auto" />
+                <Skeleton className="h-6 w-full" />
+                <Skeleton className="h-20 w-full" />
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Categories Skeleton */}
+      <section className="py-20 bg-slate-50">
+        <div className="container mx-auto px-4">
+          <Skeleton className="h-12 w-96 mb-12" />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4].map((i) => (
+              <Skeleton key={i} className="h-64 w-full rounded-xl" />
             ))}
           </div>
         </div>
