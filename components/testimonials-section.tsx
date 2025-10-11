@@ -1,85 +1,68 @@
+"use client"
+
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Star } from "lucide-react"
 
-interface Testimonial {
-  name: string
-  role: string
-  company: string
-  content: string
-  rating: number
-  avatar?: string
-}
-
-const testimonials: Testimonial[] = [
+const testimonials = [
   {
-    name: "Sarah Benali",
-    role: "Directrice IT",
-    company: "TechCorp Maroc",
+    id: 1,
+    name: "Ahmed Bennani",
+    role: "Directeur IT, TechCorp Maroc",
     content:
-      "Ekwip nous a permis d'équiper toute notre équipe rapidement et sans impacter notre trésorerie. Le service est exceptionnel et le support très réactif.",
+      "Ekwip a transformé notre gestion d'équipements. La flexibilité et le service client sont exceptionnels. Nous économisons 40% sur notre budget IT.",
     rating: 5,
+    avatar: "/placeholder-user.jpg",
   },
   {
-    name: "Ahmed Tazi",
-    role: "CEO",
-    company: "StartupHub",
+    id: 2,
+    name: "Fatima El Alaoui",
+    role: "CEO, StartupHub",
     content:
-      "La flexibilité des contrats et la qualité des équipements sont exceptionnelles. Nous avons pu faire évoluer notre parc informatique au fur et à mesure de notre croissance.",
+      "Service impeccable ! La livraison est rapide et les équipements sont toujours en excellent état. Notre équipe est ravie de la qualité du matériel.",
     rating: 5,
+    avatar: "/placeholder-user.jpg",
   },
   {
-    name: "Fatima Elkhayati",
-    role: "Responsable Achats",
-    company: "InnovGroup",
+    id: 3,
+    name: "Karim Tazi",
+    role: "Responsable Achats, MediaGroup",
     content:
-      "Grâce à Ekwip, nous avons équipé toute notre équipe avec du matériel de qualité professionnelle. Un vrai gain de temps et d'argent pour notre entreprise.",
+      "La solution parfaite pour notre croissance rapide. Nous pouvons adapter notre parc informatique sans investissement massif. Je recommande vivement !",
     rating: 5,
+    avatar: "/placeholder-user.jpg",
   },
 ]
 
-function StarRating({ rating }: { rating: number }) {
+export default function TestimonialsSection() {
   return (
-    <div className="flex gap-1">
-      {[...Array(5)].map((_, i) => (
-        <Star key={i} className={`w-5 h-5 ${i < rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`} />
-      ))}
-    </div>
-  )
-}
-
-export function TestimonialsSection() {
-  return (
-    <section className="py-20 px-4 md:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-20 bg-white">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Ce que disent nos clients</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Découvrez pourquoi plus de 500 entreprises nous font confiance
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Ce que disent nos clients</h2>
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            Découvrez les témoignages de nos clients satisfaits
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="border-2 hover:shadow-lg transition-shadow">
-              <CardContent className="p-6">
-                <StarRating rating={testimonial.rating} />
-                <p className="text-gray-700 my-4 leading-relaxed">{testimonial.content}</p>
-                <div className="flex items-center gap-4">
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="border-2">
+              <CardContent className="pt-6">
+                <div className="flex gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-slate-600 mb-6 italic">&ldquo;{testimonial.content}&rdquo;</p>
+                <div className="flex items-center gap-3">
                   <Avatar>
-                    <AvatarImage src={testimonial.avatar || "/placeholder.svg"} />
-                    <AvatarFallback className="bg-ekwip text-white">
-                      {testimonial.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </AvatarFallback>
+                    <AvatarImage src={testimonial.avatar || "/placeholder.svg"} alt={testimonial.name} />
+                    <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-semibold text-gray-900">{testimonial.name}</p>
-                    <p className="text-sm text-gray-600">
-                      {testimonial.role} • {testimonial.company}
-                    </p>
+                    <div className="font-semibold text-slate-900">{testimonial.name}</div>
+                    <div className="text-sm text-slate-500">{testimonial.role}</div>
                   </div>
                 </div>
               </CardContent>

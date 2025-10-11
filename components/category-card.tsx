@@ -13,7 +13,6 @@ interface CategoryCardProps {
   slug: string
 }
 
-// Map category slugs to their respective images
 const categoryImages: Record<string, string> = {
   "ordinateurs-portables": "/images/laptop-hero.png",
   tablettes: "/images/tablet-hero.png",
@@ -21,17 +20,16 @@ const categoryImages: Record<string, string> = {
   imprimantes: "/images/printer-hero.png",
   mobilier: "/images/furniture-hero.png",
   smartphones: "/images/smartphone-hero.png",
+  "ordinateurs-bureau": "/images/imac.png",
 }
 
 export default function CategoryCard({ iconName, title, description, slug }: CategoryCardProps) {
-  // Get the image for this category or use a default
   const categoryImage = categoryImages[slug] || "/images/laptop-hero.png"
 
   return (
     <Link href={`/catalogue/${slug}`}>
       <motion.div whileHover={{ y: -5 }} transition={{ duration: 0.3 }}>
         <Card className="group border border-ekwip-200 hover:border-ekwip hover:shadow-lg hover:bg-ekwip hover:bg-none transition-all duration-300 h-full bg-gradient-to-br from-white to-ekwip-50 relative overflow-hidden">
-          {/* Circle with product image in upper right - MADE BIGGER */}
           <div className="absolute -top-8 -right-8 w-32 h-32 rounded-full bg-white border-4 border-ekwip-100 group-hover:border-white overflow-hidden shadow-md">
             <div className="w-full h-full flex items-center justify-center">
               <Image
