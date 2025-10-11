@@ -85,6 +85,17 @@ export default function HomeLoading() {
           </div>
         </div>
       </section>
+
+      {/* Updated Section Skeleton */}
+      <div className="container mx-auto px-4 py-20">
+        <Skeleton className="h-96 w-full mb-8" />
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-64 w-full" />
+          <Skeleton className="h-64 w-full" />
+        </div>
+      </div>
     </div>
   )
 }
