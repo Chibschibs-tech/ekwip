@@ -18,12 +18,12 @@ export default function Navbar() {
   }, [])
 
   const navigation = [
-    { name: t("nav.home"), href: "/" },
-    { name: t("nav.catalog"), href: "/catalogue" },
-    { name: t("nav.store"), href: "/boutique" },
-    { name: t("nav.brands"), href: "/marques" },
-    { name: t("nav.how-it-works"), href: "/comment-ca-marche" },
-    { name: t("nav.contact"), href: "/contact" },
+    { name: t("nav.home"), href: "/home" },
+    { name: t("nav.catalog"), href: "/home/catalogue" },
+    { name: t("nav.store"), href: "/home/boutique" },
+    { name: t("nav.brands"), href: "/home/marques" },
+    { name: t("nav.how-it-works"), href: "/home/comment-ca-marche" },
+    { name: t("nav.contact"), href: "/home/contact" },
   ]
 
   if (!mounted) {
@@ -45,7 +45,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            <Link href="/home" className="flex-shrink-0 flex items-center">
               <Image src="/images/logo-black.png" alt="Ekwip" width={120} height={40} className="h-8 w-auto" />
             </Link>
           </div>
