@@ -2,16 +2,16 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { Toaster } from "@/components/ui/toaster"
-import { AdminAuthProvider } from "@/contexts/admin-auth-context"
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
 import { AuthProvider } from "@/contexts/auth-context"
+import { NeedsListProvider } from "@/contexts/cart-context"
 import { LanguageProvider } from "@/contexts/language-context"
-import { CartProvider } from "@/contexts/cart-context"
 import { ProductsProvider } from "@/contexts/products-context"
 import { CategoriesProvider } from "@/contexts/categories-context"
 import { BrandsProvider } from "@/contexts/brands-context"
 import { AttributesProvider } from "@/contexts/attributes-context"
+import { Toaster } from "@/components/ui/toaster"
 import { DataSync } from "@/components/data-sync"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -19,7 +19,9 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "Ekwip - Location d'équipements informatiques professionnels",
   description:
-    "Louez vos équipements IT sur-mesure avec Ekwip. Flexibilité, performance et tranquillité d'esprit garanties.",
+    "Ekwip propose des solutions de location d'équipements informatiques flexibles pour les entreprises au Maroc. Ordinateurs portables, imprimantes, serveurs et plus encore.",
+  keywords:
+    "location équipement informatique, location ordinateur portable, location imprimante, location serveur, Maroc, Casablanca, entreprise",
     generator: 'v0.app'
 }
 
@@ -29,29 +31,29 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="fr" suppressHydrationWarning>
+    <html lang="fr">
       <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <AdminAuthProvider>
-            <AuthProvider>
-              <LanguageProvider>
-                <ProductsProvider>
-                  <CategoriesProvider>
-                    <BrandsProvider>
-                      <AttributesProvider>
-                        <CartProvider>
-                          <DataSync />
-                          {children}
-                          <Toaster />
-                        </CartProvider>
-                      </AttributesProvider>
-                    </BrandsProvider>
-                  </CategoriesProvider>
-                </ProductsProvider>
-              </LanguageProvider>
-            </AuthProvider>
-          </AdminAuthProvider>
-        </ThemeProvider>
+        <LanguageProvider>
+          <AuthProvider>
+            <ProductsProvider>
+              <CategoriesProvider>
+                <BrandsProvider>
+                  <AttributesProvider>
+                    <NeedsListProvider>
+                      <DataSync />
+                      <div className="flex flex-col min-h-screen">
+                        <Navbar />
+                        <main className="flex-grow">{children}</main>
+                        <Footer />
+                      </div>
+                      <Toaster />
+                    </NeedsListProvider>
+                  </AttributesProvider>
+                </BrandsProvider>
+              </CategoriesProvider>
+            </ProductsProvider>
+          </AuthProvider>
+        </LanguageProvider>
       </body>
     </html>
   )
