@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -167,7 +166,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Section (Optional) */}
+      {/* Map Section */}
       <section className="py-16 px-4 md:px-6 lg:px-8 bg-slate-50">
         <div className="max-w-7xl mx-auto">
           <div className="bg-slate-200 rounded-xl h-96 flex items-center justify-center">

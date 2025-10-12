@@ -3,8 +3,11 @@ import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Mail, Phone, Sparkles } from "lucide-react"
+import { redirect } from "next/navigation"
 
-export default function UnderConstructionPage() {
+export default function RootPage() {
+  redirect("/home")
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4">
       <div className="max-w-4xl w-full">

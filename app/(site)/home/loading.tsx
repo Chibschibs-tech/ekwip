@@ -7,6 +7,8 @@ export default function HomeLoading() {
       {/* Hero Skeleton */}
       <section className="relative min-h-[600px] flex items-center justify-center px-4">
         <div className="max-w-7xl mx-auto text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Chargement...</p>
           <Skeleton className="h-16 w-[600px] mx-auto mb-6" />
           <Skeleton className="h-6 w-[700px] mx-auto mb-8" />
           <Skeleton className="h-12 w-48 mx-auto" />
