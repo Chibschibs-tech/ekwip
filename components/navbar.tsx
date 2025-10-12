@@ -18,12 +18,12 @@ export default function Navbar() {
   }, [])
 
   const navigation = [
-    { name: t("nav.home"), href: "/home" },
-    { name: t("nav.catalog"), href: "/home/catalogue" },
-    { name: t("nav.store"), href: "/home/boutique" },
-    { name: t("nav.brands"), href: "/home/marques" },
-    { name: t("nav.how-it-works"), href: "/home/comment-ca-marche" },
-    { name: t("nav.contact"), href: "/home/contact" },
+    { name: "Accueil", href: "/home" },
+    { name: "Catalogue", href: "/catalogue" },
+    { name: "Boutique", href: "/boutique" },
+    { name: "Marques", href: "/marques" },
+    { name: "Comment ça marche", href: "/comment-ca-marche" },
+    { name: "Contact", href: "/contact" },
   ]
 
   if (!mounted) {

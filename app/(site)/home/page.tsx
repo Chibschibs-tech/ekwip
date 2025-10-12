@@ -283,7 +283,7 @@ export default function HomePage() {
       </section>
 
       {/* How it Works Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+      <section className="py-20 bg-gradient-to-br from-[#1f3b57] to-[#2d4a63] text-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Comment ça marche ?</h2>
@@ -324,7 +324,7 @@ export default function HomePage() {
 
           <div className="text-center mt-12">
             <Link href="/comment-ca-marche">
-              <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-blue-50">
+              <Button size="lg" variant="secondary" className="bg-white text-[#1f3b57] hover:bg-blue-50">
                 En savoir plus
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -365,7 +365,7 @@ export default function HomePage() {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/home/contact">
+              <Link href="/contact">
                 <Button
                   size="lg"
                   variant="outline"
