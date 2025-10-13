@@ -1,21 +1,9 @@
 // app/[locale]/page.tsx
-import LanguageSwitcher from '../../components/LanguageSwitcher';
-import type {Metadata} from 'next';
-import type {Locale} from '@/i18n/config';
+import LanguageSwitcher from "../../components/LanguageSwitcher";
+import type {Metadata} from "next";
+import {hreflangFor} from "@/i18n/seo";
 
-export function generateMetadata({params}: {params: {locale: Locale}}): Metadata {
-  // on pointe les 3 locales + x-default
-  return {
-    alternates: {
-      languages: {
-        en: '/en',
-        fr: '/fr',
-        ar: '/ar',
-        'x-default': '/fr'
-      }
-    }
-  };
-}
+export const generateMetadata = (): Metadata => hreflangFor("/");
 
 export default function HomeLocalized() {
   return (
