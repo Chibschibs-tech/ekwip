@@ -1,10 +1,15 @@
 'use client';
 import {usePathname, useRouter, useSearchParams} from 'next/navigation';
-import {locales, Locale} from '../i18n/config';
 
-type Props = { current?: Locale };
+const LOCALES = ['fr', 'en', 'ar'] as const;
+type Locale = typeof LOCALES[number];
 
-export default function LanguageSwitcher({current = 'fr'}: Props) {
+function currentLocale(pathname: string): Locale {
+  const first = pathname.split('/').filter(Boolean)[0];
+  return (LOCALES as readonly string[]).includes(first as any) ? (first as Locale) : 'fr';
+}
+
+export default function LanguageSwitcher() {
   const pathname = usePathname() || '/';
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -17,14 +22,39 @@ export default function LanguageSwitcher({current = 'fr'}: Props) {
   };
 
   function switchTo(locale: Locale) {
-    // Étape 2: navigation simple (on branchera le vrai routage à l’étape 3)
-    router.push('/' + (locale === 'fr' ? '' : locale) + qs());
+    const parts = pathname.split('/').filter(Boolean);
+    if (parts.length === 0) {
+      router.push(`/${locale}${qs()}`);
+      return;
+    }
+    if ((LOCALES as readonly string[]).includes(parts[0] as any)) {
+      parts[0] = locale;
+    } else {
+      parts.unshift(locale);
+    }
+    const target = '/' + parts.join('/') + qs();
+
+    // Hook analytics
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ekwip_lang_change', {
+        detail: {from: currentLocale(pathname), to: locale, path: pathname}
+      }));
+    }
+
+    router.push(target);
   }
+
+  const active = currentLocale(pathname);
 
   return (
     <div role="group" aria-label="Language switcher">
-      {locales.map((l) => (
-        <button key={l} onClick={() => switchTo(l as Locale)} style={{marginRight: 8}}>
+      {LOCALES.map((l) => (
+        <button
+          key={l}
+          onClick={() => switchTo(l)}
+          aria-current={l === active ? 'true' : undefined}
+          style={{marginRight: 8, fontWeight: l === active ? 700 : 400}}
+        >
           {l.toUpperCase()}
         </button>
       ))}
