@@ -1,29 +1,30 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import Navbar from "@/components/navbar"
-import Footer from "@/components/footer"
-import { AuthProvider } from "@/contexts/auth-context"
-import { NeedsListProvider } from "@/contexts/cart-context"
-import { LanguageProvider } from "@/contexts/language-context"
-import { ProductsProvider } from "@/contexts/products-context"
-import { CategoriesProvider } from "@/contexts/categories-context"
-import { BrandsProvider } from "@/contexts/brands-context"
-import { AttributesProvider } from "@/contexts/attributes-context"
-import { Toaster } from "@/components/ui/toaster"
-import { DataSync } from "@/components/data-sync"
+import type React from "react";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
+import { AuthProvider } from "@/contexts/auth-context";
+import { NeedsListProvider } from "@/contexts/cart-context";
+import { LanguageProvider } from "@/contexts/language-context";
+import { ProductsProvider } from "@/contexts/products-context";
+import { CategoriesProvider } from "@/contexts/categories-context";
+import { BrandsProvider } from "@/contexts/brands-context";
+import { AttributesProvider } from "@/contexts/attributes-context";
+import { Toaster } from "@/components/ui/toaster";
+import { DataSync } from "@/components/data-sync";
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: "Ekwip - Location d'équipements informatiques professionnels",
   description:
     "Ekwip propose des solutions de location d'équipements informatiques flexibles pour les entreprises au Maroc. Ordinateurs portables, imprimantes, serveurs et plus encore.",
   keywords:
     "location équipement informatique, location ordinateur portable, location imprimante, location serveur, Maroc, Casablanca, entreprise",
-    generator: 'v0.app'
-}
+  generator: "v0.app"
+};
 
 export default function RootLayout({
   children,
@@ -31,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="fr">
+    <html lang="fr" suppressHydrationWarning>
       <body className={inter.className}>
         <LanguageProvider>
           <AuthProvider>
@@ -56,5 +57,5 @@ export default function RootLayout({
         </LanguageProvider>
       </body>
     </html>
-  )
+  );
 }
