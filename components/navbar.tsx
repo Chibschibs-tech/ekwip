@@ -1,21 +1,22 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { Menu, X, User } from "lucide-react"
-import { CartIcon } from "@/components/cart/cart-icon"
-import { useLanguage } from "@/contexts/language-context"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Menu, X, User } from "lucide-react";
+import { CartIcon } from "@/components/cart/cart-icon";
+import { useLanguage } from "@/contexts/language-context";
+import LanguageSwitcher from "@/components/LanguageSwitcher"; // ⬅️ nouveau
 
 export default function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [mounted, setMounted] = useState(false)
-  const { t, language, setLanguage } = useLanguage()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const { t } = useLanguage(); // ⬅️ on ne garde que `t` (plus de language/setLanguage)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
   const navigation = [
     { name: t("nav.home"), href: "/" },
@@ -24,7 +25,7 @@ export default function Navbar() {
     { name: t("nav.brands"), href: "/marques" },
     { name: t("nav.how-it-works"), href: "/comment-ca-marche" },
     { name: t("nav.contact"), href: "/contact" },
-  ]
+  ];
 
   if (!mounted) {
     return (
@@ -37,7 +38,7 @@ export default function Navbar() {
           </div>
         </div>
       </nav>
-    )
+    );
   }
 
   return (
@@ -46,7 +47,13 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <Image src="/images/logo-black.png" alt="Ekwip" width={120} height={40} className="h-8 w-auto" />
+              <Image
+                src="/images/logo-black.png"
+                alt="Ekwip"
+                width={120}
+                height={40}
+                className="h-8 w-auto"
+              />
             </Link>
           </div>
 
@@ -63,31 +70,9 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-2">
-              <Button
-                variant={language === "fr" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setLanguage("fr")}
-                className="h-8"
-              >
-                FR
-              </Button>
-              <Button
-                variant={language === "ar" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setLanguage("ar")}
-                className="h-8"
-              >
-                AR
-              </Button>
-              <Button
-                variant={language === "en" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => setLanguage("en")}
-                className="h-8"
-              >
-                EN
-              </Button>
+            {/* ⬇️ Remplace l’ancien trio de boutons FR/AR/EN par notre switcher */}
+            <div className="hidden md:flex items-center">
+              <LanguageSwitcher />
             </div>
 
             <CartIcon />
@@ -98,7 +83,10 @@ export default function Navbar() {
               </Button>
             </Link>
 
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="lg:hidden p-2">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2"
+            >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
@@ -118,9 +106,14 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
+
+            {/* ⬇️ Switcher aussi dans le menu mobile */}
+            <div className="px-3 py-2">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       )}
     </nav>
-  )
+  );
 }
