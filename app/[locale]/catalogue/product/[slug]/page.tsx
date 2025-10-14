@@ -1,13 +1,27 @@
+// app/[locale]/catalogue/product/[slug]/page.tsx
 import type { Metadata } from "next";
+import ProductPage, {
+  // si ta page source exporte ces fonctions, on les ré-exporte pour préserver le SSG
+  generateStaticParams as _generateStaticParams
+} from "@/app/catalogue/product/[slug]/page";
 import { hreflangFor } from "@/i18n/seo";
-import BasePage from "../../../../catalogue/product/[slug]/page";
+import type { Locale } from "@/i18n/config";
 
-export const generateMetadata = ({ params }: { params: { slug: string } }): Metadata =>
-  hreflangFor(`/catalogue/product/${params.slug}`);
+export const dynamicParams = true;
 
-export default function LocalizedProductPage({ params }: { params: { slug: string } }) {
-  // on propage "params" au composant de base au cas où il en a besoin
-  // (si BasePage n’en a pas besoin, il les ignorera)
-  // @ts-expect-error next props passthrough
-  return <BasePage params={params} />;
+// Next 15 : params est un Promise
+export async function generateMetadata(
+  props: { params: Promise<{ locale: Locale; slug: string }> }
+): Promise<Metadata> {
+  const { slug } = await props.params;
+  return hreflangFor(`/catalogue/product/${slug}`);
+}
+
+// Optionnel : si la page source exporte generateStaticParams, on le relaie
+export const generateStaticParams =
+  typeof _generateStaticParams === "function" ? _generateStaticParams : undefined;
+
+// Important : on RELAIE **tous** les props (params, searchParams, etc.)
+export default function LocalizedProductAlias(props: any) {
+  return <ProductPage {...props} />;
 }
