@@ -1,22 +1,20 @@
 "use client";
-import LocaleLink from '@/components/LocaleLink';
+
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Menu, X, User } from "lucide-react";
 import { CartIcon } from "@/components/cart/cart-icon";
 import { useLanguage } from "@/contexts/language-context";
-import LanguageSwitcher from "@/components/LanguageSwitcher"; // ⬅️ nouveau
+import LanguageSwitcher from "@/components/LanguageSwitcher";
+import LocaleLink from "@/components/LocaleLink";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
-  const { t } = useLanguage(); // ⬅️ on ne garde que `t` (plus de language/setLanguage)
+  const { t } = useLanguage();
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  useEffect(() => setMounted(true), []);
 
   const navigation = [
     { name: t("nav.home"), href: "/" },
@@ -45,6 +43,7 @@ export default function Navbar() {
     <nav className="bg-white border-b sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* Logo -> locale-aware */}
           <div className="flex items-center">
             <LocaleLink href="/" className="flex-shrink-0 flex items-center">
               <Image
@@ -57,6 +56,7 @@ export default function Navbar() {
             </LocaleLink>
           </div>
 
+          {/* Menu desktop -> locale-aware links */}
           <div className="hidden lg:flex lg:items-center lg:space-x-8">
             {navigation.map((item) => (
               <LocaleLink
@@ -69,8 +69,9 @@ export default function Navbar() {
             ))}
           </div>
 
-          <div className="flex items-center space-x-4">
-            {/* ⬇️ Remplace l’ancien trio de boutons FR/AR/EN par notre switcher */}
+          {/* Actions */}
+          <div className="flex items-center space-x-2">
+            {/* Switcher remplace les anciens boutons FR/AR/EN */}
             <div className="hidden md:flex items-center">
               <LanguageSwitcher />
             </div>
@@ -78,7 +79,7 @@ export default function Navbar() {
             <CartIcon />
 
             <LocaleLink href="/portail-client">
-              <Button variant="ghost" size="icon">
+              <Button variant="ghost" size="icon" aria-label="Client portal">
                 <User className="h-5 w-5" />
               </Button>
             </LocaleLink>
@@ -86,6 +87,7 @@ export default function Navbar() {
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden p-2"
+              aria-label="Open menu"
             >
               {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -93,6 +95,7 @@ export default function Navbar() {
         </div>
       </div>
 
+      {/* Menu mobile */}
       {isMenuOpen && (
         <div className="lg:hidden border-t">
           <div className="px-2 pt-2 pb-3 space-y-1">
@@ -106,8 +109,6 @@ export default function Navbar() {
                 {item.name}
               </LocaleLink>
             ))}
-
-            {/* ⬇️ Switcher aussi dans le menu mobile */}
             <div className="px-3 py-2">
               <LanguageSwitcher />
             </div>
