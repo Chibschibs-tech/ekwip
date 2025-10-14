@@ -1,23 +1,26 @@
 // i18n/seo.ts
-import type {Metadata} from "next";
+import type {Metadata} from 'next';
 
-const LOCALES = ["fr", "en", "ar"] as const;
+const BASE =
+  (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '') || 'https://ekwip.ma';
 
-function mapFor(pathWithoutLocale: string) {
-  const clean = pathWithoutLocale.startsWith("/") ? pathWithoutLocale : `/${pathWithoutLocale}`;
+function abs(path: string) {
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${BASE}${p}`;
+}
+
+function localizedPaths(pathWithoutLocale: string) {
+  const clean = pathWithoutLocale.startsWith('/') ? pathWithoutLocale : `/${pathWithoutLocale}`;
+  const suffix = clean === '/' ? '' : clean;
   return {
-    en: `/en${clean === "/" ? "" : clean}`,
-    fr: `/fr${clean === "/" ? "" : clean}`,
-    ar: `/ar${clean === "/" ? "" : clean}`,
-    "x-default": `/fr${clean === "/" ? "" : clean}`,
+    en: abs(`/en${suffix}`),
+    fr: abs(`/fr${suffix}`),
+    ar: abs(`/ar${suffix}`),
+    'x-default': abs(`/fr${suffix}`)
   };
 }
 
-/**
- * Utilise-le dans generateMetadata() de n'importe quelle page sous /app/[locale]/...
- * Exemple: hreflangFor("/")  -> /fr, /en, /ar
- *          hreflangFor("/catalogue") -> /fr/catalogue, /en/catalogue, /ar/catalogue
- */
+/** À utiliser dans generateMetadata() des pages sous /app/[locale]/... */
 export function hreflangFor(pathWithoutLocale: string): Metadata {
-  return { alternates: { languages: mapFor(pathWithoutLocale) } };
+  return {alternates: {languages: localizedPaths(pathWithoutLocale)}};
 }
