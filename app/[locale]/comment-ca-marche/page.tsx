@@ -1,4 +1,9 @@
-import type {Metadata} from "next";
-import {hreflangFor} from "@/i18n/seo";
+import type { Metadata } from "next";
+import { hreflangFor } from "@/i18n/seo";
+import BasePage from "../../comment-ca-marche/page";
+
 export const generateMetadata = (): Metadata => hreflangFor("/comment-ca-marche");
-export { default } from "../../comment-ca-marche/page";
+
+export default function LocalizedHowItWorksPage() {
+  return <BasePage />;
+}
