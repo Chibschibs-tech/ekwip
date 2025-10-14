@@ -14,8 +14,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      { source: '/store', destination: '/catalogue', permanent: false },
-      { source: '/store/:path*', destination: '/catalogue', permanent: false }
+      // Non localisé : /store -> /boutique
+      { source: '/store', destination: '/boutique', permanent: false },
+      { source: '/store/:path*', destination: '/boutique', permanent: false },
+
+      // Localisé : /:locale/store -> /:locale/boutique
+      { source: '/:locale(fr|en|ar)/store', destination: '/:locale/boutique', permanent: false },
+      { source: '/:locale(fr|en|ar)/store/:path*', destination: '/:locale/boutique', permanent: false }
     ];
   }
 };
