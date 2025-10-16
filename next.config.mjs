@@ -1,7 +1,6 @@
 // next.config.mjs
 import createNextIntlPlugin from 'next-intl/plugin';
 
-// 👉 chemin vers notre config i18n côté serveur
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
@@ -14,13 +13,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
-      // Non localisé : /store -> /boutique
-      { source: '/store', destination: '/boutique', permanent: false },
-      { source: '/store/:path*', destination: '/boutique', permanent: false },
++     // redirige /fr, /en, /ar (avec ou sans slash final) vers /
++     { source: '/:locale(fr|en|ar)',  destination: '/', permanent: true },
++     { source: '/:locale(fr|en|ar)/', destination: '/', permanent: true },
 
-      // Localisé : /:locale/store -> /:locale/boutique
-      { source: '/:locale(fr|en|ar)/store', destination: '/:locale/boutique', permanent: false },
-      { source: '/:locale(fr|en|ar)/store/:path*', destination: '/:locale/boutique', permanent: false }
+      // existant
+      { source: '/store',           destination: '/catalogue', permanent: false },
+      { source: '/store/:path*',    destination: '/catalogue', permanent: false }
     ];
   }
 };
