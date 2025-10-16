@@ -13,13 +13,13 @@ const nextConfig = {
   },
   async redirects() {
     return [
-+     // redirige /fr, /en, /ar (avec ou sans slash final) vers /
-+     { source: '/:locale(fr|en|ar)',  destination: '/', permanent: true },
-+     { source: '/:locale(fr|en|ar)/', destination: '/', permanent: true },
+      // redirige /fr, /en, /ar (avec ou sans slash final) vers /
+      { source: '/:locale(fr|en|ar)', destination: '/', permanent: true },
+      { source: '/:locale(fr|en|ar)/', destination: '/', permanent: true },
 
       // existant
-      { source: '/store',           destination: '/catalogue', permanent: false },
-      { source: '/store/:path*',    destination: '/catalogue', permanent: false }
+      { source: '/store', destination: '/catalogue', permanent: false },
+      { source: '/store/:path*', destination: '/catalogue', permanent: false }
     ];
   }
 };
