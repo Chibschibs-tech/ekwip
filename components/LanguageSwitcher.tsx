@@ -1,63 +1,99 @@
-'use client';
-import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+"use client";
 
-const LOCALES = ['fr', 'en', 'ar'] as const;
-type Locale = typeof LOCALES[number];
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
+import {Button} from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuItem,
+} from "@/components/ui/dropdown-menu";
+import {Globe, Check} from "lucide-react";
 
-function currentLocale(pathname: string): Locale {
-  const first = pathname.split('/').filter(Boolean)[0];
-  return (LOCALES as readonly string[]).includes(first as any) ? (first as Locale) : 'fr';
+const LOCALES = [
+  {code: "fr", short: "FR", label: "Français", flag: "🇫🇷"},
+  {code: "en", short: "EN", label: "English", flag: "🇬🇧"},
+  {code: "ar", short: "AR", label: "العربية", flag: "🇲🇦"},
+] as const;
+
+function buildTargetUrl({
+  pathname,
+  search,
+  target,
+}: {
+  pathname: string;
+  search: string;
+  target: string;
+}) {
+  const segments = pathname.split("/"); // ex: ["", "fr", "catalogue", ...]
+  // si le 1er segment est déjà une locale → on le remplace
+  if (LOCALES.some((l) => l.code === segments[1])) {
+    segments[1] = target;
+    const base = segments.join("/") || "/";
+    return `${base}${search ? `?${search}` : ""}`;
+  }
+  // sinon, on préfixe simplement par la locale
+  return `/${target}${pathname}${search ? `?${search}` : ""}`;
 }
 
-export default function LanguageSwitcher() {
-  const pathname = usePathname() || '/';
-  const searchParams = useSearchParams();
+export default function LanguageSwitcher({
+  variant = "ghost",
+  size = "sm",
+}: {
+  variant?: React.ComponentProps<typeof Button>["variant"];
+  size?: React.ComponentProps<typeof Button>["size"];
+}) {
+  const pathname = usePathname() || "/";
+  const search = useSearchParams()?.toString() || "";
   const router = useRouter();
 
-  const qs = () => {
-    const q = new URLSearchParams();
-    searchParams.forEach((v, k) => q.set(k, v));
-    const s = q.toString();
-    return s ? `?${s}` : '';
-  };
+  const seg1 = pathname.split("/")[1];
+  const current =
+    LOCALES.find((l) => l.code === seg1)?.code ?? "fr";
 
-  function switchTo(locale: Locale) {
-    const parts = pathname.split('/').filter(Boolean);
-    if (parts.length === 0) {
-      router.push(`/${locale}${qs()}`);
-      return;
-    }
-    if ((LOCALES as readonly string[]).includes(parts[0] as any)) {
-      parts[0] = locale;
-    } else {
-      parts.unshift(locale);
-    }
-    const target = '/' + parts.join('/') + qs();
-
-    // Hook analytics
-    if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent('ekwip_lang_change', {
-        detail: {from: currentLocale(pathname), to: locale, path: pathname}
-      }));
-    }
-
-    router.push(target);
-  }
-
-  const active = currentLocale(pathname);
+  const currentShort =
+    LOCALES.find((l) => l.code === current)?.short ?? "FR";
 
   return (
-    <div role="group" aria-label="Language switcher">
-      {LOCALES.map((l) => (
-        <button
-          key={l}
-          onClick={() => switchTo(l)}
-          aria-current={l === active ? 'true' : undefined}
-          style={{marginRight: 8, fontWeight: l === active ? 700 : 400}}
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant={variant}
+          size={size}
+          className="gap-2 rounded-full px-3"
+          aria-label="Change language"
         >
-          {l.toUpperCase()}
-        </button>
-      ))}
-    </div>
+          <Globe className="h-4 w-4" />
+          <span className="font-medium">{currentShort}</span>
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent align="end" className="min-w-[12rem]">
+        <DropdownMenuLabel>Langue</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {LOCALES.map((l) => {
+          const url = buildTargetUrl({pathname, search, target: l.code});
+          const active = current === l.code;
+          return (
+            <DropdownMenuItem
+              key={l.code}
+              onClick={() => router.push(url)}
+              className="flex items-center justify-between"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-base leading-none">{l.flag}</span>
+                <span>{l.label}</span>
+                <span className="ml-2 text-xs text-muted-foreground">
+                  {l.short}
+                </span>
+              </div>
+              {active && <Check className="h-4 w-4" />}
+            </DropdownMenuItem>
+          );
+        })}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
