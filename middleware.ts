@@ -19,13 +19,18 @@ export function middleware(req: NextRequest) {
   // Prépare une réponse (pour pouvoir modifier les headers)
   const res = NextResponse.next()
 
-  // Ajoute X-Robots-Tag: noindex en PREVIEW uniquement (pages HTML)
-  if (process.env.VERCEL_ENV === 'preview') {
-    const accept = req.headers.get('accept') || ''
-    if (accept.includes('text/html')) {
-      res.headers.set('x-robots-tag', 'noindex')
-    }
+    // Ajoute X-Robots-Tag: noindex pour les pages HTML en PREVIEW
+  const host = req.headers.get("host") || "";
+  const isPreviewEnv = process.env.VERCEL_ENV === "preview";
+  const isVercelPreviewHost = host.includes(".vercel.app");
+
+  const accept = req.headers.get("accept") || "";
+  const isHtml = accept.includes("text/html");
+
+  if (isHtml && (isPreviewEnv || isVercelPreviewHost)) {
+    res.headers.set("x-robots-tag", "noindex, nofollow, noarchive");
   }
+
 
   // Si déjà préfixé par une locale → ne rien faire (on renvoie res pour garder les headers)
   const seg1 = pathname.split('/').filter(Boolean)[0]

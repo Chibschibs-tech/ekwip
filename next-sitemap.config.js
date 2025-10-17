@@ -2,13 +2,13 @@
 module.exports = {
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://ekwip.ma",
   generateRobotsTxt: true,
-  // évite l’indexation de l’admin & API
   exclude: ["/admin/*", "/api/*", "/coming-soon"],
-  // gère les locales (FR/EN/AR)
+
+  // Ajoute les hreflang (alternateRefs) pour FR/EN/AR
   transform: async (config, path) => {
-    // self canonical + alternates pour chaque locale
     const locales = ["fr", "en", "ar"];
-    const noLocale = path === "/" ? "" : path; // home sans double slash
+    // pour que "/" ne devienne pas "//" lorsqu'on préfixe la locale
+    const noLocale = path === "/" ? "" : path;
 
     return {
       loc: path,
@@ -20,30 +20,28 @@ module.exports = {
       })),
     };
   },
-  // Optionnel: ajoute des chemins dynamiques (produits, marques)
+
+  // 👉 à relier plus tard à ta DB pour lister dynamiquement produits / marques
   additionalPaths: async (config) => {
-    // TODO: remplace par une vraie source (DB/API)
-    const productSlugs = ["dell-precision-5690"]; // ex.
-    const brandSlugs = ["dell","hp"]; // ex.
+    const productSlugs = ["dell-precision-5690"]; // exemple
+    const brandSlugs = ["dell", "hp"]; // exemple
+
+    const locales = ["fr", "en", "ar"];
+    const alt = (p) =>
+      locales.map((l) => ({ href: `${config.siteUrl}/${l}${p}`, hreflang: l }));
 
     return [
       ...productSlugs.map((slug) => ({
         loc: `/catalogue/product/${slug}`,
         changefreq: "weekly",
         priority: 0.8,
-        alternateRefs: ["fr","en","ar"].map((l) => ({
-          href: `${config.siteUrl}/${l}/catalogue/product/${slug}`,
-          hreflang: l,
-        })),
+        alternateRefs: alt(`/catalogue/product/${slug}`),
       })),
       ...brandSlugs.map((slug) => ({
         loc: `/marques/${slug}`,
         changefreq: "monthly",
         priority: 0.6,
-        alternateRefs: ["fr","en","ar"].map((l) => ({
-          href: `${config.siteUrl}/${l}/marques/${slug}`,
-          hreflang: l,
-        })),
+        alternateRefs: alt(`/marques/${slug}`),
       })),
     ];
   },

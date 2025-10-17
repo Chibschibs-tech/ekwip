@@ -1,26 +1,30 @@
 // i18n/seo.ts
-import type {Metadata} from 'next';
+import type { Metadata } from "next";
 
-const BASE =
-  (process.env.NEXT_PUBLIC_SITE_URL ?? '').replace(/\/$/, '') || 'https://ekwip.ma';
+const LOCALES = ["fr", "en", "ar"] as const;
 
-function abs(path: string) {
-  const p = path.startsWith('/') ? path : `/${path}`;
-  return `${BASE}${p}`;
-}
+// IMPORTANT : défini dans Vercel (Production et Preview)
+const ORIGIN =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/+$/, "") || "https://ekwip.ma";
 
-function localizedPaths(pathWithoutLocale: string) {
-  const clean = pathWithoutLocale.startsWith('/') ? pathWithoutLocale : `/${pathWithoutLocale}`;
-  const suffix = clean === '/' ? '' : clean;
+/**
+ * Construit un objet Metadata avec canonical + hreflang pour un chemin "non localisé".
+ * Exemple d'appel: hreflangFor("/catalogue/product/dell-precision-5690")
+ */
+export function hreflangFor(pathname: string): Metadata {
+  const clean = pathname.startsWith("/") ? pathname : `/${pathname}`;
+
+  const languages = LOCALES.reduce<Record<string, string>>((acc, l) => {
+    acc[l] = `${ORIGIN}/${l}${clean === "/" ? "" : clean}`;
+    return acc;
+  }, {});
+
   return {
-    en: abs(`/en${suffix}`),
-    fr: abs(`/fr${suffix}`),
-    ar: abs(`/ar${suffix}`),
-    'x-default': abs(`/fr${suffix}`)
+    alternates: {
+      canonical: `${ORIGIN}${clean === "/" ? "" : clean}`,
+      languages,
+      // Optionnel: x-default → FR
+      types: { "x-default": `${ORIGIN}/fr${clean === "/" ? "" : clean}` },
+    },
   };
-}
-
-/** À utiliser dans generateMetadata() des pages sous /app/[locale]/... */
-export function hreflangFor(pathWithoutLocale: string): Metadata {
-  return {alternates: {languages: localizedPaths(pathWithoutLocale)}};
 }
