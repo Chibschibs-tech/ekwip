@@ -1,43 +1,50 @@
 /** @type {import('next-sitemap').IConfig} */
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://ekwip.ma';
-
-// locales utilisées (FR par défaut sans préfixe, EN/AR avec préfixe)
-const locales = [
-  { code: 'fr', base: `${SITE}` },        // pas de /fr pour la locale par défaut
-  { code: 'en', base: `${SITE}/en` },
-  { code: 'ar', base: `${SITE}/ar` },
-];
-
-export default {
-  siteUrl: SITE,
+module.exports = {
+  siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "https://ekwip.ma",
   generateRobotsTxt: true,
-  changefreq: 'weekly',
-  priority: 0.7,
-  exclude: [
-    // routes à ne pas indexer
-    '/admin/*',
-    '/api/*',
-    '/portail-client*',
-    '/coming-soon',
-    '/ma-liste-besoins',
-  ],
-
-  // Hreflang automatiques pour chaque URL
-  alternateRefs: [
-    { href: locales[0].base, hreflang: 'fr' },
-    { href: locales[1].base, hreflang: 'en' },
-    { href: locales[2].base, hreflang: 'ar' },
-    { href: SITE,           hreflang: 'x-default' },
-  ],
-
-  // Si tu dois ajuster le <loc>, la fréquence ou la priorité selon le path
+  // évite l’indexation de l’admin & API
+  exclude: ["/admin/*", "/api/*", "/coming-soon"],
+  // gère les locales (FR/EN/AR)
   transform: async (config, path) => {
-    const isHome = path === '/';
+    // self canonical + alternates pour chaque locale
+    const locales = ["fr", "en", "ar"];
+    const noLocale = path === "/" ? "" : path; // home sans double slash
+
     return {
-      loc: `${SITE}${path}`,
-      changefreq: isHome ? 'daily' : 'weekly',
-      priority: isHome ? 1.0 : 0.7,
-      // next-sitemap s’occupe d’ajouter les <xhtml:link> via alternateRefs
+      loc: path,
+      changefreq: "weekly",
+      priority: 0.7,
+      alternateRefs: locales.map((l) => ({
+        href: `${config.siteUrl}/${l}${noLocale}`,
+        hreflang: l,
+      })),
     };
+  },
+  // Optionnel: ajoute des chemins dynamiques (produits, marques)
+  additionalPaths: async (config) => {
+    // TODO: remplace par une vraie source (DB/API)
+    const productSlugs = ["dell-precision-5690"]; // ex.
+    const brandSlugs = ["dell","hp"]; // ex.
+
+    return [
+      ...productSlugs.map((slug) => ({
+        loc: `/catalogue/product/${slug}`,
+        changefreq: "weekly",
+        priority: 0.8,
+        alternateRefs: ["fr","en","ar"].map((l) => ({
+          href: `${config.siteUrl}/${l}/catalogue/product/${slug}`,
+          hreflang: l,
+        })),
+      })),
+      ...brandSlugs.map((slug) => ({
+        loc: `/marques/${slug}`,
+        changefreq: "monthly",
+        priority: 0.6,
+        alternateRefs: ["fr","en","ar"].map((l) => ({
+          href: `${config.siteUrl}/${l}/marques/${slug}`,
+          hreflang: l,
+        })),
+      })),
+    ];
   },
 };
