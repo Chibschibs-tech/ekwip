@@ -6,6 +6,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Loader2 } from "lucide-react"
 
 interface Product {
   id: string
@@ -34,55 +35,53 @@ export function ProductTabs() {
   const [products, setProducts] = useState<Product[]>([])
   const [categories, setCategories] = useState<Category[]>([])
   const [displayedProducts, setDisplayedProducts] = useState<Product[]>([])
-  const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    const fetchData = async () => {
+      try {
+        setLoading(true)
 
-  useEffect(() => {
-    if (!mounted) return
+        // Fetch categories and products from API
+        const [categoriesRes, productsRes] = await Promise.all([
+          fetch("/api/categories"),
+          fetch("/api/products?status=active&productType=rent"),
+        ])
 
-    // Charger les catégories depuis localStorage
-    try {
-      const storedCategories = localStorage.getItem("ekwip_admin_categories")
-      if (storedCategories) {
-        const allCategories = JSON.parse(storedCategories)
-        const activeCategories = allCategories.filter((cat: Category) => cat.isActive)
-        setCategories(activeCategories)
-      }
-    } catch (error) {
-      console.error("Error loading categories:", error)
-    }
+        if (categoriesRes.ok) {
+          const categoriesData = await categoriesRes.json()
+          const activeCategories = categoriesData.filter((cat: Category) => cat.isActive)
+          setCategories(activeCategories)
+        }
 
-    // Charger les produits depuis localStorage
-    try {
-      const storedProducts = localStorage.getItem("ekwip_admin_products")
-      if (storedProducts) {
-        const allProducts = JSON.parse(storedProducts)
-        const activeProducts = allProducts
-          .filter((p: any) => p.status === "active")
-          .map((p: any) => ({
+        if (productsRes.ok) {
+          const productsData = await productsRes.json()
+          const mappedProducts = productsData.map((p: any) => ({
             id: p.id,
             name: p.name,
             slug: p.slug,
             description: p.shortDescription || p.description || "",
             price: p.rentalDurations?.[0]?.monthlyPrice || p.price || 0,
             image: p.thumbnail || p.images?.[0] || "/placeholder.svg",
-            brand: p.brandId || "Sans marque",
-            category: p.categoryId || "Sans catégorie",
+            brand: p.brandName || "Sans marque",
+            category: p.categoryName || "Sans catégorie",
             categoryId: p.categoryId || "",
             isNew: p.isNew || false,
             isPopular: p.isPopular || false,
             isFeatured: p.isFeatured || false,
           }))
-        setProducts(activeProducts)
-        setDisplayedProducts(activeProducts.slice(0, 6))
+          setProducts(mappedProducts)
+          setDisplayedProducts(mappedProducts.slice(0, 6))
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error)
+      } finally {
+        setLoading(false)
       }
-    } catch (error) {
-      console.error("Error loading products:", error)
     }
-  }, [mounted])
+
+    fetchData()
+  }, [])
 
   useEffect(() => {
     if (activeTab === "all") {
@@ -93,17 +92,18 @@ export function ProductTabs() {
     }
   }, [activeTab, products])
 
-  if (!mounted) {
+  if (loading) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500">Chargement des produits...</p>
+        <Loader2 className="h-8 w-8 animate-spin mx-auto text-[#1f3b57]" />
+        <p className="text-gray-500 mt-4">Chargement des produits...</p>
       </div>
     )
   }
 
   return (
     <div className="w-full">
-      {/* Tabs de catégories - une seule ligne avec scroll horizontal */}
+      {/* Tabs de catégories */}
       <div className="mb-8 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
         <div className="inline-flex gap-2 min-w-full pb-2">
           <button

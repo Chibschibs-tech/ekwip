@@ -1,78 +1,115 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { Brand } from "@/types/admin"
-import { mockBrands } from "@/lib/mock-data"
 
 interface BrandsContextType {
   brands: Brand[]
-  addBrand: (brand: Brand) => void
-  updateBrand: (id: string, brand: Partial<Brand>) => void
-  deleteBrand: (id: string) => void
+  loading: boolean
+  error: string | null
+  addBrand: (brand: Omit<Brand, "id" | "createdAt" | "updatedAt">) => Promise<Brand | null>
+  updateBrand: (id: string, brand: Partial<Brand>) => Promise<boolean>
+  deleteBrand: (id: string) => Promise<boolean>
   getBrand: (id: string) => Brand | undefined
+  refreshBrands: () => Promise<void>
 }
 
 const BrandsContext = createContext<BrandsContextType | undefined>(undefined)
 
-const STORAGE_KEY = "ekwip_admin_brands"
-
 export function BrandsProvider({ children }: { children: ReactNode }) {
   const [brands, setBrands] = useState<Brand[]>([])
-  const [isInitialized, setIsInitialized] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchBrands = useCallback(async () => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        setBrands(JSON.parse(stored))
-      } else {
-        setBrands(mockBrands)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(mockBrands))
-      }
-    } catch (error) {
-      console.error("Error loading brands:", error)
-      setBrands(mockBrands)
+      setLoading(true)
+      setError(null)
+      const response = await fetch("/api/brands")
+      if (!response.ok) throw new Error("Failed to fetch brands")
+      const data = await response.json()
+      setBrands(data)
+    } catch (err) {
+      console.error("Error fetching brands:", err)
+      setError(err instanceof Error ? err.message : "Unknown error")
     } finally {
-      setIsInitialized(true)
+      setLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    if (isInitialized && brands.length > 0) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(brands))
-      } catch (error) {
-        console.error("Error saving brands:", error)
-      }
+    fetchBrands()
+  }, [fetchBrands])
+
+  const addBrand = async (brand: Omit<Brand, "id" | "createdAt" | "updatedAt">): Promise<Brand | null> => {
+    try {
+      const response = await fetch("/api/brands", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(brand),
+      })
+      if (!response.ok) throw new Error("Failed to create brand")
+      const newBrand = await response.json()
+      setBrands((prev) => [...prev, newBrand])
+      return newBrand
+    } catch (err) {
+      console.error("Error creating brand:", err)
+      return null
     }
-  }, [brands, isInitialized])
-
-  const addBrand = (brand: Brand) => {
-    setBrands((prev) => [...prev, brand])
   }
 
-  const updateBrand = (id: string, updatedBrand: Partial<Brand>) => {
-    setBrands((prev) => prev.map((b) => (b.id === id ? { ...b, ...updatedBrand } : b)))
+  const updateBrand = async (id: string, updates: Partial<Brand>): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/brands/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      })
+      if (!response.ok) throw new Error("Failed to update brand")
+      const updatedBrand = await response.json()
+      setBrands((prev) => prev.map((b) => (b.id === id ? updatedBrand : b)))
+      return true
+    } catch (err) {
+      console.error("Error updating brand:", err)
+      return false
+    }
   }
 
-  const deleteBrand = (id: string) => {
-    setBrands((prev) => prev.filter((b) => b.id !== id))
+  const deleteBrand = async (id: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/brands/${id}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) throw new Error("Failed to delete brand")
+      setBrands((prev) => prev.filter((b) => b.id !== id))
+      return true
+    } catch (err) {
+      console.error("Error deleting brand:", err)
+      return false
+    }
   }
 
   const getBrand = (id: string) => {
     return brands.find((b) => b.id === id)
   }
 
-  if (!isInitialized) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    )
+  const refreshBrands = async () => {
+    await fetchBrands()
   }
 
   return (
-    <BrandsContext.Provider value={{ brands, addBrand, updateBrand, deleteBrand, getBrand }}>
+    <BrandsContext.Provider
+      value={{
+        brands,
+        loading,
+        error,
+        addBrand,
+        updateBrand,
+        deleteBrand,
+        getBrand,
+        refreshBrands,
+      }}
+    >
       {children}
     </BrandsContext.Provider>
   )

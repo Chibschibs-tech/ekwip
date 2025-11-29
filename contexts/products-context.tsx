@@ -1,97 +1,91 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { Product } from "@/types/admin"
 
 interface ProductsContextType {
   products: Product[]
-  addProduct: (product: Product) => void
-  updateProduct: (id: string, product: Partial<Product>) => void
-  deleteProduct: (id: string) => void
+  loading: boolean
+  error: string | null
+  addProduct: (product: Omit<Product, "id" | "createdAt" | "updatedAt">) => Promise<Product | null>
+  updateProduct: (id: string, product: Partial<Product>) => Promise<boolean>
+  deleteProduct: (id: string) => Promise<boolean>
   getProduct: (id: string) => Product | undefined
+  refreshProducts: () => Promise<void>
 }
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined)
 
 export function ProductsProvider({ children }: { children: ReactNode }) {
   const [products, setProducts] = useState<Product[]>([])
-  const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    setMounted(true)
+  const fetchProducts = useCallback(async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await fetch("/api/products")
+      if (!response.ok) throw new Error("Failed to fetch products")
+      const data = await response.json()
+      setProducts(data)
+    } catch (err) {
+      console.error("Error fetching products:", err)
+      setError(err instanceof Error ? err.message : "Unknown error")
+    } finally {
+      setLoading(false)
+    }
   }, [])
 
   useEffect(() => {
-    if (!mounted) return
+    fetchProducts()
+  }, [fetchProducts])
 
-    const loadProducts = () => {
-      try {
-        const stored = localStorage.getItem("ekwip_admin_products")
-        if (stored) {
-          const parsedProducts = JSON.parse(stored) as Product[]
-
-          // Migration: Add productType="rent" to products that don't have it
-          const migratedProducts = parsedProducts.map((product) => {
-            if (!product.productType) {
-              return {
-                ...product,
-                productType: "rent" as const,
-              }
-            }
-            return product
-          })
-
-          // Save migrated products back to localStorage
-          if (migratedProducts.some((p, i) => p.productType !== parsedProducts[i].productType)) {
-            localStorage.setItem("ekwip_admin_products", JSON.stringify(migratedProducts))
-          }
-
-          setProducts(migratedProducts)
-        }
-      } catch (error) {
-        console.error("Error loading products:", error)
-        setProducts([])
-      }
-    }
-
-    loadProducts()
-
-    const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "ekwip_admin_products") {
-        loadProducts()
-      }
-    }
-
-    window.addEventListener("storage", handleStorageChange)
-    return () => window.removeEventListener("storage", handleStorageChange)
-  }, [mounted])
-
-  const addProduct = (product: Product) => {
-    const newProducts = [...products, product]
-    setProducts(newProducts)
-    if (typeof window !== "undefined") {
-      localStorage.setItem("ekwip_admin_products", JSON.stringify(newProducts))
-      window.dispatchEvent(new Event("storage"))
+  const addProduct = async (product: Omit<Product, "id" | "createdAt" | "updatedAt">): Promise<Product | null> => {
+    try {
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(product),
+      })
+      if (!response.ok) throw new Error("Failed to create product")
+      const newProduct = await response.json()
+      setProducts((prev) => [...prev, newProduct])
+      return newProduct
+    } catch (err) {
+      console.error("Error creating product:", err)
+      return null
     }
   }
 
-  const updateProduct = (id: string, updates: Partial<Product>) => {
-    const newProducts = products.map((p) =>
-      p.id === id ? { ...p, ...updates, updatedAt: new Date().toISOString() } : p,
-    )
-    setProducts(newProducts)
-    if (typeof window !== "undefined") {
-      localStorage.setItem("ekwip_admin_products", JSON.stringify(newProducts))
-      window.dispatchEvent(new Event("storage"))
+  const updateProduct = async (id: string, updates: Partial<Product>): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/products/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      })
+      if (!response.ok) throw new Error("Failed to update product")
+      const updatedProduct = await response.json()
+      setProducts((prev) => prev.map((p) => (p.id === id ? updatedProduct : p)))
+      return true
+    } catch (err) {
+      console.error("Error updating product:", err)
+      return false
     }
   }
 
-  const deleteProduct = (id: string) => {
-    const newProducts = products.filter((p) => p.id !== id)
-    setProducts(newProducts)
-    if (typeof window !== "undefined") {
-      localStorage.setItem("ekwip_admin_products", JSON.stringify(newProducts))
-      window.dispatchEvent(new Event("storage"))
+  const deleteProduct = async (id: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) throw new Error("Failed to delete product")
+      setProducts((prev) => prev.filter((p) => p.id !== id))
+      return true
+    } catch (err) {
+      console.error("Error deleting product:", err)
+      return false
     }
   }
 
@@ -99,14 +93,21 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
     return products.find((p) => p.id === id)
   }
 
+  const refreshProducts = async () => {
+    await fetchProducts()
+  }
+
   return (
     <ProductsContext.Provider
       value={{
         products,
+        loading,
+        error,
         addProduct,
         updateProduct,
         deleteProduct,
         getProduct,
+        refreshProducts,
       }}
     >
       {children}

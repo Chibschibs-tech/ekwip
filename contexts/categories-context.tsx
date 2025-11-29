@@ -1,78 +1,115 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from "react"
 import type { Category } from "@/types/admin"
-import { mockCategories } from "@/lib/mock-data"
 
 interface CategoriesContextType {
   categories: Category[]
-  addCategory: (category: Category) => void
-  updateCategory: (id: string, category: Partial<Category>) => void
-  deleteCategory: (id: string) => void
+  loading: boolean
+  error: string | null
+  addCategory: (category: Omit<Category, "id" | "createdAt" | "updatedAt">) => Promise<Category | null>
+  updateCategory: (id: string, category: Partial<Category>) => Promise<boolean>
+  deleteCategory: (id: string) => Promise<boolean>
   getCategory: (id: string) => Category | undefined
+  refreshCategories: () => Promise<void>
 }
 
 const CategoriesContext = createContext<CategoriesContextType | undefined>(undefined)
 
-const STORAGE_KEY = "ekwip_admin_categories"
-
 export function CategoriesProvider({ children }: { children: ReactNode }) {
   const [categories, setCategories] = useState<Category[]>([])
-  const [isInitialized, setIsInitialized] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
+  const fetchCategories = useCallback(async () => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY)
-      if (stored) {
-        setCategories(JSON.parse(stored))
-      } else {
-        setCategories(mockCategories)
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(mockCategories))
-      }
-    } catch (error) {
-      console.error("Error loading categories:", error)
-      setCategories(mockCategories)
+      setLoading(true)
+      setError(null)
+      const response = await fetch("/api/categories")
+      if (!response.ok) throw new Error("Failed to fetch categories")
+      const data = await response.json()
+      setCategories(data)
+    } catch (err) {
+      console.error("Error fetching categories:", err)
+      setError(err instanceof Error ? err.message : "Unknown error")
     } finally {
-      setIsInitialized(true)
+      setLoading(false)
     }
   }, [])
 
   useEffect(() => {
-    if (isInitialized && categories.length > 0) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(categories))
-      } catch (error) {
-        console.error("Error saving categories:", error)
-      }
+    fetchCategories()
+  }, [fetchCategories])
+
+  const addCategory = async (category: Omit<Category, "id" | "createdAt" | "updatedAt">): Promise<Category | null> => {
+    try {
+      const response = await fetch("/api/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(category),
+      })
+      if (!response.ok) throw new Error("Failed to create category")
+      const newCategory = await response.json()
+      setCategories((prev) => [...prev, newCategory])
+      return newCategory
+    } catch (err) {
+      console.error("Error creating category:", err)
+      return null
     }
-  }, [categories, isInitialized])
-
-  const addCategory = (category: Category) => {
-    setCategories((prev) => [...prev, category])
   }
 
-  const updateCategory = (id: string, updatedCategory: Partial<Category>) => {
-    setCategories((prev) => prev.map((c) => (c.id === id ? { ...c, ...updatedCategory } : c)))
+  const updateCategory = async (id: string, updates: Partial<Category>): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/categories/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+      })
+      if (!response.ok) throw new Error("Failed to update category")
+      const updatedCategory = await response.json()
+      setCategories((prev) => prev.map((c) => (c.id === id ? updatedCategory : c)))
+      return true
+    } catch (err) {
+      console.error("Error updating category:", err)
+      return false
+    }
   }
 
-  const deleteCategory = (id: string) => {
-    setCategories((prev) => prev.filter((c) => c.id !== id))
+  const deleteCategory = async (id: string): Promise<boolean> => {
+    try {
+      const response = await fetch(`/api/categories/${id}`, {
+        method: "DELETE",
+      })
+      if (!response.ok) throw new Error("Failed to delete category")
+      setCategories((prev) => prev.filter((c) => c.id !== id))
+      return true
+    } catch (err) {
+      console.error("Error deleting category:", err)
+      return false
+    }
   }
 
   const getCategory = (id: string) => {
     return categories.find((c) => c.id === id)
   }
 
-  if (!isInitialized) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-      </div>
-    )
+  const refreshCategories = async () => {
+    await fetchCategories()
   }
 
   return (
-    <CategoriesContext.Provider value={{ categories, addCategory, updateCategory, deleteCategory, getCategory }}>
+    <CategoriesContext.Provider
+      value={{
+        categories,
+        loading,
+        error,
+        addCategory,
+        updateCategory,
+        deleteCategory,
+        getCategory,
+        refreshCategories,
+      }}
+    >
       {children}
     </CategoriesContext.Provider>
   )
