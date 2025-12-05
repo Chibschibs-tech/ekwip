@@ -16,7 +16,12 @@ export function middleware(request: NextRequest) {
     }
 
     // Check if it's a DaaS subdomain
-    const isDaasDomain = hostname.startsWith("daas.") || hostname === "daas.localhost:3000" || hostname === "daas.localhost";
+    // Supports: daas.ekwip.ma, daas.localhost, daas.localhost:3000
+    const isDaasDomain = 
+      hostname.startsWith("daas.") || 
+      hostname === "daas.localhost:3000" || 
+      hostname === "daas.localhost" ||
+      hostname === "daas.ekwip.ma";
 
     if (isDaasDomain) {
         // Rewrite daas.ekwip.ma/* to /daas/*
