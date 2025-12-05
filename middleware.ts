@@ -15,6 +15,12 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
+    // Skip admin routes - they should be accessible from both domains
+    // Admin routes are handled by their own layouts
+    if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/portail-client")) {
+        return NextResponse.next();
+    }
+
     // Check if it's a DaaS subdomain
     // Supports: daas.ekwip.ma, daas.localhost, daas.localhost:3000
     const isDaasDomain = 
