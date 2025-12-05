@@ -21,14 +21,45 @@ This updated audit incorporates deep technical analysis, multi-domain routing im
 
 ## 1. Business Context & Architecture
 
-### 1.1 Three Core Services
+### 1.1 Business Model: Rental vs Sale
+
+**Critical Distinction**:
+- **Rental Equipment** (`/catalogue`): Monthly rental pricing, equipment remains Ekwip property
+  - Products with `productType === "rent"`
+  - Managed through client portal
+  - Flexible contracts, equipment return
+  
+- **Sale Equipment** (`/boutique`): One-time purchase, ownership transfers to customer
+  - Products with `productType === "sale"`
+  - Standard e-commerce flow
+  - Direct purchase, no return management
+
+**Current State**:
+- ✅ `/boutique` route exists and filters for `productType === "sale"`
+- ✅ `/catalogue` should filter for `productType === "rent"` (needs verification)
+- ⚠️ Naming and structure of `/boutique` needs team discussion
+- ⚠️ Navigation doesn't clearly distinguish rental vs sale
+
+**Recommendation**:
+1. **Visual Indicators**: Add badges/labels to distinguish rental vs sale
+2. **Navigation Clarity**: Update navbar to show both options clearly
+3. **Naming Discussion**: Finalize `/boutique` naming (alternatives: `/vente`, `/achat`, `/store`)
+4. **Homepage Updates**: Add clear sections for "Location" and "Vente"
+
+### 1.2 Three Core Services
 
 #### **Ekwip DaaS** (`daas.ekwip.ma`)
-- **Purpose**: IT Equipment Rental Platform (B2B)
-- **Features**: Product catalog, client portal, quote requests, order management
+- **Purpose**: IT Equipment Rental & Sale Platform (B2B)
+- **Features**: 
+  - **Rental Catalog** (`/catalogue`): Monthly rental equipment
+  - **Sale Shop** (`/boutique`): Equipment for purchase
+  - Client portal, quote requests, order management
 - **Target Users**: Companies needing flexible IT equipment (laptops, servers, printers, etc.)
 - **Color Identity**: Sky Blue (`#38BDF8`)
-- **Current Status**: Functional but uses hardcoded data (see Critical Issues)
+- **Current Status**: 
+  - ⚠️ Functional but uses hardcoded data for catalog (see Critical Issues)
+  - ✅ Sale shop (`/boutique`) uses API correctly
+  - ⚠️ Category pages fixed to use API (2024-12-19)
 
 #### **Ekwip Connect** (`ekwip.ma/connect`)
 - **Purpose**: Audiovisual Solutions & Integration
@@ -590,6 +621,8 @@ Element Spacing: space-y-4-6 (16-24px)
 **Goal**: Fix blocking issues, restore functionality
 
 #### Week 1: Data Flow & Filters
+
+**Update (2024-12-19)**: Category pages fixed to use API contexts ✅
 - [ ] **Day 1-2**: Remove hardcoded products, connect catalog to API
   - Delete `lib/store-products.ts`
   - Update catalog to use `ProductsContext`

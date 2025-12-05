@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
@@ -10,7 +10,10 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { getCategoryBySlug, getProductsByCategory, formatPrice, type Category, type Product } from "@/lib/products"
+import { formatPrice } from "@/lib/products"
+import { useCategories } from "@/contexts/categories-context"
+import { useProducts } from "@/contexts/products-context"
+import { useBrands } from "@/contexts/brands-context"
 import { notFound } from "next/navigation"
 
 interface CategoryPageProps {
@@ -27,9 +30,9 @@ interface FilterState {
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const [category, setCategory] = useState<Category | undefined>()
-  const [products, setProducts] = useState<Product[]>([])
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+  const { categories, loading: categoriesLoading } = useCategories()
+  const { products: allProducts, loading: productsLoading } = useProducts()
+  const { brands: allBrands } = useBrands()
   const [sortBy, setSortBy] = useState("name")
   const [attributes, setAttributes] = useState<any[]>([])
 
@@ -40,48 +43,42 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     inStock: false,
   })
 
+  // Find category by slug
+  const category = useMemo(() => {
+    return categories.find((cat) => cat.slug === params.slug && cat.isActive)
+  }, [categories, params.slug])
+
+  // Filter products for this category (rental only, active status)
+  const products = useMemo(() => {
+    if (!category) return []
+    return allProducts.filter(
+      (p) => p.categoryId === category.id && p.productType === "rent" && p.status === "active"
+    )
+  }, [allProducts, category])
+
+  // Calculate price range
   useEffect(() => {
-    const cat = getCategoryBySlug(params.slug)
-    if (!cat) {
-      notFound()
-    }
-    setCategory(cat)
-
-    const prods = getProductsByCategory(params.slug)
-    setProducts(prods)
-    setFilteredProducts(prods)
-
-    // Charger les attributs depuis localStorage
-    try {
-      const stored = localStorage.getItem("ekwip_admin_attributes")
-      if (stored) {
-        const allAttributes = JSON.parse(stored)
-        const categoryAttributes = allAttributes.filter((attr: any) => attr.isFilterable)
-        setAttributes(categoryAttributes)
+    if (products.length > 0) {
+      const prices = products.map((p) => p.price).filter((p) => p > 0)
+      if (prices.length > 0) {
+        setFilters((prev) => ({
+          ...prev,
+          priceRange: {
+            min: Math.floor(Math.min(...prices)),
+            max: Math.ceil(Math.max(...prices)),
+          },
+        }))
       }
-    } catch (error) {
-      console.error("Error loading attributes:", error)
     }
+  }, [products])
 
-    // Calculer le prix min/max
-    if (prods.length > 0) {
-      const prices = prods.map((p) => p.price)
-      setFilters((prev) => ({
-        ...prev,
-        priceRange: {
-          min: Math.floor(Math.min(...prices)),
-          max: Math.ceil(Math.max(...prices)),
-        },
-      }))
-    }
-  }, [params.slug])
-
-  useEffect(() => {
+  // Filtered products based on filters
+  const filteredProducts = useMemo(() => {
     let filtered = [...products]
 
-    // Filtre par marque
+    // Filtre par marque (using brandId)
     if (filters.brands.length > 0) {
-      filtered = filtered.filter((p) => filters.brands.includes(p.brand))
+      filtered = filtered.filter((p) => p.brandId && filters.brands.includes(p.brandId))
     }
 
     // Filtre par prix
@@ -89,14 +86,14 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
     // Filtre par stock
     if (filters.inStock) {
-      filtered = filtered.filter((p) => p.inStock)
+      filtered = filtered.filter((p) => (p.stockQuantity || 0) > 0)
     }
 
     // Filtre par attributs
     Object.entries(filters.attributes).forEach(([attrId, values]) => {
       if (values.length > 0) {
         filtered = filtered.filter((p) => {
-          const productAttrValue = p.specifications?.[attrId]
+          const productAttrValue = p.attributes?.[attrId]
           return productAttrValue && values.includes(productAttrValue)
         })
       }
@@ -115,19 +112,40 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       }
     })
 
-    setFilteredProducts(filtered)
+    return filtered
   }, [products, filters, sortBy])
 
-  const handleBrandChange = (brand: string, checked: boolean) => {
+  // Load attributes from localStorage (temporary until API is ready)
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("ekwip_admin_attributes")
+      if (stored) {
+        const allAttributes = JSON.parse(stored)
+        const categoryAttributes = allAttributes.filter((attr: any) => attr.isFilterable)
+        setAttributes(categoryAttributes)
+      }
+    } catch (error) {
+      console.error("Error loading attributes:", error)
+    }
+  }, [])
+
+  // Show 404 if category not found
+  useEffect(() => {
+    if (!categoriesLoading && !category) {
+      notFound()
+    }
+  }, [categoriesLoading, category])
+
+  const handleBrandChange = (brandId: string, checked: boolean) => {
     if (checked) {
       setFilters({
         ...filters,
-        brands: [...filters.brands, brand],
+        brands: [...filters.brands, brandId],
       })
     } else {
       setFilters({
         ...filters,
-        brands: filters.brands.filter((b) => b !== brand),
+        brands: filters.brands.filter((b) => b !== brandId),
       })
     }
   }
@@ -177,11 +195,23 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     })
   }
 
-  // Get unique brands
-  const brands = Array.from(new Set(products.map((p) => p.brand))).sort()
+  // Get unique brand IDs from products
+  const brandIds = Array.from(new Set(products.map((p) => p.brandId).filter(Boolean))) as string[]
+  const brands = allBrands.filter((b) => brandIds.includes(b.id) && b.isActive)
+
+  if (categoriesLoading || productsLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-ekwip mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!category) {
-    return <div>Chargement...</div>
+    return null // notFound() will be called by useEffect
   }
 
   return (
@@ -214,18 +244,18 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Marques</h3>
                   <div className="space-y-2">
-                    {brands.map((brand) => (
-                      <div key={brand} className="flex items-center space-x-2">
+                    {brands.map((brand: any) => (
+                      <div key={brand.id} className="flex items-center space-x-2">
                         <Checkbox
-                          id={`brand-${brand}`}
-                          checked={filters.brands.includes(brand)}
-                          onCheckedChange={(checked) => handleBrandChange(brand, checked === true)}
+                          id={`brand-${brand.id}`}
+                          checked={filters.brands.includes(brand.id)}
+                          onCheckedChange={(checked) => handleBrandChange(brand.id, checked === true)}
                         />
                         <label
-                          htmlFor={`brand-${brand}`}
+                          htmlFor={`brand-${brand.id}`}
                           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
                         >
-                          {brand}
+                          {brand.name}
                         </label>
                       </div>
                     ))}
@@ -349,23 +379,23 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                     <CardContent className="p-4">
                       <div className="aspect-square bg-gray-100 rounded-lg mb-4 overflow-hidden relative">
                         <Image
-                          src={product.image || "/placeholder.svg"}
-                          alt={product.name}
-                          fill
-                          className="object-contain p-4 group-hover:scale-105 transition-transform"
-                        />
-                        {product.isNew && <Badge className="absolute top-2 left-2 bg-green-500">Nouveau</Badge>}
-                        {product.isPopular && <Badge className="absolute top-2 right-2 bg-blue-500">Populaire</Badge>}
+                        src={product.thumbnail || product.images?.[0] || "/placeholder.svg"}
+                        alt={product.name}
+                        fill
+                        className="object-contain p-4 group-hover:scale-105 transition-transform"
+                      />
+                      {product.isNew && <Badge className="absolute top-2 left-2 bg-green-500">Nouveau</Badge>}
+                      {product.isPopular && <Badge className="absolute top-2 right-2 bg-blue-500">Populaire</Badge>}
                       </div>
                       <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
-                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.description}</p>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.shortDescription || product.description}</p>
                       <div className="flex items-center justify-between mb-4">
                         <div>
                           <span className="text-lg font-bold text-gray-900">{formatPrice(product.price)}</span>
                           <span className="text-sm text-gray-500">/mois</span>
                         </div>
-                        <Badge variant={product.inStock ? "default" : "secondary"}>
-                          {product.inStock ? "En stock" : "Rupture"}
+                        <Badge variant={(product.stockQuantity || 0) > 0 ? "default" : "secondary"}>
+                          {(product.stockQuantity || 0) > 0 ? "En stock" : "Rupture"}
                         </Badge>
                       </div>
                       <Link href={`/catalogue/product/${product.slug}`}>
