@@ -10,7 +10,8 @@
     "db:sync": "tsx scripts/sync-local-to-prod.ts",
     "db:start": "docker-compose up -d",
     "db:stop": "docker-compose down",
-    "db:logs": "docker-compose logs -f postgres"
+    "db:logs": "docker-compose logs -f postgres",
+    "vercel:monitor": "node scripts/monitor-vercel.js"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -53,7 +54,7 @@
     "framer-motion": "latest",
     "input-otp": "1.4.1",
     "lucide-react": "^0.454.0",
-    "next": "15.2.4",
+    "next": "^16.0.7",
     "next-themes": "latest",
     "postgres": "^3.4.7",
     "react": "^19",
