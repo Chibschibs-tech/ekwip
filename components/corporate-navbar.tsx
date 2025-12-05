@@ -1,7 +1,27 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
+import { useEffect, useState } from "react"
 
 export default function CorporateNavbar() {
+    const [daasUrl, setDaasUrl] = useState("https://daas.ekwip.ma")
+    const [catalogUrl, setCatalogUrl] = useState("https://daas.ekwip.ma/catalogue")
+
+    useEffect(() => {
+        // Detect if we're in local development
+        if (typeof window !== "undefined") {
+            const hostname = window.location.hostname
+            const port = window.location.port || "3000"
+            
+            if (hostname === "localhost" || hostname === "127.0.0.1") {
+                // Local development - use localhost subdomain
+                setDaasUrl(`http://daas.localhost:${port}`)
+                setCatalogUrl(`http://daas.localhost:${port}/catalogue`)
+            }
+            // Production: keep default https://daas.ekwip.ma
+        }
+    }, [])
     return (
         <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
