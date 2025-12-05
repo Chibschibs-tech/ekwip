@@ -8,6 +8,42 @@
 
 ## 📋 Change Log (Timed Entries)
 
+### 2024-12-20 00:25 UTC - Admin Route Fix & Category Debug Endpoint
+
+**Issue**: `/admin` route not accessible, being rewritten to `/corporate/admin`
+
+**Root Cause**: 
+- Middleware was rewriting all paths to `/corporate/*` for corporate domain
+- `/admin` routes were being caught and rewritten incorrectly
+- Admin panel exists at both `app/admin/*` and `app/(daas)/daas/admin/*`
+
+**Fix Applied**:
+- ✅ Updated middleware to skip `/admin` and `/portail-client` routes
+- ✅ These routes now pass through without rewriting
+- ✅ Admin panel accessible from both domains
+
+**Category Debug**:
+- ✅ Created `/api/debug/categories` endpoint to check database categories
+- ✅ Created `scripts/check-categories.ts` script (requires DATABASE_URL)
+- ✅ From seed data, expected categories:
+  - `ordinateurs-portables` (Ordinateurs portables) ✅
+  - `smartphones` (Smartphones)
+  - `ordinateurs-bureau` (Ordinateurs de bureau) - Note: different from "ordinateurs-de-bureau"
+  - `imprimantes` (Imprimantes)
+  - `accessoires` (Accessoires)
+
+**Files Modified**:
+- `middleware.ts` - Added skip for admin/portail-client routes
+- `app/api/debug/categories/route.ts` - Created debug endpoint
+- `scripts/check-categories.ts` - Created check script
+
+**Next Steps**:
+- [ ] Visit `/api/debug/categories` to see actual database categories
+- [ ] Verify category slug matches exactly: `ordinateurs-portables`
+- [ ] Check if category is active (`is_active: true`)
+
+---
+
 ### 2024-12-20 00:10 UTC - Category Page 404 UI Implementation
 
 **Issue**: Category page still showing 404 for `/catalogue/ordinateurs-portables`
