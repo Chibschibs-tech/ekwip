@@ -38,12 +38,9 @@ jobs:
         run: |
           node scripts/monitor-vercel.js || exit 1
 
-      - name: Notify on failure
-        if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          text: 'Vercel deployment check failed!'
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-        if: env.SLACK_WEBHOOK_URL != ''
+      - name: Create deployment status summary
+        if: always()
+        run: |
+          echo "## Vercel Deployment Status" >> $GITHUB_STEP_SUMMARY
+          node scripts/monitor-vercel.js >> $GITHUB_STEP_SUMMARY 2>&1 || true
 
