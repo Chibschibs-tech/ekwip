@@ -1,5 +1,6 @@
 import { neon } from "@neondatabase/serverless"
-import postgres from "postgres"
+// Dynamic import for postgres to avoid bundling in production
+let postgres: typeof import("postgres").default | null = null
 
 // Determine if we're using local or production database
 const DATABASE_URL = process.env.DATABASE_URL
@@ -15,18 +16,28 @@ const isLocal =
   DATABASE_URL.includes("postgres://ekwip")
 
 // Initialize clients based on environment
-let postgresClient: ReturnType<typeof postgres> | null = null
+let postgresClient: Awaited<ReturnType<typeof getPostgresClient>> | null = null
 let neonClient: ReturnType<typeof neon> | null = null
+
+async function getPostgresClient() {
+  if (!postgres) {
+    postgres = (await import("postgres")).default
+  }
+  return postgres
+}
 
 if (isLocal) {
   // Use postgres package for local Docker database
-  postgresClient = postgres(DATABASE_URL, {
-    max: 10, // Connection pool size
-    idle_timeout: 20,
-    connect_timeout: 10,
+  // Initialize lazily to avoid bundling in production
+  getPostgresClient().then((pg) => {
+    postgresClient = pg(DATABASE_URL, {
+      max: 10, // Connection pool size
+      idle_timeout: 20,
+      connect_timeout: 10,
+    }) as any
   })
 } else {
-  // Use Neon for production
+  // Use Neon for production (Vercel)
   neonClient = neon(DATABASE_URL)
 }
 
