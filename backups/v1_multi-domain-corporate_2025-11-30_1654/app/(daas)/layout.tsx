@@ -1,0 +1,54 @@
+import type React from "react"
+import type { Metadata } from "next"
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
+import { AuthProvider } from "@/contexts/auth-context"
+import { NeedsListProvider } from "@/contexts/cart-context"
+import { LanguageProvider } from "@/contexts/language-context"
+import { ProductsProvider } from "@/contexts/products-context"
+import { CategoriesProvider } from "@/contexts/categories-context"
+import { BrandsProvider } from "@/contexts/brands-context"
+import { AttributesProvider } from "@/contexts/attributes-context"
+import { Toaster } from "@/components/ui/toaster"
+import { DataSync } from "@/components/data-sync"
+
+
+
+export const metadata: Metadata = {
+  title: "Ekwip - Location d'équipements informatiques professionnels",
+  description:
+    "Ekwip propose des solutions de location d'équipements informatiques flexibles pour les entreprises au Maroc. Ordinateurs portables, imprimantes, serveurs et plus encore.",
+  keywords:
+    "location équipement informatique, location ordinateur portable, location imprimante, location serveur, Maroc, Casablanca, entreprise",
+  generator: 'v0.app'
+}
+
+export default function DaasLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <LanguageProvider>
+      <AuthProvider>
+        <ProductsProvider>
+          <CategoriesProvider>
+            <BrandsProvider>
+              <AttributesProvider>
+                <NeedsListProvider>
+                  <DataSync />
+                  <div className="flex flex-col min-h-screen">
+                    <Navbar />
+                    <main className="flex-grow">{children}</main>
+                    <Footer />
+                  </div>
+                  <Toaster />
+                </NeedsListProvider>
+              </AttributesProvider>
+            </BrandsProvider>
+          </CategoriesProvider>
+        </ProductsProvider>
+      </AuthProvider>
+    </LanguageProvider>
+  )
+}
