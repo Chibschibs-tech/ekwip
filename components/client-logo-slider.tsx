@@ -4,10 +4,12 @@ import Image from "next/image"
 import { useEffect, useState } from "react"
 
 const clientLogos = [
-  { name: "Cambiste", src: "/images/clients-logo/cambiste-logo-dark.png" },
-  { name: "YouPack", src: "/images/clients-logo/logo-youpack-site-2048x444.png" },
-  { name: "Ocura Consulting", src: "/images/clients-logo/ocura22consuting_cover_e2147483647vbetatxSLpw.png" },
-  { name: "Valkima", src: "/images/clients-logo/valkima.png" },
+  { name: "Client 1", src: "/images/client-logo-1.png" },
+  { name: "Client 2", src: "/images/client-logo-2.png" },
+  { name: "Client 3", src: "/images/client-logo-3.png" },
+  { name: "Client 4", src: "/images/client-logo-4.png" },
+  { name: "Client 5", src: "/images/client-logo-5.png" },
+  { name: "Client 6", src: "/images/client-logo-6.png" },
 ]
 
 export function ClientLogoSlider() {

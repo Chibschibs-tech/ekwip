@@ -65,13 +65,6 @@ const config = {
           700: "#334e68",
           800: "#243b53",
           900: "#102a43",
-          // New Ekwip Design Tokens
-          primaryDeep: "#1E3563",
-          primary: "#214274",
-          primarySoft: "#E0E7FF",
-          daas: "#38BDF8",
-          connect: "#10B981",
-          tech: "#F97316",
         },
       },
       borderRadius: {
@@ -88,22 +81,13 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        scroll: {
-          "0%": { transform: "translateX(0)" },
-          "100%": { transform: "translateX(-50%)" },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        scroll: "scroll 40s linear infinite",
       },
       backgroundImage: {
         "gradient-ekwip": "linear-gradient(135deg, #1f3b57 0%, #334e68 100%)",
-        "ekwip-page": "linear-gradient(to bottom, #F9FAFB 0%, #F9FAFB 45%, rgba(219,234,254,0.4) 100%)",
-      },
-      boxShadow: {
-        "ekwip-cta": "0 10px 30px rgba(15, 23, 42, 0.18)",
       },
     },
   },
