@@ -25,17 +25,17 @@ export default function CorporateFooter() {
                         <h3 className="font-semibold mb-4">Nos Solutions</h3>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <Link href="/corporate/daas" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="https://daas.ekwip.ma" className="text-gray-300 hover:text-white transition-colors">
                                     Ekwip DaaS
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/corporate/connect" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/connect" className="text-gray-300 hover:text-white transition-colors">
                                     Ekwip Connect
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/corporate/tech" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/tech" className="text-gray-300 hover:text-white transition-colors">
                                     Ekwip Tech
                                 </Link>
                             </li>
@@ -47,12 +47,12 @@ export default function CorporateFooter() {
                         <h3 className="font-semibold mb-4">Entreprise</h3>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <Link href="/corporate/about" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/" className="text-gray-300 hover:text-white transition-colors">
                                     À propos
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/corporate/contact" className="text-gray-300 hover:text-white transition-colors">
+                                <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
                                     Contact
                                 </Link>
                             </li>

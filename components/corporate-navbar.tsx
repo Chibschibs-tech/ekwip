@@ -7,7 +7,7 @@ export default function CorporateNavbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
-                    <Link href="/corporate" className="flex items-center space-x-2">
+                    <Link href="/" className="flex items-center space-x-2">
                         <Image
                             src="/images/logo-black.png"
                             alt="Ekwip"
@@ -19,19 +19,19 @@ export default function CorporateNavbar() {
 
                     {/* Navigation Links */}
                     <div className="hidden md:flex items-center gap-1">
-                        <Link href="/corporate" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                        <Link href="/" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Accueil
                         </Link>
-                        <Link href="/daas" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                        <Link href="https://daas.ekwip.ma" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Ekwip DaaS
                         </Link>
-                        <Link href="/corporate/connect" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                        <Link href="/connect" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Ekwip Connect
                         </Link>
-                        <Link href="/corporate/tech" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                        <Link href="/tech" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Ekwip Tech
                         </Link>
-                        <Link href="/corporate/contact" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                        <Link href="/contact" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Contact
                         </Link>
                     </div>
@@ -50,7 +50,7 @@ export default function CorporateNavbar() {
                         </div>
 
                         {/* Catalog CTA */}
-                        <Link href="/daas/catalogue" className="ek-btn-pill-primary">
+                        <Link href="https://daas.ekwip.ma/catalogue" className="ek-btn-pill-primary">
                             Accéder au Catalogue
                         </Link>
                     </div>

@@ -30,7 +30,7 @@ export default function CorporateHome() {
                                 </p>
 
                                 <div className="flex flex-col sm:flex-row gap-3">
-                                    <Link href="/corporate/contact">
+                                    <Link href="/contact">
                                         <button className="ek-btn-pill-primary">
                                             Parler à un expert Ekwip
                                             <ArrowRight className="h-4 w-4" />
@@ -111,9 +111,9 @@ export default function CorporateHome() {
                         </ScrollReveal>
                     </div>
 
-                    <ScrollReveal delay={0.4}>
+                        <ScrollReveal delay={0.4}>
                         <div className="text-center">
-                            <Link href="/corporate/contact">
+                            <Link href="/contact">
                                 <button className="ek-btn-pill-primary px-8 py-3 text-lg shadow-lg hover:shadow-xl transition-all">
                                     Parlons de votre besoin
                                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -142,7 +142,7 @@ export default function CorporateHome() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                         {/* DaaS Card */}
                         <ScrollReveal delay={0.1}>
-                            <Link href="/daas/catalogue" className="group block h-full">
+                            <Link href="https://daas.ekwip.ma/catalogue" className="group block h-full">
                                 <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
@@ -176,7 +176,7 @@ export default function CorporateHome() {
 
                         {/* Connect Card */}
                         <ScrollReveal delay={0.2}>
-                            <Link href="/corporate/connect" className="group block h-full">
+                            <Link href="/connect" className="group block h-full">
                                 <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
@@ -210,7 +210,7 @@ export default function CorporateHome() {
 
                         {/* Tech Card */}
                         <ScrollReveal delay={0.3}>
-                            <Link href="/corporate/tech" className="group block h-full">
+                            <Link href="/tech" className="group block h-full">
                                 <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
@@ -314,7 +314,7 @@ export default function CorporateHome() {
                         <p className="text-lg text-gray-600 mb-8 max-w-3xl mx-auto">
                             Démarrons par un seul sujet – un parc IT à structurer, une salle à équiper ou un besoin d&apos;automatisation – puis faisons évoluer la collaboration au rythme de votre entreprise.
                         </p>
-                        <Link href="/corporate/contact">
+                        <Link href="/contact">
                             <button className="ek-btn-pill-primary">
                                 Nous parler de votre projet
                                 <ArrowRight className="h-4 w-4" />

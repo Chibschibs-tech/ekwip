@@ -27,7 +27,7 @@ export default function TechPage() {
                                 </p>
 
                                 <div className="flex flex-col sm:flex-row gap-3 mb-8">
-                                    <Link href="/corporate/contact">
+                                    <Link href="/contact">
                                         <button className="ek-btn-pill-primary">
                                             Planifier un atelier Tech
                                             <ArrowRight className="h-4 w-4" />
@@ -162,7 +162,7 @@ export default function TechPage() {
 
                     <ScrollReveal delay={0.4}>
                         <div className="text-center">
-                            <Link href="/corporate/contact">
+                            <Link href="/contact">
                                 <button className="ek-btn-pill-secondary border-slate-600 text-slate-300 hover:bg-slate-800 hover:text-white hover:border-white transition-colors">
                                     Explorer nos technologies
                                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -208,7 +208,7 @@ export default function TechPage() {
                             <p className="text-white/90 mb-8 max-w-2xl mx-auto">
                                 Nos équipes sont prêtes à s&apos;intégrer à votre stack et à vos process dès maintenant.
                             </p>
-                            <Link href="/corporate/contact">
+                            <Link href="/contact">
                                 <button className="bg-white text-orange-600 hover:bg-orange-50 px-8 py-3 rounded-full font-semibold transition-colors flex items-center mx-auto shadow-lg">
                                     Réserver un créneau
                                     <ArrowRight className="ml-2 h-5 w-5" />

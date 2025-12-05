@@ -30,6 +30,15 @@ export function middleware(request: NextRequest) {
     }
 
     // Default: Corporate domain (ekwip.ma, www.ekwip.ma, localhost)
+    // For root path, show corporate homepage directly (no /corporate prefix)
+    if (url.pathname === "/" || url.pathname === "") {
+        return NextResponse.rewrite(new URL("/corporate", request.url));
+    }
+    // For other paths, check if they're corporate routes
+    if (url.pathname.startsWith("/connect") || url.pathname.startsWith("/tech") || url.pathname.startsWith("/contact")) {
+        return NextResponse.rewrite(new URL(`/corporate${url.pathname}`, request.url));
+    }
+    // Default: rewrite to corporate path
     const path = url.pathname === "/" ? "" : url.pathname;
     return NextResponse.rewrite(new URL(`/corporate${path}`, request.url));
 }

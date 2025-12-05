@@ -34,7 +34,7 @@ export default function ConnectPage() {
                                 </p>
 
                                 <div className="flex flex-col sm:flex-row gap-3">
-                                    <Link href="/corporate/contact">
+                                    <Link href="/contact">
                                         <button className="ek-btn-pill-primary bg-emerald-500 hover:bg-emerald-600 border-emerald-400 text-white shadow-lg shadow-emerald-900/20">
                                             Parler d&apos;un projet
                                             <ArrowRight className="h-4 w-4" />
@@ -99,7 +99,7 @@ export default function ConnectPage() {
 
                     <ScrollReveal delay={0.4}>
                         <div className="text-center">
-                            <Link href="/corporate/contact">
+                            <Link href="/contact">
                                 <button className="ek-btn-pill-secondary hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-colors">
                                     Voir toutes nos solutions
                                     <ArrowRight className="ml-2 h-4 w-4" />
@@ -152,7 +152,7 @@ export default function ConnectPage() {
                                 <p className="text-emerald-50 mb-8 max-w-2xl mx-auto">
                                     Nos experts sont là pour vous conseiller sur la meilleure configuration pour vos espaces.
                                 </p>
-                                <Link href="/corporate/contact">
+                                <Link href="/contact">
                                     <button className="bg-white text-emerald-700 hover:bg-emerald-50 px-8 py-3 rounded-full font-semibold transition-colors flex items-center mx-auto shadow-lg">
                                         Démarrer votre projet
                                         <ArrowRight className="ml-2 h-5 w-5" />
