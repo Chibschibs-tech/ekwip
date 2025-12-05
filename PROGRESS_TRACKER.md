@@ -8,6 +8,37 @@
 
 ## 📋 Change Log (Timed Entries)
 
+### 2024-12-20 00:10 UTC - Category Page 404 UI Implementation
+
+**Issue**: Category page still showing 404 for `/catalogue/ordinateurs-portables`
+
+**Root Cause**: 
+- `notFound()` cannot be called in `useEffect` in client components
+- Category might not exist in database with that exact slug
+- Need better debugging to see what categories are available
+
+**Fix Applied**:
+- ✅ Replaced `notFound()` call with custom 404 UI component
+- ✅ Added debug info showing:
+  - Requested slug
+  - Number of available categories
+  - List of available category slugs (expandable)
+- ✅ Added navigation links back to catalog and home
+- ✅ Fixed TypeScript errors (category possibly undefined)
+- ✅ Fixed price slider to only show when products exist
+- ✅ Fixed attributes filtering to use `Product.attributes` field
+
+**Files Modified**:
+- `app/(daas)/daas/catalogue/[slug]/page.tsx`
+
+**Next Steps**:
+- [ ] Check database to verify category with slug "ordinateurs-portables" exists
+- [ ] Verify category is marked as `isActive: true`
+- [ ] Check if slug matches exactly (case-sensitive, no extra spaces)
+- [ ] If category doesn't exist, create it in admin panel
+
+---
+
 ### 2024-12-19 23:55 UTC - FeatureCard Image Empty String Fix
 
 **Issue**: Next.js console error - "An empty string ("") was passed to the src attribute"
