@@ -42,7 +42,7 @@ export default function CorporateNavbar() {
                         <Link href="/" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Accueil
                         </Link>
-                        <Link href="https://daas.ekwip.ma" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                        <Link href={daasUrl} className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Ekwip DaaS
                         </Link>
                         <Link href="/connect" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
@@ -70,7 +70,7 @@ export default function CorporateNavbar() {
                         </div>
 
                         {/* Catalog CTA */}
-                        <Link href="https://daas.ekwip.ma/catalogue" className="ek-btn-pill-primary">
+                        <Link href={catalogUrl} className="ek-btn-pill-primary">
                             Accéder au Catalogue
                         </Link>
                     </div>
