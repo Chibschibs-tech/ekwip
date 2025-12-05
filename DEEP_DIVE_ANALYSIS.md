@@ -714,3 +714,4 @@ The Ekwip web application has a solid foundation with Next.js 15, TypeScript, an
 
 The application is functional but needs significant improvements before production deployment.
 
+

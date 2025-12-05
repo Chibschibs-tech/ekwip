@@ -229,3 +229,4 @@ CONTACT_EMAIL=contact@ekwip.ma
 **Last Updated**: 2024-12-19
 **Status**: Configuration review in progress
 
+
