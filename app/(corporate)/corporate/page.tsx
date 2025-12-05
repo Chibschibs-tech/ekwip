@@ -172,7 +172,7 @@ export default function CorporateHome() {
                                         </div>
                                     </div>
                                 </div>
-                            </Link>
+                            </DaasLink>
                         </ScrollReveal>
 
                         {/* Connect Card */}
