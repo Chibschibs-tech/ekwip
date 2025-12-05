@@ -31,19 +31,31 @@ if (isLocal) {
 }
 
 // Unified SQL function that works with both clients
-// IMPORTANT: Only accepts template strings to prevent SQL injection
+// Supports both template strings (preferred) and parameterized string queries
 export const sql = async (
-  query: TemplateStringsArray,
+  query: TemplateStringsArray | string,
   ...params: any[]
 ): Promise<any[]> => {
   if (isLocal && postgresClient) {
     // Local PostgreSQL (Docker)
-    // Template strings are automatically parameterized (safe)
-    return await postgresClient(query as any, ...params)
+    if (typeof query === "string") {
+      // String query with parameters - convert to parameterized query
+      // This is safe as long as params are provided and query uses $1, $2, etc.
+      return await postgresClient.unsafe(query, params)
+    } else {
+      // Template string query (preferred, automatically parameterized)
+      return await postgresClient(query as any, ...params)
+    }
   } else if (neonClient) {
     // Production Neon database
-    // Template strings are automatically parameterized (safe)
-    return await neonClient(query as any, ...params)
+    if (typeof query === "string") {
+      // For Neon, string queries need to be executed directly
+      // Note: Neon's serverless driver handles parameterization differently
+      return await neonClient(query, params)
+    } else {
+      // Template string query
+      return await neonClient(query as any, ...params)
+    }
   }
 
   throw new Error("No database client available. Check DATABASE_URL configuration.")
