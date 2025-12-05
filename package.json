@@ -6,7 +6,11 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "db:sync": "tsx scripts/sync-local-to-prod.ts",
+    "db:start": "docker-compose up -d",
+    "db:stop": "docker-compose down",
+    "db:logs": "docker-compose logs -f postgres"
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
@@ -71,6 +75,7 @@
     "@types/react-dom": "^19",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
+    "tsx": "^4.7.0",
     "typescript": "^5"
   }
 }
