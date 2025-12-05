@@ -89,12 +89,14 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       filtered = filtered.filter((p) => (p.stockQuantity || 0) > 0)
     }
 
-    // Filtre par attributs
+    // Filtre par attributs (using attributes field from API)
     Object.entries(filters.attributes).forEach(([attrId, values]) => {
       if (values.length > 0) {
         filtered = filtered.filter((p) => {
-          const productAttrValue = p.attributes?.[attrId]
-          return productAttrValue && values.includes(productAttrValue)
+          // Check if product has this attribute value
+          const productAttrs = p.attributes || {}
+          const productAttrValue = productAttrs[attrId]
+          return productAttrValue && values.includes(String(productAttrValue))
         })
       }
     })
@@ -384,8 +386,9 @@ export default function CategoryPage({ params }: CategoryPageProps) {
                         fill
                         className="object-contain p-4 group-hover:scale-105 transition-transform"
                       />
-                      {product.isNew && <Badge className="absolute top-2 left-2 bg-green-500">Nouveau</Badge>}
-                      {product.isPopular && <Badge className="absolute top-2 right-2 bg-blue-500">Populaire</Badge>}
+                      {/* Badges can be added based on product flags if needed */}
+                      {/* {product.isNew && <Badge className="absolute top-2 left-2 bg-green-500">Nouveau</Badge>} */}
+                      {/* {product.isPopular && <Badge className="absolute top-2 right-2 bg-blue-500">Populaire</Badge>} */}
                       </div>
                       <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
                       <p className="text-sm text-gray-600 mb-3 line-clamp-2">{product.shortDescription || product.description}</p>
