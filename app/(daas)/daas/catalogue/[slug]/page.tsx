@@ -14,7 +14,6 @@ import { formatPrice } from "@/lib/products"
 import { useCategories } from "@/contexts/categories-context"
 import { useProducts } from "@/contexts/products-context"
 import { useBrands } from "@/contexts/brands-context"
-import { notFound } from "next/navigation"
 
 interface CategoryPageProps {
   params: {
@@ -131,12 +130,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     }
   }, [])
 
-  // Show 404 if category not found
-  useEffect(() => {
-    if (!categoriesLoading && !category) {
-      notFound()
-    }
-  }, [categoriesLoading, category])
+  // Note: notFound() can't be called in useEffect in client components
+  // We'll show a 404 UI instead
 
   const handleBrandChange = (brandId: string, checked: boolean) => {
     if (checked) {
@@ -212,8 +207,50 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     )
   }
 
-  if (!category) {
-    return null // notFound() will be called by useEffect
+  // Show 404 UI if category not found after loading
+  if (!categoriesLoading && !category) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md px-4">
+          <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
+          <h2 className="text-2xl font-semibold text-gray-700 mb-2">Catégorie non trouvée</h2>
+          <p className="text-gray-600 mb-6">
+            La catégorie "{params.slug}" n'existe pas ou n'est plus disponible.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/catalogue">
+              <Button>Retour au catalogue</Button>
+            </Link>
+            <Link href="/">
+              <Button variant="outline">Retour à l'accueil</Button>
+            </Link>
+          </div>
+          <div className="mt-8 p-4 bg-blue-50 rounded-lg text-left">
+            <p className="text-sm text-gray-700 mb-2">
+              <strong>Debug info:</strong>
+            </p>
+            <p className="text-xs text-gray-600">
+              Slug recherché: <code className="bg-white px-2 py-1 rounded">{params.slug}</code>
+            </p>
+            <p className="text-xs text-gray-600 mt-1">
+              Catégories disponibles: {categories.length}
+            </p>
+            {categories.length > 0 && (
+              <details className="mt-2">
+                <summary className="text-xs text-gray-600 cursor-pointer">Voir les slugs disponibles</summary>
+                <ul className="mt-2 text-xs text-gray-600 space-y-1">
+                  {categories.slice(0, 10).map((cat) => (
+                    <li key={cat.id}>
+                      <code className="bg-white px-2 py-1 rounded">{cat.slug}</code> - {cat.name}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -266,33 +303,37 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               )}
 
               {/* Prix */}
-              <div>
-                <h3 className="text-lg font-semibold mb-3">Prix (MAD/mois)</h3>
-                <div className="px-2">
-                  <Slider
-                    value={[filters.priceRange.min, filters.priceRange.max]}
-                    onValueChange={handlePriceRangeChange}
-                    min={Math.floor(Math.min(...products.map((p) => p.price)))}
-                    max={Math.ceil(Math.max(...products.map((p) => p.price)))}
-                    step={10}
-                    className="mb-6"
-                  />
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm">{formatPrice(filters.priceRange.min)}</span>
-                    <span className="text-sm">{formatPrice(filters.priceRange.max)}</span>
+              {products.length > 0 && (
+                <div>
+                  <h3 className="text-lg font-semibold mb-3">Prix (MAD/mois)</h3>
+                  <div className="px-2">
+                    <Slider
+                      value={[filters.priceRange.min, filters.priceRange.max]}
+                      onValueChange={handlePriceRangeChange}
+                      min={Math.floor(Math.min(...products.map((p) => p.price)))}
+                      max={Math.ceil(Math.max(...products.map((p) => p.price)))}
+                      step={10}
+                      className="mb-6"
+                    />
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm">{formatPrice(filters.priceRange.min)}</span>
+                      <span className="text-sm">{formatPrice(filters.priceRange.max)}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Attributs filtrables */}
               {attributes.map((attr) => {
-                // Get unique values for this attribute from products
+                // Get unique values for this attribute from products (using attributes field)
                 const uniqueValues = Array.from(
                   new Set(
                     products
-                      .map((p) => p.specifications?.[attr.id])
-                      .filter(Boolean)
-                      .flat(),
+                      .map((p) => {
+                        const productAttrs = p.attributes || {}
+                        return productAttrs[attr.id]
+                      })
+                      .filter(Boolean),
                   ),
                 ).sort()
 

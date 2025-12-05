@@ -8,6 +8,34 @@
 
 ## 📋 Change Log (Timed Entries)
 
+### 2024-12-19 23:55 UTC - FeatureCard Image Empty String Fix
+
+**Issue**: Next.js console error - "An empty string ("") was passed to the src attribute"
+
+**Root Cause**: 
+- `FeatureCard` component was receiving empty string for `icon` prop
+- `icon || "/placeholder.svg"` doesn't catch empty strings (empty string is truthy)
+- Next.js Image component doesn't accept empty strings
+
+**Fix Applied**:
+- ✅ Updated `components/feature-card.tsx` to validate icon prop
+- ✅ Added check for empty strings explicitly
+- ✅ Made icon prop optional and support both string and ReactNode
+- ✅ Added proper fallback logic for invalid icons
+- ✅ Component now handles:
+  - Valid string icons (non-empty)
+  - React components (from daas/page.tsx)
+  - Invalid/empty icons (fallback to placeholder)
+
+**Files Modified**:
+- `components/feature-card.tsx`
+
+**Next Steps**:
+- [ ] Verify all FeatureCard usages pass valid icons
+- [ ] Check if any other Image components have similar issues
+
+---
+
 ### 2024-12-19 23:45 UTC - Category Page 404 Fix & Rental vs Sale Documentation
 
 **Issue**: Category pages (e.g., `/catalogue/ordinateurs-portables`) showing 404 errors
