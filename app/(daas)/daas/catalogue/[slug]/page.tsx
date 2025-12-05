@@ -253,6 +253,11 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     )
   }
 
+  // Type guard: category must exist at this point
+  if (!category) {
+    return null
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -269,7 +274,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">{category.name}</h1>
-          <p className="text-lg text-gray-600">{category.description}</p>
+          <p className="text-lg text-gray-600">{category.description || ""}</p>
         </div>
       </div>
 
