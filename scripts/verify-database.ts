@@ -115,13 +115,17 @@ Or check if it exists:
         SELECT COUNT(*) as count FROM categories
       `
     } else {
-      categories = (await client(`
+      // Neon database - use template string syntax
+      const categoriesResult = await client`
         SELECT id, name, slug, is_active, product_count, sort_order
         FROM categories
         ORDER BY sort_order ASC
         LIMIT 10
-      `)) as any[]
-      categoryCount = (await client(`SELECT COUNT(*) as count FROM categories`)) as any[]
+      `
+      categories = Array.isArray(categoriesResult) ? categoriesResult : [categoriesResult]
+      
+      const countResult = await client`SELECT COUNT(*) as count FROM categories`
+      categoryCount = Array.isArray(countResult) ? countResult : [countResult]
     }
 
     const totalCategories = Number.parseInt(categoryCount[0]?.count || "0")
@@ -154,13 +158,17 @@ Or check if it exists:
         SELECT COUNT(*) as count FROM brands
       `
     } else {
-      brands = (await client(`
+      // Neon database - use template string syntax
+      const brandsResult = await client`
         SELECT id, name, slug, is_active, product_count
         FROM brands
         ORDER BY name ASC
         LIMIT 10
-      `)) as any[]
-      brandCount = (await client(`SELECT COUNT(*) as count FROM brands`)) as any[]
+      `
+      brands = Array.isArray(brandsResult) ? brandsResult : [brandsResult]
+      
+      const countResult = await client`SELECT COUNT(*) as count FROM brands`
+      brandCount = Array.isArray(countResult) ? countResult : [countResult]
     }
 
     const totalBrands = Number.parseInt(brandCount[0]?.count || "0")
@@ -193,13 +201,17 @@ Or check if it exists:
         SELECT COUNT(*) as count FROM products
       `
     } else {
-      products = (await client(`
+      // Neon database - use template string syntax
+      const productsResult = await client`
         SELECT id, name, slug, category_id, brand_id, product_type, status, stock_quantity
         FROM products
         ORDER BY created_at DESC
         LIMIT 10
-      `)) as any[]
-      productCount = (await client(`SELECT COUNT(*) as count FROM products`)) as any[]
+      `
+      products = Array.isArray(productsResult) ? productsResult : [productsResult]
+      
+      const countResult = await client`SELECT COUNT(*) as count FROM products`
+      productCount = Array.isArray(countResult) ? countResult : [countResult]
     }
 
     const totalProducts = Number.parseInt(productCount[0]?.count || "0")
@@ -227,11 +239,13 @@ Or check if it exists:
         WHERE slug = 'ordinateurs-portables'
       `
     } else {
-      laptopCategory = (await client(`
+      // Neon database - use template string syntax
+      const result = await client`
         SELECT id, name, slug, is_active, product_count
         FROM categories
         WHERE slug = 'ordinateurs-portables'
-      `)) as any[]
+      `
+      laptopCategory = Array.isArray(result) ? result : [result]
     }
 
     const targetFound = laptopCategory.length > 0
@@ -249,9 +263,11 @@ Or check if it exists:
           SELECT COUNT(*) as count FROM products WHERE category_id = ${cat.id}
         `
       } else {
-        categoryProducts = (await client(`
-          SELECT COUNT(*) as count FROM products WHERE category_id = '${cat.id}'
-        `)) as any[]
+        // Neon database - use template string syntax
+        const result = await client`
+          SELECT COUNT(*) as count FROM products WHERE category_id = ${cat.id}
+        `
+        categoryProducts = Array.isArray(result) ? result : [result]
       }
       const actualProductCount = Number.parseInt(categoryProducts[0]?.count || "0")
       console.log(`      Actual Products: ${actualProductCount}`)
