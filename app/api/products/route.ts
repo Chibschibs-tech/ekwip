@@ -13,88 +13,125 @@ export async function GET(request: Request) {
     const limit = Number.parseInt(searchParams.get("limit") || "100")
     const offset = Number.parseInt(searchParams.get("offset") || "0")
 
-    let query = `
-      SELECT p.*, 
-             c.name as category_name, 
-             c.slug as category_slug,
-             b.name as brand_name,
-             b.logo as brand_logo
-      FROM products p
-      LEFT JOIN categories c ON p.category_id = c.id
-      LEFT JOIN brands b ON p.brand_id = b.id
-      WHERE 1=1
-    `
-    const params: any[] = []
-    let paramIndex = 1
+    // Build query using template strings - use conditional logic for filters
+    let products
 
-    if (categoryId) {
-      query += ` AND p.category_id = $${paramIndex++}`
-      params.push(categoryId)
+    // Simple case: no filters
+    if (!categoryId && !brandId && !productType && !status && !featured && !search) {
+      products = await sql`
+        SELECT p.*, 
+               c.name as category_name, 
+               c.slug as category_slug,
+               b.name as brand_name,
+               b.logo as brand_logo
+        FROM products p
+        LEFT JOIN categories c ON p.category_id = c.id
+        LEFT JOIN brands b ON p.brand_id = b.id
+        ORDER BY p.created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else {
+      // Complex case with filters - build query with conditions
+      // We'll use template strings with conditional SQL fragments
+      let whereConditions: any[] = []
+      let whereValues: any[] = []
+      
+      if (categoryId) {
+        whereConditions.push(`p.category_id = $${whereConditions.length + 1}`)
+        whereValues.push(categoryId)
+      }
+      if (brandId) {
+        whereConditions.push(`p.brand_id = $${whereConditions.length + 1}`)
+        whereValues.push(brandId)
+      }
+      if (productType) {
+        whereConditions.push(`p.product_type = $${whereConditions.length + 1}`)
+        whereValues.push(productType)
+      }
+      if (status) {
+        whereConditions.push(`p.status = $${whereConditions.length + 1}`)
+        whereValues.push(status)
+      }
+      if (featured === "true") {
+        whereConditions.push(`p.is_featured = true`)
+      }
+      if (search) {
+        const searchTerm = `%${search}%`
+        whereConditions.push(`(p.name ILIKE $${whereConditions.length + 1} OR p.description ILIKE $${whereConditions.length + 2} OR p.sku ILIKE $${whereConditions.length + 3})`)
+        whereValues.push(searchTerm, searchTerm, searchTerm)
+      }
+
+      const whereClause = whereConditions.length > 0 ? `WHERE ${whereConditions.join(" AND ")}` : ""
+      
+      // Add LIMIT and OFFSET as parameters
+      whereValues.push(limit, offset)
+      
+      const query = `
+        SELECT p.*, 
+               c.name as category_name, 
+               c.slug as category_slug,
+               b.name as brand_name,
+               b.logo as brand_logo
+        FROM products p
+        LEFT JOIN categories c ON p.category_id = c.id
+        LEFT JOIN brands b ON p.brand_id = b.id
+        ${whereClause}
+        ORDER BY p.created_at DESC
+        LIMIT $${whereConditions.length + (search ? 4 : 1)} OFFSET $${whereConditions.length + (search ? 5 : 2)}
+      `
+      
+      // Use sql with string query and parameters
+      products = await sql(query as any, ...whereValues)
     }
-
-    if (brandId) {
-      query += ` AND p.brand_id = $${paramIndex++}`
-      params.push(brandId)
-    }
-
-    if (productType) {
-      query += ` AND p.product_type = $${paramIndex++}`
-      params.push(productType)
-    }
-
-    if (status) {
-      query += ` AND p.status = $${paramIndex++}`
-      params.push(status)
-    }
-
-    if (featured === "true") {
-      query += ` AND p.is_featured = true`
-    }
-
-    if (search) {
-      query += ` AND (p.name ILIKE $${paramIndex} OR p.description ILIKE $${paramIndex} OR p.sku ILIKE $${paramIndex})`
-      params.push(`%${search}%`)
-      paramIndex++
-    }
-
-    query += ` ORDER BY p.created_at DESC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`
-    params.push(limit, offset)
-
-    const products = await sql(query, params)
 
     // Transform to match frontend types
-    const transformedProducts = products.map((p: any) => ({
-      id: p.id,
-      name: p.name,
-      slug: p.slug,
-      sku: p.sku,
-      description: p.description,
-      shortDescription: p.short_description,
-      categoryId: p.category_id,
-      categoryName: p.category_name,
-      categorySlug: p.category_slug,
-      brandId: p.brand_id,
-      brandName: p.brand_name,
-      brandLogo: p.brand_logo,
-      productType: p.product_type,
-      price: Number.parseFloat(p.price),
-      compareAtPrice: p.compare_at_price ? Number.parseFloat(p.compare_at_price) : undefined,
-      costPrice: p.cost_price ? Number.parseFloat(p.cost_price) : undefined,
-      images: p.images || [],
-      thumbnail: p.thumbnail,
-      status: p.status,
-      stockQuantity: p.stock_quantity,
-      lowStockThreshold: p.low_stock_threshold,
-      weight: p.weight ? Number.parseFloat(p.weight) : undefined,
-      dimensions: p.dimensions,
-      attributes: p.attributes || {},
-      tags: p.tags || [],
-      isFeatured: p.is_featured,
-      rentalDurations: p.rental_durations,
-      variations: p.variations,
-      createdAt: p.created_at,
-      updatedAt: p.updated_at,
-    }))
+    const transformedProducts = products.map((p: any) => {
+      // Handle JSON fields that might be strings
+      const parseJsonField = (field: any) => {
+        if (!field) return field
+        if (typeof field === "string") {
+          try {
+            return JSON.parse(field)
+          } catch {
+            return field
+          }
+        }
+        return field
+      }
+
+      return {
+        id: p.id,
+        name: p.name,
+        slug: p.slug,
+        sku: p.sku,
+        description: p.description,
+        shortDescription: p.short_description,
+        categoryId: p.category_id,
+        categoryName: p.category_name,
+        categorySlug: p.category_slug,
+        brandId: p.brand_id,
+        brandName: p.brand_name,
+        brandLogo: p.brand_logo,
+        productType: p.product_type,
+        price: Number.parseFloat(p.price || 0),
+        compareAtPrice: p.compare_at_price ? Number.parseFloat(p.compare_at_price) : undefined,
+        costPrice: p.cost_price ? Number.parseFloat(p.cost_price) : undefined,
+        images: parseJsonField(p.images) || [],
+        thumbnail: p.thumbnail,
+        status: p.status,
+        stockQuantity: p.stock_quantity || 0,
+        lowStockThreshold: p.low_stock_threshold || 5,
+        weight: p.weight ? Number.parseFloat(p.weight) : undefined,
+        dimensions: parseJsonField(p.dimensions),
+        attributes: parseJsonField(p.attributes) || {},
+        tags: parseJsonField(p.tags) || [],
+        isFeatured: p.is_featured || false,
+        rentalDurations: parseJsonField(p.rental_durations),
+        variations: parseJsonField(p.variations),
+        createdAt: p.created_at,
+        updatedAt: p.updated_at,
+      }
+    })
 
     return NextResponse.json(transformedProducts)
   } catch (error) {

@@ -6,15 +6,21 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const active = searchParams.get("active")
 
-    let query = `SELECT * FROM brands WHERE 1=1`
-
+    // Use template strings for better compatibility
+    let brands
     if (active === "true") {
-      query += ` AND is_active = true`
+      brands = await sql`
+        SELECT * FROM brands 
+        WHERE is_active = true
+        ORDER BY name ASC
+      `
+    } else {
+      // Get all brands
+      brands = await sql`
+        SELECT * FROM brands 
+        ORDER BY name ASC
+      `
     }
-
-    query += ` ORDER BY name ASC`
-
-    const brands = await sql(query)
 
     const transformedBrands = brands.map((b: any) => ({
       id: b.id,
