@@ -8,6 +8,41 @@
 
 ## 📋 Change Log (Timed Entries)
 
+### 2024-12-20 01:00 UTC - Comprehensive API Routes Fix for Categories, Brands, and Products
+
+**Issue**: Multiple errors across all three entities:
+- "Failed to fetch brands" error
+- "Failed to fetch products" error  
+- Categories showing but brands/products failing
+- `useEffect is not defined` error in categories page
+
+**Root Cause**: 
+- All three API routes (`/api/categories`, `/api/brands`, `/api/products`) were using string queries with parameterization that fails
+- Missing `useEffect` import in categories admin page
+- Inconsistent database query patterns across routes
+
+**Fix Applied**:
+- ✅ Fixed missing `useEffect` import in `app/admin/catalogue/categories/page.tsx`
+- ✅ Converted `/api/brands` route to use template strings (like categories)
+- ✅ Converted `/api/products` route to use template strings with proper JSON field parsing
+- ✅ Created debug endpoints: `/api/debug/brands` and `/api/debug/products`
+- ✅ Added proper error handling for JSON fields in products (images, attributes, tags, etc.)
+- ✅ All routes now use consistent template string query patterns
+
+**Files Modified**:
+- `app/admin/catalogue/categories/page.tsx` - Added useEffect import
+- `app/api/brands/route.ts` - Converted to template strings
+- `app/api/products/route.ts` - Converted to template strings with JSON parsing
+- `app/api/debug/brands/route.ts` - Created debug endpoint
+- `app/api/debug/products/route.ts` - Created debug endpoint
+
+**Next Steps**:
+- [ ] Verify all three APIs return data correctly
+- [ ] Test admin panel for categories, brands, and products
+- [ ] Verify frontend catalog pages display data correctly
+
+---
+
 ### 2024-12-20 00:40 UTC - Fixed Categories API Route & Admin Panel Display
 
 **Issue**: Categories exist in database (visible via `/api/debug/categories`) but don't show in admin panel (showing 0)
