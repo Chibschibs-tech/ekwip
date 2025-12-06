@@ -90,7 +90,23 @@ export async function POST(request: Request) {
       RETURNING *
     `
 
-    return NextResponse.json(result[0], { status: 201 })
+    const c = result[0]
+    const transformedCategory = {
+      id: c.id,
+      name: c.name,
+      slug: c.slug,
+      description: c.description,
+      parentId: c.parent_id,
+      image: c.image,
+      icon: c.icon,
+      order: c.sort_order,
+      isActive: c.is_active,
+      productCount: c.product_count,
+      createdAt: c.created_at,
+      updatedAt: c.updated_at,
+    }
+
+    return NextResponse.json(transformedCategory, { status: 201 })
   } catch (error) {
     console.error("Error creating category:", error)
     return NextResponse.json({ error: "Failed to create category" }, { status: 500 })

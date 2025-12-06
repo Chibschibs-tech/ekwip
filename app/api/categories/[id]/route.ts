@@ -57,7 +57,21 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "Category not found" }, { status: 404 })
     }
 
-    return NextResponse.json(result[0])
+    const c = result[0]
+    return NextResponse.json({
+      id: c.id,
+      name: c.name,
+      slug: c.slug,
+      description: c.description,
+      parentId: c.parent_id,
+      image: c.image,
+      icon: c.icon,
+      order: c.sort_order,
+      isActive: c.is_active,
+      productCount: c.product_count,
+      createdAt: c.created_at,
+      updatedAt: c.updated_at,
+    })
   } catch (error) {
     console.error("Error updating category:", error)
     return NextResponse.json({ error: "Failed to update category" }, { status: 500 })

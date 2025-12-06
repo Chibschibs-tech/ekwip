@@ -10,29 +10,70 @@ export async function GET(request: Request) {
     const limit = Number.parseInt(searchParams.get("limit") || "100")
     const offset = Number.parseInt(searchParams.get("offset") || "0")
 
-    let query = `SELECT * FROM orders WHERE 1=1`
-    const params: any[] = []
-    let paramIndex = 1
-
-    if (status) {
-      query += ` AND status = $${paramIndex++}`
-      params.push(status)
+    // Use template strings with conditional logic for filters
+    let orders
+    if (status && clientId && orderType) {
+      orders = await sql`
+        SELECT * FROM orders
+        WHERE status = ${status}
+          AND client_id = ${clientId}
+          AND order_type = ${orderType}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (status && clientId) {
+      orders = await sql`
+        SELECT * FROM orders
+        WHERE status = ${status}
+          AND client_id = ${clientId}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (status && orderType) {
+      orders = await sql`
+        SELECT * FROM orders
+        WHERE status = ${status}
+          AND order_type = ${orderType}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (clientId && orderType) {
+      orders = await sql`
+        SELECT * FROM orders
+        WHERE client_id = ${clientId}
+          AND order_type = ${orderType}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (status) {
+      orders = await sql`
+        SELECT * FROM orders
+        WHERE status = ${status}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (clientId) {
+      orders = await sql`
+        SELECT * FROM orders
+        WHERE client_id = ${clientId}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (orderType) {
+      orders = await sql`
+        SELECT * FROM orders
+        WHERE order_type = ${orderType}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else {
+      // No filters
+      orders = await sql`
+        SELECT * FROM orders
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
     }
-
-    if (clientId) {
-      query += ` AND client_id = $${paramIndex++}`
-      params.push(clientId)
-    }
-
-    if (orderType) {
-      query += ` AND order_type = $${paramIndex++}`
-      params.push(orderType)
-    }
-
-    query += ` ORDER BY created_at DESC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`
-    params.push(limit, offset)
-
-    const orders = await sql(query, params)
 
     // Get items for all orders
     const orderIds = orders.map((o: any) => o.id)

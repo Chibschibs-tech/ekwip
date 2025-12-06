@@ -29,7 +29,7 @@ interface FilterState {
 }
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const { categories, loading: categoriesLoading } = useCategories()
+  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories()
   const { products: allProducts, loading: productsLoading } = useProducts()
   const { brands: allBrands } = useBrands()
   const [sortBy, setSortBy] = useState("name")
@@ -42,9 +42,24 @@ export default function CategoryPage({ params }: CategoryPageProps) {
     inStock: false,
   })
 
+  // Debug logging
+  useEffect(() => {
+    console.log("[CategoryPage] Slug:", params.slug)
+    console.log("[CategoryPage] Categories:", categories.length)
+    console.log("[CategoryPage] Available slugs:", categories.map((c) => c.slug))
+    console.log("[CategoryPage] Categories loading:", categoriesLoading)
+    console.log("[CategoryPage] Categories error:", categoriesError)
+  }, [params.slug, categories, categoriesLoading, categoriesError])
+
   // Find category by slug
   const category = useMemo(() => {
-    return categories.find((cat) => cat.slug === params.slug && cat.isActive)
+    const found = categories.find((cat) => cat.slug === params.slug && cat.isActive)
+    console.log("[CategoryPage] Category lookup:", {
+      slug: params.slug,
+      found: !!found,
+      category: found ? { id: found.id, name: found.name, slug: found.slug } : null,
+    })
+    return found
   }, [categories, params.slug])
 
   // Filter products for this category (rental only, active status)

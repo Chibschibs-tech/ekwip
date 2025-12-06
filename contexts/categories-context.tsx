@@ -25,12 +25,19 @@ export function CategoriesProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true)
       setError(null)
+      console.log("[CategoriesProvider] Fetching categories from /api/categories...")
       const response = await fetch("/api/categories")
-      if (!response.ok) throw new Error("Failed to fetch categories")
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error("[CategoriesProvider] API error:", response.status, errorText)
+        throw new Error(`Failed to fetch categories: ${response.status} ${errorText}`)
+      }
       const data = await response.json()
+      console.log("[CategoriesProvider] Categories fetched:", data.length, "categories")
+      console.log("[CategoriesProvider] Categories data:", data)
       setCategories(data)
     } catch (err) {
-      console.error("Error fetching categories:", err)
+      console.error("[CategoriesProvider] Error fetching categories:", err)
       setError(err instanceof Error ? err.message : "Unknown error")
     } finally {
       setLoading(false)

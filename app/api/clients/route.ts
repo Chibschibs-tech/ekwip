@@ -9,25 +9,42 @@ export async function GET(request: Request) {
     const limit = Number.parseInt(searchParams.get("limit") || "100")
     const offset = Number.parseInt(searchParams.get("offset") || "0")
 
-    let query = `SELECT * FROM clients WHERE 1=1`
-    const params: any[] = []
-    let paramIndex = 1
-
-    if (status) {
-      query += ` AND status = $${paramIndex++}`
-      params.push(status)
+    // Use template strings with conditional logic for filters
+    let clients
+    if (status && search) {
+      const searchTerm = `%${search}%`
+      clients = await sql`
+        SELECT * FROM clients
+        WHERE status = ${status}
+          AND (company_name ILIKE ${searchTerm} OR contact_name ILIKE ${searchTerm} OR email ILIKE ${searchTerm})
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (status) {
+      clients = await sql`
+        SELECT * FROM clients
+        WHERE status = ${status}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else if (search) {
+      const searchTerm = `%${search}%`
+      clients = await sql`
+        SELECT * FROM clients
+        WHERE company_name ILIKE ${searchTerm} 
+           OR contact_name ILIKE ${searchTerm} 
+           OR email ILIKE ${searchTerm}
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
+    } else {
+      // No filters
+      clients = await sql`
+        SELECT * FROM clients
+        ORDER BY created_at DESC
+        LIMIT ${limit} OFFSET ${offset}
+      `
     }
-
-    if (search) {
-      query += ` AND (company_name ILIKE $${paramIndex} OR contact_name ILIKE $${paramIndex} OR email ILIKE $${paramIndex})`
-      params.push(`%${search}%`)
-      paramIndex++
-    }
-
-    query += ` ORDER BY created_at DESC LIMIT $${paramIndex++} OFFSET $${paramIndex++}`
-    params.push(limit, offset)
-
-    const clients = await sql(query, params)
 
     const transformedClients = clients.map((c: any) => ({
       id: c.id,
@@ -74,7 +91,27 @@ export async function POST(request: Request) {
       RETURNING *
     `
 
-    return NextResponse.json(result[0], { status: 201 })
+    const c = result[0]
+    const transformedClient = {
+      id: c.id,
+      companyName: c.company_name,
+      contactName: c.contact_name,
+      email: c.email,
+      phone: c.phone,
+      address: c.address,
+      city: c.city,
+      postalCode: c.postal_code,
+      country: c.country,
+      taxId: c.tax_id,
+      status: c.status,
+      notes: c.notes,
+      totalOrders: c.total_orders,
+      totalSpent: c.total_spent ? Number.parseFloat(c.total_spent) : 0,
+      createdAt: c.created_at,
+      updatedAt: c.updated_at,
+    }
+
+    return NextResponse.json(transformedClient, { status: 201 })
   } catch (error) {
     console.error("Error creating client:", error)
     return NextResponse.json({ error: "Failed to create client" }, { status: 500 })
