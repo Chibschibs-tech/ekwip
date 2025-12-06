@@ -19,7 +19,7 @@ import { useToast } from "@/hooks/use-toast"
 import type { Category } from "@/types/admin"
 
 export default function CategoriesPage() {
-  const { categories, addCategory, updateCategory, deleteCategory } = useCategories()
+  const { categories, loading, error, addCategory, updateCategory, deleteCategory, refreshCategories } = useCategories()
   const { toast } = useToast()
   const [searchQuery, setSearchQuery] = useState("")
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
@@ -36,6 +36,13 @@ export default function CategoriesPage() {
   })
 
   const filteredCategories = categories.filter((cat) => cat.name.toLowerCase().includes(searchQuery.toLowerCase()))
+
+  // Debug: Log categories when they change
+  useEffect(() => {
+    if (!loading) {
+      console.log("Categories loaded:", categories.length, categories)
+    }
+  }, [categories, loading])
 
   const handleInputChange = (field: string, value: string | number | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -299,26 +306,43 @@ export default function CategoriesPage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="border rounded-lg">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Nom</TableHead>
-                  <TableHead>Slug</TableHead>
-                  <TableHead>Produits</TableHead>
-                  <TableHead>Ordre</TableHead>
-                  <TableHead>Statut</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredCategories.length === 0 ? (
+          {error && (
+            <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-800 font-semibold mb-2">Erreur de chargement</p>
+              <p className="text-red-600 text-sm mb-3">{error}</p>
+              <Button onClick={refreshCategories} variant="outline" size="sm">
+                Réessayer
+              </Button>
+            </div>
+          )}
+          {loading ? (
+            <div className="text-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-gray-600">Chargement des catégories...</p>
+            </div>
+          ) : (
+            <div className="border rounded-lg">
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                      Aucune catégorie trouvée
-                    </TableCell>
+                    <TableHead>Nom</TableHead>
+                    <TableHead>Slug</TableHead>
+                    <TableHead>Produits</TableHead>
+                    <TableHead>Ordre</TableHead>
+                    <TableHead>Statut</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ) : (
+                </TableHeader>
+                <TableBody>
+                  {filteredCategories.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                        {categories.length === 0
+                          ? "Aucune catégorie trouvée. Utilisez le bouton ci-dessus pour en ajouter une."
+                          : "Aucune catégorie ne correspond à votre recherche."}
+                      </TableCell>
+                    </TableRow>
+                  ) : (
                   filteredCategories
                     .sort((a, b) => a.order - b.order)
                     .map((category) => (
@@ -356,10 +380,11 @@ export default function CategoriesPage() {
                         </TableCell>
                       </TableRow>
                     ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+          )}
         </CardContent>
       </Card>
 

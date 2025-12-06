@@ -7,26 +7,49 @@ export async function GET(request: Request) {
     const active = searchParams.get("active")
     const parentId = searchParams.get("parentId")
 
-    let query = `SELECT * FROM categories WHERE 1=1`
-    const params: any[] = []
-    let paramIndex = 1
-
-    if (active === "true") {
-      query += ` AND is_active = true`
-    }
-
-    if (parentId) {
+    // Use template strings for better compatibility
+    let categories
+    if (active === "true" && parentId) {
       if (parentId === "null") {
-        query += ` AND parent_id IS NULL`
+        categories = await sql`
+          SELECT * FROM categories 
+          WHERE is_active = true AND parent_id IS NULL
+          ORDER BY sort_order ASC, name ASC
+        `
       } else {
-        query += ` AND parent_id = $${paramIndex++}`
-        params.push(parentId)
+        categories = await sql`
+          SELECT * FROM categories 
+          WHERE is_active = true AND parent_id = ${parentId}
+          ORDER BY sort_order ASC, name ASC
+        `
       }
+    } else if (active === "true") {
+      categories = await sql`
+        SELECT * FROM categories 
+        WHERE is_active = true
+        ORDER BY sort_order ASC, name ASC
+      `
+    } else if (parentId) {
+      if (parentId === "null") {
+        categories = await sql`
+          SELECT * FROM categories 
+          WHERE parent_id IS NULL
+          ORDER BY sort_order ASC, name ASC
+        `
+      } else {
+        categories = await sql`
+          SELECT * FROM categories 
+          WHERE parent_id = ${parentId}
+          ORDER BY sort_order ASC, name ASC
+        `
+      }
+    } else {
+      // Get all categories
+      categories = await sql`
+        SELECT * FROM categories 
+        ORDER BY sort_order ASC, name ASC
+      `
     }
-
-    query += ` ORDER BY sort_order ASC, name ASC`
-
-    const categories = await sql(query, params)
 
     // Transform to match frontend types
     const transformedCategories = categories.map((c: any) => ({
