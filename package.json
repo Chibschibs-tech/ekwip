@@ -11,6 +11,9 @@
     "db:start": "docker-compose up -d",
     "db:stop": "docker-compose down",
     "db:logs": "docker-compose logs -f postgres",
+    "db:verify": "tsx scripts/verify-database.ts",
+    "db:verify:prod": "tsx scripts/verify-database.ts --prod",
+    "db:verify:both": "tsx scripts/verify-database.ts --both",
     "vercel:monitor": "node scripts/monitor-vercel.js"
   },
   "dependencies": {
@@ -74,6 +77,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv": "^17.2.3",
     "postcss": "^8.5",
     "tailwindcss": "^3.4.17",
     "tsx": "^4.7.0",
