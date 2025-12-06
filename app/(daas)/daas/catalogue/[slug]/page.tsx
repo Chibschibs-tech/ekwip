@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect, useMemo } from "react"
+import { useParams } from "next/navigation"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowLeft } from "lucide-react"
@@ -15,12 +16,6 @@ import { useCategories } from "@/contexts/categories-context"
 import { useProducts } from "@/contexts/products-context"
 import { useBrands } from "@/contexts/brands-context"
 
-interface CategoryPageProps {
-  params: {
-    slug: string
-  }
-}
-
 interface FilterState {
   brands: string[]
   priceRange: { min: number; max: number }
@@ -28,7 +23,9 @@ interface FilterState {
   inStock: boolean
 }
 
-export default function CategoryPage({ params }: CategoryPageProps) {
+export default function CategoryPage() {
+  const params = useParams()
+  const slug = (params?.slug as string) || ""
   const { categories, loading: categoriesLoading, error: categoriesError } = useCategories()
   const { products: allProducts, loading: productsLoading } = useProducts()
   const { brands: allBrands } = useBrands()
@@ -44,23 +41,23 @@ export default function CategoryPage({ params }: CategoryPageProps) {
 
   // Debug logging
   useEffect(() => {
-    console.log("[CategoryPage] Slug:", params.slug)
+    console.log("[CategoryPage] Slug:", slug)
     console.log("[CategoryPage] Categories:", categories.length)
     console.log("[CategoryPage] Available slugs:", categories.map((c) => c.slug))
     console.log("[CategoryPage] Categories loading:", categoriesLoading)
     console.log("[CategoryPage] Categories error:", categoriesError)
-  }, [params.slug, categories, categoriesLoading, categoriesError])
+  }, [slug, categories, categoriesLoading, categoriesError])
 
   // Find category by slug
   const category = useMemo(() => {
-    const found = categories.find((cat) => cat.slug === params.slug && cat.isActive)
+    const found = categories.find((cat) => cat.slug === slug && cat.isActive)
     console.log("[CategoryPage] Category lookup:", {
-      slug: params.slug,
+      slug: slug,
       found: !!found,
       category: found ? { id: found.id, name: found.name, slug: found.slug } : null,
     })
     return found
-  }, [categories, params.slug])
+  }, [categories, slug])
 
   // Filter products for this category (rental only, active status)
   const products = useMemo(() => {
@@ -230,7 +227,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
           <h1 className="text-6xl font-bold text-gray-900 mb-4">404</h1>
           <h2 className="text-2xl font-semibold text-gray-700 mb-2">Catégorie non trouvée</h2>
           <p className="text-gray-600 mb-6">
-            La catégorie "{params.slug}" n'existe pas ou n'est plus disponible.
+            La catégorie "{slug}" n'existe pas ou n'est plus disponible.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/catalogue">
@@ -245,7 +242,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
               <strong>Debug info:</strong>
             </p>
             <p className="text-xs text-gray-600">
-              Slug recherché: <code className="bg-white px-2 py-1 rounded">{params.slug}</code>
+              Slug recherché: <code className="bg-white px-2 py-1 rounded">{slug}</code>
             </p>
             <p className="text-xs text-gray-600 mt-1">
               Catégories disponibles: {categories.length}
