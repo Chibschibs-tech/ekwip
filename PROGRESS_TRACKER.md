@@ -8,6 +8,33 @@
 
 ## 📋 Change Log (Timed Entries)
 
+### 2024-12-20 00:40 UTC - Fixed Categories API Route & Admin Panel Display
+
+**Issue**: Categories exist in database (visible via `/api/debug/categories`) but don't show in admin panel (showing 0)
+
+**Root Cause**: 
+- `/api/categories` route was using string query with parameters that might fail
+- `/api/debug/categories` uses template strings which work correctly
+- Different query construction methods causing inconsistency
+
+**Fix Applied**:
+- ✅ Converted `/api/categories` route to use template string queries (like debug endpoint)
+- ✅ Removed complex string query building with parameter indexing
+- ✅ Now uses simple template string queries with proper parameterization
+- ✅ Added better error handling and loading states in admin categories page
+- ✅ Added debug info showing total vs filtered categories count
+
+**Files Modified**:
+- `app/api/categories/route.ts` - Converted to template strings
+- `app/admin/catalogue/categories/page.tsx` - Added loading/error states
+
+**Next Steps**:
+- [ ] Verify categories now appear in admin panel
+- [ ] Test if `/admin` route works correctly
+- [ ] Verify category page `/catalogue/ordinateurs-portables` works
+
+---
+
 ### 2024-12-20 00:25 UTC - Admin Route Fix & Category Debug Endpoint
 
 **Issue**: `/admin` route not accessible, being rewritten to `/corporate/admin`
