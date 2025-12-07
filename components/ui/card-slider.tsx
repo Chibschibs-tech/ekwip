@@ -66,12 +66,28 @@ export function CardSlider({
     lg: "gap-8",
   }[gap]
 
+  // Extract custom grid classes from className
+  const hasCustomGrid = className.includes("grid-cols")
+  const customGridMatches = className.match(/(grid-cols-\d+|auto-rows-\w+)/g) || []
+  const defaultGridClasses = "hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+  
+  // Build grid classes
+  const gridClasses = hasCustomGrid && customGridMatches.length > 0
+    ? cn("hidden md:grid w-full justify-items-center", ...customGridMatches, gapClass, "auto-rows-fr")
+    : cn(defaultGridClasses, gapClass, "auto-rows-fr w-full justify-items-center")
+  
+  // Remove grid-related classes from container className
+  const containerClasses = className
+    .split(" ")
+    .filter(c => !c.includes("grid-cols") && !c.includes("auto-rows"))
+    .join(" ")
+
   return (
-    <div className={cn("relative", className)}>
+    <div className={cn("relative w-full mx-auto", containerClasses)}>
       {/* Desktop: Grid Layout */}
-      <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 auto-rows-fr">
+      <div className={gridClasses}>
         {children.map((child, index) => (
-          <div key={index} className={cardClassName}>
+          <div key={index} className={cn("w-full", cardClassName)}>
             {child}
           </div>
         ))}
