@@ -151,11 +151,11 @@ export default function CorporateHome() {
                     </ScrollReveal>
 
                     {/* Domain Cards - Horizontal Grid with Enhanced Glassmorphism */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
                         {/* DaaS Card */}
                         <ScrollReveal delay={0.1}>
                             <DaasLink href="/catalogue" className="group block h-full">
-                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
+                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -189,7 +189,7 @@ export default function CorporateHome() {
                         {/* Connect Card */}
                         <ScrollReveal delay={0.2}>
                             <Link href="/connect" className="group block h-full">
-                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
+                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -223,7 +223,7 @@ export default function CorporateHome() {
                         {/* Tech Card */}
                         <ScrollReveal delay={0.3}>
                             <Link href="/tech" className="group block h-full">
-                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
+                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image

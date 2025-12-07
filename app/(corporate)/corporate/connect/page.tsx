@@ -12,11 +12,11 @@ import { ServiceCard } from "@/components/service-card"
 export const metadata = genMetadata({
   title: "Ekwip Connect - Solutions Audiovisuelles Professionnelles au Maroc",
   description:
-    "Installation de salles de rÃ©union, visioconfÃ©rence et solutions de diffusion fixes pour les entreprises. De l'audit Ã  la maintenance, nous gÃ©rons votre projet AV de A Ã  Z.",
+    "Installation de salles de réunion, visioconférence et solutions de diffusion fixes pour les entreprises. De l'audit à la maintenance, nous gérons votre projet AV de A à Z.",
   keywords: [
     "solutions audiovisuelles Maroc",
-    "salles de rÃ©union",
-    "visioconfÃ©rence professionnelle",
+    "salles de réunion",
+    "visioconférence professionnelle",
     "installation AV",
     "Zoom Rooms",
     "Microsoft Teams Rooms",
@@ -65,7 +65,7 @@ export default function ConnectPage() {
                                 </h1>
 
                                 <p className="text-lg text-emerald-50 mb-8 leading-relaxed">
-                                    Installation de salles de rÃ©union, visioconfÃ©rence et solutions de diffusion fixes pour les entreprises. De l&apos;audit Ã  la maintenance, nous gÃ©rons votre projet de A Ã  Z.
+                                    Installation de salles de réunion, visioconférence et solutions de diffusion fixes pour les entreprises. De l&apos;audit à la maintenance, nous gérons votre projet de A à Z.
                                 </p>
 
                                 <div className="flex flex-col sm:flex-row gap-3">
@@ -77,7 +77,7 @@ export default function ConnectPage() {
                                     </Link>
                                     <a href="#solutions">
                                         <button className="ek-btn-pill-secondary border-white/30 text-white hover:bg-white/10 hover:border-white">
-                                            DÃ©couvrir nos solutions
+                                            Découvrir nos solutions
                                         </button>
                                     </a>
                                 </div>
@@ -89,7 +89,7 @@ export default function ConnectPage() {
                             <div className="relative h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <Image
                                     src="/artifacts/connect_hero_visual.png"
-                                    alt="Salle de rÃ©union moderne Ã©quipÃ©e de solutions audiovisuelles professionnelles - Installation AV pour entreprises au Maroc"
+                                    alt="Salle de réunion moderne équipée de solutions audiovisuelles professionnelles - Installation AV pour entreprises au Maroc"
                                     fill
                                     className="object-cover"
                                     priority
@@ -108,17 +108,17 @@ export default function ConnectPage() {
                         <div className="text-center mb-16">
                             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Ce que nous faisons</h2>
                             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Conception et installation de solutions AV fixes pour tous vos espaces. De la salle de rÃ©union Ã  l&apos;auditorium, nous Ã©quipons vos espaces pour la collaboration hybride et la diffusion de contenu.
+                                 Conception et installation de solutions AV fixes pour tous vos espaces. De la salle de réunion à l&apos;auditorium, nous équipons vos espaces pour la collaboration hybride et la diffusion de contenu.
                             </p>
                         </div>
                     </ScrollReveal>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                         {[
-                            { icon: <Users className="w-6 h-6 text-emerald-600" />, title: "Salles de rÃ©union", description: "Ã‰crans interactifs, systÃ¨mes audio, camÃ©ras pour la collaboration hybride." },
-                            { icon: <Video className="w-6 h-6 text-emerald-600" />, title: "VisioconfÃ©rence", description: "Zoom Rooms, Microsoft Teams Rooms certifiÃ©es et optimisÃ©es." },
-                            { icon: <LayoutGrid className="w-6 h-6 text-emerald-600" />, title: "Salles de direction", description: "Boardrooms haut de gamme avec pilotage centralisÃ©." },
-                            { icon: <Mic className="w-6 h-6 text-emerald-600" />, title: "Auditoriums", description: "Sonorisation, captation et diffusion pour vos Ã©vÃ©nements internes." },
+                             { icon: <Users className="w-6 h-6 text-emerald-600" />, title: "Salles de réunion", description: "Écrans interactifs, systèmes audio, caméras pour la collaboration hybride." },
+                             { icon: <Video className="w-6 h-6 text-emerald-600" />, title: "Visioconférence", description: "Zoom Rooms, Microsoft Teams Rooms certifiées et optimisées." },
+                             { icon: <LayoutGrid className="w-6 h-6 text-emerald-600" />, title: "Salles de direction", description: "Boardrooms haut de gamme avec pilotage centralisé." },
+                             { icon: <Mic className="w-6 h-6 text-emerald-600" />, title: "Auditoriums", description: "Sonorisation, captation et diffusion pour vos événements internes." },
                             { icon: <Monitor className="w-6 h-6 text-emerald-600" />, title: "Digital Signage", description: "Affichage dynamique pour la communication interne." },
                             { icon: <Settings className="w-6 h-6 text-emerald-600" />, title: "Maintenance", description: "Support technique et supervision de vos installations." }
                         ].map((item, index) => (
@@ -154,7 +154,7 @@ export default function ConnectPage() {
                         <div className="text-center mb-16">
                             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Notre approche</h2>
                             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Une mÃ©thodologie Ã©prouvÃ©e pour garantir le succÃ¨s de vos projets
+                                 Une méthodologie éprouvée pour garantir le succès de vos projets
                             </p>
                         </div>
                     </ScrollReveal>
@@ -165,8 +165,8 @@ export default function ConnectPage() {
 
                         {[
                             { step: "1", title: "Audit", description: "Analyse de vos besoins et contraintes techniques" },
-                            { step: "2", title: "Design", description: "Conception technique et choix des Ã©quipements" },
-                            { step: "3", title: "Installation", description: "Mise en place, cÃ¢blage et paramÃ©trage" },
+                             { step: "2", title: "Design", description: "Conception technique et choix des équipements" },
+                             { step: "3", title: "Installation", description: "Mise en place, câblage et paramétrage" },
                             { step: "4", title: "Support", description: "Formation, maintenance et supervision" }
                         ].map((item, index) => (
                             <ScrollReveal key={item.step} delay={index * 0.1}>
@@ -185,13 +185,13 @@ export default function ConnectPage() {
                     <ScrollReveal delay={0.5}>
                         <div className="bg-gradient-to-r from-emerald-600 to-teal-600 rounded-3xl p-8 md:p-12 text-center text-white shadow-xl shadow-emerald-900/20 relative overflow-hidden">
                             <div className="relative z-10">
-                                <h3 className="text-2xl md:text-3xl font-bold mb-4">Un projet en tÃªte ?</h3>
-                                <p className="text-emerald-50 mb-8 max-w-2xl mx-auto">
-                                    Nos experts sont lÃ  pour vous conseiller sur la meilleure configuration pour vos espaces.
-                                </p>
-                                <Link href="/contact">
-                                    <button className="bg-white text-emerald-700 hover:bg-emerald-50 px-8 py-3 rounded-full font-semibold transition-colors flex items-center mx-auto shadow-lg">
-                                        DÃ©marrer votre projet
+                                 <h3 className="text-2xl md:text-3xl font-bold mb-4">Un projet en tête ?</h3>
+                                  <p className="text-emerald-50 mb-8 max-w-2xl mx-auto">
+                                     Nos experts sont là pour vous conseiller sur la meilleure configuration pour vos espaces.
+                                  </p>
+                                  <Link href="/contact">
+                                      <button className="bg-white text-emerald-700 hover:bg-emerald-50 px-8 py-3 rounded-full font-semibold transition-colors flex items-center mx-auto shadow-lg">
+                                         Démarrer votre projet
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </button>
                                 </Link>
@@ -211,7 +211,7 @@ export default function ConnectPage() {
                         <div className="text-center mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Technologies & Partenaires</h2>
                             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Nous travaillons avec les meilleures marques et solutions du marchÃ© pour garantir la qualitÃ© de vos installations
+                                 Nous travaillons avec les meilleures marques et solutions du marché pour garantir la qualité de vos installations
                             </p>
                         </div>
                     </ScrollReveal>
@@ -239,9 +239,9 @@ export default function ConnectPage() {
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
                         <div className="text-center mb-12">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">ComplÃ©tez votre infrastructure avec nos autres services</h2>
-                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                                Ekwip propose une gamme complÃ¨te de services pour rÃ©pondre Ã  tous vos besoins d&apos;infrastructure IT
+                             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Complétez votre infrastructure avec nos autres services</h2>
+                              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                 Ekwip propose une gamme complète de services pour répondre à tous vos besoins d&apos;infrastructure IT
                             </p>
                         </div>
                     </ScrollReveal>
@@ -249,7 +249,7 @@ export default function ConnectPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <ScrollReveal delay={0.1}>
                             <ServiceCard
-                                title="Location d'Ã©quipements IT"
+                                title="Location d'équipements IT"
                                 description="Parc informatique, smartphones, tablettes et accessoires en location mensuelle, avec un portail pour suivre votre parc, vos contrats et vos renouvellements."
                                 href="/catalogue"
                                 image="/artifacts/daas_equipment_visual_v2.png"
@@ -262,8 +262,8 @@ export default function ConnectPage() {
 
                         <ScrollReveal delay={0.2}>
                             <ServiceCard
-                                title="Web Apps mÃ©tiers, Agents IA et automatisation"
-                                description="Portails internes, automatisations, connecteurs et agents IA adaptÃ©s Ã  vos outils existants, pour soutenir les Ã©quipes support, ventes ou opÃ©rations."
+                                 title="Web Apps métiers, Agents IA et automatisation"
+                                 description="Portails internes, automatisations, connecteurs et agents IA adaptés à vos outils existants, pour soutenir les équipes support, ventes ou opérations."
                                 href="/tech"
                                 image="/artifacts/tech_ai_visual_v2.png"
                                 imageAlt="Solutions tech et IA"

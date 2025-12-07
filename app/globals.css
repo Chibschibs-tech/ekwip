@@ -141,3 +141,146 @@
     -ms-overflow-style: none;
   }
 }
+
+/* Ekwip Button Styles */
+.ek-btn-pill-primary {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply px-6 py-3 rounded-full;
+  @apply font-semibold text-sm;
+  @apply bg-[#1f3b57] text-white;
+  @apply border border-transparent;
+  @apply shadow-lg hover:shadow-xl;
+  @apply transition-all duration-300;
+  @apply hover:-translate-y-0.5;
+  @apply active:scale-[0.98];
+}
+
+.ek-btn-pill-secondary {
+  @apply inline-flex items-center justify-center gap-2;
+  @apply px-6 py-3 rounded-full;
+  @apply font-semibold text-sm;
+  @apply bg-transparent;
+  @apply border-2;
+  @apply transition-all duration-300;
+  @apply hover:-translate-y-0.5;
+  @apply active:scale-[0.98];
+}
+
+/* Ekwip Chip Styles */
+.ek-chip {
+  @apply inline-flex items-center gap-2;
+  @apply px-3 py-1.5 rounded-full;
+  @apply text-xs font-semibold;
+  @apply border;
+}
+
+.ek-chip-dot {
+  @apply w-2 h-2 rounded-full;
+}
+
+.ek-chip-daas {
+  @apply bg-[#38BDF8]/10 text-[#0ea5e9] border-[#38BDF8]/20;
+}
+
+.ek-chip-daas .ek-chip-dot {
+  @apply bg-[#38BDF8];
+}
+
+.ek-chip-connect {
+  @apply bg-[#10B981]/10 text-[#059669] border-[#10B981]/20;
+}
+
+.ek-chip-connect .ek-chip-dot {
+  @apply bg-[#10B981];
+}
+
+.ek-chip-tech {
+  @apply bg-[#F97316]/10 text-[#ea580c] border-[#F97316]/20;
+}
+
+.ek-chip-tech .ek-chip-dot {
+  @apply bg-[#F97316];
+}
+
+.ek-chip-neutral {
+  @apply bg-slate-100 text-slate-700 border-slate-200;
+}
+
+.ek-chip-neutral .ek-chip-dot {
+  @apply bg-slate-400;
+}
+
+/* Tech Console Styles */
+.ek-tech-console-wrapper {
+  @apply relative;
+}
+
+.ek-tech-console {
+  @apply bg-[#0F172A] border border-slate-700 rounded-2xl;
+  @apply p-6 shadow-2xl;
+  @apply min-h-[400px];
+}
+
+.ek-tech-console-header {
+  @apply flex items-center justify-between mb-6;
+  @apply pb-4 border-b border-slate-700;
+}
+
+.ek-tech-console-pill {
+  @apply px-3 py-1 rounded-full;
+  @apply bg-emerald-500/20 text-emerald-400;
+  @apply text-xs font-medium;
+  @apply border border-emerald-500/30;
+}
+
+.ek-tech-console-stats {
+  @apply grid grid-cols-3 gap-4 mb-6;
+}
+
+.ek-stat-dark {
+  @apply bg-slate-800/50 rounded-lg p-4;
+  @apply border border-slate-700;
+}
+
+.ek-stat-dark-label {
+  @apply text-xs text-slate-400 mb-2;
+}
+
+.ek-stat-dark-value {
+  @apply text-2xl font-bold text-white mb-2;
+}
+
+.ek-stat-dark-badge {
+  @apply inline-flex items-center gap-1;
+  @apply px-2 py-1 rounded text-xs font-medium;
+}
+
+.ek-stat-dark-badge-emerald {
+  @apply bg-emerald-500/20 text-emerald-400;
+}
+
+.ek-stat-dark-badge-blue {
+  @apply bg-blue-500/20 text-blue-400;
+}
+
+.ek-stat-dark-badge-tech {
+  @apply bg-orange-500/20 text-orange-400;
+}
+
+.ek-tech-console-graph {
+  @apply relative h-32 bg-slate-900/50 rounded-lg;
+  @apply border border-slate-700;
+  @apply mb-6;
+}
+
+.ek-tech-console-bar {
+  @apply bg-gradient-to-t from-orange-500 to-orange-400;
+  @apply w-6 rounded-t;
+  @apply transition-all duration-300;
+}
+
+.ek-tech-console-footer {
+  @apply flex items-center justify-between;
+  @apply pt-4 border-t border-slate-700;
+  @apply text-xs text-slate-400;
+}
