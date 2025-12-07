@@ -77,7 +77,7 @@ export default function TechPage() {
                                         </button>
                                     </Link>
                                     <a href="#expertises">
-                                        <button className="ek-btn-pill-secondary border-[#1f3b57] text-[#1f3b57] hover:bg-[#1f3b57]/10 hover:border-[#1f3b57] bg-white">
+                                        <button className="ek-btn-pill-secondary bg-white border-ekwip-primary text-ekwip-primary hover:bg-ekwip-primary/10 hover:border-ekwip-primary">
                                             Découvrir nos expertises
                                         </button>
                                     </a>

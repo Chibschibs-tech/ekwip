@@ -3,10 +3,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { Menu, X } from "lucide-react"
 
 export default function CorporateNavbar() {
     const [daasUrl, setDaasUrl] = useState("https://daas.ekwip.ma")
     const [catalogUrl, setCatalogUrl] = useState("https://daas.ekwip.ma/catalogue")
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     useEffect(() => {
         // Detect if we're in local development
@@ -37,7 +39,7 @@ export default function CorporateNavbar() {
                         />
                     </Link>
 
-                    {/* Navigation Links */}
+                    {/* Navigation Links - Desktop */}
                     <div className="hidden md:flex items-center gap-1">
                         <Link href="/" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Accueil
@@ -56,7 +58,7 @@ export default function CorporateNavbar() {
                         </Link>
                     </div>
 
-                    {/* Right Section: Language & CTA */}
+                    {/* Right Section: Language & CTA - Desktop */}
                     <div className="hidden md:flex items-center gap-3">
                         {/* Language Switcher */}
                         <div className="flex items-center gap-1 text-sm">
@@ -74,6 +76,68 @@ export default function CorporateNavbar() {
                             Accéder au catalogue DaaS
                         </Link>
                     </div>
+
+                    {/* Mobile Menu Button */}
+                    <button
+                        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        className="md:hidden p-2 text-slate-600 hover:text-slate-900 transition-colors"
+                        aria-label="Toggle menu"
+                    >
+                        {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                    </button>
+                </div>
+
+                {/* Mobile Menu */}
+                {mobileMenuOpen && (
+                    <div className="md:hidden border-t border-slate-200 bg-white">
+                        <div className="px-4 py-4 space-y-2">
+                            <Link
+                                href="/"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
+                            >
+                                Accueil
+                            </Link>
+                            <Link
+                                href={daasUrl}
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
+                            >
+                                Ekwip DaaS
+                            </Link>
+                            <Link
+                                href="/connect"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
+                            >
+                                Ekwip Connect
+                            </Link>
+                            <Link
+                                href="/tech"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
+                            >
+                                Ekwip Tech
+                            </Link>
+                            <Link
+                                href="/contact"
+                                onClick={() => setMobileMenuOpen(false)}
+                                className="block px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
+                            >
+                                Contact
+                            </Link>
+                            <div className="pt-4 border-t border-slate-200">
+                                <Link
+                                    href={catalogUrl}
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    className="block w-full text-center ek-btn-pill-primary"
+                                >
+                                    Accéder au catalogue DaaS
+                                </Link>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 </div>
             </div>
         </nav>

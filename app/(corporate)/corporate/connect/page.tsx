@@ -77,7 +77,7 @@ export default function ConnectPage() {
                                         </button>
                                     </Link>
                                     <a href="#solutions">
-                                        <button className="ek-btn-pill-secondary border-white text-white hover:bg-white/20 hover:border-white bg-white/10 backdrop-blur-sm">
+                                        <button className="ek-btn-pill-secondary bg-white border-white text-ekwip-primary hover:bg-slate-50 hover:border-white">
                                             Découvrir nos solutions
                                         </button>
                                     </a>

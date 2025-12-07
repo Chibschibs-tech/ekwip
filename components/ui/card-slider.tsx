@@ -78,44 +78,18 @@ export function CardSlider({
       </div>
 
       {/* Mobile: Horizontal Slider */}
-      <div className="md:hidden relative">
-        {showControls && (
-          <>
-            {canScrollLeft && (
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-full h-10 w-10"
-                onClick={() => scroll("left")}
-                aria-label="Scroll left"
-              >
-                <ChevronLeft className="h-5 w-5" />
-              </Button>
-            )}
-            {canScrollRight && (
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 backdrop-blur-sm shadow-lg rounded-full h-10 w-10"
-                onClick={() => scroll("right")}
-                aria-label="Scroll right"
-              >
-                <ChevronRight className="h-5 w-5" />
-              </Button>
-            )}
-          </>
-        )}
-
+      <div className="md:hidden relative -mx-4 px-4">
         <div
           ref={scrollContainerRef}
-          className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth -mx-4 px-4"
+          className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pb-4"
           style={{
             scrollbarWidth: "none",
             msOverflowStyle: "none",
+            WebkitOverflowScrolling: "touch",
           }}
         >
-          <style jsx>{`
-            div::-webkit-scrollbar {
+          <style jsx global>{`
+            .scrollbar-hide::-webkit-scrollbar {
               display: none;
             }
           `}</style>
@@ -123,15 +97,46 @@ export function CardSlider({
             <div
               key={index}
               className={cn(
-                "flex-shrink-0 w-[85vw] max-w-sm snap-start",
-                cardClassName,
-                gapClass
+                "flex-shrink-0 w-[calc(90vw-2rem)] max-w-[320px] snap-start mr-4 last:mr-0",
+                cardClassName
               )}
             >
               {child}
             </div>
           ))}
         </div>
+        
+        {/* Navigation Dots */}
+        {showControls && children.length > 1 && (
+          <div className="flex justify-center gap-2 mt-4">
+            {children.map((_, index) => {
+              const isActive = Math.round((scrollContainerRef.current?.scrollLeft || 0) / (scrollContainerRef.current?.clientWidth || 1)) === index
+              return (
+                <button
+                  key={index}
+                  onClick={() => {
+                    if (scrollContainerRef.current) {
+                      const cardWidth = scrollContainerRef.current.clientWidth * 0.9
+                      scrollContainerRef.current.scrollTo({
+                        left: cardWidth * index,
+                        behavior: "smooth",
+                      })
+                    }
+                  }}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all duration-300",
+                    isActive ? "w-6 bg-ekwip-primary" : "w-1.5 bg-slate-300"
+                  )}
+                  aria-label={`Go to card ${index + 1}`}
+                />
+              )
+            })}
+          </div>
+        )}
+        
+        {/* Subtle Gradient Fades */}
+        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
       </div>
     </div>
   )
