@@ -198,7 +198,7 @@ export default function BoutiqueCategoryPage() {
           {/* Filters Sidebar */}
           <div
             className={`lg:w-64 space-y-6 ${showFilters ? "block" : "hidden lg:block"} ${
-              showFilters ? "fixed lg:relative inset-0 lg:inset-auto z-50 lg:z-auto bg-white dark:bg-gray-800 lg:bg-transparent p-4 lg:p-0 overflow-y-auto"
+              showFilters ? "fixed lg:relative inset-0 lg:inset-auto z-50 lg:z-auto bg-white dark:bg-gray-800 lg:bg-transparent p-4 lg:p-0 overflow-y-auto" : ""
             }`}
           >
             {showFilters && (

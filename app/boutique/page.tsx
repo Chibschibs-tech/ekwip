@@ -212,6 +212,7 @@ export default function BoutiquePage() {
           </Card>
         </div>
       </section>
+      )}
 
       {/* Products Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8">
@@ -338,7 +339,6 @@ export default function BoutiquePage() {
           )}
         </div>
       </section>
-      )}
 
       {/* Actualités (Blog) Section */}
       <BoutiqueActualites />
