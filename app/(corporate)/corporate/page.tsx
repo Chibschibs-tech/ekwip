@@ -22,7 +22,7 @@ export default function CorporateHome() {
             <StructuredData data={websiteSchema} />
             <main className="min-h-screen">
             {/* Hero Section with Glassmorphism */}
-            <section className="relative bg-gradient-to-br from-[#1F3B57] via-[#2a4a66] to-[#1F3B57] py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
+            <section className="relative bg-gradient-to-br from-[#1F3B57] via-[#2a4a66] to-[#1F3B57] py-20 md:py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
                 {/* Animated Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
@@ -60,13 +60,14 @@ export default function CorporateHome() {
 
                         {/* Right: Team in Server Room Visual */}
                         <ScrollReveal delay={0.2}>
-                            <div className="relative h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                            <div className="relative h-[300px] md:h-[400px] lg:h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <Image
                                     src="/artifacts/corporate_hero_team.png"
                                     alt="Équipe Ekwip dans un datacenter"
                                     fill
                                     className="object-cover"
                                     priority
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#1F3B57]/50 to-transparent"></div>
                             </div>

@@ -44,7 +44,7 @@ export default function ConnectPage() {
             <StructuredData data={serviceSchema} />
             <main className="min-h-screen">
             {/* Hero Section with Glassmorphism */}
-            <section className="relative bg-gradient-to-br from-[#064E3B] via-[#059669] to-[#064E3B] py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
+            <section className="relative bg-gradient-to-br from-[#064E3B] via-[#059669] to-[#064E3B] py-20 md:py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
                 {/* Animated Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-20 left-10 w-72 h-72 bg-emerald-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
@@ -87,7 +87,7 @@ export default function ConnectPage() {
 
                         {/* Right: Visual */}
                         <ScrollReveal delay={0.2}>
-                            <div className="relative h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                            <div className="relative h-[300px] md:h-[400px] lg:h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <Image
                                     src="/artifacts/connect_hero_visual.png"
                                     alt="Salle de réunion moderne équipée de solutions audiovisuelles professionnelles - Installation AV pour entreprises au Maroc"

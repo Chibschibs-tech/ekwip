@@ -138,7 +138,6 @@ export default function CorporateNavbar() {
                         </div>
                     </div>
                 )}
-                </div>
             </div>
         </nav>
     )
