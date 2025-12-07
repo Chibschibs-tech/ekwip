@@ -45,13 +45,13 @@ export default function CorporateHome() {
                                 <div className="flex flex-col sm:flex-row gap-3">
                                     <Link href="/contact">
                                         <button className="ek-btn-pill-primary">
-                                            Parler à un expert Ekwip
+                                            Parler à un expert
                                             <ArrowRight className="h-4 w-4" />
                                         </button>
                                     </Link>
                                     <a href="#domains">
-                                        <button className="ek-btn-pill-secondary bg-white border-ekwip-primary text-ekwip-primary hover:bg-ekwip-primary/10 hover:border-ekwip-primary">
-                                            Découvrir nos domaines d&apos;intervention
+                                        <button className="ek-btn-pill-secondary bg-white border-white/20 text-ekwip-primary hover:backdrop-blur-md hover:bg-white/80 hover:border-white/30 hover:text-[#1a3047] transition-all duration-300 shadow-lg hover:shadow-xl">
+                                            Nos domaines d&apos;intervention
                                         </button>
                                     </a>
                                 </div>
@@ -87,43 +87,45 @@ export default function CorporateHome() {
                         </div>
                     </ScrollReveal>
 
-                    <CardSlider gap="lg" className="mb-12">
-                        {[
-                            {
-                                icon: <Laptop className="h-7 w-7 text-[#38BDF8]" />,
-                                bgColor: "bg-[#38BDF8]/10",
-                                title: "Équiper vos équipes",
-                                description: "Ordinateurs, smartphones, accessoires et mobilier IT fournis en location, suivis dans un portail unique pour garder la maîtrise de votre parc.",
-                                hoverColor: "text-[#38BDF8]",
-                            },
-                            {
-                                icon: <Cast className="h-7 w-7 text-[#10B981]" />,
-                                bgColor: "bg-[#10B981]/10",
-                                title: "Connecter vos espaces",
-                                description: "Salles de réunion, espaces de formation, visio et diffusion, pensés pour que vos équipes se concentrent sur le contenu plutôt que sur la technique.",
-                                hoverColor: "text-[#10B981]",
-                            },
-                            {
-                                icon: <Cpu className="h-7 w-7 text-[#F97316]" />,
-                                bgColor: "bg-[#F97316]/10",
-                                title: "Digitaliser vos opérations",
-                                description: "Outils internes, automatisations, connecteurs et agents IA adaptés à votre stack, pour fluidifier les process et réduire les tâches répétitives.",
-                                hoverColor: "text-[#F97316]",
-                            },
-                        ].map((item, index) => (
-                            <ScrollReveal key={index} delay={index * 0.1}>
-                                <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group h-full flex flex-col">
-                                    <div className={`${item.bgColor} rounded-full w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
-                                        {item.icon}
+                    <div className="w-full flex justify-center">
+                        <CardSlider gap="lg" className="mb-12 w-full max-w-7xl">
+                            {[
+                                {
+                                    icon: <Laptop className="h-7 w-7 text-[#38BDF8]" />,
+                                    bgColor: "bg-[#38BDF8]/10",
+                                    title: "Équiper vos équipes",
+                                    description: "Ordinateurs, smartphones, accessoires et mobilier IT fournis en location, suivis dans un portail unique pour garder la maîtrise de votre parc.",
+                                    hoverColor: "text-[#38BDF8]",
+                                },
+                                {
+                                    icon: <Cast className="h-7 w-7 text-[#10B981]" />,
+                                    bgColor: "bg-[#10B981]/10",
+                                    title: "Connecter vos espaces",
+                                    description: "Salles de réunion, espaces de formation, visio et diffusion, pensés pour que vos équipes se concentrent sur le contenu plutôt que sur la technique.",
+                                    hoverColor: "text-[#10B981]",
+                                },
+                                {
+                                    icon: <Cpu className="h-7 w-7 text-[#F97316]" />,
+                                    bgColor: "bg-[#F97316]/10",
+                                    title: "Digitaliser vos opérations",
+                                    description: "Outils internes, automatisations, connecteurs et agents IA adaptés à votre stack, pour fluidifier les process et réduire les tâches répétitives.",
+                                    hoverColor: "text-[#F97316]",
+                                },
+                            ].map((item, index) => (
+                                <ScrollReveal key={index} delay={index * 0.1}>
+                                    <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group h-full flex flex-col">
+                                        <div className={`${item.bgColor} rounded-full w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                                            {item.icon}
+                                        </div>
+                                        <h3 className={`text-xl font-bold text-gray-900 mb-3 transition-colors ${index === 0 ? 'group-hover:text-[#38BDF8]' : index === 1 ? 'group-hover:text-[#10B981]' : 'group-hover:text-[#F97316]'}`}>{item.title}</h3>
+                                        <p className="text-gray-600 leading-relaxed flex-grow">
+                                            {item.description}
+                                        </p>
                                     </div>
-                                    <h3 className={`text-xl font-bold text-gray-900 mb-3 transition-colors ${index === 0 ? 'group-hover:text-[#38BDF8]' : index === 1 ? 'group-hover:text-[#10B981]' : 'group-hover:text-[#F97316]'}`}>{item.title}</h3>
-                                    <p className="text-gray-600 leading-relaxed flex-grow">
-                                        {item.description}
-                                    </p>
-                                </div>
-                            </ScrollReveal>
-                        ))}
-                    </CardSlider>
+                                </ScrollReveal>
+                            ))}
+                        </CardSlider>
+                    </div>
 
                         <ScrollReveal delay={0.4}>
                         <div className="text-center">
@@ -153,11 +155,12 @@ export default function CorporateHome() {
                     </ScrollReveal>
 
                     {/* Domain Cards - Horizontal Grid with Enhanced Glassmorphism */}
-                    <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr">
-                        {/* DaaS Card */}
-                        <ScrollReveal delay={0.1} className="h-full flex">
-                            <DaasLink href="/catalogue" className="group block h-full w-full flex">
-                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
+                    <div className="w-full flex justify-center">
+                        <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr w-full max-w-7xl">
+                            {/* DaaS Card */}
+                            <ScrollReveal delay={0.1} className="h-full flex">
+                                <DaasLink href="/catalogue" className="group block h-full w-full flex">
+                                    <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.3)] hover:shadow-gray-400/50 rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -188,10 +191,10 @@ export default function CorporateHome() {
                             </DaasLink>
                         </ScrollReveal>
 
-                        {/* Connect Card */}
-                        <ScrollReveal delay={0.2} className="h-full flex">
-                            <Link href="/connect" className="group block h-full w-full flex">
-                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
+                            {/* Connect Card */}
+                            <ScrollReveal delay={0.2} className="h-full flex">
+                                <Link href="/connect" className="group block h-full w-full flex">
+                                    <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.3)] hover:shadow-gray-400/50 rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -215,17 +218,17 @@ export default function CorporateHome() {
                                             Conception et intégration de salles de réunion, espaces de formation, visio et diffusion, du choix des équipements jusqu&apos;au paramétrage fin sur site.
                                         </p>
                                         <div className="flex items-center text-[#10B981] font-bold text-sm group-hover:gap-3 transition-all mt-auto">
-                                            Voir les solutions audiovisuelles <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                                            Nos solutions Audiovisuelles <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
                                 </div>
                             </Link>
                         </ScrollReveal>
 
-                        {/* Tech Card */}
-                        <ScrollReveal delay={0.3} className="h-full flex">
-                            <Link href="/tech" className="group block h-full w-full flex">
-                                <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.2)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
+                            {/* Tech Card */}
+                            <ScrollReveal delay={0.3} className="h-full flex">
+                                <Link href="/tech" className="group block h-full w-full flex">
+                                    <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.3)] hover:shadow-gray-400/50 rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -257,6 +260,7 @@ export default function CorporateHome() {
                         </ScrollReveal>
                     </CardSlider>
                 </div>
+            </div>
             </section>
 
             {/* Ils nous font confiance (Copied from DaaS) */}
@@ -275,46 +279,48 @@ export default function CorporateHome() {
             </section>
 
             {/* Pourquoi choisir Ekwip ? */}
-            <section aria-label="Avantages de choisir Ekwip" className="py-24 px-4 md:px-6 lg:px-8 bg-white">
+            <section aria-label="Avantages de choisir Ekwip" className="py-24 px-4 md:px-6 lg:px-8 bg-ekwip-primary">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
                         <div className="text-center mb-12">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                                 Pourquoi choisir Ekwip ?
                             </h2>
-                            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+                            <p className="text-lg text-white/90 max-w-3xl mx-auto">
                                 Le même partenaire pour vos parcs IT, vos espaces et vos outils digitaux, avec une approche pragmatique orientée usage.
                             </p>
                         </div>
                     </ScrollReveal>
 
-                    <CardSlider gap="lg">
-                        {[
-                            {
-                                icon: <Shield className="w-12 h-12 text-[#1f3b57]" />,
-                                title: "Expertise multi-domaines",
-                                description: "Une seule entreprise pour la location IT, l'AV et le développement. Un seul interlocuteur pour tous vos besoins d'infrastructure."
-                            },
-                            {
-                                icon: <TrendingUp className="w-12 h-12 text-[#1f3b57]" />,
-                                title: "Solutions évolutives",
-                                description: "Des services qui grandissent avec votre entreprise. Démarrons par un projet pilote, puis faisons évoluer la collaboration au rythme de vos besoins."
-                            },
-                            {
-                                icon: <Zap className="w-12 h-12 text-[#1f3b57]" />,
-                                title: "Approche pragmatique",
-                                description: "Nous nous concentrons sur l'usage et les résultats concrets. Support réactif et accompagnement personnalisé pour chaque client."
-                            }
-                        ].map((item, index) => (
-                            <ScrollReveal key={index} delay={index * 0.1}>
-                                <div className="bg-white rounded-2xl p-8 border border-slate-200 hover:shadow-lg transition-shadow h-full flex flex-col">
-                                    <div className="text-[#1f3b57] mb-4">{item.icon}</div>
-                                    <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                                    <p className="text-gray-600 flex-grow">{item.description}</p>
-                                </div>
-                            </ScrollReveal>
-                        ))}
-                    </CardSlider>
+                    <div className="w-full flex justify-center">
+                        <CardSlider gap="lg" className="w-full max-w-7xl">
+                            {[
+                                {
+                                    icon: <Shield className="w-12 h-12 text-white" />,
+                                    title: "Expertise multi-domaines",
+                                    description: "Une seule entreprise pour la location IT, l'AV et le développement. Un seul interlocuteur pour tous vos besoins d'infrastructure."
+                                },
+                                {
+                                    icon: <TrendingUp className="w-12 h-12 text-white" />,
+                                    title: "Solutions évolutives",
+                                    description: "Des services qui grandissent avec votre entreprise. Démarrons par un projet pilote, puis faisons évoluer la collaboration au rythme de vos besoins."
+                                },
+                                {
+                                    icon: <Zap className="w-12 h-12 text-white" />,
+                                    title: "Approche pragmatique",
+                                    description: "Nous nous concentrons sur l'usage et les résultats concrets. Support réactif et accompagnement personnalisé pour chaque client."
+                                }
+                            ].map((item, index) => (
+                                <ScrollReveal key={index} delay={index * 0.1}>
+                                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 h-full flex flex-col">
+                                        <div className="text-white mb-4">{item.icon}</div>
+                                        <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
+                                        <p className="text-white/90 flex-grow">{item.description}</p>
+                                    </div>
+                                </ScrollReveal>
+                            ))}
+                        </CardSlider>
+                    </div>
                 </div>
             </section>
 
