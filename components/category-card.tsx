@@ -36,7 +36,7 @@ export default function CategoryCard({ iconName, title, description, slug }: Cat
             <div className="w-full h-full flex items-center justify-center">
               <Image
                 src={categoryImage || "/placeholder.svg"}
-                alt={title}
+                alt={`${title} - Catégorie d'équipements IT`}
                 width={80}
                 height={80}
                 className="object-contain"

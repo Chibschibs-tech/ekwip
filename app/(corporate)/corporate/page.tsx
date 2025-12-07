@@ -5,10 +5,21 @@ import { ArrowRight, CheckCircle, Laptop, Cast, Cpu, Shield, TrendingUp, Zap } f
 import { ScrollReveal } from "@/components/ui/scroll-reveal"
 import { ClientLogoSlider } from "@/components/client-logo-slider"
 import { DaasLink } from "@/components/daas-link"
+import { StructuredData } from "@/components/seo/structured-data"
+import { generateStructuredData } from "@/lib/seo"
+import { metadata } from "./metadata"
+
+export { metadata }
 
 export default function CorporateHome() {
+    const organizationSchema = generateStructuredData("Organization", {})
+    const websiteSchema = generateStructuredData("WebSite", {})
+    
     return (
-        <div className="min-h-screen">
+        <>
+            <StructuredData data={organizationSchema} />
+            <StructuredData data={websiteSchema} />
+            <main className="min-h-screen">
             {/* Hero Section with Glassmorphism */}
             <section className="relative bg-gradient-to-br from-[#1F3B57] via-[#2a4a66] to-[#1F3B57] py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
                 {/* Animated Background Pattern */}
@@ -27,7 +38,7 @@ export default function CorporateHome() {
                                 </h1>
 
                                 <p className="text-lg text-blue-100 mb-8 leading-relaxed">
-                                    Ekwip conçoit et opère l&apos;infrastructure matérielle et digitale de votre entreprise : postes de travail, espaces audiovisuels, outils internes et agents IA qui parlent le langage de vos équipes.
+                                    De l&apos;équipement IT à la location, aux espaces audiovisuels, en passant par les outils digitaux sur-mesure. Ekwip conçoit et opère l&apos;infrastructure matérielle et digitale de votre entreprise : postes de travail, espaces audiovisuels, outils internes et agents IA qui parlent le langage de vos équipes.
                                 </p>
 
                                 <div className="flex flex-col sm:flex-row gap-3">
@@ -126,7 +137,7 @@ export default function CorporateHome() {
             </section>
 
             {/* Nos domaines d'intervention aujourd'hui */}
-            <section id="domains" className="py-24 px-4 md:px-6 lg:px-8 bg-white">
+            <section id="domains" aria-label="Nos trois services: DaaS, Connect et Tech" className="py-24 px-4 md:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
                         <div className="text-center mb-12">
@@ -149,7 +160,7 @@ export default function CorporateHome() {
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
                                             src="/artifacts/daas_equipment_visual_v2.png"
-                                            alt="IT Equipment"
+                                            alt="Location d'équipements IT - Ordinateurs portables, smartphones et accessoires pour entreprises"
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
@@ -183,7 +194,7 @@ export default function CorporateHome() {
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
                                             src="/artifacts/av_solutions_visual.png"
-                                            alt="AV Solutions"
+                                            alt="Solutions audiovisuelles professionnelles - Salles de réunion, visioconférence et digital signage"
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
@@ -217,7 +228,7 @@ export default function CorporateHome() {
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
                                             src="/artifacts/tech_ai_visual_v2.png"
-                                            alt="Tech & AI Solutions"
+                                            alt="Développement sur-mesure et agents IA - Solutions tech personnalisées pour transformation digitale"
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
@@ -247,7 +258,7 @@ export default function CorporateHome() {
             </section>
 
             {/* Ils nous font confiance (Copied from DaaS) */}
-            <section className="py-20 px-4 md:px-6 lg:px-8 bg-gray-50">
+            <section aria-label="Nos clients et partenaires" className="py-20 px-4 md:px-6 lg:px-8 bg-gray-50">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
                         <div className="text-center mb-16">
@@ -262,7 +273,7 @@ export default function CorporateHome() {
             </section>
 
             {/* Pourquoi choisir Ekwip ? */}
-            <section className="py-24 px-4 md:px-6 lg:px-8 bg-white">
+            <section aria-label="Avantages de choisir Ekwip" className="py-24 px-4 md:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
                         <div className="text-center mb-12">
@@ -280,17 +291,17 @@ export default function CorporateHome() {
                             {
                                 icon: <Shield className="w-12 h-12" />,
                                 title: "Expertise multi-domaines",
-                                description: "Une seule entreprise pour la location IT, l'AV et le développement"
+                                description: "Une seule entreprise pour la location IT, l'AV et le développement. Un seul interlocuteur pour tous vos besoins d'infrastructure."
                             },
                             {
                                 icon: <TrendingUp className="w-12 h-12" />,
                                 title: "Solutions évolutives",
-                                description: "Des services qui grandissent avec votre entreprise"
+                                description: "Des services qui grandissent avec votre entreprise. Démarrons par un projet pilote, puis faisons évoluer la collaboration au rythme de vos besoins."
                             },
                             {
                                 icon: <Zap className="w-12 h-12" />,
-                                title: "Réactivité maximale",
-                                description: "Support 24/7 et interventions rapides"
+                                title: "Approche pragmatique",
+                                description: "Nous nous concentrons sur l'usage et les résultats concrets. Support réactif et accompagnement personnalisé pour chaque client."
                             }
                         ].map((item, index) => (
                             <ScrollReveal key={index} delay={index * 0.1}>
@@ -306,7 +317,7 @@ export default function CorporateHome() {
             </section>
 
             {/* Final CTA */}
-            <section className="py-20 px-4 md:px-6 lg:px-8 bg-slate-50">
+            <section aria-label="Appel à l'action - Contactez-nous" className="py-20 px-4 md:px-6 lg:px-8 bg-slate-50">
                 <ScrollReveal>
                     <div className="max-w-4xl mx-auto text-center">
                         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -324,6 +335,7 @@ export default function CorporateHome() {
                     </div>
                 </ScrollReveal>
             </section>
-        </div>
+        </main>
+        </>
     )
 }

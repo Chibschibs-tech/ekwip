@@ -65,13 +65,23 @@ export default function AdminDashboard() {
 
         setRecentOrders(orders.slice(0, 5))
 
-        // Generate sales data for last 7 days
+        // Generate sales data for last 7 days from actual orders
         const last7Days = Array.from({ length: 7 }, (_, i) => {
           const date = new Date()
           date.setDate(date.getDate() - (6 - i))
+          const dateStr = date.toISOString().split("T")[0]
+          
+          // Calculate revenue from orders for this date
+          const dayRevenue = orders
+            .filter((o: Order) => {
+              const orderDate = o.createdAt ? new Date(o.createdAt).toISOString().split("T")[0] : null
+              return orderDate === dateStr && o.status === "delivered"
+            })
+            .reduce((sum: number, o: Order) => sum + (o.total || 0), 0)
+          
           return {
-            date: date.toISOString().split("T")[0],
-            revenue: Math.floor(Math.random() * 50000) + 10000,
+            date: dateStr,
+            revenue: dayRevenue || 0,
           }
         })
         setSalesData(last7Days)

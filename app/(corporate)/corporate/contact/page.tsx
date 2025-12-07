@@ -4,6 +4,8 @@ import type React from "react"
 
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { StructuredData } from "@/components/seo/structured-data"
+import { generateStructuredData } from "@/lib/seo"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -15,6 +17,19 @@ import { sendEmail } from "@/app/actions/send-email"
 import { toast } from "sonner"
 
 export default function ContactPage() {
+    const localBusinessSchema = generateStructuredData("LocalBusiness", {
+        name: "Ekwip",
+        address: {
+            "@type": "PostalAddress",
+            streetAddress: "30 Bd Rahal El Meskini",
+            addressLocality: "Casablanca",
+            addressCountry: "MA",
+        },
+        telephone: "+212522XXXXXX",
+        email: "contact@ekwip.ma",
+        openingHours: "Mo-Fr 09:00-18:00, Sa 09:00-13:00",
+    })
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -71,7 +86,9 @@ export default function ContactPage() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <>
+            <StructuredData data={localBusinessSchema} />
+            <div className="min-h-screen bg-gray-50">
             {/* Hero Section */}
             <section className="py-16 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-[#1f3b57] to-[#1f3b57]/80 text-white">
                 <div className="max-w-7xl mx-auto text-center">
@@ -295,5 +312,6 @@ export default function ContactPage() {
 
 
         </div>
+        </>
     )
 }

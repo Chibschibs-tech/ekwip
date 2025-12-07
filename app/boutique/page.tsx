@@ -1,7 +1,5 @@
-"use client"
+﻿"use client"
 
-import { useState, useMemo } from "react"
-import { useProducts } from "@/contexts/products-context"
 import { useCategories } from "@/contexts/categories-context"
 import { useBrands } from "@/contexts/brands-context"
 import { Input } from "@/components/ui/input"
@@ -82,13 +80,13 @@ export default function BoutiquePage() {
     addItem(product, 1)
 
     toast({
-      title: "Ajouté au panier",
-      description: `${product.name} a été ajouté à votre panier`,
+      title: "AjoutÃ© au panier",
+      description: `${product.name} a Ã©tÃ© ajoutÃ© Ã  votre panier`,
     })
   }
 
   const getCategoryName = (categoryId: string) => {
-    return categories.find((c) => c.id === categoryId)?.name || "Sans catégorie"
+    return categories.find((c) => c.id === categoryId)?.name || "Sans catÃ©gorie"
   }
 
   const getBrandName = (brandId?: string) => {
@@ -106,9 +104,9 @@ export default function BoutiquePage() {
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4">
           <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
             <p className="text-yellow-800 text-sm">
-              {categoriesError && "⚠️ Impossible de charger les catégories. "}
-              {productsError && "⚠️ Impossible de charger les produits. "}
-              Veuillez actualiser la page ou contacter le support si le problème persiste.
+              {categoriesError && "âš ï¸ Impossible de charger les catÃ©gories. "}
+              {productsError && "âš ï¸ Impossible de charger les produits. "}
+              Veuillez actualiser la page ou contacter le support si le problÃ¨me persiste.
             </p>
           </div>
         </div>
@@ -144,10 +142,10 @@ export default function BoutiquePage() {
               {/* Category Filter */}
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Toutes les catégories" />
+                  <SelectValue placeholder="Toutes les catÃ©gories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Toutes les catégories</SelectItem>
+                  <SelectItem value="all">Toutes les catÃ©gories</SelectItem>
                   {categories
                     .filter((c) => c.isActive)
                     .map((category) => (
@@ -183,14 +181,14 @@ export default function BoutiquePage() {
                 <SelectContent>
                   <SelectItem value="name">Nom (A-Z)</SelectItem>
                   <SelectItem value="price-asc">Prix croissant</SelectItem>
-                  <SelectItem value="price-desc">Prix décroissant</SelectItem>
+                  <SelectItem value="price-desc">Prix dÃ©croissant</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="mt-4 flex items-center justify-between">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {filteredProducts.length} produit{filteredProducts.length > 1 ? "s" : ""} trouvé
+                {filteredProducts.length} produit{filteredProducts.length > 1 ? "s" : ""} trouvÃ©
                 {filteredProducts.length > 1 ? "s" : ""}
               </p>
 
@@ -204,7 +202,7 @@ export default function BoutiquePage() {
                     setSelectedBrand("all")
                   }}
                 >
-                  Réinitialiser les filtres
+                  RÃ©initialiser les filtres
                 </Button>
               )}
             </div>
@@ -228,9 +226,9 @@ export default function BoutiquePage() {
               <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-slate-100 mb-6">
                 <ShoppingCart className="h-12 w-12 text-slate-400" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-2">Aucun produit trouvé</h3>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">Aucun produit trouvÃ©</h3>
               <p className="text-slate-600 mb-8 max-w-md mx-auto">
-                Essayez de modifier vos critères de recherche ou de filtrage pour trouver ce que vous cherchez.
+                Essayez de modifier vos critÃ¨res de recherche ou de filtrage pour trouver ce que vous cherchez.
               </p>
               {(searchQuery || selectedCategory !== "all" || selectedBrand !== "all") && (
                 <Button
@@ -241,7 +239,7 @@ export default function BoutiquePage() {
                   }}
                   className="bg-[#1f3b57] hover:bg-[#1f3b57]/90"
                 >
-                  Réinitialiser les filtres
+                  RÃ©initialiser les filtres
                 </Button>
               )}
             </div>
@@ -340,8 +338,9 @@ export default function BoutiquePage() {
         </div>
       </section>
 
-      {/* Actualités (Blog) Section */}
+      {/* ActualitÃ©s (Blog) Section */}
       <BoutiqueActualites />
     </div>
   )
 }
+

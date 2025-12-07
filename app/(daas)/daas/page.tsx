@@ -9,8 +9,21 @@ import { CustomOfferBanner } from "@/components/custom-offer-banner"
 import Link from "next/link"
 import Image from "next/image"
 import { ArrowRight, CheckCircle, TrendingUp, Settings, Sparkles, Headphones } from "lucide-react"
+import { StructuredData } from "@/components/seo/structured-data"
+import { generateStructuredData } from "@/lib/seo"
+import { metadata } from "./metadata"
+
+export { metadata }
 
 export default function HomePage() {
+    const serviceSchema = generateStructuredData("Service", {
+        serviceType: "Device as a Service (DaaS)",
+        description: "Location d'équipements IT pour entreprises avec gestion complète du parc",
+        areaServed: {
+            "@type": "Country",
+            name: "Morocco",
+        },
+    })
   const features = [
     {
       title: "Préservez votre trésorerie",
@@ -37,7 +50,9 @@ export default function HomePage() {
   ]
 
   return (
-    <div className="min-h-screen">
+    <>
+      <StructuredData data={serviceSchema} />
+      <main className="min-h-screen">
       {/* Hero Section */}
       <section className="py-20 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-blue-50">
         <div className="max-w-7xl mx-auto">
@@ -145,7 +160,7 @@ export default function HomePage() {
             <div className="relative">
               <Image
                 src="/artifacts/fintech_office_casablanca.png"
-                alt="Bureau moderne équipé avec la dernière technologie"
+                alt="Bureau d'entreprise moderne à Casablanca équipé avec équipements IT professionnels en location"
                 width={600}
                 height={450}
                 className="rounded-lg shadow-2xl"
@@ -217,6 +232,7 @@ export default function HomePage() {
 
       {/* FAQ */}
       <FAQSection />
-    </div>
+    </main>
+    </>
   )
 }

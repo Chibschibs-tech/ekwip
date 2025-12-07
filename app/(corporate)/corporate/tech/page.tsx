@@ -2,12 +2,47 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle, Bot, Code, Database, Cpu, Zap, Lock, Terminal } from "lucide-react"
 import { ScrollReveal } from "@/components/ui/scroll-reveal"
+import { StructuredData } from "@/components/seo/structured-data"
+import { generateStructuredData } from "@/lib/seo"
+import { generateMetadata as genMetadata } from "@/lib/seo"
+import { ClientLogoSlider } from "@/components/client-logo-slider"
+import { ServiceCard } from "@/components/service-card"
+
+export const metadata = genMetadata({
+  title: "Ekwip Tech - Agents IA, Développement sur-mesure et Automatisation au Maroc",
+  description:
+    "Agents IA, outils internes et automatisation au service de vos équipes. Développement de solutions tech personnalisées, automatisation et accompagnement à la transformation digitale.",
+  keywords: [
+    "développement sur-mesure Maroc",
+    "agents IA",
+    "automatisation processus",
+    "web apps métier",
+    "transformation digitale",
+    "outils internes",
+    "intégration API",
+    "automatisation workflows",
+    "assistants virtuels",
+  ],
+  url: "/tech",
+  type: "website",
+})
 
 export default function TechPage() {
+    const serviceSchema = generateStructuredData("Service", {
+        serviceType: "Développement sur-mesure et IA",
+        description: "Agents IA, outils internes et automatisation au service de vos équipes",
+        areaServed: {
+            "@type": "Country",
+            name: "Morocco",
+        },
+    })
+    
     return (
-        <div className="min-h-screen bg-slate-50">
+        <>
+            <StructuredData data={serviceSchema} />
+            <main className="min-h-screen bg-slate-50">
             {/* Hero Section with Dark Console */}
-            <section className="py-20 px-4 md:px-6 lg:px-8 bg-white">
+            <section aria-label="Ekwip Tech - Développement sur-mesure et IA" className="py-20 px-4 md:px-6 lg:px-8 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         {/* Left: Text Content */}
@@ -29,13 +64,15 @@ export default function TechPage() {
                                 <div className="flex flex-col sm:flex-row gap-3 mb-8">
                                     <Link href="/contact">
                                         <button className="ek-btn-pill-primary">
-                                            Planifier un atelier Tech
+                                            Réserver un atelier découverte
                                             <ArrowRight className="h-4 w-4" />
                                         </button>
                                     </Link>
-                                    <button className="px-6 py-3 rounded-full border border-slate-200 text-slate-600 font-medium hover:border-orange-500 hover:text-orange-500 hover:bg-orange-50 transition-all shadow-sm hover:shadow-md">
-                                        Voir nos projets
-                                    </button>
+                                    <a href="#expertises">
+                                        <button className="px-6 py-3 rounded-full border border-slate-200 text-slate-600 font-medium hover:border-orange-500 hover:text-orange-500 hover:bg-orange-50 transition-all shadow-sm hover:shadow-md">
+                                            Découvrir nos expertises
+                                        </button>
+                                    </a>
                                 </div>
 
                                 <div className="flex flex-wrap gap-2">
@@ -123,7 +160,7 @@ export default function TechPage() {
             </section>
 
             {/* Solutions - Dark Cards */}
-            <section className="py-20 px-4 md:px-6 lg:px-8 bg-[#0F172A] text-white relative overflow-hidden">
+            <section id="expertises" aria-label="Nos expertises techniques" className="py-20 px-4 md:px-6 lg:px-8 bg-[#0F172A] text-white relative overflow-hidden">
                 {/* Background Grid */}
                 <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center [mask-image:linear-gradient(180deg,white,rgba(255,255,255,0))] opacity-10"></div>
 
@@ -134,7 +171,7 @@ export default function TechPage() {
                                 Nos expertises
                             </h2>
                             <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                                Des technologies de pointe pour résoudre vos défis opérationnels
+                                Des technologies de pointe pour résoudre vos défis opérationnels. Développement agile, agents IA intelligents et automatisations qui s&apos;intègrent à votre stack existant.
                             </p>
                         </div>
                     </ScrollReveal>
@@ -173,8 +210,99 @@ export default function TechPage() {
                 </div>
             </section>
 
+            {/* Use Cases Section */}
+            <section aria-label="Cas d'usage" className="py-20 px-4 md:px-6 lg:px-8 bg-slate-800 text-white">
+                <div className="max-w-7xl mx-auto">
+                    <ScrollReveal>
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-orange-400 to-white">
+                                Cas d'usage
+                            </h2>
+                            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                                Des solutions concrètes pour répondre à vos défis opérationnels
+                            </p>
+                        </div>
+                    </ScrollReveal>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {[
+                            {
+                                title: "Agent IA pour support client",
+                                description: "Assistant virtuel connecté à votre base de connaissances, capable de répondre aux questions fréquentes et d'orienter les demandes vers les bons interlocuteurs.",
+                            },
+                            {
+                                title: "Automatisation de process métier",
+                                description: "Workflows automatisés pour connecter vos outils (CRM, ERP, Slack) et éliminer les tâches répétitives de vos équipes.",
+                            },
+                            {
+                                title: "Portail interne personnalisé",
+                                description: "Application web sur-mesure pour centraliser l'information, les process et les outils de votre entreprise.",
+                            },
+                            {
+                                title: "Connecteurs entre outils",
+                                description: "Intégrations API personnalisées pour synchroniser vos données entre différents systèmes et garantir la cohérence.",
+                            },
+                        ].map((useCase, index) => (
+                            <ScrollReveal key={index} delay={index * 0.1}>
+                                <div className="bg-slate-700/50 backdrop-blur-sm border border-slate-600 rounded-xl p-6 hover:bg-slate-700 hover:border-orange-500/50 transition-all">
+                                    <h3 className="text-xl font-bold text-white mb-3">{useCase.title}</h3>
+                                    <p className="text-sm text-slate-300 leading-relaxed">{useCase.description}</p>
+                                </div>
+                            </ScrollReveal>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Stack Technique Section */}
+            <section aria-label="Technologies utilisées" className="py-20 px-4 md:px-6 lg:px-8 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <ScrollReveal>
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Stack technique</h2>
+                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                Technologies modernes et frameworks éprouvés pour des solutions performantes et scalables
+                            </p>
+                        </div>
+                    </ScrollReveal>
+
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {[
+                            { name: "Next.js", category: "Frontend" },
+                            { name: "React", category: "Frontend" },
+                            { name: "TypeScript", category: "Language" },
+                            { name: "Python", category: "Backend" },
+                            { name: "PostgreSQL", category: "Database" },
+                            { name: "n8n / Make", category: "Automation" },
+                            { name: "OpenAI API", category: "IA" },
+                            { name: "Vercel / AWS", category: "Infrastructure" },
+                        ].map((tech, index) => (
+                            <div key={index} className="text-center p-4 border border-slate-200 rounded-lg hover:border-orange-500 hover:shadow-md transition-all">
+                                <div className="text-2xl font-bold text-gray-900 mb-1">{tech.name}</div>
+                                <div className="text-sm text-gray-500">{tech.category}</div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            {/* Trust Section - Client Logos */}
+            <section aria-label="Nos clients" className="py-20 px-4 md:px-6 lg:px-8 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <ScrollReveal>
+                        <div className="text-center mb-16">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Ils nous font confiance</h2>
+                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                Nos clients nous font confiance pour leur transformation digitale
+                            </p>
+                        </div>
+                        <ClientLogoSlider />
+                    </ScrollReveal>
+                </div>
+            </section>
+
             {/* Process / Methodology */}
-            <section className="py-20 px-4 md:px-6 lg:px-8 bg-white">
+            <section aria-label="Méthodologie agile" className="py-20 px-4 md:px-6 lg:px-8 bg-slate-50">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
                         <div className="text-center mb-16">
@@ -218,6 +346,49 @@ export default function TechPage() {
                     </ScrollReveal>
                 </div>
             </section>
-        </div>
+
+            {/* Cross-Service Section */}
+            <section aria-label="Autres services Ekwip" className="py-20 px-4 md:px-6 lg:px-8 bg-white">
+                <div className="max-w-7xl mx-auto">
+                    <ScrollReveal>
+                        <div className="text-center mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Équipez-vous avec nos autres services</h2>
+                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                                Complétez votre infrastructure digitale avec nos solutions matérielles et d&apos;intégration
+                            </p>
+                        </div>
+                    </ScrollReveal>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <ScrollReveal delay={0.1}>
+                            <ServiceCard
+                                title="Location d'équipements IT"
+                                description="Parc informatique, smartphones, tablettes et accessoires en location mensuelle, avec un portail pour suivre votre parc, vos contrats et vos renouvellements."
+                                href="/catalogue"
+                                image="/artifacts/daas_equipment_visual_v2.png"
+                                imageAlt="Équipements IT en location"
+                                chip={{ label: "Ekwip DaaS", variant: "daas" }}
+                                colorClass="text-[#38BDF8]"
+                                hoverColorClass="text-[#38BDF8]"
+                            />
+                        </ScrollReveal>
+
+                        <ScrollReveal delay={0.2}>
+                            <ServiceCard
+                                title="Solutions Audiovisuelles"
+                                description="Conception et intégration de salles de réunion, espaces de formation, visio et diffusion, du choix des équipements jusqu'au paramétrage fin sur site."
+                                href="/connect"
+                                image="/artifacts/av_solutions_visual.png"
+                                imageAlt="Solutions audiovisuelles"
+                                chip={{ label: "Ekwip Connect", variant: "connect" }}
+                                colorClass="text-[#10B981]"
+                                hoverColorClass="text-[#10B981]"
+                            />
+                        </ScrollReveal>
+                    </div>
+                </div>
+            </section>
+        </main>
+        </>
     )
 }

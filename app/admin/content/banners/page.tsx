@@ -87,6 +87,15 @@ export default function BannersPage() {
       return
     }
 
+    if (formData.isMobileEnabled && !formData.mobileImage.trim()) {
+      toast({
+        title: "Erreur",
+        description: "L'image mobile est requise lorsque l'activation mobile est activée",
+        variant: "destructive",
+      })
+      return
+    }
+
     try {
       const bannerData = {
         ...formData,

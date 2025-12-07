@@ -43,7 +43,7 @@ export default function ProductCard({ product, href }: ProductCardProps) {
             {product.images && product.images.length > 0 ? (
               <Image
                 src={product.images[0] || "/placeholder.svg"}
-                alt={product.name}
+                alt={`${product.name} - ${product.brandName || 'Équipement'} en location mensuelle`}
                 fill
                 className="object-contain p-4 transition-transform group-hover:scale-105"
               />

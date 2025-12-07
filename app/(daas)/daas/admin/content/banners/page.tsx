@@ -31,11 +31,12 @@ export default function BannersPage() {
     title: "",
     description: "",
     image: "",
+    mobileImage: "",
+    isMobileEnabled: false,
     link: "",
     buttonText: "",
     position: "boutique" as "hero" | "sidebar" | "footer" | "boutique",
     order: 0,
-    gradient: "from-slate-800 to-slate-900",
     startDate: new Date().toISOString().split("T")[0],
     endDate: "",
     isActive: true,
@@ -81,6 +82,15 @@ export default function BannersPage() {
       toast({
         title: "Erreur",
         description: "Le titre et l'image sont requis",
+        variant: "destructive",
+      })
+      return
+    }
+
+    if (formData.isMobileEnabled && !formData.mobileImage.trim()) {
+      toast({
+        title: "Erreur",
+        description: "L'image mobile est requise lorsque l'activation mobile est activée",
         variant: "destructive",
       })
       return
@@ -166,11 +176,12 @@ export default function BannersPage() {
       title: banner.title,
       description: banner.description || "",
       image: banner.image,
+      mobileImage: banner.mobileImage || "",
+      isMobileEnabled: banner.isMobileEnabled || false,
       link: banner.link || "",
       buttonText: banner.buttonText || "",
       position: banner.position as "hero" | "sidebar" | "footer" | "boutique",
       order: banner.order,
-      gradient: (banner as any).gradient || "from-slate-800 to-slate-900",
       startDate: banner.startDate ? new Date(banner.startDate).toISOString().split("T")[0] : new Date().toISOString().split("T")[0],
       endDate: banner.endDate ? new Date(banner.endDate).toISOString().split("T")[0] : "",
       isActive: banner.isActive,
@@ -183,11 +194,12 @@ export default function BannersPage() {
       title: "",
       description: "",
       image: "",
+      mobileImage: "",
+      isMobileEnabled: false,
       link: "",
       buttonText: "",
       position: "boutique",
       order: 0,
-      gradient: "from-slate-800 to-slate-900",
       startDate: new Date().toISOString().split("T")[0],
       endDate: "",
       isActive: true,
@@ -243,40 +255,105 @@ export default function BannersPage() {
                   value={formData.description}
                   onChange={(e) => handleInputChange("description", e.target.value)}
                   rows={3}
+                  placeholder="Description de la bannière (sous-titre)"
                 />
               </div>
 
+              {/* Image Guidelines */}
+              {formData.position === "boutique" && (
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
+                  <h4 className="font-semibold text-blue-900">📏 Tailles d'images recommandées</h4>
+                  <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                    <li><strong>Desktop (Ordre 0 - Grande bannière) :</strong> 1200x500px minimum (ratio 2.4:1)</li>
+                    <li><strong>Desktop (Ordre 1-2 - Petites bannières) :</strong> 600x500px minimum (ratio 1.2:1)</li>
+                    <li><strong>Mobile :</strong> 800x600px minimum (ratio 4:3)</li>
+                  </ul>
+                  <p className="text-xs text-blue-600 mt-2">
+                    💡 <strong>Astuce :</strong> Les images doivent contenir le gradient de fond intégré. Utilisez un format optimisé (WebP recommandé) pour de meilleures performances.
+                  </p>
+                </div>
+              )}
+
               <div>
-                <Label>Image URL *</Label>
-                <Input value={formData.image} onChange={(e) => handleInputChange("image", e.target.value)} required />
+                <Label>Image Desktop *</Label>
+                <Input 
+                  value={formData.image} 
+                  onChange={(e) => handleInputChange("image", e.target.value)} 
+                  placeholder="https://example.com/image.jpg"
+                  required 
+                />
+                <p className="text-xs text-gray-500 mt-1">URL de l'image pour desktop</p>
+              </div>
+
+              {/* Mobile Image Section */}
+              <div className="space-y-3 border border-gray-200 rounded-lg p-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <Label>Activer sur mobile</Label>
+                    <p className="text-xs text-gray-500">Afficher une image optimisée pour mobile</p>
+                  </div>
+                  <Switch 
+                    checked={formData.isMobileEnabled} 
+                    onCheckedChange={(checked) => handleInputChange("isMobileEnabled", checked)} 
+                  />
+                </div>
+                {formData.isMobileEnabled && (
+                  <div>
+                    <Label>Image Mobile *</Label>
+                    <Input 
+                      value={formData.mobileImage} 
+                      onChange={(e) => handleInputChange("mobileImage", e.target.value)} 
+                      placeholder="https://example.com/image-mobile.jpg"
+                      required={formData.isMobileEnabled}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">URL de l'image optimisée pour mobile (800x600px recommandé)</p>
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <Label>Lien</Label>
-                  <Input value={formData.link} onChange={(e) => handleInputChange("link", e.target.value)} />
+                  <Input 
+                    value={formData.link} 
+                    onChange={(e) => handleInputChange("link", e.target.value)} 
+                    placeholder="/boutique?category=..."
+                  />
                 </div>
                 <div>
                   <Label>Texte du bouton</Label>
-                  <Input value={formData.buttonText} onChange={(e) => handleInputChange("buttonText", e.target.value)} />
+                  <Input 
+                    value={formData.buttonText} 
+                    onChange={(e) => handleInputChange("buttonText", e.target.value)} 
+                    placeholder="Acheter maintenant"
+                  />
                 </div>
               </div>
 
-              {formData.position === "boutique" && (
-                <div>
-                  <Label>Gradient CSS (ex: from-slate-800 to-slate-900)</Label>
-                  <Input value={formData.gradient} onChange={(e) => handleInputChange("gradient", e.target.value)} />
-                  <p className="text-xs text-gray-500 mt-1">Classes Tailwind pour le gradient de fond</p>
+              {/* Order Explanation */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+                <div className="flex items-start gap-2">
+                  <span className="text-lg">📌</span>
+                  <div>
+                    <Label className="font-semibold text-amber-900">Ordre d'affichage (Important pour Boutique)</Label>
+                    <p className="text-sm text-amber-800 mt-1">
+                      <strong>Ordre 0 :</strong> Grande bannière à gauche (affichée en premier)<br />
+                      <strong>Ordre 1-2 :</strong> Petites bannières à droite (empilées verticalement)<br />
+                      Seules les 3 premières bannières actives sont affichées, triées par ordre croissant.
+                    </p>
+                  </div>
                 </div>
-              )}
+              </div>
 
               <div className="grid grid-cols-3 gap-4">
                 <div>
-                  <Label>Ordre</Label>
+                  <Label>Ordre *</Label>
                   <Input
                     type="number"
+                    min="0"
                     value={formData.order}
                     onChange={(e) => handleInputChange("order", Number.parseInt(e.target.value) || 0)}
+                    required
                   />
                 </div>
                 <div>
@@ -511,40 +588,109 @@ export default function BannersPage() {
 
             <div>
               <Label>Description</Label>
-              <Textarea value={formData.description} onChange={(e) => handleInputChange("description", e.target.value)} rows={3} />
+              <Textarea 
+                value={formData.description} 
+                onChange={(e) => handleInputChange("description", e.target.value)} 
+                rows={3}
+                placeholder="Description de la bannière (sous-titre)"
+              />
             </div>
 
+            {/* Image Guidelines */}
+            {formData.position === "boutique" && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 space-y-2">
+                <h4 className="font-semibold text-blue-900">📏 Tailles d'images recommandées</h4>
+                <ul className="text-sm text-blue-800 space-y-1 list-disc list-inside">
+                  <li><strong>Desktop (Ordre 0 - Grande bannière) :</strong> 1200x500px minimum (ratio 2.4:1)</li>
+                  <li><strong>Desktop (Ordre 1-2 - Petites bannières) :</strong> 600x500px minimum (ratio 1.2:1)</li>
+                  <li><strong>Mobile :</strong> 800x600px minimum (ratio 4:3)</li>
+                </ul>
+                <p className="text-xs text-blue-600 mt-2">
+                  💡 <strong>Astuce :</strong> Les images doivent contenir le gradient de fond intégré. Utilisez un format optimisé (WebP recommandé) pour de meilleures performances.
+                </p>
+              </div>
+            )}
+
             <div>
-              <Label>Image URL *</Label>
-              <Input value={formData.image} onChange={(e) => handleInputChange("image", e.target.value)} required />
+              <Label>Image Desktop *</Label>
+              <Input 
+                value={formData.image} 
+                onChange={(e) => handleInputChange("image", e.target.value)} 
+                placeholder="https://example.com/image.jpg"
+                required 
+              />
+              <p className="text-xs text-gray-500 mt-1">URL de l'image pour desktop</p>
+            </div>
+
+            {/* Mobile Image Section */}
+            <div className="space-y-3 border border-gray-200 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Activer sur mobile</Label>
+                  <p className="text-xs text-gray-500">Afficher une image optimisée pour mobile</p>
+                </div>
+                <Switch 
+                  checked={formData.isMobileEnabled} 
+                  onCheckedChange={(checked) => handleInputChange("isMobileEnabled", checked)} 
+                />
+              </div>
+              {formData.isMobileEnabled && (
+                <div>
+                  <Label>Image Mobile *</Label>
+                  <Input 
+                    value={formData.mobileImage} 
+                    onChange={(e) => handleInputChange("mobileImage", e.target.value)} 
+                    placeholder="https://example.com/image-mobile.jpg"
+                    required={formData.isMobileEnabled}
+                  />
+                  <p className="text-xs text-gray-500 mt-1">URL de l'image optimisée pour mobile (800x600px recommandé)</p>
+                </div>
+              )}
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Lien</Label>
-                <Input value={formData.link} onChange={(e) => handleInputChange("link", e.target.value)} />
+                <Input 
+                  value={formData.link} 
+                  onChange={(e) => handleInputChange("link", e.target.value)} 
+                  placeholder="/boutique?category=..."
+                />
               </div>
               <div>
                 <Label>Texte du bouton</Label>
-                <Input value={formData.buttonText} onChange={(e) => handleInputChange("buttonText", e.target.value)} />
+                <Input 
+                  value={formData.buttonText} 
+                  onChange={(e) => handleInputChange("buttonText", e.target.value)} 
+                  placeholder="Acheter maintenant"
+                />
               </div>
             </div>
 
-            {formData.position === "boutique" && (
-              <div>
-                <Label>Gradient CSS (ex: from-slate-800 to-slate-900)</Label>
-                <Input value={formData.gradient} onChange={(e) => handleInputChange("gradient", e.target.value)} />
-                <p className="text-xs text-gray-500 mt-1">Classes Tailwind pour le gradient de fond</p>
+            {/* Order Explanation */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="flex items-start gap-2">
+                <span className="text-lg">📌</span>
+                <div>
+                  <Label className="font-semibold text-amber-900">Ordre d'affichage (Important pour Boutique)</Label>
+                  <p className="text-sm text-amber-800 mt-1">
+                    <strong>Ordre 0 :</strong> Grande bannière à gauche (affichée en premier)<br />
+                    <strong>Ordre 1-2 :</strong> Petites bannières à droite (empilées verticalement)<br />
+                    Seules les 3 premières bannières actives sont affichées, triées par ordre croissant.
+                  </p>
+                </div>
               </div>
-            )}
+            </div>
 
             <div className="grid grid-cols-3 gap-4">
               <div>
-                <Label>Ordre</Label>
+                <Label>Ordre *</Label>
                 <Input
                   type="number"
+                  min="0"
                   value={formData.order}
                   onChange={(e) => handleInputChange("order", Number.parseInt(e.target.value) || 0)}
+                  required
                 />
               </div>
               <div>

@@ -1,6 +1,10 @@
+"use client"
+
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { StructuredData } from "@/components/seo/structured-data"
+import { generateStructuredData } from "@/lib/seo"
 
 const faqs = [
   {
@@ -36,8 +40,21 @@ const faqs = [
 ]
 
 export function FAQSection() {
+  const faqSchema = generateStructuredData("FAQPage", {
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  })
+
   return (
-    <section className="py-20 px-4 md:px-6 lg:px-8 bg-gray-50">
+    <>
+      <StructuredData data={faqSchema} />
+      <section className="py-20 px-4 md:px-6 lg:px-8 bg-gray-50">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Questions fréquentes</h2>
@@ -67,5 +84,6 @@ export function FAQSection() {
         </div>
       </div>
     </section>
+    </>
   )
 }

@@ -33,35 +33,133 @@ export default function AnalyticsPage() {
     const fetchAnalytics = async () => {
       try {
         setLoading(true)
-
-        // Generate mock analytics data
-        const days = Number.parseInt(period)
-        const sales = Array.from({ length: days }, (_, i) => {
+        
+        // Fetch actual orders and products data
+        const [ordersRes, productsRes] = await Promise.all([
+          fetch("/api/orders"),
+          fetch("/api/products"),
+        ])
+        
+        const orders = ordersRes.ok ? await ordersRes.json() : []
+        const products = productsRes.ok ? await productsRes.json() : []
+        
+        // Filter orders by period
+        const periodDays = Number.parseInt(period)
+        const cutoffDate = new Date()
+        cutoffDate.setDate(cutoffDate.getDate() - periodDays)
+        
+        const filteredOrders = orders.filter((o: any) => {
+          if (!o.createdAt) return false
+          const orderDate = new Date(o.createdAt)
+          return orderDate >= cutoffDate
+        })
+        
+        // Generate sales data from actual orders
+        const salesByDate = new Map<string, { revenue: number; orders: number }>()
+        
+        filteredOrders.forEach((order: any) => {
+          if (!order.createdAt) return
+          const dateStr = new Date(order.createdAt).toISOString().split("T")[0]
+          const existing = salesByDate.get(dateStr) || { revenue: 0, orders: 0 }
+          salesByDate.set(dateStr, {
+            revenue: existing.revenue + (order.total || 0),
+            orders: existing.orders + 1,
+          })
+        })
+        
+        // Fill in all days in period
+        const sales = Array.from({ length: periodDays }, (_, i) => {
           const date = new Date()
-          date.setDate(date.getDate() - (days - 1 - i))
+          date.setDate(date.getDate() - (periodDays - 1 - i))
+          const dateStr = date.toISOString().split("T")[0]
+          const dayData = salesByDate.get(dateStr) || { revenue: 0, orders: 0 }
           return {
-            date: date.toISOString().split("T")[0],
-            revenue: Math.floor(Math.random() * 80000) + 20000,
-            orders: Math.floor(Math.random() * 20) + 5,
+            date: dateStr,
+            revenue: dayData.revenue,
+            orders: dayData.orders,
           }
         })
+        
         setSalesData(sales)
-
-        setCategoryData([
-          { name: "Ordinateurs", value: 45 },
-          { name: "Smartphones", value: 25 },
-          { name: "Imprimantes", value: 15 },
-          { name: "Accessoires", value: 10 },
-          { name: "Autres", value: 5 },
-        ])
-
-        setTopProducts([
-          { name: 'MacBook Pro 14"', sales: 45 },
-          { name: "Dell XPS 15", sales: 38 },
-          { name: "iPhone 15 Pro", sales: 32 },
-          { name: "HP LaserJet Pro", sales: 28 },
-          { name: 'iMac 24"', sales: 22 },
-        ])
+        
+        // Calculate category data from order items
+        const categorySales = new Map<string, number>()
+        const productCategoryMap = new Map<string, string>()
+        
+        products.forEach((p: any) => {
+          if (p.categoryId) {
+            productCategoryMap.set(p.id, p.categoryId)
+          }
+        })
+        
+        filteredOrders.forEach((order: any) => {
+          if (order.items && Array.isArray(order.items)) {
+            order.items.forEach((item: any) => {
+              const productId = item.productId || item.product_id
+              const categoryId = productCategoryMap.get(productId)
+              if (categoryId) {
+                const current = categorySales.get(categoryId) || 0
+                categorySales.set(categoryId, current + (item.quantity || 1) * (item.price || 0))
+              }
+            })
+          }
+        })
+        
+        // Get category names from products
+        const categoryMap = new Map<string, string>()
+        products.forEach((p: any) => {
+          if (p.categoryId && p.category) {
+            categoryMap.set(p.categoryId, p.category.name || p.category)
+          }
+        })
+        
+        const categoryData = Array.from(categorySales.entries())
+          .map(([categoryId, value]) => ({
+            name: categoryMap.get(categoryId) || categoryId,
+            value: Math.round(value),
+          }))
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 5)
+        
+        if (categoryData.length === 0) {
+          setCategoryData([{ name: "Aucune donnée", value: 0 }])
+        } else {
+          setCategoryData(categoryData)
+        }
+        
+        // Calculate top products from order items
+        const productSales = new Map<string, number>()
+        
+        filteredOrders.forEach((order: any) => {
+          if (order.items && Array.isArray(order.items)) {
+            order.items.forEach((item: any) => {
+              const productId = item.productId || item.product_id
+              if (productId) {
+                const current = productSales.get(productId) || 0
+                productSales.set(productId, current + (item.quantity || 1))
+              }
+            })
+          }
+        })
+        
+        // Get top 5 products
+        const topProductEntries = Array.from(productSales.entries())
+          .sort((a, b) => b[1] - a[1])
+          .slice(0, 5)
+        
+        const topProducts = topProductEntries.map(([productId, sales]) => {
+          const product = products.find((p: any) => p.id === productId)
+          return {
+            name: product?.name || `Product ${productId.substring(0, 8)}`,
+            sales,
+          }
+        })
+        
+        if (topProducts.length === 0) {
+          setTopProducts([{ name: "Aucune vente pour cette période", sales: 0 }])
+        } else {
+          setTopProducts(topProducts)
+        }
       } catch (error) {
         console.error("Error fetching analytics:", error)
       } finally {
