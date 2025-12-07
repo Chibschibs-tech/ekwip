@@ -215,21 +215,19 @@ export default function CreateProductPage() {
     }
 
     try {
-      const productId = `prod-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
-
-      const newProduct: Product = {
-        id: productId,
+      // Don't include id, createdAt, updatedAt - API will generate these
+      const newProduct = {
         name: formData.name,
         slug: formData.slug || formData.name.toLowerCase().replace(/\s+/g, "-"),
         sku: formData.sku,
         shortDescription: formData.shortDescription,
         description: formData.description,
         categoryId: formData.categoryId,
-        brandId: formData.brandId || "",
+        brandId: formData.brandId || undefined,
         productType: productType,
         price: formData.price,
         compareAtPrice: formData.compareAtPrice || undefined,
-        costPrice: formData.costPrice,
+        costPrice: formData.costPrice || undefined,
         thumbnail: imageFiles[0] || "/placeholder.svg",
         images: imageFiles.length > 0 ? imageFiles : ["/placeholder.svg"],
         stockQuantity: formData.stockQuantity,
@@ -240,11 +238,13 @@ export default function CreateProductPage() {
         attributes: productAttributes,
         variations: hasVariations ? variations : undefined,
         rentalDurations: productType === "rent" ? rentalDurations : undefined,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
       }
 
-      addProduct(newProduct)
+      const createdProduct = await addProduct(newProduct)
+
+      if (!createdProduct) {
+        throw new Error("Failed to create product - check console for details")
+      }
 
       toast({
         title: "Produit créé",
@@ -256,9 +256,10 @@ export default function CreateProductPage() {
       router.push("/admin/catalogue/products")
     } catch (error) {
       console.error("Error creating product:", error)
+      const errorMessage = error instanceof Error ? error.message : "Impossible de créer le produit"
       toast({
         title: "Erreur",
-        description: "Impossible de créer le produit",
+        description: errorMessage,
         variant: "destructive",
       })
     } finally {

@@ -93,6 +93,10 @@ export async function GET(request: Request) {
         price: Number.parseFloat(item.price),
         total: Number.parseFloat(item.total),
         rentalDuration: item.rental_duration,
+        monthlyFee: item.monthly_fee ? Number.parseFloat(item.monthly_fee) : null,
+        upfrontContribution: item.upfront_contribution ? Number.parseFloat(item.upfront_contribution) : null,
+        itemStartDate: item.item_start_date,
+        itemEndDate: item.item_end_date,
       })
       return acc
     }, {})
@@ -101,20 +105,29 @@ export async function GET(request: Request) {
       id: o.id,
       orderNumber: o.order_number,
       clientId: o.client_id,
+      customerId: o.customer_id,
+      customerName: o.customer_name,
+      customerEmail: o.customer_email,
       status: o.status,
-      orderType: o.order_type,
+      orderType: o.order_type || 'sale',
       items: itemsByOrder[o.id] || [],
       subtotal: Number.parseFloat(o.subtotal || 0),
-      taxAmount: Number.parseFloat(o.tax_amount || 0),
-      discountAmount: Number.parseFloat(o.discount_amount || 0),
+      taxAmount: Number.parseFloat(o.tax || 0),
+      discountAmount: Number.parseFloat(o.discount || 0),
+      shippingAmount: Number.parseFloat(o.shipping || 0),
       total: Number.parseFloat(o.total || 0),
       shippingAddress: o.shipping_address,
       billingAddress: o.billing_address,
       paymentStatus: o.payment_status,
       paymentMethod: o.payment_method,
       notes: o.notes,
+      // Rental-specific fields
+      rentalStartDate: o.rental_start_date,
+      rentalEndDate: o.rental_end_date,
+      rentalDuration: o.rental_duration,
       createdAt: o.created_at,
       updatedAt: o.updated_at,
+      deliveredAt: o.delivered_at,
     }))
 
     return NextResponse.json(transformedOrders)
@@ -134,19 +147,38 @@ export async function POST(request: Request) {
     const countResult = await sql`SELECT COUNT(*) as count FROM orders`
     const orderNumber = `ORD-${new Date().getFullYear()}-${String(Number.parseInt(countResult[0].count) + 1).padStart(4, "0")}`
 
+    // Fetch client info if clientId is provided (for rental orders)
+    let customerName = body.customerName || ""
+    let customerEmail = body.customerEmail || ""
+    
+    if (body.clientId && !customerName) {
+      const clientResult = await sql`SELECT company_name, contact_name, email FROM clients WHERE id = ${body.clientId}`
+      if (clientResult.length > 0) {
+        const client = clientResult[0]
+        customerName = client.contact_name || client.company_name || "Client"
+        customerEmail = client.email || ""
+      }
+    }
+
     const result = await sql`
       INSERT INTO orders (
-        id, order_number, client_id, status, order_type, subtotal, tax_amount,
-        discount_amount, total, shipping_address, billing_address, payment_status,
-        payment_method, notes, rental_start_date, rental_end_date, rental_duration,
+        id, order_number, customer_id, customer_name, customer_email,
+        client_id, status, order_type, subtotal, tax, shipping, discount, total,
+        shipping_address, billing_address, payment_status, notes,
+        rental_start_date, rental_end_date, rental_duration,
         created_at, updated_at
       ) VALUES (
-        ${id}, ${orderNumber}, ${body.clientId || null}, ${body.status || "pending"},
-        ${body.orderType || "quote"}, ${body.subtotal || 0}, ${body.taxAmount || 0},
-        ${body.discountAmount || 0}, ${body.total || 0},
+        ${id}, ${orderNumber},
+        ${body.customerId || null},
+        ${customerName || "Customer"},
+        ${customerEmail || "customer@example.com"},
+        ${body.clientId || null}, ${body.status || "pending"},
+        ${body.orderType || "sale"}, ${body.subtotal || 0},
+        ${body.taxAmount || body.tax || 0}, ${body.shippingAmount || body.shipping || 0},
+        ${body.discountAmount || body.discount || 0}, ${body.total || 0},
         ${body.shippingAddress ? JSON.stringify(body.shippingAddress) : null},
         ${body.billingAddress ? JSON.stringify(body.billingAddress) : null},
-        ${body.paymentStatus || "pending"}, ${body.paymentMethod || null},
+        ${body.paymentStatus || "pending"},
         ${body.notes || null}, ${body.rentalStartDate || null},
         ${body.rentalEndDate || null}, ${body.rentalDuration || null},
         ${now}, ${now}
@@ -159,8 +191,15 @@ export async function POST(request: Request) {
       for (const item of body.items) {
         const itemId = generateId("item")
         await sql`
-          INSERT INTO order_items (id, order_id, product_id, product_name, sku, quantity, price, total, rental_duration)
-          VALUES (${itemId}, ${id}, ${item.productId}, ${item.productName}, ${item.sku || ""}, ${item.quantity}, ${item.price}, ${item.total}, ${item.rentalDuration || null})
+          INSERT INTO order_items (
+            id, order_id, product_id, product_name, sku, quantity, price, total, 
+            rental_duration, monthly_fee, upfront_contribution, item_start_date, item_end_date
+          ) VALUES (
+            ${itemId}, ${id}, ${item.productId}, ${item.productName}, ${item.sku || ""}, 
+            ${item.quantity}, ${item.price}, ${item.total}, ${item.rentalDuration || null},
+            ${item.monthlyFee || null}, ${item.upfrontContribution || null},
+            ${item.itemStartDate || null}, ${item.itemEndDate || null}
+          )
         `
       }
     }

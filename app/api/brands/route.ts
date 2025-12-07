@@ -8,21 +8,31 @@ export async function GET(request: Request) {
 
     // Use template strings for better compatibility
     let brands
-    if (active === "true") {
-      brands = await sql`
-        SELECT * FROM brands 
-        WHERE is_active = true
-        ORDER BY name ASC
-      `
-    } else {
-      // Get all brands
-      brands = await sql`
-        SELECT * FROM brands 
-        ORDER BY name ASC
-      `
+    try {
+      if (active === "true") {
+        brands = await sql`
+          SELECT * FROM brands 
+          WHERE is_active = true
+          ORDER BY name ASC
+        `
+      } else {
+        // Get all brands
+        brands = await sql`
+          SELECT * FROM brands 
+          ORDER BY name ASC
+        `
+      }
+    } catch (dbError: any) {
+      console.error("Database error fetching brands:", dbError)
+      // If table doesn't exist or connection fails, return empty array
+      if (dbError.message?.includes("does not exist") || dbError.message?.includes("connection")) {
+        console.warn("Brands table may not exist or database connection failed. Returning empty array.")
+        return NextResponse.json([])
+      }
+      throw dbError
     }
 
-    const transformedBrands = brands.map((b: any) => ({
+    const transformedBrands = (brands || []).map((b: any) => ({
       id: b.id,
       name: b.name,
       slug: b.slug,
@@ -30,15 +40,18 @@ export async function GET(request: Request) {
       logo: b.logo,
       website: b.website,
       isActive: b.is_active,
-      productCount: b.product_count,
+      productCount: b.product_count || 0,
       createdAt: b.created_at,
       updatedAt: b.updated_at,
     }))
 
     return NextResponse.json(transformedBrands)
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching brands:", error)
-    return NextResponse.json({ error: "Failed to fetch brands" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to fetch brands", details: error.message },
+      { status: 500 }
+    )
   }
 }
 

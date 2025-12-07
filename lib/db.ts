@@ -16,8 +16,9 @@ const isLocal =
   DATABASE_URL.includes("postgres://ekwip")
 
 // Initialize clients based on environment
-let postgresClient: Awaited<ReturnType<typeof getPostgresClient>> | null = null
+let postgresClient: any = null
 let neonClient: ReturnType<typeof neon> | null = null
+let postgresClientPromise: Promise<any> | null = null
 
 async function getPostgresClient() {
   if (!postgres) {
@@ -26,16 +27,30 @@ async function getPostgresClient() {
   return postgres
 }
 
+async function initializePostgresClient() {
+  if (postgresClient) {
+    return postgresClient
+  }
+  
+  if (!postgresClientPromise) {
+    postgresClientPromise = (async () => {
+      const pg = await getPostgresClient()
+      postgresClient = pg(DATABASE_URL!, {
+        max: 10, // Connection pool size
+        idle_timeout: 20,
+        connect_timeout: 10,
+      })
+      return postgresClient
+    })()
+  }
+  
+  return postgresClientPromise
+}
+
 if (isLocal) {
   // Use postgres package for local Docker database
-  // Initialize lazily to avoid bundling in production
-  getPostgresClient().then((pg) => {
-    postgresClient = pg(DATABASE_URL, {
-      max: 10, // Connection pool size
-      idle_timeout: 20,
-      connect_timeout: 10,
-    }) as any
-  })
+  // Initialize lazily but ensure it's ready before first query
+  // The sql function will await this initialization
 } else {
   // Use Neon for production (Vercel)
   neonClient = neon(DATABASE_URL)
@@ -47,15 +62,20 @@ export const sql = async (
   query: TemplateStringsArray | string,
   ...params: any[]
 ): Promise<any[]> => {
-  if (isLocal && postgresClient) {
-    // Local PostgreSQL (Docker)
-    if (typeof query === "string") {
-      // String query with parameters - convert to parameterized query
-      // This is safe as long as params are provided and query uses $1, $2, etc.
-      return await postgresClient.unsafe(query, params)
-    } else {
-      // Template string query (preferred, automatically parameterized)
-      return await postgresClient(query as any, ...params)
+  // Ensure postgresClient is initialized for local databases
+  if (isLocal) {
+    const client = await initializePostgresClient()
+    
+    if (client) {
+      // Local PostgreSQL (Docker)
+      if (typeof query === "string") {
+        // String query with parameters - convert to parameterized query
+        // This is safe as long as params are provided and query uses $1, $2, etc.
+        return await client.unsafe(query, params)
+      } else {
+        // Template string query (preferred, automatically parameterized)
+        return await client(query as any, ...params)
+      }
     }
   } else if (neonClient) {
     // Production Neon database

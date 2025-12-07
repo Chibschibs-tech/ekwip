@@ -9,50 +9,60 @@ export async function GET(request: Request) {
 
     // Use template strings for better compatibility
     let categories
-    if (active === "true" && parentId) {
-      if (parentId === "null") {
+    try {
+      if (active === "true" && parentId) {
+        if (parentId === "null") {
+          categories = await sql`
+            SELECT * FROM categories 
+            WHERE is_active = true AND parent_id IS NULL
+            ORDER BY sort_order ASC, name ASC
+          `
+        } else {
+          categories = await sql`
+            SELECT * FROM categories 
+            WHERE is_active = true AND parent_id = ${parentId}
+            ORDER BY sort_order ASC, name ASC
+          `
+        }
+      } else if (active === "true") {
         categories = await sql`
           SELECT * FROM categories 
-          WHERE is_active = true AND parent_id IS NULL
+          WHERE is_active = true
           ORDER BY sort_order ASC, name ASC
         `
+      } else if (parentId) {
+        if (parentId === "null") {
+          categories = await sql`
+            SELECT * FROM categories 
+            WHERE parent_id IS NULL
+            ORDER BY sort_order ASC, name ASC
+          `
+        } else {
+          categories = await sql`
+            SELECT * FROM categories 
+            WHERE parent_id = ${parentId}
+            ORDER BY sort_order ASC, name ASC
+          `
+        }
       } else {
+        // Get all categories
         categories = await sql`
           SELECT * FROM categories 
-          WHERE is_active = true AND parent_id = ${parentId}
           ORDER BY sort_order ASC, name ASC
         `
       }
-    } else if (active === "true") {
-      categories = await sql`
-        SELECT * FROM categories 
-        WHERE is_active = true
-        ORDER BY sort_order ASC, name ASC
-      `
-    } else if (parentId) {
-      if (parentId === "null") {
-        categories = await sql`
-          SELECT * FROM categories 
-          WHERE parent_id IS NULL
-          ORDER BY sort_order ASC, name ASC
-        `
-      } else {
-        categories = await sql`
-          SELECT * FROM categories 
-          WHERE parent_id = ${parentId}
-          ORDER BY sort_order ASC, name ASC
-        `
+    } catch (dbError: any) {
+      console.error("Database error fetching categories:", dbError)
+      // If table doesn't exist or connection fails, return empty array
+      if (dbError.message?.includes("does not exist") || dbError.message?.includes("connection")) {
+        console.warn("Categories table may not exist or database connection failed. Returning empty array.")
+        return NextResponse.json([])
       }
-    } else {
-      // Get all categories
-      categories = await sql`
-        SELECT * FROM categories 
-        ORDER BY sort_order ASC, name ASC
-      `
+      throw dbError
     }
 
     // Transform to match frontend types
-    const transformedCategories = categories.map((c: any) => ({
+    const transformedCategories = (categories || []).map((c: any) => ({
       id: c.id,
       name: c.name,
       slug: c.slug,
@@ -62,15 +72,18 @@ export async function GET(request: Request) {
       icon: c.icon,
       order: c.sort_order,
       isActive: c.is_active,
-      productCount: c.product_count,
+      productCount: c.product_count || 0,
       createdAt: c.created_at,
       updatedAt: c.updated_at,
     }))
 
     return NextResponse.json(transformedCategories)
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching categories:", error)
-    return NextResponse.json({ error: "Failed to fetch categories" }, { status: 500 })
+    return NextResponse.json(
+      { error: "Failed to fetch categories", details: error.message },
+      { status: 500 }
+    )
   }
 }
 

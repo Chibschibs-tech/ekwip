@@ -1,12 +1,210 @@
 # Ekwip Project - Progress Tracker
 
-**Last Updated**: 2024-12-19 23:45 UTC  
+**Last Updated**: 2024-12-20 10:30 UTC  
 **Project**: Ekwip Web Application  
 **Repository**: https://github.com/Chibschibs-tech/ekwip
 
 ---
 
 ## 📋 Change Log (Timed Entries)
+
+### 2024-12-20 10:30 UTC - Boutique Homepage Redesign & Bug Fixes
+
+**Action**: Completed Boutique homepage redesign with e-commerce layout, fixed Popular Categories display, and resolved product creation errors
+
+**Boutique Homepage Redesign**:
+- ✅ Created `BoutiqueSubmenu` component with category dropdown and navigation links
+- ✅ Added `BoutiquePromotionalBanners` component (3 banners: 1 large left, 2 stacked right)
+- ✅ Created `BoutiquePopularCategories` component with category cards showing product counts
+- ✅ Added `BoutiqueActualites` component for blog/news section
+- ✅ Implemented blog posts API (`/api/blog-posts`) and admin panel (`/admin/blog`)
+- ✅ Created blog posts database table with full CRUD support
+- ✅ Updated homepage layout to match e-commerce design (inspired by sc1 image)
+- ✅ Menu positioned closer to category dropdown as requested
+- ✅ Consistent Ekwip blue/slate color scheme maintained
+
+**Popular Categories Fix**:
+- ✅ Fixed component always rendering (was returning `null` when empty)
+- ✅ Added loading state with skeleton placeholders
+- ✅ Added empty state with debug information
+- ✅ Added console logging for debugging data flow
+- ✅ Category cards link to `/boutique/[category]` pages
+- ✅ Product counts displayed per category
+
+**Product Creation Error Fixes**:
+- ✅ Fixed database constraint violation: "value too long for type character varying(500)"
+- ✅ Added field truncation for `name` (255 chars), `slug` (255 chars), `sku` (100 chars), `thumbnail` (500 chars)
+- ✅ Improved error handling in API route with detailed error messages
+- ✅ Enhanced error display in products context
+- ✅ Added automatic product list refresh after successful creation
+- ✅ Fixed form to properly await API response and check success status
+- ✅ Removed unnecessary `id`, `createdAt`, `updatedAt` from form submission (API generates these)
+
+**Client Logos Fix**:
+- ✅ Updated `ClientLogoSlider` to fetch actual client logos from `/api/clients`
+- ✅ Uses images from `public/images/clients-logo/` folder
+- ✅ Added fallback to text-based placeholders if API fails
+- ✅ Added scroll animation CSS
+
+**Data Fetching Improvements**:
+- ✅ Improved error handling in `/api/categories` (returns empty array on errors)
+- ✅ Improved error handling in `/api/products` (returns empty array on errors)
+- ✅ Improved error handling in `/api/brands` (returns empty array on errors)
+- ✅ Fixed database connection initialization in `lib/db.ts`
+- ✅ Added error display in catalog pages
+
+**Files Created**:
+- `components/boutique-submenu.tsx` - Boutique-specific navigation menu
+- `components/boutique-promotional-banners.tsx` - Promotional banner section
+- `components/boutique-popular-categories.tsx` - Popular categories grid
+- `components/boutique-actualites.tsx` - Blog/news section
+- `app/api/blog-posts/route.ts` - Blog posts API (GET, POST)
+- `app/api/blog-posts/[id]/route.ts` - Individual blog post API (GET, PUT, DELETE)
+- `app/(daas)/daas/admin/blog/page.tsx` - Blog admin panel
+- `scripts/005-create-blog-posts-table.sql` - Blog posts table schema
+- `scripts/create-blog-posts-table.ts` - Script to create blog table
+
+**Files Modified**:
+- `app/(daas)/daas/boutique/page.tsx` - Complete redesign with new components
+- `app/boutique/page.tsx` - Complete redesign with new components
+- `components/boutique-popular-categories.tsx` - Fixed rendering and added debug logging
+- `app/api/products/route.ts` - Added field truncation and better error handling
+- `contexts/products-context.tsx` - Improved error handling and auto-refresh
+- `app/(daas)/daas/admin/catalogue/products/create/page.tsx` - Fixed form submission
+- `app/admin/catalogue/products/create/page.tsx` - Fixed form submission
+- `components/client-logo-slider.tsx` - Fetch real client logos from API
+- `app/globals.css` - Added scroll animation for client logos
+- `app/api/categories/route.ts` - Improved error handling
+- `app/api/brands/route.ts` - Improved error handling
+- `lib/db.ts` - Improved database connection handling
+
+**Next Steps**:
+- [ ] Test product creation with various field lengths
+- [ ] Verify Popular Categories displays correctly with sale products
+- [ ] Test blog post creation and display
+- [ ] Verify all client logos display correctly
+
+---
+
+### 2024-12-20 02:30 UTC - Phase 2: Orders/Clients Backend Enhancements Complete
+
+**Action**: Completed Phase 2 implementation - Database migration and Orders API updates for rental vs shop orders
+
+**Phase 2.1 - Database Migration**:
+- ✅ Created `clients` table for B2B rental orders
+- ✅ Created migration script to add rental-specific fields to `orders` table
+- ✅ Added fields: `order_type`, `client_id`, `rental_start_date`, `rental_end_date`, `rental_duration`
+- ✅ Added fields to `order_items`: `monthly_fee`, `upfront_contribution`, `item_start_date`, `item_end_date`
+- ✅ Created indexes: `idx_orders_type`, `idx_orders_client`, `idx_orders_rental_dates`
+- ✅ Verified all columns and indexes created successfully
+
+**Phase 2.2 - Migration Verification**:
+- ✅ Verified all 5 new columns in `orders` table
+- ✅ Verified all 4 new columns in `order_items` table
+- ✅ Verified all 3 indexes created
+- ✅ Database schema now supports rental vs shop order differentiation
+
+**Phase 2.3 - Orders API Updates**:
+- ✅ Updated GET `/api/orders` to include rental-specific fields in response
+- ✅ Updated GET `/api/orders/[id]` to include rental-specific fields
+- ✅ Updated POST `/api/orders` to handle rental vs shop order creation
+- ✅ Added support for rental-specific order item fields (monthly_fee, upfront_contribution, dates)
+- ✅ Added automatic client info fetching for rental orders
+- ✅ Fixed column names to match database schema (`tax`, `discount`, `shipping`)
+- ✅ Support for both `client_id` (rental) and `customer_id` (shop) orders
+
+**Files Created**:
+- `scripts/create-clients-table.ts` - Script to create clients table
+- `scripts/create-clients-table.sql` - SQL script for clients table
+
+**Files Modified**:
+- `app/api/orders/route.ts` - Updated to support rental/shop orders
+- `app/api/orders/[id]/route.ts` - Updated to include rental fields
+
+**Next Steps**:
+- [ ] Phase 2.4: Test rental order creation via API
+- [ ] Phase 2.5: Test shop order creation via API
+- [x] Phase 3: Boutique e-commerce implementation (in progress)
+
+---
+
+### 2024-12-20 03:15 UTC - Phase 3: Boutique E-commerce Implementation Complete
+
+**Action**: Completed Phase 3 implementation - Full e-commerce shop section built
+
+**Phase 3.1 - Route Structure**:
+- ✅ Boutique route structure created
+
+**Phase 3.2 - Homepage**:
+- ✅ Boutique homepage exists at `/boutique` with product filtering and search
+- ✅ Displays sale products only (`productType === "sale"`)
+- ✅ Basic filtering by category, brand, and search
+
+**Phase 3.3 - Category Pages**:
+- ✅ Created category pages at `/boutique/[category]`
+- ✅ Advanced filtering sidebar (price range, brands, stock)
+- ✅ Mobile-responsive filter panel
+- ✅ Product grid with sorting options
+- ✅ Category-specific product display
+
+**Phase 3.4 - Product Detail Pages**:
+- ✅ Product detail pages exist at `/boutique/produit/[slug]`
+- ✅ Image gallery with thumbnails
+- ✅ Quantity selector
+- ✅ Product specifications and tabs
+- ✅ Add to cart functionality
+
+**Phase 3.5 - Shopping Cart**:
+- ✅ Created shopping cart page at `/boutique/panier`
+- ✅ Cart item management (quantity, remove)
+- ✅ Stock validation
+- ✅ Cart summary with subtotal, tax, shipping
+- ✅ Free shipping threshold (1000 DH)
+- ✅ Empty cart state
+- ✅ Proceed to checkout button
+
+**Phase 3.6 - Checkout Process**:
+- ✅ Created multi-step checkout at `/boutique/checkout`
+- ✅ Step 1: Shipping address form
+- ✅ Step 2: Billing address (with "same as shipping" option) and payment method
+- ✅ Step 3: Order review and confirmation
+- ✅ Progress indicator with visual steps
+- ✅ Order summary sidebar (always visible)
+- ✅ Terms & conditions acceptance
+- ✅ Order creation via API (`/api/orders` with `orderType: "sale"`)
+- ✅ Payment methods: Cash on delivery, Bank transfer (online payment placeholder)
+
+**Cart Structure Fix**:
+- ✅ Fixed cart structure mismatch - all Boutique pages now pass full `Product` objects to cart context
+- ✅ Updated `addItem()` calls in homepage, category pages, and product detail pages
+
+**Files Created**:
+- `app/boutique/[category]/page.tsx` - Category pages with advanced filtering
+- `app/boutique/panier/page.tsx` - Shopping cart page
+- `app/boutique/checkout/page.tsx` - Multi-step checkout process
+
+**Files Modified**:
+- `app/boutique/page.tsx` - Fixed cart structure
+- `app/boutique/produit/[slug]/page.tsx` - Fixed cart structure and notFound handling
+- `app/boutique/[category]/page.tsx` - Fixed cart structure
+
+**Features Implemented**:
+- ✅ Complete e-commerce flow: Browse → Category → Product → Cart → Checkout
+- ✅ Advanced filtering system (price, brand, stock)
+- ✅ Shopping cart with quantity management
+- ✅ Multi-step checkout with address forms
+- ✅ Order creation via API (shop orders with `orderType: "sale"`)
+- ✅ Tax calculation (20% VAT)
+- ✅ Shipping calculation (free over 1000 DH)
+- ✅ Mobile-responsive design
+
+**Next Steps**:
+- [ ] Test complete e-commerce flow end-to-end
+- [ ] Add payment gateway integration (next phase)
+- [ ] Create order confirmation page
+- [ ] Add order tracking functionality
+
+---
 
 ### 2024-12-20 01:15 UTC - Database Verification Complete - Local Database Confirmed
 

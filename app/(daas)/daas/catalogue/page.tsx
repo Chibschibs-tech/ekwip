@@ -55,8 +55,8 @@ const categoryImages: Record<string, string> = {
 
 export default function Catalogue() {
   // Fetch data from API contexts
-  const { categories, loading: categoriesLoading } = useCategories()
-  const { products: allProducts, loading: productsLoading } = useProducts()
+  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories()
+  const { products: allProducts, loading: productsLoading, error: productsError } = useProducts()
   const { brands: allBrands, loading: brandsLoading } = useBrands()
 
   // Filter for rental products only (active status)
@@ -81,9 +81,22 @@ export default function Catalogue() {
   }, [allBrands])
 
   const loading = categoriesLoading || productsLoading || brandsLoading
+  const hasError = categoriesError || productsError
 
   return (
     <div>
+      {/* Error Display */}
+      {hasError && (
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-4">
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <p className="text-yellow-800 text-sm">
+              {categoriesError && "⚠️ Impossible de charger les catégories. "}
+              {productsError && "⚠️ Impossible de charger les produits. "}
+              Veuillez actualiser la page ou contacter le support si le problème persiste.
+            </p>
+          </div>
+        </div>
+      )}
       {/* Hero Section */}
       <section className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <div className="max-w-7xl mx-auto text-center">

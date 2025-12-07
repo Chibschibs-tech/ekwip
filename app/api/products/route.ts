@@ -134,17 +134,75 @@ export async function GET(request: Request) {
     })
 
     return NextResponse.json(transformedProducts)
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error fetching products:", error)
-    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 })
+    // If table doesn't exist or connection fails, return empty array
+    if (error.message?.includes("does not exist") || error.message?.includes("connection")) {
+      console.warn("Products table may not exist or database connection failed. Returning empty array.")
+      return NextResponse.json([])
+    }
+    return NextResponse.json(
+      { error: "Failed to fetch products", details: error.message },
+      { status: 500 }
+    )
   }
 }
 
 export async function POST(request: Request) {
   try {
     const body = await request.json()
+    
+    // Validate required fields
+    if (!body.name || !body.sku || !body.productType || !body.price) {
+      return NextResponse.json(
+        { error: "Missing required fields: name, sku, productType, and price are required" },
+        { status: 400 }
+      )
+    }
+
+    // Generate slug if not provided
+    if (!body.slug) {
+      body.slug = body.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "")
+    }
+
     const id = generateId("prod")
     const now = formatDate()
+
+    // Parse JSON fields that might be strings
+    const parseJsonField = (field: any) => {
+      if (!field) return field
+      if (typeof field === "string") {
+        try {
+          return JSON.parse(field)
+        } catch {
+          return field
+        }
+      }
+      return field
+    }
+
+    const images = body.images || []
+    const attributes = body.attributes || {}
+    const tags = body.tags || []
+    const dimensions = body.dimensions || null
+    const rentalDurations = body.rentalDurations || null
+
+    // Truncate fields that have database length limits
+    const truncate = (str: string | null | undefined, maxLength: number): string | null => {
+      if (!str) return null
+      if (str.length <= maxLength) return str
+      console.warn(`Truncating field from ${str.length} to ${maxLength} characters: ${str.substring(0, 50)}...`)
+      return str.substring(0, maxLength)
+    }
+
+    // Validate and truncate fields with VARCHAR limits
+    const truncatedName = truncate(body.name, 255) || body.name
+    const truncatedSlug = truncate(body.slug, 255) || body.slug
+    const truncatedSku = truncate(body.sku, 100) || body.sku
+    const truncatedThumbnail = truncate(body.thumbnail, 500)
 
     const result = await sql`
       INSERT INTO products (
@@ -154,14 +212,49 @@ export async function POST(request: Request) {
         weight, dimensions, attributes, tags, is_featured, rental_durations,
         created_at, updated_at
       ) VALUES (
-        ${id}, ${body.name}, ${body.slug}, ${body.sku}, ${body.description}, ${body.shortDescription},
-        ${body.categoryId}, ${body.brandId}, ${body.productType}, ${body.price}, ${body.compareAtPrice || null}, ${body.costPrice || null},
-        ${JSON.stringify(body.images || [])}, ${body.thumbnail}, ${body.status || "draft"}, ${body.stockQuantity || 0}, ${body.lowStockThreshold || 5},
-        ${body.weight || null}, ${body.dimensions ? JSON.stringify(body.dimensions) : null}, ${JSON.stringify(body.attributes || {})}, ${JSON.stringify(body.tags || [])}, ${body.isFeatured || false}, ${body.rentalDurations ? JSON.stringify(body.rentalDurations) : null},
+        ${id}, ${truncatedName}, ${truncatedSlug}, ${truncatedSku}, ${body.description || null}, ${body.shortDescription || null},
+        ${body.categoryId || null}, ${body.brandId || null}, ${body.productType}, ${body.price}, ${body.compareAtPrice || null}, ${body.costPrice || null},
+        ${JSON.stringify(images)}, ${truncatedThumbnail}, ${body.status || "draft"}, ${body.stockQuantity || 0}, ${body.lowStockThreshold || 5},
+        ${body.weight || null}, ${dimensions ? JSON.stringify(dimensions) : null}, ${JSON.stringify(attributes)}, ${JSON.stringify(tags)}, ${body.isFeatured || false}, ${rentalDurations ? JSON.stringify(rentalDurations) : null},
         ${now}, ${now}
       )
       RETURNING *
     `
+
+    // Transform to match frontend types
+    const p = result[0]
+    const transformedProduct = {
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      sku: p.sku,
+      description: p.description,
+      shortDescription: p.short_description,
+      categoryId: p.category_id,
+      categoryName: p.category_name,
+      categorySlug: p.category_slug,
+      brandId: p.brand_id,
+      brandName: p.brand_name,
+      brandLogo: p.brand_logo,
+      productType: p.product_type,
+      price: Number.parseFloat(p.price || 0),
+      compareAtPrice: p.compare_at_price ? Number.parseFloat(p.compare_at_price) : undefined,
+      costPrice: p.cost_price ? Number.parseFloat(p.cost_price) : undefined,
+      images: parseJsonField(p.images) || [],
+      thumbnail: p.thumbnail,
+      status: p.status,
+      stockQuantity: p.stock_quantity || 0,
+      lowStockThreshold: p.low_stock_threshold || 5,
+      weight: p.weight ? Number.parseFloat(p.weight) : undefined,
+      dimensions: parseJsonField(p.dimensions),
+      attributes: parseJsonField(p.attributes) || {},
+      tags: parseJsonField(p.tags) || [],
+      isFeatured: p.is_featured || false,
+      rentalDurations: parseJsonField(p.rental_durations),
+      variations: parseJsonField(p.variations),
+      createdAt: p.created_at,
+      updatedAt: p.updated_at,
+    }
 
     // Update category product count
     if (body.categoryId) {
@@ -181,9 +274,18 @@ export async function POST(request: Request) {
       `
     }
 
-    return NextResponse.json(result[0], { status: 201 })
-  } catch (error) {
+    return NextResponse.json(transformedProduct, { status: 201 })
+  } catch (error: any) {
     console.error("Error creating product:", error)
-    return NextResponse.json({ error: "Failed to create product" }, { status: 500 })
+    const errorMessage = error?.message || "Failed to create product"
+    const errorDetails = error?.detail || error?.code || ""
+    return NextResponse.json(
+      { 
+        error: "Failed to create product",
+        details: errorMessage,
+        code: errorDetails
+      },
+      { status: 500 }
+    )
   }
 }

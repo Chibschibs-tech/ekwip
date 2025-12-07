@@ -14,7 +14,6 @@ import { Separator } from "@/components/ui/separator"
 import { ShoppingCart, Minus, Plus, Check } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
-import { notFound } from "next/navigation"
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const resolvedParams = use(params)
@@ -30,7 +29,16 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
   const product = products.find((p) => p.slug === resolvedParams.slug && p.productType === "sale")
 
   if (!product) {
-    notFound()
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Produit introuvable</h1>
+          <Link href="/boutique">
+            <Button>Retour à la boutique</Button>
+          </Link>
+        </div>
+      </div>
+    )
   }
 
   const category = categories.find((c) => c.id === product.categoryId)
@@ -47,13 +55,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
       return
     }
 
-    addItem({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      quantity: quantity,
-      image: product.thumbnail || product.images?.[0] || "/placeholder.svg",
-    })
+    addItem(product, quantity)
 
     toast({
       title: "Ajouté au panier",

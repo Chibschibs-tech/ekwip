@@ -48,12 +48,21 @@ export function ProductsProvider({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product),
       })
-      if (!response.ok) throw new Error("Failed to create product")
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: "Unknown error" }))
+        const errorMessage = errorData.details || errorData.error || `Failed to create product (${response.status})`
+        console.error("Error creating product:", errorMessage, errorData)
+        throw new Error(errorMessage)
+      }
+      
       const newProduct = await response.json()
       setProducts((prev) => [...prev, newProduct])
+      await fetchProducts() // Refresh the list
       return newProduct
     } catch (err) {
       console.error("Error creating product:", err)
+      setError(err instanceof Error ? err.message : "Failed to create product")
       return null
     }
   }

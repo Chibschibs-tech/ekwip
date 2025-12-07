@@ -50,28 +50,36 @@ export function ProductTabs() {
 
         if (categoriesRes.ok) {
           const categoriesData = await categoriesRes.json()
-          const activeCategories = categoriesData.filter((cat: Category) => cat.isActive)
-          setCategories(activeCategories)
+          if (Array.isArray(categoriesData)) {
+            const activeCategories = categoriesData.filter((cat: Category) => cat.isActive)
+            setCategories(activeCategories)
+          }
+        } else {
+          console.warn("Failed to fetch categories:", categoriesRes.status, categoriesRes.statusText)
         }
 
         if (productsRes.ok) {
           const productsData = await productsRes.json()
-          const mappedProducts = productsData.map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            slug: p.slug,
-            description: p.shortDescription || p.description || "",
-            price: p.rentalDurations?.[0]?.monthlyPrice || p.price || 0,
-            image: p.thumbnail || p.images?.[0] || "/placeholder.svg",
-            brand: p.brandName || "Sans marque",
-            category: p.categoryName || "Sans catégorie",
-            categoryId: p.categoryId || "",
-            isNew: p.isNew || false,
-            isPopular: p.isPopular || false,
-            isFeatured: p.isFeatured || false,
-          }))
-          setProducts(mappedProducts)
-          setDisplayedProducts(mappedProducts.slice(0, 6))
+          if (Array.isArray(productsData)) {
+            const mappedProducts = productsData.map((p: any) => ({
+              id: p.id,
+              name: p.name,
+              slug: p.slug,
+              description: p.shortDescription || p.description || "",
+              price: p.rentalDurations?.[0]?.monthlyPrice || p.rentalDurations?.[0]?.monthlyFee || p.price || 0,
+              image: p.thumbnail || p.images?.[0] || "/placeholder.svg",
+              brand: p.brandName || "Sans marque",
+              category: p.categoryName || "Sans catégorie",
+              categoryId: p.categoryId || "",
+              isNew: p.isNew || false,
+              isPopular: p.isPopular || false,
+              isFeatured: p.isFeatured || false,
+            }))
+            setProducts(mappedProducts)
+            setDisplayedProducts(mappedProducts.slice(0, 6))
+          }
+        } else {
+          console.warn("Failed to fetch products:", productsRes.status, productsRes.statusText)
         }
       } catch (error) {
         console.error("Error fetching data:", error)
