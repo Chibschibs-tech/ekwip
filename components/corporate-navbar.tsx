@@ -71,7 +71,7 @@ export default function CorporateNavbar() {
 
                         {/* Catalog CTA */}
                         <Link href={catalogUrl} className="ek-btn-pill-primary">
-                            Accéder au Catalogue
+                            Accéder au catalogue DaaS
                         </Link>
                     </div>
                 </div>

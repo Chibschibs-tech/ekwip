@@ -8,6 +8,7 @@ import { generateStructuredData } from "@/lib/seo"
 import { generateMetadata as genMetadata } from "@/lib/seo"
 import { ClientLogoSlider } from "@/components/client-logo-slider"
 import { ServiceCard } from "@/components/service-card"
+import { CardSlider } from "@/components/ui/card-slider"
 
 export const metadata = genMetadata({
   title: "Ekwip Tech - Agents IA, Développement sur-mesure et Automatisation au Maroc",
@@ -76,7 +77,7 @@ export default function TechPage() {
                                         </button>
                                     </Link>
                                     <a href="#expertises">
-                                        <button className="ek-btn-pill-secondary border-slate-300 text-slate-700 hover:border-orange-500 hover:text-orange-500 hover:bg-orange-50">
+                                        <button className="ek-btn-pill-secondary border-[#1f3b57] text-[#1f3b57] hover:bg-[#1f3b57]/10 hover:border-[#1f3b57] bg-white">
                                             Découvrir nos expertises
                                         </button>
                                     </a>
@@ -90,24 +91,10 @@ export default function TechPage() {
                             </div>
                         </ScrollReveal>
 
-                        {/* Right: Hero Image and Console */}
+                        {/* Right: Console Module */}
                         <ScrollReveal delay={0.2}>
-                            <div className="space-y-6">
-                                {/* Hero Image */}
-                                <div className="relative h-[400px] w-full rounded-2xl overflow-hidden shadow-2xl border border-slate-200">
-                                    <Image
-                                        src="/artifacts/tech_ai_visual_v2.png"
-                                        alt="Développement sur-mesure et agents IA - Solutions tech personnalisées pour transformation digitale"
-                                        fill
-                                        className="object-cover"
-                                        priority
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent"></div>
-                                </div>
-                                
-                                {/* Console Module */}
-                                <div className="ek-tech-console-wrapper transform hover:scale-[1.02] transition-transform duration-500">
-                                    <div className="ek-tech-console">
+                            <div className="ek-tech-console-wrapper transform hover:scale-[1.02] transition-transform duration-500">
+                                <div className="ek-tech-console">
                                     {/* Header */}
                                     <div className="ek-tech-console-header">
                                         <div style={{ fontSize: '0.7rem', color: '#e5e7eb' }}>Console Ekwip Tech</div>
@@ -173,7 +160,6 @@ export default function TechPage() {
                                         </div>
                                         <div className="font-mono">v2.4.0</div>
                                     </div>
-                                    </div>
                                 </div>
                             </div>
                         </ScrollReveal>
@@ -198,7 +184,7 @@ export default function TechPage() {
                         </div>
                     </ScrollReveal>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                    <CardSlider gap="md" className="mb-12">
                         {[
                             { icon: <Bot className="w-6 h-6 text-orange-500" />, title: "Agents IA", description: "Assistants virtuels intelligents connectés à votre base de connaissances interne." },
                             { icon: <Code className="w-6 h-6 text-blue-500" />, title: "Web Apps Métier", description: "Applications sur-mesure pour digitaliser vos processus spécifiques." },
@@ -213,11 +199,11 @@ export default function TechPage() {
                                         {item.icon}
                                     </div>
                                     <h3 className="text-lg font-bold text-white mb-3 group-hover:text-orange-400 transition-colors">{item.title}</h3>
-                                    <p className="text-sm text-slate-400 leading-relaxed">{item.description}</p>
+                                    <p className="text-sm text-slate-400 leading-relaxed flex-grow">{item.description}</p>
                                 </div>
                             </ScrollReveal>
                         ))}
-                    </div>
+                    </CardSlider>
 
                     <ScrollReveal delay={0.4}>
                         <div className="text-center">

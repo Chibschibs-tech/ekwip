@@ -8,6 +8,7 @@ import { generateStructuredData } from "@/lib/seo"
 import { generateMetadata as genMetadata } from "@/lib/seo"
 import { ClientLogoSlider } from "@/components/client-logo-slider"
 import { ServiceCard } from "@/components/service-card"
+import { CardSlider } from "@/components/ui/card-slider"
 
 export const metadata = genMetadata({
   title: "Ekwip Connect - Solutions Audiovisuelles Professionnelles au Maroc",
@@ -76,7 +77,7 @@ export default function ConnectPage() {
                                         </button>
                                     </Link>
                                     <a href="#solutions">
-                                        <button className="ek-btn-pill-secondary border-white/30 text-white hover:bg-white/10 hover:border-white">
+                                        <button className="ek-btn-pill-secondary border-white text-white hover:bg-white/20 hover:border-white bg-white/10 backdrop-blur-sm">
                                             Découvrir nos solutions
                                         </button>
                                     </a>

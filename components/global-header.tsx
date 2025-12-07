@@ -73,7 +73,7 @@ export default function GlobalHeader() {
                             href="/daas/catalogue"
                             className="inline-flex items-center justify-center gap-2 h-9 px-5 rounded-full bg-gradient-to-r from-ekwip-primaryDeep via-ekwip-primary to-sky-500 text-xs font-semibold text-white shadow-sm hover:shadow-md transition-shadow"
                         >
-                            Accéder au Catalogue
+                            Accéder au catalogue DaaS
                         </Link>
                     </div>
                 </div>
