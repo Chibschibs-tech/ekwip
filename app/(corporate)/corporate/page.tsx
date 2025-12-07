@@ -87,8 +87,8 @@ export default function CorporateHome() {
                         </div>
                     </ScrollReveal>
 
-                    <div className="w-full flex justify-center">
-                        <CardSlider gap="lg" className="mb-12 w-full max-w-7xl">
+                    <div className="w-full">
+                        <CardSlider gap="lg" className="mb-12 w-full max-w-7xl mx-auto">
                             {[
                                 {
                                     icon: <Laptop className="h-7 w-7 text-[#38BDF8]" />,
@@ -155,8 +155,8 @@ export default function CorporateHome() {
                     </ScrollReveal>
 
                     {/* Domain Cards - Horizontal Grid with Enhanced Glassmorphism */}
-                    <div className="w-full flex justify-center">
-                        <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr w-full max-w-7xl">
+                    <div className="w-full">
+                        <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr w-full max-w-7xl mx-auto">
                             {/* DaaS Card */}
                             <ScrollReveal delay={0.1} className="h-full flex">
                                 <DaasLink href="/catalogue" className="group block h-full w-full flex">
