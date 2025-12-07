@@ -8,6 +8,7 @@ import { DaasLink } from "@/components/daas-link"
 import { StructuredData } from "@/components/seo/structured-data"
 import { generateStructuredData } from "@/lib/seo"
 import { metadata } from "./metadata"
+import { CardSlider } from "@/components/ui/card-slider"
 
 export { metadata }
 
