@@ -226,9 +226,11 @@ export interface Banner {
   title: string
   description?: string
   image: string
+  mobileImage?: string
+  isMobileEnabled: boolean
   link?: string
   buttonText?: string
-  position: "hero" | "sidebar" | "footer"
+  position: "hero" | "sidebar" | "footer" | "boutique"
   order: number
   startDate: string
   endDate?: string
