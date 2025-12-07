@@ -7,9 +7,10 @@ interface ScrollRevealProps {
     children: React.ReactNode
     width?: "fit-content" | "100%"
     delay?: number
+    className?: string
 }
 
-export const ScrollReveal = ({ children, width = "100%", delay = 0 }: ScrollRevealProps) => {
+export const ScrollReveal = ({ children, width = "100%", delay = 0, className = "" }: ScrollRevealProps) => {
     const ref = useRef(null)
     const isInView = useInView(ref, { once: true, margin: "-50px" })
     const mainControls = useAnimation()
@@ -20,8 +21,12 @@ export const ScrollReveal = ({ children, width = "100%", delay = 0 }: ScrollReve
         }
     }, [isInView, mainControls])
 
+    // If className contains flex or h-full, override width to allow flex behavior
+    const hasFlexClasses = className.includes("flex") || className.includes("h-full")
+    const finalWidth = hasFlexClasses ? undefined : width
+
     return (
-        <div ref={ref} style={{ position: "relative", width, overflow: "hidden" }}>
+        <div ref={ref} style={{ position: "relative", width: finalWidth, overflow: "hidden" }} className={className}>
             <motion.div
                 variants={{
                     hidden: { opacity: 0, y: 75 },
@@ -30,6 +35,7 @@ export const ScrollReveal = ({ children, width = "100%", delay = 0 }: ScrollReve
                 initial="hidden"
                 animate={mainControls}
                 transition={{ duration: 0.5, delay: delay, ease: "easeOut" }}
+                className={hasFlexClasses ? "h-full w-full flex" : ""}
             >
                 {children}
             </motion.div>
