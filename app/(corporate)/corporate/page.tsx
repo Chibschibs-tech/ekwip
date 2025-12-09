@@ -87,8 +87,9 @@ export default function CorporateHome() {
                         </div>
                     </ScrollReveal>
 
-                    <div className="w-full">
-                        <CardSlider gap="lg" className="mb-12 w-full max-w-7xl mx-auto">
+                    <div className="w-full flex justify-center">
+                        <div className="w-full max-w-7xl">
+                            <CardSlider gap="lg" className="mb-12">
                             {[
                                 {
                                     icon: <Laptop className="h-7 w-7 text-[#38BDF8]" />,
