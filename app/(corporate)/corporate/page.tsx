@@ -24,54 +24,50 @@ export default function CorporateHome() {
             {/* Hero Section with Glassmorphism */}
             <section className="relative bg-gradient-to-br from-[#1F3B57] via-[#2a4a66] to-[#1F3B57] py-16 md:py-20 lg:py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
                 {/* Animated Background Pattern */}
-                <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0 opacity-10 z-0">
                     <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
                     <div className="absolute bottom-20 right-10 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse delay-700"></div>
+                </div>
+
+                {/* Mobile Background Image Layer */}
+                <div className="lg:hidden absolute inset-0 z-[1]">
+                    <Image
+                        src="/artifacts/corporate_hero_team.png"
+                        alt=""
+                        fill
+                        className="object-cover opacity-40"
+                        priority
+                        sizes="100vw"
+                        aria-hidden="true"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#1F3B57]/90 via-[#1F3B57]/85 to-[#1F3B57]/95"></div>
                 </div>
 
                 <div className="max-w-7xl mx-auto relative z-10">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         {/* Left: Hero Content in Glassmorphic Container */}
                         <ScrollReveal>
-                            {/* Mobile: Background image container */}
-                            <div className="relative lg:static">
-                                {/* Mobile background image */}
-                                <div className="lg:hidden absolute inset-0 rounded-3xl overflow-hidden -z-10">
-                                    <Image
-                                        src="/artifacts/corporate_hero_team.png"
-                                        alt=""
-                                        fill
-                                        className="object-cover"
-                                        priority
-                                        sizes="100vw"
-                                        aria-hidden="true"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-b from-[#1F3B57]/80 via-[#1F3B57]/70 to-[#1F3B57]/90 rounded-3xl"></div>
-                                </div>
-                                
-                                {/* Text content */}
-                                <div className="backdrop-blur-md bg-white/10 lg:bg-white/10 border border-white/20 rounded-3xl p-6 md:p-8 lg:p-12 relative z-10">
-                                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">
-                                        Alignez vos équipes, vos outils et vos équipements.
-                                    </h1>
+                            <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-3xl p-6 md:p-8 lg:p-12 relative">
+                                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">
+                                    Alignez vos équipes, vos outils et vos équipements.
+                                </h1>
 
-                                    <p className="text-base md:text-lg text-blue-100 mb-6 md:mb-8 leading-relaxed">
-                                        De l&apos;équipement IT à la location, aux espaces audiovisuels, en passant par les outils digitaux sur-mesure. Ekwip conçoit et opère l&apos;infrastructure matérielle et digitale de votre entreprise : postes de travail, espaces audiovisuels, outils internes et agents IA qui parlent le langage de vos équipes.
-                                    </p>
+                                <p className="text-base md:text-lg text-blue-100 mb-6 md:mb-8 leading-relaxed">
+                                    De l&apos;équipement IT à la location, aux espaces audiovisuels, en passant par les outils digitaux sur-mesure. Ekwip conçoit et opère l&apos;infrastructure matérielle et digitale de votre entreprise : postes de travail, espaces audiovisuels, outils internes et agents IA qui parlent le langage de vos équipes.
+                                </p>
 
-                                    <div className="flex flex-col sm:flex-row gap-3">
-                                        <Link href="/contact">
-                                            <button className="ek-btn-pill-primary">
-                                                Parler à un expert
-                                                <ArrowRight className="h-4 w-4" />
-                                            </button>
-                                        </Link>
-                                        <a href="#domains">
-                                            <button className="ek-btn-pill-secondary bg-white border-white/20 text-ekwip-primary hover:backdrop-blur-md hover:bg-white/80 hover:border-white/30 hover:text-[#1a3047] transition-all duration-300 shadow-lg hover:shadow-xl">
-                                                Nos domaines d&apos;intervention
-                                            </button>
-                                        </a>
-                                    </div>
+                                <div className="flex flex-col sm:flex-row gap-3">
+                                    <Link href="/contact">
+                                        <button className="ek-btn-pill-primary">
+                                            Parler à un expert
+                                            <ArrowRight className="h-4 w-4" />
+                                        </button>
+                                    </Link>
+                                    <a href="#domains">
+                                        <button className="ek-btn-pill-secondary bg-white border-white/20 text-ekwip-primary hover:backdrop-blur-md hover:bg-white/80 hover:border-white/30 hover:text-[#1a3047] transition-all duration-300 shadow-lg hover:shadow-xl">
+                                            Nos domaines d&apos;intervention
+                                        </button>
+                                    </a>
                                 </div>
                             </div>
                         </ScrollReveal>
