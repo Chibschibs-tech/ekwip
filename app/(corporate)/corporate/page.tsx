@@ -35,7 +35,7 @@ export default function CorporateHome() {
                         src="/artifacts/corporate_hero_team.png"
                         alt=""
                         fill
-                        className="object-cover opacity-40"
+                        className="object-cover opacity-80"
                         priority
                         sizes="100vw"
                         aria-hidden="true"
