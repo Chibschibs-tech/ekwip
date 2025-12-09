@@ -22,7 +22,7 @@ export default function CorporateHome() {
             <StructuredData data={websiteSchema} />
             <main className="min-h-screen">
             {/* Hero Section with Glassmorphism */}
-            <section className="relative bg-gradient-to-br from-[#1F3B57] via-[#2a4a66] to-[#1F3B57] py-20 md:py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
+            <section className="relative bg-gradient-to-br from-[#1F3B57] via-[#2a4a66] to-[#1F3B57] py-16 md:py-20 lg:py-32 px-4 md:px-6 lg:px-8 overflow-hidden">
                 {/* Animated Background Pattern */}
                 <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl animate-pulse"></div>
@@ -33,41 +33,59 @@ export default function CorporateHome() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         {/* Left: Hero Content in Glassmorphic Container */}
                         <ScrollReveal>
-                            <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-3xl p-8 md:p-12">
-                                <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">
-                                    Alignez vos équipes, vos outils et vos équipements.
-                                </h1>
+                            {/* Mobile: Background image container */}
+                            <div className="relative lg:static">
+                                {/* Mobile background image */}
+                                <div className="lg:hidden absolute inset-0 rounded-3xl overflow-hidden -z-10">
+                                    <Image
+                                        src="/artifacts/corporate_hero_team.png"
+                                        alt=""
+                                        fill
+                                        className="object-cover"
+                                        priority
+                                        sizes="100vw"
+                                        aria-hidden="true"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-b from-[#1F3B57]/80 via-[#1F3B57]/70 to-[#1F3B57]/90 rounded-3xl"></div>
+                                </div>
+                                
+                                {/* Text content */}
+                                <div className="backdrop-blur-md bg-white/10 lg:bg-white/10 border border-white/20 rounded-3xl p-6 md:p-8 lg:p-12 relative z-10">
+                                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">
+                                        Alignez vos équipes, vos outils et vos équipements.
+                                    </h1>
 
-                                <p className="text-lg text-blue-100 mb-8 leading-relaxed">
-                                    De l&apos;équipement IT à la location, aux espaces audiovisuels, en passant par les outils digitaux sur-mesure. Ekwip conçoit et opère l&apos;infrastructure matérielle et digitale de votre entreprise : postes de travail, espaces audiovisuels, outils internes et agents IA qui parlent le langage de vos équipes.
-                                </p>
+                                    <p className="text-base md:text-lg text-blue-100 mb-6 md:mb-8 leading-relaxed">
+                                        De l&apos;équipement IT à la location, aux espaces audiovisuels, en passant par les outils digitaux sur-mesure. Ekwip conçoit et opère l&apos;infrastructure matérielle et digitale de votre entreprise : postes de travail, espaces audiovisuels, outils internes et agents IA qui parlent le langage de vos équipes.
+                                    </p>
 
-                                <div className="flex flex-col sm:flex-row gap-3">
-                                    <Link href="/contact">
-                                        <button className="ek-btn-pill-primary">
-                                            Parler à un expert
-                                            <ArrowRight className="h-4 w-4" />
-                                        </button>
-                                    </Link>
-                                    <a href="#domains">
-                                        <button className="ek-btn-pill-secondary bg-white border-white/20 text-ekwip-primary hover:backdrop-blur-md hover:bg-white/80 hover:border-white/30 hover:text-[#1a3047] transition-all duration-300 shadow-lg hover:shadow-xl">
-                                            Nos domaines d&apos;intervention
-                                        </button>
-                                    </a>
+                                    <div className="flex flex-col sm:flex-row gap-3">
+                                        <Link href="/contact">
+                                            <button className="ek-btn-pill-primary">
+                                                Parler à un expert
+                                                <ArrowRight className="h-4 w-4" />
+                                            </button>
+                                        </Link>
+                                        <a href="#domains">
+                                            <button className="ek-btn-pill-secondary bg-white border-white/20 text-ekwip-primary hover:backdrop-blur-md hover:bg-white/80 hover:border-white/30 hover:text-[#1a3047] transition-all duration-300 shadow-lg hover:shadow-xl">
+                                                Nos domaines d&apos;intervention
+                                            </button>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </ScrollReveal>
 
-                        {/* Right: Team in Server Room Visual */}
-                        <ScrollReveal delay={0.2}>
-                            <div className="relative h-[300px] md:h-[400px] lg:h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+                        {/* Right: Team in Server Room Visual - Desktop only */}
+                        <ScrollReveal delay={0.2} className="hidden lg:block">
+                            <div className="relative h-[400px] lg:h-[500px] w-full flex items-center justify-center rounded-2xl overflow-hidden shadow-2xl border border-white/10">
                                 <Image
                                     src="/artifacts/corporate_hero_team.png"
                                     alt="Équipe Ekwip dans un datacenter"
                                     fill
                                     className="object-cover"
                                     priority
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    sizes="(max-width: 1024px) 50vw, 33vw"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-[#1F3B57]/50 to-transparent"></div>
                             </div>
