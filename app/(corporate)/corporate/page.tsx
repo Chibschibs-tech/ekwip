@@ -113,12 +113,12 @@ export default function CorporateHome() {
                                 },
                             ].map((item, index) => (
                                 <ScrollReveal key={index} delay={index * 0.1}>
-                                    <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group h-full flex flex-col">
-                                        <div className={`${item.bgColor} rounded-full w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                                    <div className="backdrop-blur-xl bg-white/80 rounded-3xl p-10 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.15)] hover:bg-white/90 hover:-translate-y-2 transition-all duration-300 group h-full flex flex-col">
+                                        <div className={`${item.bgColor} rounded-full w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
                                             {item.icon}
                                         </div>
-                                        <h3 className={`text-xl font-bold text-gray-900 mb-3 transition-colors ${index === 0 ? 'group-hover:text-[#38BDF8]' : index === 1 ? 'group-hover:text-[#10B981]' : 'group-hover:text-[#F97316]'}`}>{item.title}</h3>
-                                        <p className="text-gray-600 leading-relaxed flex-grow">
+                                        <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${index === 0 ? 'group-hover:text-[#38BDF8]' : index === 1 ? 'group-hover:text-[#10B981]' : 'group-hover:text-[#F97316]'}`}>{item.title}</h3>
+                                        <p className="text-gray-600 leading-relaxed flex-grow text-base">
                                             {item.description}
                                         </p>
                                     </div>

@@ -113,7 +113,7 @@ export function CardSlider({
             <div
               key={index}
               className={cn(
-                "flex-shrink-0 w-[calc(90vw-2rem)] max-w-[320px] snap-start mr-4 last:mr-0",
+                "flex-shrink-0 w-[85vw] max-w-[380px] snap-start mr-6 last:mr-0",
                 cardClassName
               )}
             >
