@@ -260,31 +260,31 @@ export default function CorporateHome() {
                             </Link>
                         </ScrollReveal>
                     </CardSlider>
-                        </div>
-                    </div>
                 </div>
             </section>
 
             {/* Ils nous font confiance (Copied from DaaS) */}
-            <section aria-label="Nos clients et partenaires" className="py-20 px-4 md:px-6 lg:px-8 bg-gray-50">
+            <section aria-label="Nos clients et partenaires" className="py-16 md:py-20 px-4 md:px-6 lg:px-8 bg-gray-50">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
-                        <div className="text-center mb-16">
-                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Ils nous font confiance</h2>
-                            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                        <div className="text-center mb-8 md:mb-12">
+                            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Ils nous font confiance</h2>
+                            <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6 md:mb-8">
                                 Nos partenaires nous font confiance pour l'ensemble de leurs besoins IT
                             </p>
                         </div>
-                        <ClientLogoSlider />
+                        <div className="flex items-center justify-center">
+                            <ClientLogoSlider />
+                        </div>
                     </ScrollReveal>
                 </div>
             </section>
 
             {/* Pourquoi choisir Ekwip ? */}
-            <section aria-label="Avantages de choisir Ekwip" className="py-24 px-4 md:px-6 lg:px-8 bg-ekwip-primary">
+            <section aria-label="Avantages de choisir Ekwip" className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-ekwip-primary">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
-                        <div className="text-center mb-12">
+                        <div className="text-center mb-8 md:mb-12">
                             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
                                 Pourquoi choisir Ekwip ?
                             </h2>
@@ -294,9 +294,8 @@ export default function CorporateHome() {
                         </div>
                     </ScrollReveal>
 
-                    <div className="w-full flex justify-center">
-                        <div className="w-full max-w-7xl">
-                            <CardSlider gap="lg">
+                    <div className="w-full max-w-7xl mx-auto">
+                        <CardSlider gap="lg" className="lg:grid-cols-3">
                             {[
                                 {
                                     icon: <Shield className="w-12 h-12 text-white" />,
@@ -320,10 +319,9 @@ export default function CorporateHome() {
                                         <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                                         <p className="text-white/90 flex-grow">{item.description}</p>
                                     </div>
-                            </ScrollReveal>
-                        ))}
-                    </CardSlider>
-                        </div>
+                                </ScrollReveal>
+                            ))}
+                        </CardSlider>
                     </div>
                 </div>
             </section>
