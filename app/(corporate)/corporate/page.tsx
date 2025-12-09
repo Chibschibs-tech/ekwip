@@ -281,7 +281,7 @@ export default function CorporateHome() {
             </section>
 
             {/* Pourquoi choisir Ekwip ? */}
-            <section aria-label="Avantages de choisir Ekwip" className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-ekwip-primary">
+            <section aria-label="Avantages de choisir Ekwip" className="py-16 md:py-24 px-4 md:px-6 lg:px-8 bg-[#1f3b57]">
                 <div className="max-w-7xl mx-auto">
                     <ScrollReveal>
                         <div className="text-center mb-8 md:mb-12">
