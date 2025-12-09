@@ -87,26 +87,25 @@ export default function CorporateHome() {
                         </div>
                     </ScrollReveal>
 
-                    <div className="w-full flex justify-center">
-                        <div className="w-full max-w-7xl">
-                            <CardSlider gap="lg" className="mb-12">
+                    <div className="w-full max-w-7xl mx-auto">
+                        <CardSlider gap="lg" className="mb-12 lg:grid-cols-3">
                             {[
                                 {
-                                    icon: <Laptop className="h-7 w-7 text-[#38BDF8]" />,
+                                    icon: <Laptop className="h-8 w-8 text-[#38BDF8]" />,
                                     bgColor: "bg-[#38BDF8]/10",
                                     title: "Équiper vos équipes",
                                     description: "Ordinateurs, smartphones, accessoires et mobilier IT fournis en location, suivis dans un portail unique pour garder la maîtrise de votre parc.",
                                     hoverColor: "text-[#38BDF8]",
                                 },
                                 {
-                                    icon: <Cast className="h-7 w-7 text-[#10B981]" />,
+                                    icon: <Cast className="h-8 w-8 text-[#10B981]" />,
                                     bgColor: "bg-[#10B981]/10",
                                     title: "Connecter vos espaces",
                                     description: "Salles de réunion, espaces de formation, visio et diffusion, pensés pour que vos équipes se concentrent sur le contenu plutôt que sur la technique.",
                                     hoverColor: "text-[#10B981]",
                                 },
                                 {
-                                    icon: <Cpu className="h-7 w-7 text-[#F97316]" />,
+                                    icon: <Cpu className="h-8 w-8 text-[#F97316]" />,
                                     bgColor: "bg-[#F97316]/10",
                                     title: "Digitaliser vos opérations",
                                     description: "Outils internes, automatisations, connecteurs et agents IA adaptés à votre stack, pour fluidifier les process et réduire les tâches répétitives.",
@@ -114,12 +113,12 @@ export default function CorporateHome() {
                                 },
                             ].map((item, index) => (
                                 <ScrollReveal key={index} delay={index * 0.1}>
-                                    <div className="backdrop-blur-xl bg-white/80 rounded-3xl p-10 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.15)] hover:bg-white/90 hover:-translate-y-2 transition-all duration-300 group h-full flex flex-col">
-                                        <div className={`${item.bgColor} rounded-full w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                                    <div className="relative backdrop-blur-2xl bg-gradient-to-br from-white/95 via-white/90 to-white/85 rounded-3xl p-10 md:p-12 border border-white/80 shadow-[0_8px_32px_0px_rgba(0,0,0,0.08)] hover:shadow-[0_16px_48px_0px_rgba(0,0,0,0.12)] hover:bg-white/98 hover:-translate-y-2 hover:border-white transition-all duration-500 group h-full flex flex-col before:absolute before:inset-0 before:rounded-3xl before:bg-gradient-to-br before:from-white/50 before:to-transparent before:opacity-0 hover:before:opacity-100 before:transition-opacity before:duration-500 before:-z-10">
+                                        <div className={`${item.bgColor} rounded-2xl w-18 h-18 md:w-20 md:h-20 flex items-center justify-center mb-6 md:mb-8 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300`}>
                                             {item.icon}
                                         </div>
-                                        <h3 className={`text-2xl font-bold text-gray-900 mb-4 transition-colors ${index === 0 ? 'group-hover:text-[#38BDF8]' : index === 1 ? 'group-hover:text-[#10B981]' : 'group-hover:text-[#F97316]'}`}>{item.title}</h3>
-                                        <p className="text-gray-600 leading-relaxed flex-grow text-base">
+                                        <h3 className={`text-2xl md:text-2xl font-bold text-gray-900 mb-4 md:mb-5 transition-colors ${index === 0 ? 'group-hover:text-[#38BDF8]' : index === 1 ? 'group-hover:text-[#10B981]' : 'group-hover:text-[#F97316]'}`}>{item.title}</h3>
+                                        <p className="text-gray-600 leading-relaxed flex-grow text-base md:text-lg">
                                             {item.description}
                                         </p>
                                     </div>
@@ -156,8 +155,9 @@ export default function CorporateHome() {
                     </ScrollReveal>
 
                     {/* Domain Cards - Horizontal Grid with Enhanced Glassmorphism */}
-                    <div className="w-full">
-                        <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr w-full max-w-7xl mx-auto">
+                    <div className="w-full flex justify-center">
+                        <div className="w-full max-w-7xl">
+                            <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr">
                             {/* DaaS Card */}
                             <ScrollReveal delay={0.1} className="h-full flex">
                                 <DaasLink href="/catalogue" className="group block h-full w-full flex">
@@ -260,8 +260,9 @@ export default function CorporateHome() {
                             </Link>
                         </ScrollReveal>
                     </CardSlider>
+                        </div>
+                    </div>
                 </div>
-            </div>
             </section>
 
             {/* Ils nous font confiance (Copied from DaaS) */}
@@ -294,7 +295,8 @@ export default function CorporateHome() {
                     </ScrollReveal>
 
                     <div className="w-full flex justify-center">
-                        <CardSlider gap="lg" className="w-full max-w-7xl">
+                        <div className="w-full max-w-7xl">
+                            <CardSlider gap="lg">
                             {[
                                 {
                                     icon: <Shield className="w-12 h-12 text-white" />,
@@ -318,9 +320,10 @@ export default function CorporateHome() {
                                         <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                                         <p className="text-white/90 flex-grow">{item.description}</p>
                                     </div>
-                                </ScrollReveal>
-                            ))}
-                        </CardSlider>
+                            </ScrollReveal>
+                        ))}
+                    </CardSlider>
+                        </div>
                     </div>
                 </div>
             </section>
