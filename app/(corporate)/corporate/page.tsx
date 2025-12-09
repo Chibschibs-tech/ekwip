@@ -295,7 +295,7 @@ export default function CorporateHome() {
                     </ScrollReveal>
 
                     <div className="w-full max-w-7xl mx-auto">
-                        <CardSlider gap="lg" className="lg:grid-cols-3">
+                        <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr">
                             {[
                                 {
                                     icon: <Shield className="w-12 h-12 text-white" />,
@@ -313,8 +313,8 @@ export default function CorporateHome() {
                                     description: "Nous nous concentrons sur l'usage et les résultats concrets. Support réactif et accompagnement personnalisé pour chaque client."
                                 }
                             ].map((item, index) => (
-                                <ScrollReveal key={index} delay={index * 0.1}>
-                                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 h-full flex flex-col">
+                                <ScrollReveal key={index} delay={index * 0.1} className="h-full flex">
+                                    <div className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 h-full w-full flex flex-col">
                                         <div className="text-white mb-4">{item.icon}</div>
                                         <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
                                         <p className="text-white/90 flex-grow">{item.description}</p>

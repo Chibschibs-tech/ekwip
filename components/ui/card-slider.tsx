@@ -87,7 +87,7 @@ export function CardSlider({
       {/* Desktop: Grid Layout */}
       <div className={gridClasses}>
         {children.map((child, index) => (
-          <div key={index} className={cn("w-full", cardClassName)}>
+          <div key={index} className={cn("w-full h-full", cardClassName)}>
             {child}
           </div>
         ))}
