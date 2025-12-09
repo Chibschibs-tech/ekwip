@@ -47,7 +47,7 @@ export default function CorporateHome() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                         {/* Left: Hero Content in Glassmorphic Container */}
                         <ScrollReveal>
-                            <div className="backdrop-blur-md bg-white/10 border border-white/20 rounded-3xl p-6 md:p-8 lg:p-12 relative">
+                            <div className="lg:backdrop-blur-md bg-white/10 lg:bg-white/10 border border-white/20 rounded-3xl p-6 md:p-8 lg:p-12 relative">
                                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 md:mb-6 leading-tight">
                                     Alignez vos équipes, vos outils et vos équipements.
                                 </h1>
