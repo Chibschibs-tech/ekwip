@@ -44,11 +44,55 @@ This document tracks all development changes made to the Ekwip project to mainta
 
 ---
 
+## Session: January 26, 2026 (Continued)
+
+### Boutique Product Import from Excel
+
+**File**: `TARIFS_REVENDEURS_DECEMBRE_2025.xlsx`
+
+#### Import Configuration
+- **Product Type**: `sale` (boutique, not rental)
+- **SKU Format**: `EK-BTQ-0001`, `EK-BTQ-0002`...
+- **Pricing**: 
+  - Cost Price (from Excel) × 1.07 = Selling Price HT
+  - TVA: 20%
+- **Stock Initial**: 10 units per product
+- **Status**: `active`
+
+#### Results
+| Metric | Value |
+|--------|-------|
+| Total Processed | 723 products |
+| Imported Successfully | 723 ✅ |
+| Errors | 0 |
+
+#### New Categories Created (7)
+- `cat-monitors` - Écrans et Moniteurs
+- `cat-servers` - Serveurs
+- `cat-networking` - Réseau
+- `cat-software` - Logiciels
+- `cat-ups` - Onduleurs
+- `cat-storage` - Stockage
+- `cat-multimedia` - Multimédia
+
+#### New Brands Created (16)
+MICROSOFT, ASUS, HUAWEI, MSI, EPSON, CANON, ARUBA, ALTAI, TP-LINK, CISCO, KASPERSKY, WESTERN DIGITAL, SEAGATE, UGREEN, LOGITECH, XIAOMI
+
+#### Scripts Created
+- `scripts/analyze-excel.ts` - Analyze Excel file structure
+- `scripts/analyze-columns.ts` - Detailed column analysis
+- `scripts/import-boutique-products.ts` - Main import script
+- `scripts/import-report.json` - Import report
+
+---
+
 ## Pending Tasks / Future Work
 
 - [ ] Complete English translations
 - [ ] Re-enable language switcher when translations ready
 - [ ] Review other pages for consistency
+- [ ] Add product images (currently using placeholders)
+- [ ] Extract and add product attributes for filtering
 
 ---
 

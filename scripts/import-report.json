@@ -1,0 +1,33 @@
+{
+  "totalProcessed": 723,
+  "imported": 723,
+  "skipped": 0,
+  "errors": [],
+  "categoriesCreated": [
+    "Écrans et Moniteurs",
+    "Serveurs",
+    "Réseau",
+    "Logiciels",
+    "Onduleurs",
+    "Stockage",
+    "Multimédia"
+  ],
+  "brandsCreated": [
+    "MICROSOFT",
+    "ASUS",
+    "HUAWEI",
+    "MSI",
+    "EPSON",
+    "CANON",
+    "ARUBA",
+    "ALTAI",
+    "TP-LINK",
+    "CISCO",
+    "KASPERSKY",
+    "EATON",
+    "APC",
+    "LOGITECH",
+    "UGREEN",
+    "XIAOMI"
+  ]
+}
