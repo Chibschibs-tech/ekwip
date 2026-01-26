@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,8 +21,10 @@ import { useToast } from "@/hooks/use-toast"
 import { resizeImage } from "@/lib/image-utils"
 import { RentalDurationsManager } from "@/components/admin/rental-durations-manager"
 
-export default function EditProductPage({ params }: { params: { id: string } }) {
+export default function EditProductPage() {
   const router = useRouter()
+  const params = useParams()
+  const productId = params.id as string
   const { getProduct, updateProduct } = useProducts()
   const { categories } = useCategories()
   const { brands } = useBrands()
@@ -44,7 +46,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
   useEffect(() => {
     const loadProduct = () => {
       try {
-        const foundProduct = getProduct(params.id)
+        const foundProduct = getProduct(productId)
 
         if (foundProduct) {
           setProduct(foundProduct)
@@ -75,7 +77,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
     }
 
     loadProduct()
-  }, [params.id, getProduct, router, toast])
+  }, [productId, getProduct, router, toast])
 
   useEffect(() => {
     if (selectedCategory) {
@@ -182,7 +184,7 @@ export default function EditProductPage({ params }: { params: { id: string } }) 
         updatedAt: new Date().toISOString(),
       }
 
-      updateProduct(params.id, updatedProductData)
+      updateProduct(productId, updatedProductData)
 
       toast({
         title: "Produit mis à jour",
