@@ -237,7 +237,11 @@ export default function ProductsPage() {
                 </TableRow>
               ) : (
                 filteredProducts.map((product) => (
-                  <TableRow key={product.id}>
+                  <TableRow 
+                    key={product.id} 
+                    className="cursor-pointer hover:bg-slate-50"
+                    onClick={() => router.push(`/admin/catalogue/products/view/${product.id}`)}
+                  >
                     <TableCell>
                       <img
                         src={product.thumbnail || "/placeholder.svg"}
@@ -245,7 +249,7 @@ export default function ProductsPage() {
                         className="w-12 h-12 object-cover rounded"
                       />
                     </TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell className="font-medium max-w-[300px] truncate">{product.name}</TableCell>
                     <TableCell className="text-sm text-gray-600">{product.sku}</TableCell>
                     <TableCell>
                       {product.productType === "rent" ? (
@@ -273,7 +277,7 @@ export default function ProductsPage() {
                       {product.status === "draft" && <Badge variant="secondary">Brouillon</Badge>}
                       {product.status === "archived" && <Badge variant="outline">Archivé</Badge>}
                     </TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <Button variant="ghost" size="sm">
