@@ -93,8 +93,8 @@ export function CardSlider({
         ))}
       </div>
 
-      {/* Mobile: Horizontal Slider */}
-      <div className="md:hidden relative -mx-4 px-4">
+      {/* Mobile: Horizontal Slider - Only visible on mobile */}
+      <div className="block md:hidden relative -mx-4 px-4">
         <div
           ref={scrollContainerRef}
           className="flex overflow-x-auto scrollbar-hide snap-x snap-mandatory scroll-smooth pb-4"
@@ -150,9 +150,9 @@ export function CardSlider({
           </div>
         )}
         
-        {/* Subtle Gradient Fades */}
-        <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
+        {/* Subtle Gradient Fades - match section background */}
+        <div className="absolute left-0 top-0 bottom-4 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none z-10" />
+        <div className="absolute right-0 top-0 bottom-4 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none z-10" />
       </div>
     </div>
   )

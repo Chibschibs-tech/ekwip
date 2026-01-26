@@ -60,8 +60,8 @@ export default function CorporateNavbar() {
 
                     {/* Right Section: Language & CTA - Desktop */}
                     <div className="hidden md:flex items-center gap-3">
-                        {/* Language Switcher */}
-                        <div className="flex items-center gap-1 text-sm">
+                        {/* Language Switcher - Hidden until English is ready */}
+                        {/* <div className="flex items-center gap-1 text-sm">
                             <button className="px-2 py-1 text-ekwip-primary font-medium">
                                 FR
                             </button>
@@ -69,7 +69,7 @@ export default function CorporateNavbar() {
                             <button className="px-2 py-1 text-slate-400 hover:text-slate-600 transition-colors">
                                 EN
                             </button>
-                        </div>
+                        </div> */}
 
                         {/* Catalog CTA */}
                         <Link href={catalogUrl} className="ek-btn-pill-primary">

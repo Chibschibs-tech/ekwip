@@ -21,8 +21,10 @@ This document tracks all development changes made to the Ekwip project to mainta
 - **After**: `text-white` with semi-transparent white background
 
 #### 2. Language Switcher Hidden
-- **File**: `components/navbar.tsx`
-- **Change**: Commented out FR/EN/AR language switcher (both desktop and mobile)
+- **Files**: 
+  - `components/navbar.tsx` (DaaS site navbar)
+  - `components/corporate-navbar.tsx` (Corporate site navbar)
+- **Change**: Commented out FR/EN language switchers
 - **Reason**: English translation not ready yet, keeping French only for now
 - **Note**: Easy to re-enable by uncommenting the code
 
@@ -34,6 +36,11 @@ This document tracks all development changes made to the Ekwip project to mainta
   - Border: `border-slate-200` (visible grey border)
   - Shadow: Lighter default, more prominent on hover
   - Image gradient overlay: Matches grey background, transitions to white on hover
+
+#### 4. CardSlider Mobile Fix
+- **File**: `components/ui/card-slider.tsx`
+- **Change**: Fixed mobile slider visibility and gradient fades
+- **Details**: Ensured mobile elements don't bleed through on desktop
 
 ---
 
