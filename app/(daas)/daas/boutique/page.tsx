@@ -26,6 +26,64 @@ const categoryIcons: Record<string, any> = {
   "cat-multimedia": Package,
 }
 
+// Main categories (grandes catégories) for the slider
+const mainCategories = [
+  { 
+    name: "PC portable", 
+    slug: "ordinateurs-portables", 
+    icon: Laptop,
+    image: "/images/categories/laptop.png"
+  },
+  { 
+    name: "PC bureau", 
+    slug: "ordinateurs-de-bureau", 
+    icon: Monitor,
+    image: "/images/categories/desktop.png"
+  },
+  { 
+    name: "Impression", 
+    slug: "imprimantes", 
+    icon: Printer,
+    image: "/images/categories/printer.png"
+  },
+  { 
+    name: "Tablette & Téléphonie", 
+    slug: "tablettes-telephonie", 
+    icon: Package,
+    image: "/images/categories/tablet.png"
+  },
+  { 
+    name: "Image & Son", 
+    slug: "image-son", 
+    icon: Monitor,
+    image: "/images/categories/tv.png"
+  },
+  { 
+    name: "Accessoire", 
+    slug: "accessoires", 
+    icon: Package,
+    image: "/images/categories/accessories.png"
+  },
+  { 
+    name: "Vidéo Surveillance", 
+    slug: "video-surveillance", 
+    icon: Server,
+    image: "/images/categories/camera.png"
+  },
+  { 
+    name: "Logiciel", 
+    slug: "logiciels", 
+    icon: Package,
+    image: "/images/categories/software.png"
+  },
+  { 
+    name: "Réseau", 
+    slug: "reseau", 
+    icon: Wifi,
+    image: "/images/categories/network.png"
+  },
+]
+
 // Slider data for hero banner
 const heroSlides = [
   {
@@ -382,41 +440,37 @@ export default function BoutiquePage() {
         </div>
       </section>
 
-      {/* Categories Section */}
-      <section className="py-12 md:py-16">
+      {/* Categories Slider Section */}
+      <section className="py-10 md:py-14 bg-gradient-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900">Nos Catégories</h2>
-              <p className="text-slate-600 mt-1">Explorez notre gamme complète</p>
-            </div>
-            <Link href="/boutique/tous-les-produits" className="hidden sm:flex items-center text-[#1f3b57] hover:underline font-medium">
-              Voir tout
-              <ArrowRight className="ml-1 h-4 w-4" />
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {categoriesWithCounts.slice(0, 12).map((category) => {
-              const IconComponent = categoryIcons[category.id] || Package
-              return (
-                <Link key={category.id} href={`/boutique/${category.slug}`}>
-                  <Card className="h-full group hover:shadow-lg hover:border-[#1f3b57] transition-all duration-300 cursor-pointer">
-                    <CardContent className="p-4 text-center">
-                      <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-slate-100 group-hover:bg-[#1f3b57]/10 flex items-center justify-center transition-colors">
-                        <IconComponent className="h-6 w-6 text-[#1f3b57]" />
-                      </div>
-                      <h3 className="font-semibold text-sm text-slate-900 mb-1 line-clamp-2 group-hover:text-[#1f3b57] transition-colors">
-                        {category.name}
-                      </h3>
-                      <p className="text-xs text-slate-500">
-                        {category.productCount} produit{category.productCount !== 1 ? "s" : ""}
-                      </p>
-                    </CardContent>
-                  </Card>
+          {/* Main Categories Slider */}
+          <div className="overflow-x-auto pb-4 -mx-4 px-4 scrollbar-hide">
+            <div className="flex gap-6 md:gap-8 min-w-max justify-center">
+              {mainCategories.map((mainCat) => (
+                <Link 
+                  key={mainCat.slug} 
+                  href={`/boutique/${mainCat.slug}`}
+                  className="flex flex-col items-center group"
+                >
+                  <div className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-slate-100 group-hover:bg-slate-200 flex items-center justify-center transition-all duration-300 overflow-hidden shadow-sm group-hover:shadow-md">
+                    {mainCat.image ? (
+                      <Image
+                        src={mainCat.image}
+                        alt={mainCat.name}
+                        width={80}
+                        height={80}
+                        className="object-contain p-2 group-hover:scale-110 transition-transform duration-300"
+                      />
+                    ) : (
+                      <mainCat.icon className="h-10 w-10 md:h-12 md:w-12 text-[#1f3b57] group-hover:scale-110 transition-transform duration-300" />
+                    )}
+                  </div>
+                  <span className="mt-3 text-sm font-medium text-slate-700 group-hover:text-[#1f3b57] transition-colors text-center max-w-[100px]">
+                    {mainCat.name}
+                  </span>
                 </Link>
-              )
-            })}
+              ))}
+            </div>
           </div>
         </div>
       </section>

@@ -32,6 +32,7 @@ export default function CategoryPage() {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid")
   const [sortBy, setSortBy] = useState<SortOption>("newest")
   const [selectedBrands, setSelectedBrands] = useState<string[]>([])
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000])
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
@@ -80,9 +81,23 @@ export default function CategoryPage() {
       .sort((a, b) => a.name.localeCompare(b.name))
   }, [categoryProducts, brands])
 
+  // Get categories with products (for tous-les-produits page)
+  const availableCategories = useMemo(() => {
+    if (!isAllProducts) return []
+    const categoryIds = new Set(categoryProducts.map((p) => p.categoryId).filter(Boolean))
+    return categories
+      .filter((c) => c.isActive && categoryIds.has(c.id))
+      .sort((a, b) => a.name.localeCompare(b.name))
+  }, [categoryProducts, categories, isAllProducts])
+
   // Filter and sort products
   const filteredProducts = useMemo(() => {
     let filtered = [...categoryProducts]
+
+    // Filter by category (only for tous-les-produits)
+    if (isAllProducts && selectedCategories.length > 0) {
+      filtered = filtered.filter((p) => p.categoryId && selectedCategories.includes(p.categoryId))
+    }
 
     // Filter by brand
     if (selectedBrands.length > 0) {
@@ -112,7 +127,7 @@ export default function CategoryPage() {
     }
 
     return filtered
-  }, [categoryProducts, selectedBrands, priceRange, sortBy])
+  }, [categoryProducts, selectedBrands, selectedCategories, priceRange, sortBy, isAllProducts])
 
   const toggleBrand = (brandId: string) => {
     setSelectedBrands((prev) =>
@@ -120,12 +135,19 @@ export default function CategoryPage() {
     )
   }
 
+  const toggleCategory = (categoryId: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(categoryId) ? prev.filter((id) => id !== categoryId) : [...prev, categoryId]
+    )
+  }
+
   const clearFilters = () => {
     setSelectedBrands([])
+    setSelectedCategories([])
     setPriceRange([minPrice, maxPrice])
   }
 
-  const hasActiveFilters = selectedBrands.length > 0 || priceRange[0] > minPrice || priceRange[1] < maxPrice
+  const hasActiveFilters = selectedBrands.length > 0 || selectedCategories.length > 0 || priceRange[0] > minPrice || priceRange[1] < maxPrice
 
   const loading = categoriesLoading || productsLoading
 
@@ -152,11 +174,35 @@ export default function CategoryPage() {
         </Button>
       )}
 
+      {/* Categories filter - only for tous-les-produits */}
+      {isAllProducts && availableCategories.length > 0 && (
+        <div>
+          <h3 className="font-semibold text-slate-900 mb-3">Catégories</h3>
+          <div className="space-y-2 max-h-48 overflow-y-auto">
+            {availableCategories.map((category) => (
+              <div key={category.id} className="flex items-center space-x-2">
+                <Checkbox
+                  id={`cat-${category.id}`}
+                  checked={selectedCategories.includes(category.id)}
+                  onCheckedChange={() => toggleCategory(category.id)}
+                />
+                <Label
+                  htmlFor={`cat-${category.id}`}
+                  className="text-sm font-normal cursor-pointer flex-1"
+                >
+                  {category.name}
+                </Label>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Brands filter */}
       {availableBrands.length > 0 && (
         <div>
           <h3 className="font-semibold text-slate-900 mb-3">Marques</h3>
-          <div className="space-y-2 max-h-60 overflow-y-auto">
+          <div className="space-y-2 max-h-48 overflow-y-auto">
             {availableBrands.map((brand) => (
               <div key={brand.id} className="flex items-center space-x-2">
                 <Checkbox
