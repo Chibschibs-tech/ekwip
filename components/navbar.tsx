@@ -63,7 +63,8 @@ export default function Navbar() {
           </div>
 
           <div className="flex items-center space-x-4">
-            <div className="hidden md:flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
+            {/* Language switcher hidden until English is ready */}
+            {/* <div className="hidden md:flex items-center space-x-1 bg-gray-100 rounded-lg p-1">
               <button
                 onClick={() => setLanguage("fr")}
                 className={`px-2 py-1 text-xs font-medium rounded transition-colors ${
@@ -88,7 +89,7 @@ export default function Navbar() {
               >
                 AR
               </button>
-            </div>
+            </div> */}
 
             <CartIcon />
 
@@ -118,7 +119,8 @@ export default function Navbar() {
                 {item.name}
               </Link>
             ))}
-            <div className="flex items-center space-x-2 px-3 py-2 border-t mt-2 pt-4">
+            {/* Language switcher hidden until English is ready */}
+            {/* <div className="flex items-center space-x-2 px-3 py-2 border-t mt-2 pt-4">
               <span className="text-sm text-gray-500">Langue:</span>
               <button
                 onClick={() => {
@@ -147,7 +149,7 @@ export default function Navbar() {
               >
                 AR
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

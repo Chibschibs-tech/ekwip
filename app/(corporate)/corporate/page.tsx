@@ -64,7 +64,7 @@ export default function CorporateHome() {
                                         </button>
                                     </Link>
                                     <a href="#domains">
-                                        <button className="ek-btn-pill-secondary bg-white border-white/20 text-ekwip-primary hover:backdrop-blur-md hover:bg-white/80 hover:border-white/30 hover:text-[#1a3047] transition-all duration-300 shadow-lg hover:shadow-xl">
+                                        <button className="ek-btn-pill-secondary bg-white/20 border-white/30 text-white hover:backdrop-blur-md hover:bg-white/30 hover:border-white/40 transition-all duration-300 shadow-lg hover:shadow-xl">
                                             Nos domaines d&apos;intervention
                                         </button>
                                     </a>
@@ -174,7 +174,7 @@ export default function CorporateHome() {
                             {/* DaaS Card */}
                             <ScrollReveal delay={0.1} className="h-full flex">
                                 <DaasLink href="/catalogue" className="group block h-full w-full flex">
-                                    <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.3)] hover:shadow-gray-400/50 rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
+                                    <div className="relative overflow-hidden bg-slate-50 border border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] hover:bg-white rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -183,7 +183,7 @@ export default function CorporateHome() {
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 group-hover:from-white via-slate-50/20 group-hover:via-white/20 to-transparent transition-colors duration-500"></div>
                                     </div>
 
                                     <div className="p-8 flex flex-col flex-grow relative z-10">
@@ -208,7 +208,7 @@ export default function CorporateHome() {
                             {/* Connect Card */}
                             <ScrollReveal delay={0.2} className="h-full flex">
                                 <Link href="/connect" className="group block h-full w-full flex">
-                                    <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.3)] hover:shadow-gray-400/50 rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
+                                    <div className="relative overflow-hidden bg-slate-50 border border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] hover:bg-white rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -217,7 +217,7 @@ export default function CorporateHome() {
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 group-hover:from-white via-slate-50/20 group-hover:via-white/20 to-transparent transition-colors duration-500"></div>
                                     </div>
 
                                     <div className="p-8 flex flex-col flex-grow relative z-10">
@@ -242,7 +242,7 @@ export default function CorporateHome() {
                             {/* Tech Card */}
                             <ScrollReveal delay={0.3} className="h-full flex">
                                 <Link href="/tech" className="group block h-full w-full flex">
-                                    <div className="relative overflow-hidden backdrop-blur-xl bg-gradient-to-br from-white/90 to-white/70 border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:shadow-[0_25px_60px_rgba(0,0,0,0.3)] hover:shadow-gray-400/50 rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
+                                    <div className="relative overflow-hidden bg-slate-50 border border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] hover:bg-white rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
                                         <Image
@@ -251,7 +251,7 @@ export default function CorporateHome() {
                                             fill
                                             className="object-cover group-hover:scale-110 transition-transform duration-700"
                                         />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent"></div>
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-50 group-hover:from-white via-slate-50/20 group-hover:via-white/20 to-transparent transition-colors duration-500"></div>
                                     </div>
 
                                     <div className="p-8 flex flex-col flex-grow relative z-10">
