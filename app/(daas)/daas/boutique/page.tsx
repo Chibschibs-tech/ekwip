@@ -63,14 +63,16 @@ export default function BoutiquePage() {
     return sorted.slice(midIndex, midIndex + 8)
   }, [saleProducts])
 
-  // Format prices - TTC rounded up to nearest integer
-  const formatPrice = (priceHT: number) => {
+  // Format prices - TTC rounded up, HT = TTC / 1.2 (TVA 20%)
+  const formatPriceTTC = (priceHT: number) => {
     const priceTTC = Math.ceil(priceHT * 1.2)
     return new Intl.NumberFormat("fr-FR").format(priceTTC) + " Dh"
   }
 
-  const formatPriceHT = (price: number) => {
-    return new Intl.NumberFormat("fr-FR").format(Math.round(price)) + " Dh"
+  const formatPriceHTFromTTC = (priceHT: number) => {
+    const priceTTC = Math.ceil(priceHT * 1.2)
+    const htFromTTC = Math.round(priceTTC / 1.2)
+    return new Intl.NumberFormat("fr-FR").format(htFromTTC) + " Dh HT"
   }
 
   // Product Card Component
@@ -100,8 +102,8 @@ export default function BoutiquePage() {
               {product.name}
             </h3>
             <div className="flex flex-col">
-              <span className="text-lg font-bold text-[#1f3b57]">{formatPrice(product.price)}</span>
-              <span className="text-xs text-slate-500">{formatPriceHT(product.price)} HT</span>
+              <span className="text-lg font-bold text-[#1f3b57]">{formatPriceTTC(product.price)}</span>
+              <span className="text-xs text-slate-500">{formatPriceHTFromTTC(product.price)}</span>
             </div>
           </div>
         </CardContent>
@@ -135,51 +137,97 @@ export default function BoutiquePage() {
     <div className="min-h-screen bg-slate-50">
       <BoutiqueSubmenu />
 
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#1f3b57] via-[#2a4a6b] to-[#1f3b57] text-white overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-10" />
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-500/10 to-transparent" />
-        
-        <div className="relative max-w-7xl mx-auto px-4 md:px-6 lg:px-8 py-16 md:py-24">
-          <div className="grid md:grid-cols-2 gap-8 items-center">
-            <div>
-              <Badge className="bg-white/20 text-white border-white/30 mb-4">
-                Boutique Ekwip
-              </Badge>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                Équipement IT<br />
-                <span className="text-blue-300">Professionnel</span>
-              </h1>
-              <p className="text-lg md:text-xl text-white/80 mb-8 max-w-lg">
-                Découvrez notre sélection de matériel informatique de qualité professionnelle. 
-                Laptops, imprimantes, accessoires et plus encore.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link href="/boutique/tous-les-produits">
-                  <Button size="lg" className="bg-white text-[#1f3b57] hover:bg-white/90">
-                    Voir tous les produits
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="/boutique/ordinateurs-portables">
-                  <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10">
-                    Ordinateurs portables
-                  </Button>
-                </Link>
+      {/* Hero Banners - 1 large left + 2 small right */}
+      <section className="bg-slate-50 py-4 md:py-6">
+        <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[400px]">
+            {/* Large Banner Left */}
+            <Link href="/boutique/tous-les-produits" className="lg:col-span-2 group">
+              <div className="relative h-[280px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#1f3b57] via-[#2a4a6b] to-[#1f3b57] shadow-lg">
+                <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
+                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-500/10 to-transparent" />
+                <div className="relative h-full p-6 md:p-8 flex flex-col justify-between">
+                  <div>
+                    <Badge className="bg-white/20 text-white border-white/30 mb-3">
+                      Boutique Ekwip
+                    </Badge>
+                    <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 leading-tight">
+                      Équipement IT<br />
+                      <span className="text-blue-300">Professionnel</span>
+                    </h2>
+                    <p className="text-white/80 text-sm md:text-base max-w-md">
+                      Laptops, imprimantes, accessoires et plus encore. 
+                      Qualité professionnelle garantie.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 text-white font-medium group-hover:gap-3 transition-all">
+                    Découvrir <ArrowRight className="h-5 w-5" />
+                  </div>
+                </div>
+                <div className="absolute bottom-0 right-0 w-1/2 h-full hidden md:block">
+                  <Image
+                    src="/images/laptop-hero.png"
+                    alt="Laptop professionnel"
+                    fill
+                    className="object-contain object-right-bottom p-4 opacity-90 group-hover:scale-105 transition-transform duration-500"
+                    priority
+                  />
+                </div>
               </div>
-            </div>
-            <div className="hidden md:flex justify-center">
-              <div className="relative w-full max-w-md">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl" />
-                <Image
-                  src="/images/laptop-hero.png"
-                  alt="Laptop professionnel"
-                  width={500}
-                  height={400}
-                  className="relative z-10 drop-shadow-2xl"
-                  priority
-                />
-              </div>
+            </Link>
+
+            {/* Right Column - 2 Stacked Banners */}
+            <div className="flex flex-col gap-4 h-auto lg:h-full">
+              {/* Top Right Banner */}
+              <Link href="/boutique/imprimantes" className="flex-1 group">
+                <div className="relative h-[140px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg">
+                  <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
+                  <div className="relative h-full p-5 flex flex-col justify-between">
+                    <div>
+                      <Badge className="bg-white/20 text-white border-white/30 mb-2 text-xs">
+                        Imprimantes
+                      </Badge>
+                      <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">
+                        Solutions d'impression
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/90 text-sm font-medium group-hover:gap-3 transition-all">
+                      Voir les offres <ArrowRight className="h-4 w-4" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-0 right-0 w-1/3 h-full hidden sm:block">
+                    <Image
+                      src="/images/printer-hero.png"
+                      alt="Imprimante"
+                      fill
+                      className="object-contain object-right-bottom p-2 opacity-80 group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                </div>
+              </Link>
+
+              {/* Bottom Right Banner */}
+              <Link href="/boutique/accessoires" className="flex-1 group">
+                <div className="relative h-[140px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
+                  <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
+                  <div className="relative h-full p-5 flex flex-col justify-between">
+                    <div>
+                      <Badge className="bg-white/20 text-white border-white/30 mb-2 text-xs">
+                        Accessoires
+                      </Badge>
+                      <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">
+                        Périphériques & Plus
+                      </h3>
+                    </div>
+                    <div className="flex items-center gap-2 text-white/90 text-sm font-medium group-hover:gap-3 transition-all">
+                      Explorer <ArrowRight className="h-4 w-4" />
+                    </div>
+                  </div>
+                  <div className="absolute bottom-2 right-2 text-6xl opacity-20">
+                    🎧
+                  </div>
+                </div>
+              </Link>
             </div>
           </div>
         </div>

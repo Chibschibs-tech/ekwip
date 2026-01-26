@@ -220,14 +220,22 @@ export default function ViewProductPage() {
                   <DollarSign className="h-4 w-4" />
                   {isSaleProduct ? "Prix de vente (HT)" : "Prix de location"}
                 </div>
-                <p className="text-2xl font-bold text-[#1f3b57]">
-                  {new Intl.NumberFormat("fr-FR").format(Math.round(product.price || 0))} Dh
-                </p>
-                {isSaleProduct && (
-                  <p className="text-sm text-gray-500">
-                    TTC: {new Intl.NumberFormat("fr-FR").format(Math.ceil((product.price || 0) * 1.2))} Dh
-                  </p>
-                )}
+                {(() => {
+                  const priceTTC = Math.ceil((product.price || 0) * 1.2)
+                  const priceHT = Math.round(priceTTC / 1.2)
+                  return (
+                    <>
+                      <p className="text-2xl font-bold text-[#1f3b57]">
+                        {new Intl.NumberFormat("fr-FR").format(priceHT)} Dh
+                      </p>
+                      {isSaleProduct && (
+                        <p className="text-sm text-gray-500">
+                          TTC: {new Intl.NumberFormat("fr-FR").format(priceTTC)} Dh
+                        </p>
+                      )}
+                    </>
+                  )
+                })()}
                 {isRentalProduct && (
                   <p className="text-sm text-gray-500">par mois</p>
                 )}

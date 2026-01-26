@@ -129,14 +129,16 @@ export default function CategoryPage() {
 
   const loading = categoriesLoading || productsLoading
 
-  // Calculate TTC price (HT + 20% TVA) - TTC rounded up to nearest integer
-  const formatPrice = (priceHT: number) => {
+  // Calculate TTC price (HT + 20% TVA) - TTC rounded up, HT = TTC / 1.2
+  const formatPriceTTC = (priceHT: number) => {
     const priceTTC = Math.ceil(priceHT * 1.2)
     return new Intl.NumberFormat("fr-FR").format(priceTTC) + " Dh"
   }
 
-  const formatPriceHT = (price: number) => {
-    return new Intl.NumberFormat("fr-FR").format(Math.round(price)) + " Dh"
+  const formatPriceHTFromTTC = (priceHT: number) => {
+    const priceTTC = Math.ceil(priceHT * 1.2)
+    const htFromTTC = Math.round(priceTTC / 1.2)
+    return new Intl.NumberFormat("fr-FR").format(htFromTTC) + " Dh HT"
   }
 
   // Filters sidebar component
@@ -187,8 +189,8 @@ export default function CategoryPage() {
             className="mb-4"
           />
           <div className="flex items-center justify-between text-sm text-slate-600">
-            <span>{formatPriceHT(priceRange[0])}</span>
-            <span>{formatPriceHT(priceRange[1])}</span>
+            <span>{new Intl.NumberFormat("fr-FR").format(Math.round(priceRange[0]))} Dh</span>
+            <span>{new Intl.NumberFormat("fr-FR").format(Math.round(priceRange[1]))} Dh</span>
           </div>
         </div>
       </div>
@@ -370,10 +372,10 @@ export default function CategoryPage() {
                           </h3>
                           <div className="flex flex-col">
                             <span className="text-lg font-bold text-[#1f3b57]">
-                              {formatPrice(product.price)}
+                              {formatPriceTTC(product.price)}
                             </span>
                             <span className="text-xs text-slate-500">
-                              {formatPriceHT(product.price)} HT
+                              {formatPriceHTFromTTC(product.price)}
                             </span>
                           </div>
                         </div>
@@ -413,10 +415,10 @@ export default function CategoryPage() {
                           )}
                           <div className="flex items-baseline gap-2">
                             <span className="text-xl font-bold text-[#1f3b57]">
-                              {formatPrice(product.price)}
+                              {formatPriceTTC(product.price)}
                             </span>
                             <span className="text-sm text-slate-500">
-                              ({formatPriceHT(product.price)} HT)
+                              ({formatPriceHTFromTTC(product.price)})
                             </span>
                           </div>
                         </div>
