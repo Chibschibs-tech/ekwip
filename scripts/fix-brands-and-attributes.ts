@@ -43,6 +43,7 @@ const BRAND_PATTERNS: Record<string, string[]> = {
   'ALTAI': ['ALTAI ', 'Altai '],
   'PORT': ['PORT ', 'Port '],
   'JABRA': ['JABRA ', 'Jabra '],
+  'JBL': ['JBL ', 'JBL-'],
   'AXTEL': ['AXTEL ', 'Axtel '],
   'SANDISK': ['SanDisk ', 'SANDISK '],
   'KINGSTON': ['Kingston ', 'KINGSTON '],

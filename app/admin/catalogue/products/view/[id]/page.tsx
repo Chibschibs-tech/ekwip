@@ -289,7 +289,16 @@ export default function ViewProductPage() {
                   <Tag className="h-4 w-4" />
                   Marque
                 </div>
-                <p className="font-medium">{getBrandName(product.brandId)}</p>
+                {product.brandId ? (
+                  <Link 
+                    href={`/admin/catalogue/products?brand=${product.brandId}`}
+                    className="font-medium text-[#1f3b57] hover:underline"
+                  >
+                    {getBrandName(product.brandId)}
+                  </Link>
+                ) : (
+                  <p className="font-medium text-gray-500">Non spécifiée</p>
+                )}
               </div>
 
               <Separator />
