@@ -138,12 +138,12 @@ export default function BoutiquePage() {
       <BoutiqueSubmenu />
 
       {/* Hero Banners - 1 large left + 2 small right */}
-      <section className="bg-slate-50 py-4 md:py-6">
+      <section className="bg-slate-50 py-6 md:py-8">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[400px]">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[480px]">
             {/* Large Banner Left */}
             <Link href="/boutique/tous-les-produits" className="lg:col-span-2 group">
-              <div className="relative h-[280px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#1f3b57] via-[#2a4a6b] to-[#1f3b57] shadow-lg">
+              <div className="relative h-[320px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#1f3b57] via-[#2a4a6b] to-[#1f3b57] shadow-lg">
                 <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
                 <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-500/10 to-transparent" />
                 <div className="relative h-full p-6 md:p-8 flex flex-col justify-between">
@@ -180,7 +180,7 @@ export default function BoutiquePage() {
             <div className="flex flex-col gap-4 h-auto lg:h-full">
               {/* Top Right Banner */}
               <Link href="/boutique/imprimantes" className="flex-1 group">
-                <div className="relative h-[140px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg">
+                <div className="relative h-[160px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg">
                   <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
                   <div className="relative h-full p-5 flex flex-col justify-between">
                     <div>
@@ -208,7 +208,7 @@ export default function BoutiquePage() {
 
               {/* Bottom Right Banner */}
               <Link href="/boutique/accessoires" className="flex-1 group">
-                <div className="relative h-[140px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
+                <div className="relative h-[160px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
                   <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
                   <div className="relative h-full p-5 flex flex-col justify-between">
                     <div>
