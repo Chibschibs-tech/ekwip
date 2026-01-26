@@ -18,6 +18,8 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       slug: c.slug,
       description: c.description,
       parentId: c.parent_id,
+      familyId: c.family_id,
+      categoryType: c.category_type,
       image: c.image,
       icon: c.icon,
       order: c.sort_order,
@@ -38,12 +40,17 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     const body = await request.json()
     const now = formatDate()
 
+    // Handle "none" value for familyId
+    const familyId = body.familyId === "none" ? null : (body.familyId || null)
+
     const result = await sql`
       UPDATE categories SET
         name = ${body.name},
         slug = ${body.slug},
         description = ${body.description || null},
         parent_id = ${body.parentId || null},
+        family_id = ${familyId},
+        category_type = ${body.categoryType || 'category'},
         image = ${body.image || null},
         icon = ${body.icon || null},
         sort_order = ${body.order || 0},
@@ -64,6 +71,8 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       slug: c.slug,
       description: c.description,
       parentId: c.parent_id,
+      familyId: c.family_id,
+      categoryType: c.category_type,
       image: c.image,
       icon: c.icon,
       order: c.sort_order,

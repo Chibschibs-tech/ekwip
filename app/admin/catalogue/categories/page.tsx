@@ -131,21 +131,25 @@ export default function CategoriesPage() {
       updateCategory(editingCategory.id, {
         ...formData,
         slug,
+        familyId: formData.familyId || null,
         updatedAt: new Date().toISOString(),
-      })
+      } as any)
       toast({
         title: "Catégorie mise à jour",
         description: `La catégorie ${formData.name} a été mise à jour`,
       })
       setIsEditDialogOpen(false)
+      // Refresh to get updated data
+      setTimeout(() => refreshAll(), 500)
     } else {
-      const newCategory: Category = {
+      const newCategory = {
         id: `cat-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         name: formData.name,
         slug,
         description: formData.description || undefined,
         image: formData.image || undefined,
         parentId: null,
+        familyId: formData.familyId || null,
         order: formData.order,
         isActive: formData.isActive,
         productCount: 0,
@@ -153,12 +157,14 @@ export default function CategoriesPage() {
         updatedAt: new Date().toISOString(),
       }
 
-      addCategory(newCategory)
+      addCategory(newCategory as any)
       toast({
         title: "Catégorie créée",
         description: `La catégorie ${formData.name} a été créée avec succès`,
       })
       setIsCreateDialogOpen(false)
+      // Refresh to get updated data
+      setTimeout(() => refreshAll(), 500)
     }
 
     resetForm()
