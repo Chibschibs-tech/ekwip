@@ -1,9 +1,9 @@
 "use client"
 
-import { useMemo } from "react"
+import { useMemo, useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { ArrowRight, Laptop, Printer, Monitor, Server, Wifi, Package, ShoppingBag, Truck, Shield, Headphones } from "lucide-react"
+import { ArrowRight, Laptop, Printer, Monitor, Server, Wifi, Package, ShoppingBag, Truck, Shield, Headphones, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -26,11 +26,66 @@ const categoryIcons: Record<string, any> = {
   "cat-multimedia": Package,
 }
 
+// Slider data for hero banner
+const heroSlides = [
+  {
+    id: 1,
+    badge: "Boutique Ekwip",
+    title: "Équipement IT",
+    subtitle: "Professionnel",
+    description: "Laptops, imprimantes, accessoires et plus encore. Qualité professionnelle garantie.",
+    cta: "Découvrir",
+    link: "/boutique/tous-les-produits",
+    image: "/images/laptop-hero.png",
+    gradient: "from-[#1f3b57] via-[#2a4a6b] to-[#1f3b57]",
+    accentColor: "text-blue-300",
+  },
+  {
+    id: 2,
+    badge: "Ordinateurs Portables",
+    title: "Performance",
+    subtitle: "& Mobilité",
+    description: "Les meilleures marques : HP, Dell, Lenovo. Pour tous vos besoins professionnels.",
+    cta: "Voir les laptops",
+    link: "/boutique/ordinateurs-portables",
+    image: "/images/laptop-hero.png",
+    gradient: "from-indigo-700 via-indigo-800 to-indigo-900",
+    accentColor: "text-indigo-300",
+  },
+  {
+    id: 3,
+    badge: "Offres Spéciales",
+    title: "Prix Imbattables",
+    subtitle: "Garantis",
+    description: "Profitez de nos tarifs compétitifs sur tout le matériel informatique professionnel.",
+    cta: "Voir les offres",
+    link: "/boutique/tous-les-produits",
+    image: "/images/laptop-hero.png",
+    gradient: "from-emerald-700 via-teal-700 to-emerald-800",
+    accentColor: "text-emerald-300",
+  },
+]
+
 export default function BoutiquePage() {
   const { categories, loading: categoriesLoading } = useCategories()
   const { products, loading: productsLoading } = useProducts()
+  const [currentSlide, setCurrentSlide] = useState(0)
 
   const loading = categoriesLoading || productsLoading
+
+  // Auto-advance slider every 5 seconds
+  const nextSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev + 1) % heroSlides.length)
+  }, [])
+
+  const prevSlide = useCallback(() => {
+    setCurrentSlide((prev) => (prev - 1 + heroSlides.length) % heroSlides.length)
+  }, [])
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000)
+    return () => clearInterval(timer)
+  }, [nextSlide])
 
   // Get sale products only
   const saleProducts = useMemo(() => {
@@ -137,59 +192,106 @@ export default function BoutiquePage() {
     <div className="min-h-screen bg-slate-50">
       <BoutiqueSubmenu />
 
-      {/* Hero Banners - 1 large left + 2 small right */}
+      {/* Hero Banners - Slider left + 2 small right */}
       <section className="bg-slate-50 py-6 md:py-8">
         <div className="max-w-7xl mx-auto px-4 md:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[480px]">
-            {/* Large Banner Left */}
-            <Link href="/boutique/tous-les-produits" className="lg:col-span-2 group">
-              <div className="relative h-[320px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-[#1f3b57] via-[#2a4a6b] to-[#1f3b57] shadow-lg">
-                <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-blue-500/10 to-transparent" />
-                <div className="relative h-full p-6 md:p-8 flex flex-col justify-between">
-                  <div>
-                    <Badge className="bg-white/20 text-white border-white/30 mb-3">
-                      Boutique Ekwip
-                    </Badge>
-                    <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 leading-tight">
-                      Équipement IT<br />
-                      <span className="text-blue-300">Professionnel</span>
-                    </h2>
-                    <p className="text-white/80 text-sm md:text-base max-w-md">
-                      Laptops, imprimantes, accessoires et plus encore. 
-                      Qualité professionnelle garantie.
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 text-white font-medium group-hover:gap-3 transition-all">
-                    Découvrir <ArrowRight className="h-5 w-5" />
-                  </div>
-                </div>
-                <div className="absolute bottom-0 right-0 w-1/2 h-full hidden md:block">
-                  <Image
-                    src="/images/laptop-hero.png"
-                    alt="Laptop professionnel"
-                    fill
-                    className="object-contain object-right-bottom p-4 opacity-90 group-hover:scale-105 transition-transform duration-500"
-                    priority
-                  />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-auto lg:h-[600px]">
+            {/* Large Banner Slider Left */}
+            <div className="lg:col-span-2 relative">
+              <div className="relative h-[380px] lg:h-full rounded-2xl overflow-hidden shadow-lg">
+                {/* Slides */}
+                {heroSlides.map((slide, index) => (
+                  <Link
+                    key={slide.id}
+                    href={slide.link}
+                    className={`absolute inset-0 transition-opacity duration-700 ${
+                      index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"
+                    }`}
+                  >
+                    <div className={`relative h-full bg-gradient-to-br ${slide.gradient}`}>
+                      <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
+                      <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-white/5 to-transparent" />
+                      <div className="relative h-full p-6 md:p-10 flex flex-col justify-between">
+                        <div>
+                          <Badge className="bg-white/20 text-white border-white/30 mb-4">
+                            {slide.badge}
+                          </Badge>
+                          <h2 className="text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
+                            {slide.title}<br />
+                            <span className={slide.accentColor}>{slide.subtitle}</span>
+                          </h2>
+                          <p className="text-white/80 text-sm md:text-lg max-w-md">
+                            {slide.description}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2 text-white font-medium text-lg hover:gap-3 transition-all">
+                          {slide.cta} <ArrowRight className="h-5 w-5" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-0 right-0 w-1/2 h-full hidden md:block">
+                        <Image
+                          src={slide.image}
+                          alt={slide.title}
+                          fill
+                          className="object-contain object-right-bottom p-4 opacity-90"
+                          priority={index === 0}
+                        />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+
+                {/* Navigation Arrows */}
+                <button
+                  onClick={(e) => { e.preventDefault(); prevSlide(); }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-2 transition-all"
+                  aria-label="Slide précédente"
+                >
+                  <ChevronLeft className="h-6 w-6 text-white" />
+                </button>
+                <button
+                  onClick={(e) => { e.preventDefault(); nextSlide(); }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-20 bg-white/20 hover:bg-white/40 backdrop-blur-sm rounded-full p-2 transition-all"
+                  aria-label="Slide suivante"
+                >
+                  <ChevronRight className="h-6 w-6 text-white" />
+                </button>
+
+                {/* Dots Indicator */}
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+                  {heroSlides.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={(e) => { e.preventDefault(); setCurrentSlide(index); }}
+                      className={`w-2.5 h-2.5 rounded-full transition-all ${
+                        index === currentSlide 
+                          ? "bg-white w-8" 
+                          : "bg-white/50 hover:bg-white/70"
+                      }`}
+                      aria-label={`Aller à la slide ${index + 1}`}
+                    />
+                  ))}
                 </div>
               </div>
-            </Link>
+            </div>
 
             {/* Right Column - 2 Stacked Banners */}
             <div className="flex flex-col gap-4 h-auto lg:h-full">
               {/* Top Right Banner */}
               <Link href="/boutique/imprimantes" className="flex-1 group">
-                <div className="relative h-[160px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg">
+                <div className="relative h-[180px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-emerald-600 to-emerald-700 shadow-lg">
                   <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
-                  <div className="relative h-full p-5 flex flex-col justify-between">
+                  <div className="relative h-full p-6 flex flex-col justify-between">
                     <div>
-                      <Badge className="bg-white/20 text-white border-white/30 mb-2 text-xs">
+                      <Badge className="bg-white/20 text-white border-white/30 mb-3 text-xs">
                         Imprimantes
                       </Badge>
-                      <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">
+                      <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight">
                         Solutions d'impression
                       </h3>
+                      <p className="text-white/70 text-sm mt-2 hidden lg:block">
+                        HP, Brother, Epson et plus
+                      </p>
                     </div>
                     <div className="flex items-center gap-2 text-white/90 text-sm font-medium group-hover:gap-3 transition-all">
                       Voir les offres <ArrowRight className="h-4 w-4" />
@@ -208,22 +310,25 @@ export default function BoutiquePage() {
 
               {/* Bottom Right Banner */}
               <Link href="/boutique/accessoires" className="flex-1 group">
-                <div className="relative h-[160px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
+                <div className="relative h-[180px] lg:h-full rounded-2xl overflow-hidden bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg">
                   <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
-                  <div className="relative h-full p-5 flex flex-col justify-between">
+                  <div className="relative h-full p-6 flex flex-col justify-between">
                     <div>
-                      <Badge className="bg-white/20 text-white border-white/30 mb-2 text-xs">
+                      <Badge className="bg-white/20 text-white border-white/30 mb-3 text-xs">
                         Accessoires
                       </Badge>
-                      <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">
+                      <h3 className="text-2xl md:text-3xl font-bold text-white leading-tight">
                         Périphériques & Plus
                       </h3>
+                      <p className="text-white/70 text-sm mt-2 hidden lg:block">
+                        Claviers, souris, câbles...
+                      </p>
                     </div>
                     <div className="flex items-center gap-2 text-white/90 text-sm font-medium group-hover:gap-3 transition-all">
                       Explorer <ArrowRight className="h-4 w-4" />
                     </div>
                   </div>
-                  <div className="absolute bottom-2 right-2 text-6xl opacity-20">
+                  <div className="absolute bottom-2 right-4 text-7xl opacity-20">
                     🎧
                   </div>
                 </div>
