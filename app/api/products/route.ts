@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     const status = searchParams.get("status")
     const featured = searchParams.get("featured")
     const search = searchParams.get("search")
-    const limit = Number.parseInt(searchParams.get("limit") || "100")
+    const limit = Number.parseInt(searchParams.get("limit") || "1000")
     const offset = Number.parseInt(searchParams.get("offset") || "0")
 
     // Build query using template strings - use conditional logic for filters
