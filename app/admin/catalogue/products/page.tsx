@@ -266,7 +266,7 @@ export default function ProductsPage() {
                     </TableCell>
                     <TableCell className="text-sm">{getCategoryName(product.categoryId)}</TableCell>
                     <TableCell className="text-sm">{getBrandName(product.brandId)}</TableCell>
-                    <TableCell className="font-medium">{product.price} DH</TableCell>
+                    <TableCell className="font-medium">{new Intl.NumberFormat("fr-FR").format(Math.round(product.price))} Dh</TableCell>
                     <TableCell>
                       <Badge variant={product.stockQuantity <= product.lowStockThreshold ? "destructive" : "secondary"}>
                         {product.stockQuantity}

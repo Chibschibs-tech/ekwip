@@ -221,11 +221,11 @@ export default function ViewProductPage() {
                   {isSaleProduct ? "Prix de vente (HT)" : "Prix de location"}
                 </div>
                 <p className="text-2xl font-bold text-[#1f3b57]">
-                  {product.price?.toFixed(2)} MAD
+                  {new Intl.NumberFormat("fr-FR").format(Math.round(product.price || 0))} Dh
                 </p>
                 {isSaleProduct && (
                   <p className="text-sm text-gray-500">
-                    TTC: {(product.price * 1.2).toFixed(2)} MAD
+                    TTC: {new Intl.NumberFormat("fr-FR").format(Math.ceil((product.price || 0) * 1.2))} Dh
                   </p>
                 )}
                 {isRentalProduct && (
@@ -243,7 +243,7 @@ export default function ViewProductPage() {
                       Prix de revient (HT)
                     </div>
                     <p className="text-lg font-semibold text-gray-700">
-                      {product.costPrice.toFixed(2)} MAD
+                      {new Intl.NumberFormat("fr-FR").format(Math.round(product.costPrice))} Dh
                     </p>
                     {product.price && product.costPrice && (
                       <p className="text-sm text-green-600">

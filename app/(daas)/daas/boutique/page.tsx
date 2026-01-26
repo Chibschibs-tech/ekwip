@@ -63,14 +63,14 @@ export default function BoutiquePage() {
     return sorted.slice(midIndex, midIndex + 8)
   }, [saleProducts])
 
-  // Format prices
+  // Format prices - TTC rounded up to nearest integer
   const formatPrice = (priceHT: number) => {
-    const priceTTC = priceHT * 1.2
-    return new Intl.NumberFormat("fr-MA", { style: "currency", currency: "MAD" }).format(priceTTC)
+    const priceTTC = Math.ceil(priceHT * 1.2)
+    return new Intl.NumberFormat("fr-FR").format(priceTTC) + " Dh"
   }
 
   const formatPriceHT = (price: number) => {
-    return new Intl.NumberFormat("fr-MA", { style: "currency", currency: "MAD" }).format(price)
+    return new Intl.NumberFormat("fr-FR").format(Math.round(price)) + " Dh"
   }
 
   // Product Card Component
