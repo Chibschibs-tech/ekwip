@@ -68,6 +68,8 @@ export async function GET(request: Request) {
       slug: c.slug,
       description: c.description,
       parentId: c.parent_id,
+      familyId: c.family_id,
+      categoryType: c.category_type,
       image: c.image,
       icon: c.icon,
       order: c.sort_order,
@@ -95,9 +97,10 @@ export async function POST(request: Request) {
 
     const result = await sql`
       INSERT INTO categories (
-        id, name, slug, description, parent_id, image, icon, sort_order, is_active, created_at, updated_at
+        id, name, slug, description, parent_id, family_id, category_type, image, icon, sort_order, is_active, created_at, updated_at
       ) VALUES (
         ${id}, ${body.name}, ${body.slug}, ${body.description || null}, ${body.parentId || null}, 
+        ${body.familyId || null}, ${body.categoryType || 'category'},
         ${body.image || null}, ${body.icon || null}, ${body.order || 0}, ${body.isActive !== false}, ${now}, ${now}
       )
       RETURNING *
@@ -110,6 +113,8 @@ export async function POST(request: Request) {
       slug: c.slug,
       description: c.description,
       parentId: c.parent_id,
+      familyId: c.family_id,
+      categoryType: c.category_type,
       image: c.image,
       icon: c.icon,
       order: c.sort_order,

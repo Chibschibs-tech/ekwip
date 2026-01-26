@@ -47,10 +47,10 @@ const mainCategories = [
     image: "/images/categories/printer.png"
   },
   { 
-    name: "Tablette & Téléphonie", 
-    slug: "tablettes-telephonie", 
+    name: "Téléphonie & Tablettes", 
+    slug: "telephonie-tablettes", 
     icon: Package,
-    image: "/images/categories/tablet.png"
+    image: "/images/categories/phone.png"
   },
   { 
     name: "Image & Son", 
@@ -59,22 +59,10 @@ const mainCategories = [
     image: "/images/categories/tv.png"
   },
   { 
-    name: "Accessoire", 
+    name: "Accessoires", 
     slug: "accessoires", 
     icon: Package,
     image: "/images/categories/accessories.png"
-  },
-  { 
-    name: "Vidéo Surveillance", 
-    slug: "video-surveillance", 
-    icon: Server,
-    image: "/images/categories/camera.png"
-  },
-  { 
-    name: "Logiciel", 
-    slug: "logiciels", 
-    icon: Package,
-    image: "/images/categories/software.png"
   },
   { 
     name: "Réseau", 
