@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Plus, Search, MoreVertical, Eye, Edit, Trash2, Package, ShoppingCart } from "lucide-react"
+import { Plus, Search, MoreVertical, Eye, Edit, Trash2, Package, ShoppingCart, Upload, Download } from "lucide-react"
 import { useProducts } from "@/contexts/products-context"
 import { useCategories } from "@/contexts/categories-context"
 import { useBrands } from "@/contexts/brands-context"
@@ -98,12 +98,20 @@ export default function ProductsPage() {
           <h1 className="text-3xl font-bold">Produits</h1>
           <p className="text-gray-600 dark:text-gray-400">Gérez tous vos produits (location et vente)</p>
         </div>
-        <Link href="/admin/catalogue/products/create">
-          <Button>
-            <Plus className="mr-2 h-4 w-4" />
-            Ajouter un produit
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/admin/catalogue/products/import-export">
+            <Button variant="outline">
+              <Upload className="mr-2 h-4 w-4" />
+              Import / Export
+            </Button>
+          </Link>
+          <Link href="/admin/catalogue/products/create">
+            <Button>
+              <Plus className="mr-2 h-4 w-4" />
+              Ajouter un produit
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
