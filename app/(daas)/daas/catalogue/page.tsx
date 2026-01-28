@@ -64,10 +64,23 @@ export default function Catalogue() {
     return allProducts.filter((p) => p.productType === "rent" && p.status === "active")
   }, [allProducts])
 
-  // Get active categories only
+  // Calculate rental product counts per category
+  const rentalCategoryCounts = useMemo(() => {
+    const counts: Record<string, number> = {}
+    rentalProducts.forEach((p) => {
+      if (p.categoryId) {
+        counts[p.categoryId] = (counts[p.categoryId] || 0) + 1
+      }
+    })
+    return counts
+  }, [rentalProducts])
+
+  // Get only categories that have rental products
   const activeCategories = useMemo(() => {
-    return categories.filter((cat) => cat.isActive)
-  }, [categories])
+    return categories
+      .filter((cat) => cat.isActive && rentalCategoryCounts[cat.id] > 0)
+      .sort((a, b) => (rentalCategoryCounts[b.id] || 0) - (rentalCategoryCounts[a.id] || 0))
+  }, [categories, rentalCategoryCounts])
 
   // Get available brands from rental products
   const availableBrands = useMemo(() => {
@@ -165,7 +178,7 @@ export default function Catalogue() {
                       {/* Product Count */}
                       <div className="flex items-center justify-between pt-3">
                         <span className="text-xs font-semibold text-ekwip bg-ekwip-100 px-3 py-1 rounded-full shadow-sm group-hover:bg-white/20 group-hover:text-white transition-colors">
-                          {category.productCount || 0} {(category.productCount || 0) > 1 ? "produits" : "produit"}
+                          {rentalCategoryCounts[category.id] || 0} {(rentalCategoryCounts[category.id] || 0) > 1 ? "produits" : "produit"}
                         </span>
                         <div className="flex items-center text-ekwip font-medium text-sm group-hover:text-gray-100 transition-colors">
                           Découvrir
