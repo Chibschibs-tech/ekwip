@@ -47,11 +47,6 @@ export default function CorporateFooter() {
                         <h3 className="font-semibold mb-4">Entreprise</h3>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <Link href="/" className="text-gray-300 hover:text-white transition-colors">
-                                    À propos
-                                </Link>
-                            </li>
-                            <li>
                                 <Link href="/contact" className="text-gray-300 hover:text-white transition-colors">
                                     Contact
                                 </Link>
