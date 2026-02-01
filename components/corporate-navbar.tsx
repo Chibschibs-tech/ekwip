@@ -2,28 +2,11 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Menu, X } from "lucide-react"
 
 export default function CorporateNavbar() {
-    const [daasUrl, setDaasUrl] = useState("https://daas.ekwip.ma")
-    const [catalogUrl, setCatalogUrl] = useState("https://daas.ekwip.ma/catalogue")
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-    useEffect(() => {
-        // Detect if we're in local development
-        if (typeof window !== "undefined") {
-            const hostname = window.location.hostname
-            const port = window.location.port || "3000"
-            
-            if (hostname === "localhost" || hostname === "127.0.0.1") {
-                // Local development - use localhost subdomain
-                setDaasUrl(`http://daas.localhost:${port}`)
-                setCatalogUrl(`http://daas.localhost:${port}/catalogue`)
-            }
-            // Production: keep default https://daas.ekwip.ma
-        }
-    }, [])
     return (
         <nav className="sticky top-0 z-50 border-b border-slate-200 bg-white/90 backdrop-blur">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -44,8 +27,8 @@ export default function CorporateNavbar() {
                         <Link href="/" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Accueil
                         </Link>
-                        <Link href={daasUrl} className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
-                            Ekwip DaaS
+                        <Link href="/coming-soon" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
+                            Ekwip RENTO
                         </Link>
                         <Link href="/connect" className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 rounded-lg transition-colors">
                             Ekwip Connect
@@ -72,8 +55,8 @@ export default function CorporateNavbar() {
                         </div> */}
 
                         {/* Catalog CTA */}
-                        <Link href={catalogUrl} className="ek-btn-pill-primary">
-                            Accéder au catalogue DaaS
+                        <Link href="/coming-soon" className="ek-btn-pill-primary">
+                            Accéder au catalogue RENTO
                         </Link>
                     </div>
 
@@ -99,11 +82,11 @@ export default function CorporateNavbar() {
                                 Accueil
                             </Link>
                             <Link
-                                href={daasUrl}
+                                href="/coming-soon"
                                 onClick={() => setMobileMenuOpen(false)}
                                 className="block px-4 py-2 text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg transition-colors"
                             >
-                                Ekwip DaaS
+                                Ekwip RENTO
                             </Link>
                             <Link
                                 href="/connect"
@@ -128,11 +111,11 @@ export default function CorporateNavbar() {
                             </Link>
                             <div className="pt-4 border-t border-slate-200">
                                 <Link
-                                    href={catalogUrl}
+                                    href="/coming-soon"
                                     onClick={() => setMobileMenuOpen(false)}
                                     className="block w-full text-center ek-btn-pill-primary"
                                 >
-                                    Accéder au catalogue DaaS
+                                    Accéder au catalogue RENTO
                                 </Link>
                             </div>
                         </div>

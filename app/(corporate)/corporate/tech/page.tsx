@@ -372,10 +372,10 @@ export default function TechPage() {
                             <ServiceCard
                                 title="Location d'équipements IT"
                                 description="Parc informatique, smartphones, tablettes et accessoires en location mensuelle, avec un portail pour suivre votre parc, vos contrats et vos renouvellements."
-                                href="/catalogue"
+                                href="/coming-soon"
                                 image="/artifacts/daas_equipment_visual_v2.png"
                                 imageAlt="Équipements IT en location"
-                                chip={{ label: "Ekwip DaaS", variant: "daas" }}
+                                chip={{ label: "Ekwip RENTO", variant: "daas" }}
                                 colorClass="text-[#38BDF8]"
                                 hoverColorClass="text-[#38BDF8]"
                             />

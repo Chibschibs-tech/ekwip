@@ -30,13 +30,9 @@ export function middleware(request: NextRequest) {
       hostname === "daas.ekwip.ma";
 
     if (isDaasDomain) {
-        // Skip if path already starts with /daas (direct access)
-        if (url.pathname.startsWith("/daas")) {
-            return NextResponse.next();
-        }
-        // Rewrite daas.ekwip.ma/* to /daas/*
-        const path = url.pathname === "/" ? "" : url.pathname;
-        return NextResponse.rewrite(new URL(`/daas${path}`, request.url));
+        // Temporarily redirect all DaaS subdomain traffic to coming-soon page
+        // TODO: Remove this redirect when RENTO subdomain is ready
+        return NextResponse.redirect(new URL("/coming-soon", request.url));
     }
 
     // Default: Corporate domain (ekwip.ma, www.ekwip.ma, localhost)

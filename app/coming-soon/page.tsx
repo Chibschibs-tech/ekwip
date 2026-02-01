@@ -79,14 +79,19 @@ export default function ComingSoonPage() {
         <div className="text-center mb-16">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-[#1f3b57] text-white text-sm font-medium mb-8">
             <Clock className="h-4 w-4 mr-2" />
-            Bientôt disponible
+            Section en cours de construction
           </div>
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-            Quelque chose d'<span className="text-[#1f3b57]">extraordinaire</span> arrive
+            Ekwip <span className="text-[#1f3b57]">RENTO</span> arrive bientôt
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-            Nous travaillons dur pour vous offrir une expérience exceptionnelle. Notre nouvelle plateforme sera bientôt
-            prête à révolutionner votre façon de louer des équipements informatiques.
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-4">
+            Dorénavant, vous pourrez compléter toute la procédure de location en ligne, jusqu'à la livraison. 
+            Notre nouvelle plateforme vous permettra de sélectionner vos équipements, configurer votre contrat 
+            et suivre votre commande en temps réel.
+          </p>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
+            En attendant, vous pouvez toujours <a href="/contact" className="text-[#1f3b57] font-semibold hover:underline">nous contacter</a> pour 
+            vos besoins afin que notre équipe commerciale vous accompagne dans vos projets d'équipement.
           </p>
         </div>
 

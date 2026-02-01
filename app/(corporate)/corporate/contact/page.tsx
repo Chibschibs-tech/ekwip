@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Mail, Phone, MapPin, Clock, Send } from "lucide-react"
+import { Mail, Phone, MapPin, Send } from "lucide-react"
 
 import { sendEmail } from "@/app/actions/send-email"
 import { toast } from "sonner"
@@ -25,9 +25,8 @@ export default function ContactPage() {
             addressLocality: "Casablanca",
             addressCountry: "MA",
         },
-        telephone: "+212522XXXXXX",
+        telephone: "+212660703622",
         email: "contact@ekwip.ma",
-        openingHours: "Mo-Fr 09:00-18:00, Sa 09:00-13:00",
     })
 
     const [formData, setFormData] = useState({
@@ -131,9 +130,7 @@ export default function ContactPage() {
                                         </div>
                                         <div>
                                             <h3 className="text-lg font-semibold text-gray-900">Téléphone</h3>
-                                            <p className="text-gray-600">+212 5 22 XX XX XX</p>
-                                            <p className="text-gray-600">+212 6 XX XX XX XX</p>
-                                            <p className="text-sm text-gray-500">Lun-Ven 9h-18h</p>
+                                            <p className="text-gray-600">06 60 70 36 22</p>
                                         </div>
                                     </div>
 
@@ -152,24 +149,6 @@ export default function ContactPage() {
                                                 Maroc
                                             </p>
                                             <p className="text-sm text-gray-500">Rendez-vous sur demande</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-start space-x-4">
-                                        <div className="flex-shrink-0">
-                                            <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
-                                                <Clock className="h-6 w-6 text-white" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <h3 className="text-lg font-semibold text-gray-900">Horaires</h3>
-                                            <p className="text-gray-600">
-                                                Lundi - Vendredi: 9h - 18h
-                                                <br />
-                                                Samedi: 9h - 13h
-                                                <br />
-                                                Dimanche: Fermé
-                                            </p>
                                         </div>
                                     </div>
                                 </div>

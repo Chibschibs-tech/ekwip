@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle, Video, Monitor, Mic, LayoutGrid, Users, Settings, Share2, ShieldCheck } from "lucide-react"
@@ -252,10 +252,10 @@ export default function ConnectPage() {
                             <ServiceCard
                                 title="Location d'équipements IT"
                                 description="Parc informatique, smartphones, tablettes et accessoires en location mensuelle, avec un portail pour suivre votre parc, vos contrats et vos renouvellements."
-                                href="/catalogue"
+                                href="/coming-soon"
                                 image="/artifacts/daas_equipment_visual_v2.png"
-                                imageAlt="Ã‰quipements IT en location"
-                                chip={{ label: "Ekwip DaaS", variant: "daas" }}
+                                imageAlt="Équipements IT en location"
+                                chip={{ label: "Ekwip RENTO", variant: "daas" }}
                                 colorClass="text-[#38BDF8]"
                                 hoverColorClass="text-[#38BDF8]"
                             />

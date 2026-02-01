@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, CheckCircle, Laptop, Cast, Cpu, Shield, TrendingUp, Zap } from "lucide-react"
 import { ScrollReveal } from "@/components/ui/scroll-reveal"
 import { ClientLogoSlider } from "@/components/client-logo-slider"
-import { DaasLink } from "@/components/daas-link"
 import { StructuredData } from "@/components/seo/structured-data"
 import { generateStructuredData } from "@/lib/seo"
 import { metadata } from "./metadata"
@@ -171,9 +170,9 @@ export default function CorporateHome() {
                     {/* Domain Cards - Horizontal Grid with Enhanced Glassmorphism */}
                     <div className="w-full max-w-7xl mx-auto">
                         <CardSlider gap="lg" className="lg:grid-cols-3 auto-rows-fr">
-                            {/* DaaS Card */}
+                            {/* RENTO Card */}
                             <ScrollReveal delay={0.1} className="h-full flex">
-                                <DaasLink href="/catalogue" className="group block h-full w-full flex">
+                                <Link href="/coming-soon" className="group block h-full w-full flex">
                                     <div className="relative overflow-hidden bg-white border border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.06)] hover:shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl transition-all duration-500 hover:-translate-y-2 h-full w-full flex flex-col">
                                     {/* Image Background */}
                                     <div className="relative h-56 overflow-hidden rounded-t-3xl">
@@ -189,7 +188,7 @@ export default function CorporateHome() {
                                     <div className="p-8 flex flex-col flex-grow relative z-10">
                                         <div className="ek-chip ek-chip-daas mb-4 w-fit">
                                             <div className="ek-chip-dot" />
-                                            Ekwip DaaS
+                                            Ekwip RENTO
                                         </div>
                                         <h3 className="text-2xl font-bold text-gray-900 mb-4 leading-tight">
                                             Location d&apos;équipements IT
@@ -198,11 +197,11 @@ export default function CorporateHome() {
                                             Parc informatique, smartphones, tablettes et accessoires en location mensuelle, avec un portail pour suivre votre parc, vos contrats et vos renouvellements.
                                         </p>
                                         <div className="flex items-center text-[#38BDF8] font-bold text-sm group-hover:gap-3 transition-all mt-auto">
-                                            Explorer la location IT <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                                            Explorer Ekwip RENTO <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                                         </div>
                                     </div>
                                 </div>
-                            </DaasLink>
+                            </Link>
                         </ScrollReveal>
 
                             {/* Connect Card */}

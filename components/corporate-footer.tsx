@@ -25,8 +25,8 @@ export default function CorporateFooter() {
                         <h3 className="font-semibold mb-4">Nos Solutions</h3>
                         <ul className="space-y-2 text-sm">
                             <li>
-                                <Link href="https://daas.ekwip.ma" className="text-gray-300 hover:text-white transition-colors">
-                                    Ekwip DaaS
+                                <Link href="/coming-soon" className="text-gray-300 hover:text-white transition-colors">
+                                    Ekwip RENTO
                                 </Link>
                             </li>
                             <li>
