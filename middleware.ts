@@ -41,6 +41,11 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
     
+    // Skip coming-soon page - it's a standalone page
+    if (url.pathname.startsWith("/coming-soon")) {
+        return NextResponse.next();
+    }
+    
     // For root path, show corporate homepage directly
     if (url.pathname === "/" || url.pathname === "") {
         return NextResponse.rewrite(new URL("/corporate", request.url));
