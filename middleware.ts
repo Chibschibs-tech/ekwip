@@ -45,6 +45,20 @@ export function middleware(request: NextRequest) {
     if (url.pathname.startsWith("/coming-soon")) {
         return NextResponse.next();
     }
+
+    // Non-corporate pages that have their own routes — let them through
+    const nonCorporatePrefixes = [
+        "/catalogue",
+        "/boutique",
+        "/marques",
+        "/blog",
+        "/store",
+        "/comment-ca-marche",
+        "/ma-liste-besoins",
+    ];
+    if (nonCorporatePrefixes.some(prefix => url.pathname.startsWith(prefix))) {
+        return NextResponse.next();
+    }
     
     // For root path, show corporate homepage directly
     if (url.pathname === "/" || url.pathname === "") {
