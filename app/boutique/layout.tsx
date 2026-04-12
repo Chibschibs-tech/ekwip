@@ -1,5 +1,7 @@
 import type { Metadata } from "next"
 import { generateMetadata as genMetadata } from "@/lib/seo"
+import Navbar from "@/components/navbar"
+import Footer from "@/components/footer"
 
 export const metadata: Metadata = genMetadata({
   title: "Boutique Ekwip - Achetez vos équipements IT neufs au Maroc",
@@ -19,6 +21,12 @@ export const metadata: Metadata = genMetadata({
 })
 
 export default function BoutiqueLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return (
+    <div className="flex flex-col min-h-screen">
+      <Navbar />
+      <main className="flex-grow">{children}</main>
+      <Footer />
+    </div>
+  )
 }
 
