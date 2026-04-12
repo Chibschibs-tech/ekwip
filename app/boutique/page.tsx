@@ -1,5 +1,7 @@
-﻿"use client"
+"use client"
 
+import { useState, useMemo } from "react"
+import { useProducts } from "@/contexts/products-context"
 import { useCategories } from "@/contexts/categories-context"
 import { useBrands } from "@/contexts/brands-context"
 import { Input } from "@/components/ui/input"
