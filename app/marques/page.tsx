@@ -1,30 +1,20 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
-import type { Brand } from "@/types/admin"
+import { useBrands } from "@/contexts/brands-context"
 
 export default function BrandsPage() {
-  const [brands, setBrands] = useState<Brand[]>([])
+  const { brands, loading } = useBrands()
   const [searchQuery, setSearchQuery] = useState("")
 
-  useEffect(() => {
-    // Charger les marques depuis localStorage
-    try {
-      const stored = localStorage.getItem("ekwip_admin_brands")
-      if (stored) {
-        const allBrands = JSON.parse(stored)
-        setBrands(allBrands.filter((b: Brand) => b.isActive))
-      }
-    } catch (error) {
-      console.error("Error loading brands:", error)
-    }
-  }, [])
-
-  const filteredBrands = brands.filter((brand) => brand.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const activeBrands = brands.filter((b) => b.isActive)
+  const filteredBrands = activeBrands.filter((brand) =>
+    brand.name.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -48,20 +38,26 @@ export default function BrandsPage() {
           </div>
         </div>
 
-        {filteredBrands.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
+              <div key={i} className="h-64 bg-gray-200 animate-pulse rounded-xl" />
+            ))}
+          </div>
+        ) : filteredBrands.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500">Aucune marque trouvée</p>
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filteredBrands.map((brand) => (
-              <Link key={brand.id} href={`/marques/${brand.slug}`}>
+              <Link key={brand.id} href={`/boutique?marque=${brand.slug}`}>
                 <Card className="group hover:shadow-lg transition-shadow cursor-pointer">
                   <CardContent className="p-6">
                     <div className="aspect-square bg-gray-100 rounded-lg mb-4 flex items-center justify-center overflow-hidden">
                       {brand.logo ? (
                         <img
-                          src={brand.logo || "/placeholder.svg"}
+                          src={brand.logo}
                           alt={brand.name}
                           className="w-full h-full object-contain p-4 group-hover:scale-105 transition-transform"
                         />

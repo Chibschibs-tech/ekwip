@@ -11,25 +11,24 @@ import { BrandsProvider } from "@/contexts/brands-context"
 import { AttributesProvider } from "@/contexts/attributes-context"
 import { Toaster } from "@/components/ui/toaster"
 import { DataSync } from "@/components/data-sync"
+import { WhatsAppButton } from "@/components/whatsapp-button"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://ekwip.ma"),
   title: {
-    default: "Ekwip - Infrastructure IT, Solutions AV et Développement sur-mesure",
+    default: "Ekwip — Votre partenaire IT au Maroc | Vente, Location & Développement",
     template: "%s | Ekwip",
   },
   description:
-    "Ekwip aligne vos équipes, outils et équipements. Location d'équipements IT (DaaS), solutions audiovisuelles (Connect) et développement sur-mesure (Tech) pour les entreprises au Maroc.",
+    "Ekwip équipe les entreprises marocaines : vente de matériel informatique, location IT via Rento, et développement digital sur-mesure. Basé à Casablanca.",
   keywords: [
-    "location équipement IT Maroc",
-    "DaaS Maroc",
-    "infrastructure IT entreprise",
-    "solutions audiovisuelles Maroc",
-    "développement sur-mesure",
-    "agents IA entreprise",
-    "automatisation processus",
+    "vente matériel informatique Maroc",
+    "équipement IT entreprise",
+    "partenaire IT Casablanca",
+    "location matériel informatique",
+    "développement web Maroc",
   ],
   authors: [{ name: "Ekwip" }],
   creator: "Ekwip",
@@ -50,19 +49,15 @@ export const metadata: Metadata = {
     locale: "fr_FR",
     url: process.env.NEXT_PUBLIC_SITE_URL || "https://ekwip.ma",
     siteName: "Ekwip",
-    title: "Ekwip - Infrastructure IT, Solutions AV et Développement sur-mesure",
+    title: "Ekwip — Votre partenaire IT au Maroc | Vente, Location & Développement",
     description:
-      "Ekwip aligne vos équipes, outils et équipements. Location d'équipements IT, solutions audiovisuelles et développement sur-mesure pour les entreprises au Maroc.",
+      "Ekwip équipe les entreprises marocaines : vente de matériel informatique, location IT via Rento, et développement digital sur-mesure. Basé à Casablanca.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ekwip - Infrastructure IT, Solutions AV et Développement sur-mesure",
+    title: "Ekwip — Votre partenaire IT au Maroc | Vente, Location & Développement",
     description:
-      "Ekwip aligne vos équipes, outils et équipements. Location d'équipements IT, solutions audiovisuelles et développement sur-mesure pour les entreprises au Maroc.",
-  },
-  verification: {
-    // Add Google Search Console verification when available
-    // google: "verification_token_here",
+      "Ekwip équipe les entreprises marocaines : vente de matériel informatique, location IT via Rento, et développement digital sur-mesure. Basé à Casablanca.",
   },
 }
 
@@ -83,6 +78,7 @@ export default function RootLayout({
                     <NeedsListProvider>
                       <DataSync />
                       {children}
+                      <WhatsAppButton />
                       <Toaster />
                     </NeedsListProvider>
                   </AttributesProvider>

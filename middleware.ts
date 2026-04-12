@@ -3,9 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
     const url = request.nextUrl;
-    const hostname = request.headers.get("host") || "";
 
-    // Skip public files and APIs
     if (
         url.pathname.startsWith("/_next") || 
         url.pathname.startsWith("/static") || 
@@ -15,74 +13,12 @@ export function middleware(request: NextRequest) {
         return NextResponse.next();
     }
 
-    // Skip admin routes - they should be accessible from both domains
-    // Admin routes are handled by their own layouts
-    if (url.pathname.startsWith("/admin") || url.pathname.startsWith("/portail-client")) {
-        return NextResponse.next();
-    }
-
-    // Check if it's a DaaS subdomain
-    // Supports: daas.ekwip.ma, daas.localhost, daas.localhost:3000
-    const isDaasDomain = 
-      hostname.startsWith("daas.") || 
-      hostname === "daas.localhost:3000" || 
-      hostname === "daas.localhost" ||
-      hostname === "daas.ekwip.ma";
-
-    if (isDaasDomain) {
-        // Temporarily redirect all DaaS subdomain traffic to coming-soon page
-        // TODO: Remove this redirect when RENTO subdomain is ready
-        return NextResponse.redirect(new URL("/coming-soon", request.url));
-    }
-
-    // Default: Corporate domain (ekwip.ma, www.ekwip.ma, localhost)
-    // Skip if path already starts with /corporate (direct access)
-    if (url.pathname.startsWith("/corporate")) {
-        return NextResponse.next();
-    }
-    
-    // Skip coming-soon page - it's a standalone page
-    if (url.pathname.startsWith("/coming-soon")) {
-        return NextResponse.next();
-    }
-
-    // Non-corporate pages that have their own routes — let them through
-    const nonCorporatePrefixes = [
-        "/catalogue",
-        "/boutique",
-        "/marques",
-        "/blog",
-        "/store",
-        "/comment-ca-marche",
-        "/ma-liste-besoins",
-    ];
-    if (nonCorporatePrefixes.some(prefix => url.pathname.startsWith(prefix))) {
-        return NextResponse.next();
-    }
-    
-    // For root path, show corporate homepage directly
-    if (url.pathname === "/" || url.pathname === "") {
-        return NextResponse.rewrite(new URL("/corporate", request.url));
-    }
-    
-    // For corporate routes (connect, tech, contact), rewrite to /corporate/*
-    if (url.pathname.startsWith("/connect") || url.pathname.startsWith("/tech") || url.pathname.startsWith("/contact")) {
-        return NextResponse.rewrite(new URL(`/corporate${url.pathname}`, request.url));
-    }
-    
-    // Default: rewrite to corporate path
-    return NextResponse.rewrite(new URL(`/corporate${url.pathname}`, request.url));
+    // All routes are served directly — no rewrites needed
+    return NextResponse.next();
 }
 
 export const config = {
     matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - api (API routes)
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         */
         "/((?!api|_next/static|_next/image|favicon.ico).*)",
     ],
 };

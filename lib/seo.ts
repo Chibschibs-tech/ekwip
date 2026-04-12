@@ -74,15 +74,17 @@ export function generateStructuredData(
       name: "Ekwip",
       url: baseUrl,
       logo: `${baseUrl}/images/logo-black.png`,
-      description: "Ekwip conçoit et opère l'infrastructure matérielle et digitale de votre entreprise",
+      description: "Ekwip — votre partenaire IT au Maroc : vente de matériel informatique, location via Rento, et développement digital sur-mesure.",
       address: {
         "@type": "PostalAddress",
+        streetAddress: "30 Bd Rahal El Meskini",
         addressLocality: "Casablanca",
         addressCountry: "MA",
       },
       contactPoint: {
         "@type": "ContactPoint",
         email: "contact@ekwip.ma",
+        telephone: "+212660703622",
         contactType: "customer service",
       },
       sameAs: [],

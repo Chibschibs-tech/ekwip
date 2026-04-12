@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Mail, Phone, MapPin, Clock, Send } from "lucide-react"
+import { Mail, Phone, MapPin, Clock, Send, MessageCircle } from "lucide-react"
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -25,134 +24,115 @@ export default function ContactPage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
   const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      subject: value,
-    }))
+    setFormData((prev) => ({ ...prev, subject: value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate form submission
     setTimeout(() => {
       setIsSubmitted(true)
       setIsSubmitting(false)
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        phone: "",
-        subject: "",
-        message: "",
-      })
+      setFormData({ name: "", email: "", company: "", phone: "", subject: "", message: "" })
     }, 1000)
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="py-16 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-[#1f3b57] to-[#1f3b57]/80 text-white">
+      <section className="py-16 px-4 md:px-6 lg:px-8 bg-gradient-to-br from-[#1f3b57] to-[#2a4a66] text-white">
         <div className="max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Contactez-nous</h1>
           <p className="text-xl text-white/90 max-w-2xl mx-auto">
-            Notre équipe d'experts est là pour vous accompagner dans tous vos projets d'équipements informatiques.
+            Notre équipe est là pour vous accompagner dans tous vos projets IT.
           </p>
         </div>
       </section>
 
-      {/* Contact Content */}
       <section className="py-16 px-4 md:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Contact Information */}
+            {/* Contact info */}
             <div className="lg:col-span-1">
-              <div className="sticky top-8">
+              <div className="sticky top-24">
                 <h2 className="text-2xl font-bold text-gray-900 mb-8">Nos coordonnées</h2>
 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
-                        <Mail className="h-6 w-6 text-white" />
-                      </div>
+                    <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Mail className="h-6 w-6 text-white" />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">Email</h3>
-                      <p className="text-gray-600">contact@ekwip.ma</p>
-                      <p className="text-gray-600">sales@ekwip.ma</p>
+                      <a href="mailto:contact@ekwip.ma" className="text-gray-600 hover:text-[#1f3b57] block">contact@ekwip.ma</a>
+                      <a href="mailto:sales@ekwip.ma" className="text-gray-600 hover:text-[#1f3b57] block">sales@ekwip.ma</a>
                       <p className="text-sm text-gray-500">Réponse sous 24h</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
-                        <Phone className="h-6 w-6 text-white" />
-                      </div>
+                    <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Phone className="h-6 w-6 text-white" />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">Téléphone</h3>
-                      <p className="text-gray-600">+212 5 22 XX XX XX</p>
-                      <p className="text-gray-600">+212 6 XX XX XX XX</p>
+                      <a href="tel:+212660703622" className="text-gray-600 hover:text-[#1f3b57]">06 60 70 36 22</a>
                       <p className="text-sm text-gray-500">Lun-Ven 9h-18h</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
-                        <MapPin className="h-6 w-6 text-white" />
-                      </div>
+                    <div className="w-12 h-12 bg-[#25D366] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <MessageCircle className="h-6 w-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-lg font-semibold text-gray-900">Adresse</h3>
-                      <p className="text-gray-600">
-                        123 Avenue Mohammed V<br />
-                        Casablanca 20000
-                        <br />
-                        Maroc
-                      </p>
-                      <p className="text-sm text-gray-500">Rendez-vous sur demande</p>
+                      <h3 className="text-lg font-semibold text-gray-900">WhatsApp</h3>
+                      <a
+                        href="https://wa.me/212660703622"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#25D366] font-medium hover:underline"
+                      >
+                        Discuter sur WhatsApp
+                      </a>
+                      <p className="text-sm text-gray-500">Réponse rapide</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0">
-                      <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center">
-                        <Clock className="h-6 w-6 text-white" />
-                      </div>
+                    <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900">Adresse</h3>
+                      <p className="text-gray-600">
+                        30 Bd Rahal El Meskini<br />
+                        Casablanca, Maroc
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 bg-[#1f3b57] rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Clock className="h-6 w-6 text-white" />
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold text-gray-900">Horaires</h3>
                       <p className="text-gray-600">
-                        Lundi - Vendredi: 9h - 18h
-                        <br />
-                        Samedi: 9h - 13h
-                        <br />
-                        Dimanche: Fermé
+                        Lundi – Vendredi : 9h – 18h<br />
+                        Samedi : 9h – 13h
                       </p>
                     </div>
                   </div>
                 </div>
-
-                <div className="mt-8 p-6 bg-gradient-to-r from-[#1f3b57] to-[#1f3b57]/80 rounded-lg text-white">
-                  <h3 className="text-lg font-semibold mb-2">Support d'urgence</h3>
-                  <p className="text-sm text-white/90 mb-3">Pour nos clients, support technique disponible 24/7</p>
-                  <p className="font-semibold">+212 6 XX XX XX XX</p>
-                </div>
               </div>
             </div>
 
-            {/* Contact Form */}
+            {/* Form */}
             <div className="lg:col-span-2">
               <Card className="shadow-xl">
                 <CardHeader>
@@ -182,52 +162,22 @@ export default function ContactPage() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="name">Nom complet *</Label>
-                          <Input
-                            id="name"
-                            name="name"
-                            type="text"
-                            required
-                            value={formData.name}
-                            onChange={handleInputChange}
-                            className="mt-1"
-                          />
+                          <Input id="name" name="name" type="text" required value={formData.name} onChange={handleInputChange} className="mt-1" />
                         </div>
                         <div>
                           <Label htmlFor="email">Email *</Label>
-                          <Input
-                            id="email"
-                            name="email"
-                            type="email"
-                            required
-                            value={formData.email}
-                            onChange={handleInputChange}
-                            className="mt-1"
-                          />
+                          <Input id="email" name="email" type="email" required value={formData.email} onChange={handleInputChange} className="mt-1" />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                           <Label htmlFor="company">Entreprise</Label>
-                          <Input
-                            id="company"
-                            name="company"
-                            type="text"
-                            value={formData.company}
-                            onChange={handleInputChange}
-                            className="mt-1"
-                          />
+                          <Input id="company" name="company" type="text" value={formData.company} onChange={handleInputChange} className="mt-1" />
                         </div>
                         <div>
                           <Label htmlFor="phone">Téléphone</Label>
-                          <Input
-                            id="phone"
-                            name="phone"
-                            type="tel"
-                            value={formData.phone}
-                            onChange={handleInputChange}
-                            className="mt-1"
-                          />
+                          <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleInputChange} className="mt-1" />
                         </div>
                       </div>
 
@@ -239,8 +189,8 @@ export default function ContactPage() {
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="devis">Demande de devis</SelectItem>
-                            <SelectItem value="info">Demande d'informations</SelectItem>
-                            <SelectItem value="support">Support technique</SelectItem>
+                            <SelectItem value="dev">Projet de développement</SelectItem>
+                            <SelectItem value="general">Question générale</SelectItem>
                             <SelectItem value="partenariat">Partenariat</SelectItem>
                             <SelectItem value="autre">Autre</SelectItem>
                           </SelectContent>
@@ -256,20 +206,13 @@ export default function ContactPage() {
                           required
                           value={formData.message}
                           onChange={handleInputChange}
-                          placeholder="Décrivez votre projet ou votre demande en détail..."
+                          placeholder="Décrivez votre projet ou votre demande..."
                           className="mt-1"
                         />
                       </div>
 
-                      <Button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/80"
-                        size="lg"
-                      >
-                        {isSubmitting ? (
-                          "Envoi en cours..."
-                        ) : (
+                      <Button type="submit" disabled={isSubmitting} className="w-full bg-[#1f3b57] hover:bg-[#1f3b57]/90" size="lg">
+                        {isSubmitting ? "Envoi en cours..." : (
                           <>
                             Envoyer le message
                             <Send className="ml-2 h-4 w-4" />
@@ -285,7 +228,6 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Section */}
       <section className="py-16 px-4 md:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
@@ -296,8 +238,8 @@ export default function ContactPage() {
           <div className="bg-gray-200 rounded-lg h-96 flex items-center justify-center">
             <div className="text-center">
               <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-600">Carte interactive bientôt disponible</p>
-              <p className="text-sm text-gray-500">123 Avenue Mohammed V, Casablanca</p>
+              <p className="text-gray-600">30 Bd Rahal El Meskini</p>
+              <p className="text-sm text-gray-500">Casablanca, Maroc</p>
             </div>
           </div>
         </div>
