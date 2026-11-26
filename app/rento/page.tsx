@@ -22,19 +22,12 @@ export default function RentoPage() {
             Équipez vos équipes sans immobiliser votre trésorerie. Louez votre parc informatique en mensualités, tout inclus.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="https://rento.ma"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/contact"
               className="ek-btn-pill-primary"
             >
-              Découvrir le catalogue
+              Demander un devis de location
               <ArrowRight className="h-4 w-4" />
-            </a>
-            <Link href="/contact">
-              <button className="ek-btn-pill-secondary bg-white/20 border-white/30 text-white hover:bg-white/30 transition-all duration-300 shadow-lg">
-                Nous contacter
-              </button>
             </Link>
           </div>
         </div>
@@ -50,7 +43,7 @@ export default function RentoPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { step: "1", title: "Choisissez vos équipements", desc: "Parcourez le catalogue Rento et sélectionnez les équipements adaptés à vos besoins." },
+              { step: "1", title: "Choisissez vos équipements", desc: "Identifiez avec nous les équipements adaptés à vos besoins." },
               { step: "2", title: "Configurez votre contrat", desc: "Choisissez la durée, les options de maintenance et les services inclus." },
               { step: "3", title: "Recevez votre matériel", desc: "Vos équipements sont livrés, installés et configurés par notre équipe." },
               { step: "4", title: "Renouvelez ou restituez", desc: "En fin de contrat : renouvelez, upgrader vers du neuf ou restituez simplement." },
@@ -128,22 +121,15 @@ export default function RentoPage() {
             Prêt à équiper vos équipes ?
           </h2>
           <p className="text-lg text-white/90 mb-8">
-            Découvrez le catalogue Rento ou contactez-nous pour un devis personnalisé.
+            Contactez-nous pour un devis adapté à vos besoins en matériel.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="https://rento.ma"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href="/contact"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-white text-[#1f3b57] font-semibold text-sm shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all"
             >
-              Voir le catalogue Rento
+              Demander un devis de location
               <ArrowRight className="h-4 w-4" />
-            </a>
-            <Link href="/contact">
-              <button className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-white/40 text-white font-semibold text-sm hover:bg-white/10 transition-all">
-                Des questions ? Contactez-nous
-              </button>
             </Link>
           </div>
         </div>
